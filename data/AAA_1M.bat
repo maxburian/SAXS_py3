@@ -1,0 +1,2 @@
+for %%i in (*.tif) do if not exist %%~ni.chi fit2d_12_077_i686_WXP.exe -dim2000x2000 -svar#IN=%%i -svar#OUT=%%~ni.chi -macE:\user\Daten_Heinz\14\140128_amenitsch\AAA_integ_Pilatus1M_cmd.mac
+dir/on/b *.chi > inlst.txt

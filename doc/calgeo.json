@@ -1,0 +1,23 @@
+{
+    "PixelPerRadialElement": 1,
+    "Imagesize": [
+        1043,
+        981
+    ],
+    "Tilt": {
+        "TiltAngleDeg": -10,
+        "TiltRotDeg": 73.569
+    },
+    "MaskFile": "emptymask.tif",
+    "PixelSizeMicroM": [
+        172.0,
+        172.0
+    ],
+    "Wavelength": 1.54,
+    "DedectorDistanceMM": 1031.657,
+    "BeamCenter": [
+        808.37,
+        387.772
+    ],
+    "Oversampling": 2
+}
