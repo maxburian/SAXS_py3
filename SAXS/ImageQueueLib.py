@@ -12,6 +12,7 @@ import numpy as np
 from multiprocessing import Queue ,Value
 from Queue import Empty
 import matplotlib.pyplot as plt
+from tifffile import   TiffFile 
 
 class imagequeue:
     """
@@ -72,7 +73,9 @@ class imagequeue:
             if not self.options.silent: print "[",threadid,"] open: ",picture 
             for i in range(max):
                 try:
-                    image=misc.imread(picture)
+                    #image=misc.imread(picture)
+                    tif = TiffFile(picture)
+                    image = tif.asarray()
                 except KeyboardInterrupt:
                     return
                 except:
