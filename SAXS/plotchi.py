@@ -59,12 +59,11 @@ def makeplot(options,args):
             ax1.plot(data[options.skip:-options.clip,0],data[options.skip:-options.clip,1],label=chifile)
           
             if data.shape[1]>=3:
-                if options.log:
-                    data=data[data[:,1]>100,:]
-                clipat=2
+ 
+                clipat=0.01
                 ax1.fill_between( data[options.skip:-options.clip,0] ,
-                   np.clip(data[options.skip:-options.clip,1]-data[options.skip:-options.clip,2],1,clipat),
-                   np.clip(data[options.skip:-options.clip,1]+data[options.skip:-options.clip,2],1,clipat),
+                   np.clip(data[options.skip:-options.clip,1]-data[options.skip:-options.clip,2],clipat,1e300),
+                   np.clip(data[options.skip:-options.clip,1]+data[options.skip:-options.clip,2],clipat,1e300),
                    facecolor='blue' ,alpha=0.2,linewidth=0,label="Count Error")
                 
 
