@@ -12,7 +12,7 @@ import numpy as np
 from multiprocessing import Queue ,Value
 from Queue import Empty
 import matplotlib.pyplot as plt
-from tifffile import   TiffFile 
+from SAXS.tifffile import   TiffFile 
 
 class imagequeue:
     """

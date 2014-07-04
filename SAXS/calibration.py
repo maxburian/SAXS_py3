@@ -298,7 +298,7 @@ def scalemat(Xsize,Ysize,ov):
 
 def openmask(config):
     """
-    Open the mask file especialy the *.msk file. Unfortunately there is no library
+    Open the mask file especialy the \*.msk file. Unfortunately there is no library
     module for msk files available also no documentation. So, for the msk file, we have a very brittle hack
     it works for our sensor. Nevermind any other resolution or size.
     
