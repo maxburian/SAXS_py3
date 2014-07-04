@@ -24,7 +24,11 @@ def parseopt():
                           , metavar="N",default=0 ,type="int")   
         parser.add_option("-k", "--clip", dest="clip",
                           help="Clip last N points."
-                          , metavar="N",default=1 ,type="int")  
+                          , metavar="N",default=1 ,type="int")
+        parser.add_option("-x",'--xaxsistype',dest='xax',metavar='TYPE',default='linear',
+                           help="Select type of X axis scale, might be [linear|log|symlog]")
+        parser.add_option("-y",'--yaxsistype',dest='yax',metavar='TYPE',default='linear',
+                           help="Select type of Y axis scale, might be [linear|log|symlog]")
         
          
         (options, args) = parser.parse_args(args=None, values=None)
@@ -69,7 +73,10 @@ def makeplot(options,args):
 
         ax1.set_ylabel('Intensity [counts/pixel]')
         ax1.set_xlabel('q [1/nm]')
+        plt.yscale(options.yax)
+        plt.xscale(options.xax)
         if options.log: plt.yscale('log')
+        
         plt.title(chifile)
     if options.title!="#filename":
              plt.title(options.title)
