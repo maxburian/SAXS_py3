@@ -76,9 +76,11 @@ class imagequeue:
                     #image=misc.imread(picture)
                     tif = TiffFile(picture)
                     image = tif.asarray()
+                    
                 except KeyboardInterrupt:
                     return
-                except:
+                except Exception,msg:
+                    print msg
                     try:
                         print "cannot open ", picture, ", lets wait.", max-i ," s"
                         time.sleep(1)
