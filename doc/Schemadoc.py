@@ -14,3 +14,21 @@ RST= transform.toRsT()
 rstfile=open("SAXSSchema.rst",'w')
 rstfile.write(RST)
 rstfile.close
+
+transform=jsonschematorst( '../SAXS/LeashRequestSchema.json') 
+
+RST= transform.toRsT()
+#print RST 
+#print RST
+rstfile=open("SAXSLeashRequest.rst",'w')
+rstfile.write(RST)
+rstfile.close
+
+transform=jsonschematorst( '../SAXS/LeashResultSchema.json') 
+
+RST= transform.toRsT()
+#print RST 
+#print RST
+rstfile=open("SAXSLeashResult.rst",'w')
+rstfile.write(RST)
+rstfile.close

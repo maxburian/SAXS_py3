@@ -175,9 +175,12 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
-SAXSSchema.rst: ../../jsonSchemaToRsT/jsonSchemaToRsT/jsonSchemaToRsT.py ../SAXS/schema.json
+	
+SAXSSchema.rst: ../../jsonSchemaToRsT/jsonSchemaToRsT/jsonSchemaToRsT.py ../SAXS/*.json
 	python Schemadoc.py 
 
+ 
+	
 	
 	
 SOURCEDIR     = .
