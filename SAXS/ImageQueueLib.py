@@ -96,8 +96,8 @@ class imagequeue:
                 basename=picture[:-3]
             
             else:
-                basename=self.options.outdir+os.sep+'_'.join(picture.replace('./','').split(os.sep))[:-3]
-                basename=basename.replace(':', '').replace('.','').replace('/',"_")+'.'
+                basename=self.options.outdir+os.sep+('_'.join(picture.replace('./','').split(os.sep))[:-3]).replace('/',"_")
+                basename=basename.replace(':', '').replace('.','')+'.'
             if not self.options.resume or not os.path.isfile(basename+'chi'):
                 data=self.cal.integratechi(image,basename+"chi")
                 if threadid==0 and self.options.plotwindow:
