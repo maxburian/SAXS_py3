@@ -20,7 +20,7 @@ Schema for requests from Saxs Leash to Saxs Server
 :Type:
   object
 :Contains:
-  :ref:`result <result>`, :ref:`data <data>`
+  :ref:`result <result>`:red:`*`, :ref:`data <data>`:red:`*`
 :Required:
   True
 :JSON Path:
@@ -30,7 +30,7 @@ Example JSON:
 
 .. code:: json
 
-    {}
+    {"data": {},"result": ""}
 
 .. _result:
 
@@ -40,7 +40,7 @@ result
 :Type:
   string
 :Required:
-  False
+  True
 :JSON Path:
   :ref:`# <root>` [':ref:`result <result>`']
 
@@ -60,7 +60,7 @@ data
 :Contains:
   :ref:`queue length <queue length>`, :ref:`images processed <images processed>`, :ref:`queue id <queue id>`, :ref:`file name <file name>`, :ref:`header <header>`, :ref:`array <array>`
 :Required:
-  False
+  True
 :JSON Path:
   :ref:`# <root>` [':ref:`data <data>`']
 

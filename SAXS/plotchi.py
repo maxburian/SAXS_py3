@@ -37,9 +37,12 @@ def plotchi():
     (options, args)= parseopt()
     makeplot(options, args)
     
-def makeplot(options,args):
+def makeplot(options,args,data=[],fig=None,ax=None):
     set=0
-    fig, ax1 = plt.subplots()
+    if not fig:
+        fig, ax1 = plt.subplots()
+    else:
+        ax1=ax
     for chifile in args:
         set+=1
         if options.compare:
@@ -59,7 +62,8 @@ def makeplot(options,args):
                 ax2.set_ylabel('relative error %' ,color="g")
                 align_yaxis(ax1,0,ax2,0)
         else:
-            data=np.loadtxt(chifile ,skiprows=4 )
+            if data==[]:
+                data=np.loadtxt(chifile ,skiprows=4 )
             ax1.plot(data[options.skip:-options.clip,0],data[options.skip:-options.clip,1],label=chifile)
           
             if data.shape[1]>=3:
@@ -85,6 +89,7 @@ def makeplot(options,args):
         plt.savefig(options.plotfile)
     else:
         plt.show()
+    return fig
     
 def align_yaxis(ax1, v1, ax2, v2):
     """adjust ax2 ylimit so that v2 in ax2 is aligned to v1 in ax1"""

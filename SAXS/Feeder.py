@@ -8,7 +8,7 @@ from optparse import OptionParser
 
 def startfeeder():
     parser = OptionParser()
-    usage = "usage: %prog [options] calibration.txt ouput.json"
+    usage = "usage: %prog [options]  "
     parser = OptionParser(usage)
     parser.add_option("-p", "--port", dest="port",
                       help="Port to offer file changes service", metavar="port",default="5556")

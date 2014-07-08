@@ -20,7 +20,7 @@ Schema for requests from Saxs Leash to Saxs Server
 :Type:
   object
 :Contains:
-  :ref:`command <command>`, :ref:`argument <argument>`
+  :ref:`command <command>`:red:`*`, :ref:`argument <argument>`:red:`*`
 :Required:
   True
 :JSON Path:
@@ -30,7 +30,7 @@ Example JSON:
 
 .. code:: json
 
-    {}
+    {"command": "close","argument": {}}
 
 .. _command:
 
@@ -40,10 +40,10 @@ command
 :Type:
   string
 :values:
-  [u'close queue', u'stop queue', u'new queue', u'send plot', u'do all in directory']
+  ``[u'close', u'abort', u'new', u'plot', u'readdir']``
 
 :Required:
-  False
+  True
 :JSON Path:
   :ref:`# <root>` [':ref:`command <command>`']
 
@@ -51,7 +51,7 @@ Example JSON:
 
 .. code:: json
 
-    {"command": "close queue"}
+    {"command": "close"}
 
 .. _argument:
 
@@ -63,7 +63,7 @@ argument
 :Contains:
   :ref:`queue id <queue id>`, :ref:`directory <directory>`, :ref:`calibration <calibration>`, :ref:`maskbin <maskbin>`
 :Required:
-  False
+  True
 :JSON Path:
   :ref:`# <root>` [':ref:`argument <argument>`']
 

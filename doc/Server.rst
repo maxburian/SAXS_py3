@@ -18,6 +18,13 @@ or subscribe to a zmq service, The Saxsdog Feeder, that publishes new file names
 The Saxsdog Feeder
 ------------------
 
+The "Saxsdog Feeder" service offers file events for subscription.
+It sould not do anny buffering or preselection, just send a new 
+message when any new file was copied and is ready for processing. 
+Also when a file is overwritten: send a message. It should however, 
+only send this event, when the file is completly written to the file system.
+
+
 New file events are composed of the following message:
 
 .. code:: json
@@ -26,6 +33,10 @@ New file events are composed of the following message:
       "command":"New file",
       "argument":"/Path/to/file/"
    }
+
+The service must be a ZeroMQ ``zmq.PUP`` socket. This code is a simulation of the messages:
+
+.. literalinclude :: ../SAXS/Feeder.py
 
 The Saxsdog Leash
 -----------------
@@ -45,7 +56,6 @@ Request:
 
     {
        "command":"close queue",
-       "argument":{"queue id":"id"}
     }
 
 Answer:

@@ -32,6 +32,7 @@ class imagequeue:
          self.args=args
          self.allp=Value('i',0)
          self.stopflag=Value('i',0)
+         self.dirwalker=False
          if not options.plotwindow: 
               plt.switch_backend("Agg")
          self.fig=plt.figure()
@@ -59,12 +60,7 @@ class imagequeue:
             self.dirwalker=Process()
             filler(self.picturequeue,self.args[0])
         
-         
-    def start(self,):  
-        """
-        Start threads and directory observer.
-        """
-        def procimage(self,picture,threadid):
+    def procimage(self,picture,threadid):
        
              
             #im=Image.open(picture,"r")
@@ -129,6 +125,12 @@ class imagequeue:
                     print "[",threadid,"] ",self.allp.value
             else:
                 print "[",threadid,"] write: ",basename+"chi" 
+            return basename ,data
+    def start(self,):  
+        """
+        Start threads and directory observer.
+        """
+       
         def funcworker(self,threadid):
            
                 while self.stopflag.value==0: 
@@ -139,7 +141,7 @@ class imagequeue:
                             break
                         except Empty:
                             continue
-                        procimage(self,picture,threadid)
+                        self.procimage(picture,threadid)
                     except KeyboardInterrupt:
                         pass 
             
@@ -162,6 +164,8 @@ class imagequeue:
             observer.schedule(eventhandler, self.args[0], recursive=True)
             observer.start()
         #We let the master process do some work because its useful for matplotlib.
+        if not self.dirwalker:
+            self.dirwalker=Process()
         try:
             while (not self.picturequeue.empty()) or self.dirwalker.is_alive() or self.options.watch: 
                     try:
@@ -170,7 +174,7 @@ class imagequeue:
                         break
                     except Empty:
                         continue
-                    procimage(self,picture,0)
+                    self.procimage(picture,0)
                     if np.mod(self.allp.value,500)==0:
                         self.timreport()
         except  KeyboardInterrupt:            

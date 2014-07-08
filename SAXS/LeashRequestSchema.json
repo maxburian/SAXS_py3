@@ -1,0 +1,63 @@
+{
+	"type": "object",
+	"$schema": "http://json-schema.org/draft-03/schema",
+	"required": true,
+	"description": "Schema for requests from Saxs Leash to Saxs Server",
+	"additionalProperties": false,
+	"properties": 
+	{
+		"command": 
+		{
+			"required":true,
+			"type": "string",
+			"enum": 
+			[
+				"close",
+				"abort",
+				"new",
+				"plot",
+				"readdir"
+			]
+		},
+
+		"argument": 
+		{
+			"type": "object",
+			"additionalProperties": false,
+			"required":true,
+			"properties": 
+			{
+				"queue id": 
+				{
+					"description": "String that uniquely indentifies a queue",
+					"type": "string"
+				},
+
+				"directory": 
+				{
+					"description": "Directory this queue is going to use. New files in other directories are going to be ignored.",
+					"type": "string"
+				},
+
+				"calibration": 
+				{
+					"description": "Calibrarion data according to :ref:`calib`",
+					"type": "object",
+					"properties": 
+					{
+						"/": 
+						{
+							"$ref": "schema.json#"
+						}
+					}
+				},
+
+				"maskbin": 
+				{
+					"description": "the mask file binary encoded as base64",
+					"type": "string"
+				}
+			}
+		}
+	}
+}

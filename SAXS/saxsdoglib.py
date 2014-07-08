@@ -18,7 +18,7 @@ def saxsdogparseopt():
                       help="Number of concurrent threads.",default=1)
     parser.add_option("-m", "--plotmonitor", dest="plotwindow", default=False, action="store_true",
                       help="Show a live updating plot window.")
-    parser.add_option("-w", "--watch", dest="watch", default=False,action="store_true",
+    parser.add_option("-w", "--watch", dest="watchdir", default=False,action="store_true",
                       help="Watch directory for changes, using file system events recursively for all sub directories.")
     parser.add_option("-r", "--resume", dest="resume", default=False,action="store_true",
                       help="Skip files that are already converted.")
@@ -50,7 +50,8 @@ def saxsdogparseopt():
     if len(args)!=1:
         parser.error("incorrect number of arguments")
         
-    
+    if options.watchdir:options.watch=True
+    else: options.watch=False
     return (options, args)
 
 def saxsdogcal(options, args):   
