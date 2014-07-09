@@ -10,184 +10,90 @@ The server should also be able to be manually started and stoped without the Lea
 
 The Saxsdog Server
 ------------------
-The saxdog server can watch for filesystem events for himself 
-or subscribe to a zmq service, The Saxsdog Feeder, that publishes new file names.
 
+The Saxdog Server is the program that is started on the processing computer (node)
+ It may subscribe to a "new file" event service. 
 
-
-The Saxsdog Feeder
-------------------
-
-The "Saxsdog Feeder" service offers file events for subscription.
-It sould not do anny buffering or preselection, just send a new 
-message when any new file was copied and is ready for processing. 
-Also when a file is overwritten: send a message. It should however, 
-only send this event, when the file is completly written to the file system.
-
-
-New file events are composed of the following message:
-
-.. code:: json
-  
-   {
-      "command":"New file",
-      "argument":"/Path/to/file/"
-   }
-
-The service must be a ZeroMQ ``zmq.PUP`` socket. This code is a simulation of the messages:
-
-.. literalinclude :: ../SAXS/Feeder.py
+.. command-output::  saxsdogserver --help
 
 The Saxsdog Leash
 -----------------
 
-The Saxsdog Leash is a user facing controll interface. 
-There the user should enter new calibrations and specify the data directoris connected to it. 
-During the processing it shows a graph of one of the current images.
+The Leash client can issue the commands for the Saxsdog Server. It is commandline interface only for now.
 
-It may send the following commands:
+.. command-output::  saxsleash --help
 
-Close Queue
-~~~~~~~~~~~
+Most of the commandline options are apout the ``plot`` command, but in order to visualize 
+the processed data one has to send the commands to setup a calibration to be used for the processing.
 
-Request:
-
-.. code:: json
-
-    {
-       "command":"close queue",
-    }
-
-Answer:
-
-.. code:: json
-
-   {
-   "result":"queue closed", 
-   "data":{
-      "queuelength":2349,
-      "images processed":2030,
-      "queueid":"queue id"
-      }
-   }
-
-Abort Queue
-~~~~~~~~~~~
-
-Request:
-
-.. code:: json
-
-   {"command":"abort queue"}
-
-Answer:
-
-.. code:: json
-
-   {
-      "result":"queue stopped emptied and closed",
-      "data":{
-         "queueid":"id",
-         "queuelength":2349,
-         "images processed":2030
-      }
-   }
-
-New Queue
-~~~~~~~~~
-
-Request:
-
-.. code:: python
-
-      {
-      "command":"new queue",
-         "argument":{
-            "directory":"directory of data to take into account",
-            "calibration":{},
-            "maskbin":""
-         }
-      }
-   
-
-Answer:
-
-
-.. code:: json
-
-   {"result":"new queue", "data":{"queueid":"id"}}
-   
-   
-Send Plot
-~~~~~~~~~
-
-Request:
-
-.. code:: json
-
-   {"command":"send plot"}
-   
-Answer:
-
-.. code:: json
-
-   {
-    "result":"plot data",
-    "data":{
-      "filename":"/name/.tiv" ,
-      "header":[" "," "],
-      "queuelength":2349,
-      "images processed":2030,
-      "array":[[0],[0],[0]]
-      }
-   }
-
-Do All in Directory
-~~~~~~~~~~~~~~~~~~~
-
-This puts all existing files in the queue directory into the queue again
-
-Request:
+New
+~~~
 
 .. code::
+   
+   # saxsleash new cal.json data/AAA_integ.msk data/
 
-   {
-      "command":"do all in directory",
-      "argument":"directory"
-   }
-Answer:
+The ``new`` command loads a calibration and starts the queue to receive new files. It requires 3 arguments:
+
+1. Calibration file. as in :ref:`calib`.
+2. Mask file
+3. Directory where the image files are or are going to be.
+
+If there is a queue running this command will abort the other one and replace it,
+ as one server can have only one queue at a time.
+
+Plot
+~~~~
 
 .. code::
-
-   {
-      "result":"directory refilled queue",
-      "data":{
-         "queuelength":2349,
-         "images processed":2030
-         }
-   }
-
    
-   
-Error
+   # saxsleash plot
+
+The plot command will grab the next image and show a plot of the result in a window. 
+This command will be repeated until the user interrupts it with ``Ctrl-C``.
+
+Close
 ~~~~~
 
-In case of error in the Saxsdog Server it will return an error message:
+.. code::
+   
+   # saxsleash close
+
+Closes the queue. Which means, the server will process what is left in the queue but ignore all new files.
+
+Abort
+~~~~~
+.. code::
+   
+   # saxsleash abort
+
+The abort command will close the queue  and stop all data processing processes.
+ It will only wait for each process to finish the picture they started before. 
+ The remaining pictures in the queue are ignored.
+ 
+Stat
+~~~~
+.. code ::
+
+   # saxsleash stat
+
+Return basic statistics data about the processes.
+
+Read Dir
+~~~~~~~~
 
 .. code::
 
-   
-   {
-   "result":"Error",
-   "data":["Error message"]
-   }
-   
-   
+   # saxsleash readdir
+
+This command will put all the images in the configured directory into the queue.
+ This is usefull to reprocess pictures.
+
+The Saxsdog Network Protocol
+----------------------------
 
 .. toctree::
-    
-   SAXSLeashRequest
-   SAXSLeashResult
+   SAXSProtocol
    
    
    

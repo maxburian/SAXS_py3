@@ -9,43 +9,51 @@
 		"result": 
 		{
 			"type": "string",
-			"required":true
+			"required": true
 		},
 
 		"data": 
-		{	"required":true,
+		{
+			"required": true,
 			"type": "object",
+			"additionalProperties": false,
 			"properties": 
 			{
-				"queue length": 
+				"stat": 
 				{
-					"type": "integer"
-				},
-
-				"images processed": 
-				{
-					"type": "integer"
-				},
-
-				"queue id": 
-				{
-					"type": "string"
-				},
-
-				"file name": 
-				{
-					"type": "string"
-				},
-
-				"header": 
-				{
-					"type": "array",
-					"items": 
-					[
+					"additionalProperties": false,
+					"properties": 
+					{
+						"queue length": 
 						{
-							"type": "string"
+							"type": "integer"
+						},
+
+						"images processed": 
+						{
+							"type": "integer"
+						},
+
+						"time interval": 
+						{
+							"type": "number"
+						},
+
+						"frames per sec": 
+						{
+							"type": "number"
+						},
+
+						"pics": 
+						{
+							"type": "integer"
 						}
-					]
+					}
+				},
+
+				"filename": 
+				{
+					"type": "string"
 				},
 
 				"array": 

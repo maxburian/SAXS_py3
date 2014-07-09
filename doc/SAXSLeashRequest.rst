@@ -4,13 +4,7 @@
 
 .. role:: red
 
-.. _root:
-
-
-JSON Configuration File
-=======================
-
-.. _required:
+.. _root:.. _required:
 
  The ':red:`*`' signifies a required Field.
 
@@ -20,7 +14,7 @@ Schema for requests from Saxs Leash to Saxs Server
 :Type:
   object
 :Contains:
-  :ref:`command <command>`:red:`*`, :ref:`argument <argument>`:red:`*`
+  :ref:`command <command>`:red:`*`, :ref:`argument <argument>`
 :Required:
   True
 :JSON Path:
@@ -30,7 +24,7 @@ Example JSON:
 
 .. code:: json
 
-    {"command": "close","argument": {}}
+    {"command": "close"}
 
 .. _command:
 
@@ -40,7 +34,7 @@ command
 :Type:
   string
 :values:
-  ``[u'close', u'abort', u'new', u'plot', u'readdir']``
+  ``[u'close', u'abort', u'new', u'plot', u'readdir', u'stat']``
 
 :Required:
   True
@@ -63,7 +57,7 @@ argument
 :Contains:
   :ref:`queue id <queue id>`, :ref:`directory <directory>`, :ref:`calibration <calibration>`, :ref:`maskbin <maskbin>`
 :Required:
-  True
+  False
 :JSON Path:
   :ref:`# <root>` [':ref:`argument <argument>`']
 

@@ -32,14 +32,16 @@ class Server():
         self.comandosocket = context.socket(zmq.REP)
         
         parser = OptionParser()
-        usage = "usage: %prog [options]  command [arguments]"
+        usage = "usage: %prog [options]"
         parser = OptionParser(usage)
         parser.add_option("-p", "--port", dest="port",
-                      help="Port to offer command service", metavar="port",default="7777") 
+                      help="Port to offer command service. Default is 7777.", metavar="port",default="7777") 
         
         parser.add_option("-t", "--threads",type="int", dest="threads",
-                      help="Number of concurrent threads.",default=1)
-        parser.add_option('-f','--feeder',dest="feederurl",metavar="tcp://hostname:port",default="tcp://localhost:5556")
+                      help="Number of concurrent processes.",default=1)
+        parser.add_option('-f','--feeder',dest="feederurl",metavar="tcp://hostname:port",default="tcp://localhost:5556",
+                          help="Specify the URL of the new file event service (Saxsdog Feeder)"
+                          )
         (self.options, self.args) = parser.parse_args(args=None, values=None)
    
         print "server listenes at tcp://*:%s" % self.options.port
@@ -78,12 +80,16 @@ class Server():
              result=self.readdir(object)
          elif command=="plot":
              result=self.plot()
+         elif command=="stat":
+             result={"result":"stat","data":{"stat":self.stat()}}
          else:
              result={"result":"ErrorNotimplemented"}
          print command   
          
          return result
     def start_image_queue(self,object,attachment):
+        self.lasttime=time.time()
+        self.lastcount=0
         self.queue_abort()
         o=SAXS.AttrDict({"plotwindow":False,"threads":self.options.threads,"watch":True,"watchdir":False,"walkdirinthreads":False,
                          "silent":False,"plotwindow":False,"outdir":"out","inplace":False,"writesvg":False,
@@ -103,7 +109,9 @@ class Server():
         self.imagequeueprocess.start()
         self.feederproc=Process(target=subscribeToFileChanges,args=(self.imagequeue.picturequeue,self.options.feederurl))
         self.feederproc.start()
-        result={"result":"queue initiated ","data":{}}
+        self.lasttime=time.time()
+        self.lastcount=0
+        result={"result":"queue initiated ","data":{"stat":self.stat()}}
         return result
     def queue_abort(self):
         if self.imagequeue:
@@ -111,26 +119,41 @@ class Server():
             self.imagequeueprocess.terminate()
             self.imagequeueprocess.join(1)
         self.queue_close()
-        return {"result":"queue aborted","data":{}}
+        return {"result":"queue aborted","data":{"stat":self.stat()}}
     def queue_close(self):
         if self.feederproc:
             self.feederproc.terminate()
             self.feederproc.join(0)
-        return {"result":"queue closed","data":{}}
+        return {"result":"queue closed","data":{"stat":self.stat()}}
     def readdir(self,object):
         try:
             self.imagequeue.fillqueuewithexistingfiles()
         except AttributeError as msg:
             result={"result":"ValueError","data":{"Error":"Start Queue first"}}
             return result
-        return {"result":"queue restarted with all files","data":{}}
+        return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
         picture=self.imagequeue.picturequeue.get(timeout=5)
         (file,data)=self.imagequeue.procimage(picture,0)
-        result={"result":"plot","data":{"filename":file,"array":data.tolist()}}
+        result={"result":"plot","data":{"filename":file,"array":data.tolist(),"stat":self.stat()}}
         return result
-            
-if __name__ == '__main__':
+    def stat(self):
+        if self.imagequeue:
+            timep=time.time()-self.lasttime
+            self.lasttime=time.time()
+            newpic=self.imagequeue.allp.value-self.lastcount
+            self.lastcount=self.imagequeue.allp.value
+            return {"images processed":self.imagequeue.allp.value,
+             "queue length":self.imagequeue.picturequeue.qsize(),
+             "time interval":timep,
+             "pics":newpic,
+             "frames per sec":newpic/timep
+             }
+        else:
+            return{}
+def saxsdogserver():
      S=Server()
      S.start()
+if __name__ == '__main__':
+     saxsdogserver()
     

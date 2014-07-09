@@ -10,16 +10,31 @@ import SAXS
 import numpy as np
 import matplotlib.pyplot as plt
 from jsonschema import validate,ValidationError
+def validateResponse(message):
+    
+    try:    
+        resp=json.loads(message)
+        respschema=json.load((open(os.path.dirname(__file__)+os.sep+'LeashResultSchema.json')) )
+        validate(resp,respschema)
+    except ValidationError as e:
+        print "\nError in response data format:\n"
+        print e.message
+    
 def sendclose(options,arg,socket):
     request={"command":"close","argument":{}}
     socket.send_multipart([json.dumps(request)])
     message=socket.recv()
     print message
+    
+    validateResponse(message)
+   
 def sendabort(options,arg,socket):
     request={"command":"abort","argument":{}}
     socket.send_multipart([json.dumps(request)])
     message=socket.recv()
     print message
+    validateResponse(message)
+    
 def sendplot(options,arg,socket):
     
     
@@ -28,7 +43,7 @@ def sendplot(options,arg,socket):
         request={"command":"plot","argument":{}}
         socket.send_multipart([json.dumps(request)])
         message=socket.recv()
-        
+        validateResponse(message)
         object=json.loads(message)
         print object['data']['filename']
         data=np.array(object['data']['array']).transpose()
@@ -57,6 +72,16 @@ def sendreaddir(options,arg,socket):
     socket.send_multipart([json.dumps(request)])
     message=socket.recv()
     print message
+    validateResponse(message)
+   
+def sendstat(socket):
+    request={"command":"stat","argument":{}}
+    socket.send_multipart([json.dumps(request)])
+    message=socket.recv()
+    print message
+    validateResponse(message)
+   
+    
 def sendnew(options,arg,socket):
     request={ 
              "command":"new",
@@ -88,6 +113,7 @@ def sendnew(options,arg,socket):
         print "Error"
         print "new command:"
         print "usage: leash new clibrationfile.json maskfile.msk directory"
+        sys.exit()
     socket.send_multipart((json.dumps(request),
                            json.dumps({"filename":arg[2],"data":base64.b64encode(open(arg[2]).read())})
                            )
@@ -95,11 +121,13 @@ def sendnew(options,arg,socket):
     message=socket.recv()
     print message
     
+    validateResponse(message)
+   
 def initcommand(options, arg):
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
-    print "conecting:","tcp://localhost:%s" % options.port
-    socket.connect ("tcp://localhost:%s" % options.port)
+    print "conecting:",options.server
+    socket.connect (options.server)
     if arg[0]=="close":
         sendclose(options,arg,socket)
     elif arg[0]=="new":
@@ -110,8 +138,10 @@ def initcommand(options, arg):
         sendplot(options,arg,socket)
     elif arg[0]=="readdir":
         sendreaddir(options,arg,socket)
+    elif arg[0]=="stat":
+        sendstat(socket)
     else:
-        raise ArgumentError(arg[0])
+        raise ValueError(arg[0])
     
     
     
@@ -119,28 +149,38 @@ def initcommand(options, arg):
 def parsecommandline():
     
     parser = OptionParser()
-    usage = "usage: %prog [options]  command [arguments]"
+    usage = ("usage: %prog [options]  command [arguments]\n"+
+             "       comand may be one of ["+
+             '|'.join(
+                      json.load(open(os.path.dirname(__file__)+'/LeashRequestSchema.json')
+                        )["properties"]["command"]['enum']
+                      ) +"]"
+       )
     parser = OptionParser(usage)
-    parser.add_option("-p", "--port", dest="port",
-                      help="Port to offer image queue service", metavar="port",default="7777") 
+    parser.add_option("-S", "--server", dest="server",
+                      help='URL of "Saxsdog Server"', metavar="tcp://HOSTNAME:PORT",default="tcp://localhost:7777") 
     parser.add_option("-s", "--skip", dest="skip",
-                          help="Skip first N points."
+                          help="plot: Skip first N points."
                           , metavar="N",default=0 ,type="int")   
     parser.add_option("-k", "--clip", dest="clip",
-                      help="Clip last N points."
+                      help="plot: Clip last N points."
                       , metavar="N",default=1 ,type="int")
     parser.add_option("-x",'--xaxsistype',dest='xax',metavar='TYPE',default='linear',
-                       help="Select type of X axis scale, might be [linear|log|symlog]")
+                       help="plot: Select type of X axis scale, might be [linear|log|symlog]")
     parser.add_option("-y",'--yaxsistype',dest='yax',metavar='TYPE',default='linear',
-                       help="Select type of Y axis scale, might be [linear|log|symlog]")
+                       help="plot: Select type of Y axis scale, might be [linear|log|symlog]")
         
     
     
     (options, args) = parser.parse_args(args=None, values=None)
+    if len(args)<1:
+        parser.error("incorrect number of arguments")
+        
     return  (options, args)
-    
-if __name__ == '__main__':
+def saxsleash():
     (options,arg)=parsecommandline()
     initcommand(options,arg)
     
+if __name__ == '__main__':
+    saxsleash()
     

@@ -12,7 +12,7 @@ import numpy as np
 from multiprocessing import Queue ,Value
 from Queue import Empty
 import matplotlib.pyplot as plt
-from SAXS.tifffile import   TiffFile 
+#from SAXS.tifffile import   TiffFile 
 
 class imagequeue:
     """
@@ -69,23 +69,28 @@ class imagequeue:
             if not self.options.silent: print "[",threadid,"] open: ",picture 
             for i in range(max):
                 try:
-                    #image=misc.imread(picture)
-                    tif = TiffFile(picture)
-                    image = tif.asarray()
+                    image=misc.imread(picture)
+                    #tif = TiffFile(picture)
+                    #image = tif.asarray()
                     
                 except KeyboardInterrupt:
                     return
-                except Exception,msg:
-                    print msg
+                except IOError as e:
                     try:
                         print "cannot open ", picture, ", lets wait.", max-i ," s"
-                        time.sleep(1)
+                        print e.message,  sys.exc_info()[0]
+                        
+                        continue
                     except KeyboardInterrupt:
                         return
+                except:
+                    print "############"
+                    print   sys.exc_info()
                     continue
                 if image.shape==tuple(self.cal.config["Imagesize"]):
                     break
-                 
+                print "cannot open ", picture, ", lets wait.", max-i ," s"
+                time.sleep(1)
                     
             else:
                 print "image ", picture, " has wrong format"
@@ -149,13 +154,11 @@ class imagequeue:
         #start threads
         for threadid in range(1,self.options.threads):
             print "start proc [",threadid,"]"
-            try:
-                worker=Process(target=funcworker, args=(self,threadid))
-                worker.daemon=True
-                self.pool.append(worker)
-                worker.start()
-            except Exception, errtxt:
-                print errtxt
+           
+            worker=Process(target=funcworker, args=(self,threadid))
+            worker.daemon=True
+            self.pool.append(worker)
+            worker.start() 
             #self.processimage(picture,options)
         self.starttime=time.time() 
         if self.options.watch:
