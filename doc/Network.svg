@@ -35,10 +35,13 @@
     <polygon style="fill: #000000" points="-515.796,314.546 -504.617,314.442 -509.057,317.837 -509.005,323.427 "/>
     <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="-515.796,314.546 -504.617,314.442 -509.057,317.837 -509.005,323.427 "/>
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="-511.388" y="232.854">
-    <tspan x="-511.388" y="232.854">Subscribe</tspan>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="-520.638" y="234.536">
+    <tspan x="-520.638" y="234.536">subscribes</tspan>
   </text>
   <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="-468.86" y="334.506">
-    <tspan x="-468.86" y="334.506">Requests</tspan>
+    <tspan x="-468.86" y="334.506">requests</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="-457.919" y="223.36">
+    <tspan x="-457.919" y="223.36"></tspan>
   </text>
 </svg>

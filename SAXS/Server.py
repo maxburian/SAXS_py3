@@ -49,6 +49,9 @@ class Server():
         parser.add_option('-f','--feeder',dest="feederurl",metavar="tcp://hostname:port",default="tcp://localhost:5556",
                           help="Specify the URL of the new file event service (Saxsdog Feeder)"
                           )
+        
+        parser.add_option("-w", "--watch", dest="watchdir", default=False,action="store_true",
+                      help="Watch directory for changes, using file system events recursively for all sub directories.")
         (self.options, self.args) = parser.parse_args(args=None, values=None)
    
         print "server listenes at tcp://*:%s" % self.options.port
@@ -99,7 +102,7 @@ class Server():
         self.lastcount=0
         self.queue_abort()
         try:
-            o=SAXS.AttrDict({"plotwindow":False,"threads":self.options.threads,"watch":True,"watchdir":False,"walkdirinthreads":False,
+            o=SAXS.AttrDict({"plotwindow":False,"threads":self.options.threads,"watch":True,"watchdir":self.options.watchdir,"walkdirinthreads":False,
                              "silent":False,"plotwindow":False,"outdir":"out","inplace":False,"writesvg":False,
                              "writepng":False,"resume":False
                              })
