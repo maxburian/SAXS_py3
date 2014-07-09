@@ -79,7 +79,7 @@ class imagequeue:
                     try:
                         print "cannot open ", picture, ", lets wait.", max-i ," s"
                         print e.message,  sys.exc_info()[0]
-                        
+                        time.sleep(1)
                         continue
                     except KeyboardInterrupt:
                         return

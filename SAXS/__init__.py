@@ -1,8 +1,8 @@
-
+from Leash import saxsleash
 from saxsdoglib import saxsdog
 from ImageQueueLib import imagequeue
 from Server import  saxsdogserver
-from Leash import saxsleash
+
 from Feeder import startfeeder as saxsfeeder
 from converter  import convert
 from plotchi import plotchi,makeplot

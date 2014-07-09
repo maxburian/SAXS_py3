@@ -37,8 +37,8 @@ def saxsdogparseopt():
                       help="Less output.")
     parser.add_option("-n","--nowalk",dest="nowalk",default=False,action="store_true",
                       help="Don't scan for files already there, only watch file system if -w flag is given.")
-    parser.add_option("-D","--walkdirinthreads",dest="walkdirinthreads",default=True,action="store_false",
-                      help="Search all directories first. Don't start computing during search.")
+    parser.add_option("-D","--walkdirinthreads",dest="walkdirinthreads",default=False,action="store_true",
+                      help="Search all directories in parallel process.")
    
         
      

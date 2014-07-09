@@ -6,9 +6,13 @@ import os
 import json
 from optparse import OptionParser
 import base64
-import SAXS
+
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
+
+import SAXS
 from jsonschema import validate,ValidationError
 def validateResponse(message):
     
@@ -88,7 +92,7 @@ def sendnew(options,arg,socket):
              "argument":{
                          "directory":"directory of data to take into account",
                          "calibration":{},
-                         "maskbin":""
+                          
                          }
              }
     if len(arg)==4:
@@ -97,7 +101,7 @@ def sendnew(options,arg,socket):
             calschema=json.load(open(os.path.dirname(__file__)+'/schema.json'))
             validate(cal,calschema)
             request['argument']['calibration']=cal
-            request['argument']['maskbin']="#attachment"
+           
             request['argument']['directory']=arg[3]
         except (ValueError) as e:
             print e
@@ -115,7 +119,7 @@ def sendnew(options,arg,socket):
         print "usage: leash new clibrationfile.json maskfile.msk directory"
         sys.exit()
     socket.send_multipart((json.dumps(request),
-                           json.dumps({"filename":arg[2],"data":base64.b64encode(open(arg[2]).read())})
+                           json.dumps({"filename":arg[2],"data":base64.b64encode(open(arg[2],"rb").read())})
                            )
                           )
     message=socket.recv()
@@ -149,12 +153,11 @@ def initcommand(options, arg):
 def parsecommandline():
     
     parser = OptionParser()
-    usage = ("usage: %prog [options]  command [arguments]\n"+
-             "       comand may be one of ["+
+    usage = ("usage: %prog "+
              '|'.join(
                       json.load(open(os.path.dirname(__file__)+'/LeashRequestSchema.json')
                         )["properties"]["command"]['enum']
-                      ) +"]"
+                      ) +" [options] [arguments]"
        )
     parser = OptionParser(usage)
     parser.add_option("-S", "--server", dest="server",

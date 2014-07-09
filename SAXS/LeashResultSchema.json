@@ -18,7 +18,7 @@
 			"type": "object",
 			"additionalProperties": false,
 			"properties": 
-			{
+			{	"cal":{"type":"object"},
 				"stat": 
 				{
 					"additionalProperties": false,

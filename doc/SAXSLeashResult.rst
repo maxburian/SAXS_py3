@@ -52,7 +52,7 @@ data
 :Type:
   object
 :Contains:
-  :ref:`queue length <queue length>`, :ref:`images processed <images processed>`, :ref:`queue id <queue id>`, :ref:`file name <file name>`, :ref:`header <header>`, :ref:`array <array>`
+  :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
 :Required:
   True
 :JSON Path:
@@ -64,6 +64,28 @@ Example JSON:
 
     {"data": {}}
 
+.. _stat:
+
+stat
+--------------------
+
+:type:
+  object
+
+
+:Contains:
+  :ref:`queue length <queue length>`, :ref:`images processed <images processed>`, :ref:`time interval <time interval>`, :ref:`frames per sec <frames per sec>`, :ref:`pics <pics>`
+:Required:
+  False
+:JSON Path:
+  :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"stat": {}}
+
 .. _queue length:
 
 queue length
@@ -74,7 +96,7 @@ queue length
 :Required:
   False
 :JSON Path:
-  :ref:`# <root>` [':ref:`data <data>`'][':ref:`queue length <queue length>`']
+  :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`queue length <queue length>`']
 
 Example JSON: 
 
@@ -92,7 +114,7 @@ images processed
 :Required:
   False
 :JSON Path:
-  :ref:`# <root>` [':ref:`data <data>`'][':ref:`images processed <images processed>`']
+  :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`images processed <images processed>`']
 
 Example JSON: 
 
@@ -100,9 +122,63 @@ Example JSON:
 
     {"images processed": 0}
 
-.. _queue id:
+.. _time interval:
 
-queue id
+time interval
+--------------------
+
+:Type:
+  number
+:Required:
+  False
+:JSON Path:
+  :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`time interval <time interval>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"time interval": 0}
+
+.. _frames per sec:
+
+frames per sec
+--------------------
+
+:Type:
+  number
+:Required:
+  False
+:JSON Path:
+  :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`frames per sec <frames per sec>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"frames per sec": 0}
+
+.. _pics:
+
+pics
+--------------------
+
+:Type:
+  integer
+:Required:
+  False
+:JSON Path:
+  :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`pics <pics>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"pics": 0}
+
+.. _filename:
+
+filename
 --------------------
 
 :Type:
@@ -110,49 +186,13 @@ queue id
 :Required:
   False
 :JSON Path:
-  :ref:`# <root>` [':ref:`data <data>`'][':ref:`queue id <queue id>`']
+  :ref:`# <root>` [':ref:`data <data>`'][':ref:`filename <filename>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"queue id": ""}
-
-.. _file name:
-
-file name
---------------------
-
-:Type:
-  string
-:Required:
-  False
-:JSON Path:
-  :ref:`# <root>` [':ref:`data <data>`'][':ref:`file name <file name>`']
-
-Example JSON: 
-
-.. code:: json
-
-    {"file name": ""}
-
-.. _header:
-
-header
---------------------
-
-:Type:
-  array() items: string 
-:Required:
-  False
-:JSON Path:
-  :ref:`# <root>` [':ref:`data <data>`'][':ref:`header <header>`']
-
-Example JSON: 
-
-.. code:: json
-
-    {"header": null}
+    {"filename": ""}
 
 .. _array:
 

@@ -55,7 +55,7 @@ argument
 :Type:
   object
 :Contains:
-  :ref:`queue id <queue id>`, :ref:`directory <directory>`, :ref:`calibration <calibration>`, :ref:`maskbin <maskbin>`
+  :ref:`directory <directory>`, :ref:`calibration <calibration>`
 :Required:
   False
 :JSON Path:
@@ -66,27 +66,6 @@ Example JSON:
 .. code:: json
 
     {"argument": {}}
-
-.. _queue id:
-
-queue id
---------------------
-
-String that uniquely indentifies a queue
-
-
-:Type:
-  string
-:Required:
-  False
-:JSON Path:
-  :ref:`# <root>` [':ref:`argument <argument>`'][':ref:`queue id <queue id>`']
-
-Example JSON: 
-
-.. code:: json
-
-    {"queue id": ""}
 
 .. _directory:
 
@@ -131,25 +110,4 @@ Example JSON:
 .. code:: json
 
     {"calibration": {}}
-
-.. _maskbin:
-
-maskbin
---------------------
-
-the mask file binary encoded as base64
-
-
-:Type:
-  string
-:Required:
-  False
-:JSON Path:
-  :ref:`# <root>` [':ref:`argument <argument>`'][':ref:`maskbin <maskbin>`']
-
-Example JSON: 
-
-.. code:: json
-
-    {"maskbin": ""}
 

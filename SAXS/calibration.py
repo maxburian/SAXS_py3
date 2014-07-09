@@ -308,6 +308,7 @@ def openmask(config):
     if config['MaskFile'].endswith('.msk'):
         import bitarray
         maskb=bitarray.bitarray( endian='little')
+        print "file:", config['MaskFile']
         maskb.fromfile(open(config['MaskFile'])) 
         maskl=np.array(maskb.tolist())
         x,y=config['Imagesize']

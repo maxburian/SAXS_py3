@@ -27,12 +27,7 @@
 			"additionalProperties": false,
 			"required":false,
 			"properties": 
-			{
-				"queue id": 
-				{
-					"description": "String that uniquely indentifies a queue",
-					"type": "string"
-				},
+			{ 
 
 				"directory": 
 				{
@@ -51,12 +46,6 @@
 							"$ref": "schema.json#"
 						}
 					}
-				},
-
-				"maskbin": 
-				{
-					"description": "the mask file binary encoded as base64",
-					"type": "string"
 				}
 			}
 		}

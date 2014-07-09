@@ -7,7 +7,7 @@ import SAXS
 from jsonschema import validate,ValidationError
 import base64
 from optparse import OptionParser
-def subscribeToFileChanges(queue,url):
+def subscribeToFileChanges(queue,url,dir):
     port = "5556"
  
     # Socket to talk to server
@@ -20,7 +20,10 @@ def subscribeToFileChanges(queue,url):
        
         string = socket.recv()
         obj=json.loads(string)
-        queue.put(obj['argument'])
+        file= os.path.normpath(obj['argument'])
+        if file.startswith( os.path.normpath(dir)):
+            if file.endswith('.tif'):
+                queue.put(obj['argument'])
         
 
 
@@ -98,7 +101,8 @@ class Server():
         maskobj=json.loads(attachment[0])
         mskfilename=os.path.join(object['argument']['directory'],
                                  "saxsdogserver"+os.path.basename(maskobj['filename']))
-        mskfile=open(mskfilename,'w')
+        print mskfilename
+        mskfile=open(mskfilename,'wb')
         mskfile.write(base64.b64decode(maskobj['data']))
         mskfile.close()
         object['argument']['calibration']['MaskFile']=mskfilename
@@ -107,11 +111,11 @@ class Server():
                 o,[object['argument']['directory']])
         self.imagequeueprocess=Process(target=self.imagequeue.start)
         self.imagequeueprocess.start()
-        self.feederproc=Process(target=subscribeToFileChanges,args=(self.imagequeue.picturequeue,self.options.feederurl))
+        self.feederproc=Process(target=subscribeToFileChanges,args=(self.imagequeue.picturequeue,self.options.feederurl,object['argument']['directory']))
         self.feederproc.start()
         self.lasttime=time.time()
         self.lastcount=0
-        result={"result":"queue initiated ","data":{"stat":self.stat()}}
+        result={"result":"queue initiated ","data":{"cal":object['argument']['calibration']}}
         return result
     def queue_abort(self):
         if self.imagequeue:
@@ -147,7 +151,7 @@ class Server():
              "queue length":self.imagequeue.picturequeue.qsize(),
              "time interval":timep,
              "pics":newpic,
-             "frames per sec":newpic/timep
+             
              }
         else:
             return{}
