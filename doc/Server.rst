@@ -4,8 +4,7 @@ The Saxsdog Network
 
 The network may consist of 3 different services. The "Saxsdog Server" does the image processing. 
 The "Saxs Feeder" puplishes new file Events and the "Saxs Leash" controlls an configures the server. 
-The server should also be able to be manually started and stoped without the Leash.
-
+ 
 .. figure:: Network.*
 
 The Saxsdog Server

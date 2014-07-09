@@ -1,4 +1,4 @@
-from Leash import saxsleash
+from Leash import saxsleash,initcommand,validateResponse
 import Leash
 from saxsdoglib import saxsdog
 from ImageQueueLib import imagequeue

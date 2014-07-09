@@ -52,7 +52,7 @@ data
 :Type:
   object
 :Contains:
-  :ref:`cal <cal>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
+  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
 :Required:
   True
 :JSON Path:
@@ -81,6 +81,26 @@ Example JSON:
 .. code:: json
 
     {"cal": null}
+
+.. _Error:
+
+Error
+--------------------
+
+:type:
+  object
+
+
+:Required:
+  False
+:JSON Path:
+  :ref:`# <root>` [':ref:`data <data>`'][':ref:`Error <Error>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"Error": {}}
 
 .. _stat:
 
