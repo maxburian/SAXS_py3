@@ -15,7 +15,9 @@ import matplotlib.pyplot as plt
 import SAXS
 from jsonschema import validate,ValidationError
 def validateResponse(message):
-    
+    """
+    Validate response from saxsdog server against the schema.
+    """
     try:    
         resp=json.loads(message)
         respschema=json.load((open(os.path.dirname(__file__)+os.sep+'LeashResultSchema.json')) )
@@ -28,17 +30,15 @@ def sendclose(options,arg,socket):
     request={"command":"close","argument":{}}
     socket.send_multipart([json.dumps(request)])
     message=socket.recv()
-    print message
-    
     validateResponse(message)
-   
+    return message
 def sendabort(options,arg,socket):
     request={"command":"abort","argument":{}}
     socket.send_multipart([json.dumps(request)])
     message=socket.recv()
-    print message
-    validateResponse(message)
     
+    validateResponse(message)
+    return message
 def sendplot(options,arg,socket):
     
     
@@ -75,16 +75,17 @@ def sendreaddir(options,arg,socket):
      
     socket.send_multipart([json.dumps(request)])
     message=socket.recv()
-    print message
+    
     validateResponse(message)
+    return message
    
 def sendstat(socket):
     request={"command":"stat","argument":{}}
     socket.send_multipart([json.dumps(request)])
     message=socket.recv()
-    print message
+    
     validateResponse(message)
-   
+    return message
     
 def sendnew(options,arg,socket):
     request={ 
@@ -123,31 +124,35 @@ def sendnew(options,arg,socket):
                            )
                           )
     message=socket.recv()
-    print message
+    
     
     validateResponse(message)
+    return message
    
 def initcommand(options, arg):
+    """
+    Interface for issuing leash commands
+    """
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
     print "conecting:",options.server
     socket.connect (options.server)
     if arg[0]=="close":
-        sendclose(options,arg,socket)
+         result= sendclose(options,arg,socket)
     elif arg[0]=="new":
-        sendnew(options,arg,socket)
+         result= sendnew(options,arg,socket)
     elif arg[0]=="abort":
-        sendabort(options,arg,socket)
+         result= sendabort(options,arg,socket)
     elif arg[0]=="plot":
-        sendplot(options,arg,socket)
+         result= sendplot(options,arg,socket)
     elif arg[0]=="readdir":
-        sendreaddir(options,arg,socket)
+         result= sendreaddir(options,arg,socket)
     elif arg[0]=="stat":
-        sendstat(socket)
+         result= sendstat(socket)
     else:
         raise ValueError(arg[0])
     
-    
+    return result
     
                         
 def parsecommandline():
@@ -181,8 +186,19 @@ def parsecommandline():
         
     return  (options, args)
 def saxsleash():
+    """
+    The command line leash.
+    """
     (options,arg)=parsecommandline()
-    initcommand(options,arg)
+    
+    try:
+        result=initcommand(options,arg)
+    except ValueError:
+        print '"',arg[0],'" is not a valid command. See -h for help.'
+        sys.exit()
+    print json.dumps(json.loads(result),indent=4, separators=(',', ': '))
+    validateResponse(result)
+    
     
 if __name__ == '__main__':
     saxsleash()

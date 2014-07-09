@@ -6,6 +6,7 @@ import os
 import SAXS
 from jsonschema import validate,ValidationError
 import base64
+import traceback
 from optparse import OptionParser
 def subscribeToFileChanges(queue,url,dir):
     port = "5556"
@@ -29,6 +30,9 @@ def subscribeToFileChanges(queue,url,dir):
 
 
 class Server():
+    """
+    class to manage a saxsdog server
+    """
     def __init__(self):
         self.files=None
         context = zmq.Context()
@@ -66,7 +70,7 @@ class Server():
             except ValidationError as e:
                 result={"result":"ValidationError in request","data":e.message}
             except ValueError as e:
-                result={"result":"ValueError in request","data":e.message}
+                result={"result":"ValueError in request","data":{"Error":e.message}}
             self.comandosocket.send(json.dumps(result))
             
             
@@ -94,28 +98,33 @@ class Server():
         self.lasttime=time.time()
         self.lastcount=0
         self.queue_abort()
-        o=SAXS.AttrDict({"plotwindow":False,"threads":self.options.threads,"watch":True,"watchdir":False,"walkdirinthreads":False,
-                         "silent":False,"plotwindow":False,"outdir":"out","inplace":False,"writesvg":False,
-                         "writepng":False,"resume":False
-                         })
-        maskobj=json.loads(attachment[0])
-        mskfilename=os.path.join(object['argument']['directory'],
-                                 "saxsdogserver"+os.path.basename(maskobj['filename']))
-        print mskfilename
-        mskfile=open(mskfilename,'wb')
-        mskfile.write(base64.b64decode(maskobj['data']))
-        mskfile.close()
-        object['argument']['calibration']['MaskFile']=mskfilename
-        cal=SAXS.calibration(object['argument']['calibration'])
-        self.imagequeue=SAXS.imagequeue(cal,
-                o,[object['argument']['directory']])
-        self.imagequeueprocess=Process(target=self.imagequeue.start)
-        self.imagequeueprocess.start()
-        self.feederproc=Process(target=subscribeToFileChanges,args=(self.imagequeue.picturequeue,self.options.feederurl,object['argument']['directory']))
-        self.feederproc.start()
-        self.lasttime=time.time()
-        self.lastcount=0
-        result={"result":"queue initiated ","data":{"cal":object['argument']['calibration']}}
+        try:
+            o=SAXS.AttrDict({"plotwindow":False,"threads":self.options.threads,"watch":True,"watchdir":False,"walkdirinthreads":False,
+                             "silent":False,"plotwindow":False,"outdir":"out","inplace":False,"writesvg":False,
+                             "writepng":False,"resume":False
+                             })
+            maskobj=json.loads(attachment[0])
+            mskfilename=os.path.join(object['argument']['directory'],
+                                     "saxsdogserver"+os.path.basename(maskobj['filename']))
+            print mskfilename
+            mskfile=open(mskfilename,'wb')
+            mskfile.write(base64.b64decode(maskobj['data']))
+            mskfile.close()
+            object['argument']['calibration']['MaskFile']=mskfilename
+            cal=SAXS.calibration(object['argument']['calibration'])
+            self.imagequeue=SAXS.imagequeue(cal,
+                    o,[object['argument']['directory']])
+            self.imagequeueprocess=Process(target=self.imagequeue.start)
+            self.imagequeueprocess.start()
+            self.feederproc=Process(target=subscribeToFileChanges,args=(self.imagequeue.picturequeue,self.options.feederurl,object['argument']['directory']))
+            self.feederproc.start()
+            self.lasttime=time.time()
+            self.lastcount=0
+            result={"result":"queue initiated ","data":{"cal":object['argument']['calibration']}}
+        except IOError as (e,v,t): 
+            result={"result":"IOError","data":{"Error": e.message}}
+        except ValueError as e:
+            result={"result":"ValueError","data":{"Error": e.message}}
         return result
     def queue_abort(self):
         if self.imagequeue:
