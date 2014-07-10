@@ -60,6 +60,13 @@ class Server():
         
         parser.add_option("-w", "--watch", dest="watchdir", default=False,action="store_true",
                       help="Watch directory for changes, using file system events recursively for all sub directories.")
+      
+        
+        parser.add_option("-o", "--out", dest="outdir", default="out",
+                      help="Specify output directory. Default is './out'.")
+        parser.add_option("-i", "--inplace", dest="inplace", default=False,action="store_true",
+                      help="Files are written, in place, in the directory of the image.")
+   
         (self.options, self.args) = parser.parse_args(args=None, values=None)
         if self.options.feederurl=="":
             self.feederurl=conf["Feeder"]
@@ -133,7 +140,7 @@ class Server():
         self.queue_abort()
         try:
             o=SAXS.AttrDict({"plotwindow":False,"threads":self.options.threads,"watch":True,"watchdir":self.options.watchdir,"walkdirinthreads":False,
-                             "silent":False,"plotwindow":False,"outdir":"out","inplace":False,"writesvg":False,
+                             "silent":False,"plotwindow":False,"outdir":self.options.outdir,"inplace":self.options.inplace,"writesvg":False,
                              "writepng":False,"resume":False
                              })
             maskobj=json.loads(attachment[0])
