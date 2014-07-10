@@ -17,7 +17,7 @@ To create such a configuration, use the command:
 
 .. code::
    
-   # saxsnetconf
+   $ saxsnetconf
 
 It will ask for the Feeder 
 URL and for the Saxsdog Server URL. Then it will generate a random secret and save the file in
@@ -30,7 +30,7 @@ to the other computers you need to allow to conect to your network. The secret m
    {
       "ServerUrl":"tcp://hostname:port",
       "FeederUrl":"tcp://hostname:port",
-      "Secret":"kljjkb4b3kjbk4bkjdbkjsdni8893nslsdf8d7f89diweh"
+      "Secret":"Some large random string."
    }
 
 The authentication is done by hashing the request and the secret including a timestamp. 
@@ -59,7 +59,7 @@ New
 
 .. code::
    
-   # saxsleash new cal.json data/AAA_integ.msk data/
+   $ saxsleash new cal.json data/AAA_integ.msk data/
 
 The ``new`` command loads a calibration and starts the queue to receive new files. It requires 3 arguments:
 
@@ -75,7 +75,7 @@ Plot
 
 .. code::
    
-   # saxsleash plot
+   $ saxsleash plot
 
 The ``plot`` command will grab the next image and show a plot of the result in a window. 
 This command will be repeated until the user interrupts it with ``Ctrl-C``.
@@ -85,7 +85,7 @@ Close
 
 .. code::
    
-   # saxsleash close
+   $ saxsleash close
 
 Closes the queue. Which means, the server will process what is left in the queue but ignore all new files.
 
@@ -93,7 +93,7 @@ Abort
 ~~~~~
 .. code::
    
-   # saxsleash abort
+   $ saxsleash abort
 
 The ``abort`` command will close the queue  and stop all data processing processes.
 It will only wait for each process to finish the picture they started before. 
@@ -103,7 +103,7 @@ Stat
 ~~~~
 .. code ::
 
-   # saxsleash stat
+   $ saxsleash stat
 
 Return basic statistics data about the processes.
 
@@ -112,7 +112,7 @@ Read Dir
 
 .. code::
 
-   # saxsleash readdir
+   $ saxsleash readdir
 
 This command will put all the images in the configured directory into the queue.
 This is usefull to reprocess pictures.
