@@ -12,7 +12,7 @@ setup(
     name="SAXS",
     version="0",
     packages=["SAXS"],
-    package_data={"SAXS": ["schema.json","LeashRequestSchema.json","LeashResultSchema.json"]},
+    package_data={"SAXS": ["schema.json","LeashRequestSchema.json","LeashResultSchema.json","NetworkSchema.json"]},
     author="Christian Meisenbichler",
     author_email="chmberg@gmail.com",
     description="Tools for analysing SAXS Data",
@@ -25,7 +25,8 @@ setup(
             'plotchi=SAXS:plotchi',
             'saxsdogserver = SAXS:saxsdogserver',
             'saxsleash =SAXS:saxsleash',
-            'saxsfeeder=SAXS:saxsfeeder'
+            'saxsfeeder=SAXS:saxsfeeder',
+            "saxsnetconf=SAXS.gennetconf"
             ]
         
     }

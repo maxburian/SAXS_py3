@@ -8,7 +8,7 @@
 	{
 		"command": 
 		{
-			"required":true,
+			"required": true,
 			"type": "string",
 			"enum": 
 			[
@@ -25,10 +25,9 @@
 		{
 			"type": "object",
 			"additionalProperties": false,
-			"required":false,
+			"required": false,
 			"properties": 
-			{ 
-
+			{
 				"directory": 
 				{
 					"description": "Directory this queue is going to use. New files in other directories are going to be ignored.",
@@ -48,6 +47,18 @@
 					}
 				}
 			}
+		},
+
+		"sign": 
+		{
+			"type": "string",
+			"description": "Signature of request"
+		},
+
+		"time": 
+		{
+			"description":"time in seconds (pythons time.time())",
+			"type": "number"
 		}
 	}
 }

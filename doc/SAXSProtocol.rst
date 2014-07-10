@@ -50,7 +50,9 @@ Request:
 .. code:: json
 
     {
-       "command":"close queue",
+      "command":"close queue",
+      "time":1404979588.715198,
+      "sign":"Signature generated for request"
     }
 
 Answer:
@@ -76,7 +78,11 @@ Request:
 
 .. code:: json
 
-   {"command":"abort queue"}
+   {  
+      "command":"abort queue",
+      "time":1404979588.715198,
+      "sign":"Signature generated for request"
+   }
 
 Answer:
 
@@ -103,12 +109,14 @@ Request:
 .. code:: python
 
       {
-      "command":"new queue",
+         "command":"new queue",
          "argument":{
             "directory":"directory of data to take into account",
             "calibration":{},
             "maskbin":""
-         }
+         },
+      "time":1404979588.715198,
+      "sign":"Signature generated for request"
       }
    
 
@@ -131,7 +139,10 @@ Request:
 
 .. code:: json
 
-   {"command":"send plot"}
+   {  "command":"send plot",
+      "time":1404979588.715198,
+      "sign":"Signature generated for request"
+   }
    
 Answer:
 
@@ -163,6 +174,8 @@ Request:
 
    {
       "command":"readdir",
+      "time":1404979588.715198,
+      "sign":"Signature generated for request"
      
    }
 Answer:
@@ -189,7 +202,9 @@ Request:
 
 .. code::
 
-   {"command":"stat","argument":{}}
+   {  "command":"stat","argument":{},
+      "time":1404979588.715198,
+      "sign":"Signature generated for request"}
 
 Answer:
 

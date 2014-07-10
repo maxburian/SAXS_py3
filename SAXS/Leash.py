@@ -6,14 +6,24 @@ import os
 import json
 from optparse import OptionParser
 import base64
-
+import time
 import numpy as np
 import matplotlib
+import hashlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 import SAXS
 from jsonschema import validate,ValidationError
+def addauthentication(request,conf):
+    m=hashlib.sha512()
+    request['time']=time.time()
+    request['sign']=""
+    m.update(json.dumps(request, sort_keys=True))
+    m.update(conf['Secret']+"")
+    request['sign']=m.hexdigest()
+    print json.dumps(request)
+    return request
 def validateResponse(message):
     """
     Validate response from saxsdog server against the schema.
@@ -26,26 +36,26 @@ def validateResponse(message):
         print "\nError in response data format:\n"
         print e.message
     
-def sendclose(options,arg,socket):
+def sendclose(options,arg,socket,conf):
     request={"command":"close","argument":{}}
-    socket.send_multipart([json.dumps(request)])
+    socket.send_multipart([json.dumps(addauthentication(request,conf))])
     message=socket.recv()
     validateResponse(message)
     return message
-def sendabort(options,arg,socket):
+def sendabort(options,arg,socket,conf):
     request={"command":"abort","argument":{}}
-    socket.send_multipart([json.dumps(request)])
+    socket.send_multipart([json.dumps(addauthentication(request,conf))])
     message=socket.recv()
     
     validateResponse(message)
     return message
-def sendplot(options,arg,socket):
+def sendplot(options,arg,socket,conf):
     
     
     plt.ion()
     while True:
         request={"command":"plot","argument":{}}
-        socket.send_multipart([json.dumps(request)])
+        socket.send_multipart([json.dumps(addauthentication(request,conf))])
         message=socket.recv()
         validateResponse(message)
         object=json.loads(message)
@@ -70,24 +80,24 @@ def sendplot(options,arg,socket):
         plt.clf()
             
     
-def sendreaddir(options,arg,socket):
+def sendreaddir(options,arg,socket,conf):
     request={"command":"readdir","argument":{}}
      
-    socket.send_multipart([json.dumps(request)])
+    socket.send_multipart([json.dumps(addauthentication(request,conf))])
     message=socket.recv()
     
     validateResponse(message)
     return message
    
-def sendstat(socket):
+def sendstat(socket,conf):
     request={"command":"stat","argument":{}}
-    socket.send_multipart([json.dumps(request)])
+    socket.send_multipart([json.dumps(addauthentication(request,conf))])
     message=socket.recv()
     
     validateResponse(message)
     return message
     
-def sendnew(options,arg,socket):
+def sendnew(options,arg,socket,conf):
     request={ 
              "command":"new",
              "argument":{
@@ -119,7 +129,7 @@ def sendnew(options,arg,socket):
         print "new command:"
         print "usage: leash new clibrationfile.json maskfile.msk directory"
         sys.exit()
-    socket.send_multipart((json.dumps(request),
+    socket.send_multipart((json.dumps(addauthentication(request,conf)),
                            json.dumps({"filename":arg[2],"data":base64.b64encode(open(arg[2],"rb").read())})
                            )
                           )
@@ -129,26 +139,31 @@ def sendnew(options,arg,socket):
     validateResponse(message)
     return message
    
-def initcommand(options, arg):
+def initcommand(options, arg,conf):
     """
     Interface for issuing leash commands
     """
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
-    print "conecting:",options.server
-    socket.connect (options.server)
+    
+    if options.server=="":
+        server=conf['Server']
+    else:
+        server=options.server
+    print "conecting:",server
+    socket.connect (server)
     if arg[0]=="close":
-         result= sendclose(options,arg,socket)
+         result= sendclose(options,arg,socket,conf)
     elif arg[0]=="new":
-         result= sendnew(options,arg,socket)
+         result= sendnew(options,arg,socket,conf)
     elif arg[0]=="abort":
-         result= sendabort(options,arg,socket)
+         result= sendabort(options,arg,socket,conf)
     elif arg[0]=="plot":
-         result= sendplot(options,arg,socket)
+         result= sendplot(options,arg,socket,conf)
     elif arg[0]=="readdir":
-         result= sendreaddir(options,arg,socket)
+         result= sendreaddir(options,arg,socket,conf)
     elif arg[0]=="stat":
-         result= sendstat(socket)
+         result= sendstat(socket,conf)
     else:
         raise ValueError(arg[0])
     
@@ -166,7 +181,7 @@ def parsecommandline():
        )
     parser = OptionParser(usage)
     parser.add_option("-S", "--server", dest="server",
-                      help='URL of "Saxsdog Server"', metavar="tcp://HOSTNAME:PORT",default="tcp://localhost:7777") 
+                      help='URL of "Saxsdog Server"', metavar="tcp://HOSTNAME:PORT",default="") 
     parser.add_option("-s", "--skip", dest="skip",
                           help="plot: Skip first N points."
                           , metavar="N",default=0 ,type="int")   
@@ -178,21 +193,20 @@ def parsecommandline():
     parser.add_option("-y",'--yaxsistype',dest='yax',metavar='TYPE',default='linear',
                        help="plot: Select type of Y axis scale, might be [linear|log|symlog]")
         
-    
-    
     (options, args) = parser.parse_args(args=None, values=None)
     if len(args)<1:
         parser.error("incorrect number of arguments")
-        
+    
     return  (options, args)
 def saxsleash():
     """
     The command line leash.
     """
     (options,arg)=parsecommandline()
-    
+    conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+    validate(conf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
     try:
-        result=initcommand(options,arg)
+        result=initcommand(options,arg,conf)
     except ValueError:
         print '"',arg[0],'" is not a valid command. See -h for help.'
         sys.exit()

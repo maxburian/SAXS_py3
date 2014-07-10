@@ -7,6 +7,35 @@ The "Saxs Feeder" puplishes new file Events and the "Saxs Leash" controlls an co
  
 .. figure:: Network.*
 
+The SAXSNetwork configuration
+-----------------------------
+The Saxsdog Server and the Saxsleash have a common configuration file, which tells them how to connect
+with each other and which also includes a shared secred for authentication. 
+If you want two computers to connect via the Saxsleash you need to have a copy of the file on each of them.
+
+To create such a configuration, use the command:
+
+.. code::
+   
+   # saxsnetconf
+
+It will ask for the Feeder 
+URL and for the Saxsdog Server URL. Then it will generate a random secret and save the file in
+file in ``$Home/.saxdognetwork``.  You will have to copy the file 
+to the other computers you need to allow to conect to your network. The secret must be the same on all of them.
+
+
+.. code ::
+
+   {
+      "ServerUrl":"tcp://hostname:port",
+      "FeederUrl":"tcp://hostname:port",
+      "Secret":"kljjkb4b3kjbk4bkjdbkjsdni8893nslsdf8d7f89diweh"
+   }
+
+The authentication is done by hashing the request and the secret including a timestamp. 
+The timestamp is checked if it lies within 900 seconds of the servers time.
+
 The Saxsdog Server
 ------------------
 
@@ -48,7 +77,7 @@ Plot
    
    # saxsleash plot
 
-The plot command will grab the next image and show a plot of the result in a window. 
+The ``plot`` command will grab the next image and show a plot of the result in a window. 
 This command will be repeated until the user interrupts it with ``Ctrl-C``.
 
 Close
@@ -66,7 +95,7 @@ Abort
    
    # saxsleash abort
 
-The abort command will close the queue  and stop all data processing processes.
+The ``abort`` command will close the queue  and stop all data processing processes.
 It will only wait for each process to finish the picture they started before. 
 The remaining pictures in the queue are ignored.
  
@@ -87,6 +116,8 @@ Read Dir
 
 This command will put all the images in the configured directory into the queue.
 This is usefull to reprocess pictures.
+
+
 
 The Saxsdog Network Protocol
 ----------------------------

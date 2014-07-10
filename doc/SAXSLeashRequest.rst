@@ -14,7 +14,7 @@ Schema for requests from Saxs Leash to Saxs Server
 :Type:
   object
 :Contains:
-  :ref:`command <command>`:red:`*`, :ref:`argument <argument>`
+  :ref:`command <command>`:red:`*`, :ref:`argument <argument>`, :ref:`sign <sign>`, :ref:`time <time>`
 :Required:
   True
 :JSON Path:
@@ -110,4 +110,46 @@ Example JSON:
 .. code:: json
 
     {"calibration": {}}
+
+.. _sign:
+
+sign
+--------------------
+
+Signature of request
+
+
+:Type:
+  string
+:Required:
+  False
+:JSON Path:
+  :ref:`# <root>` [':ref:`sign <sign>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"sign": ""}
+
+.. _time:
+
+time
+--------------------
+
+time in seconds (pythons time.time())
+
+
+:Type:
+  number
+:Required:
+  False
+:JSON Path:
+  :ref:`# <root>` [':ref:`time <time>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"time": 0}
 

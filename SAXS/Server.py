@@ -8,6 +8,14 @@ from jsonschema import validate,ValidationError
 import base64
 import traceback
 from optparse import OptionParser
+import hashlib
+class AuthenticationError(Exception):
+     def __init__(self, value):
+         self.message = value
+         self.value=value
+     def __str__(self):
+        return repr(self.message)
+
 def subscribeToFileChanges(queue,url,dir):
     port = "5556"
  
@@ -33,7 +41,7 @@ class Server():
     """
     class to manage a saxsdog server
     """
-    def __init__(self):
+    def __init__(self,conf):
         self.files=None
         context = zmq.Context()
         self.comandosocket = context.socket(zmq.REP)
@@ -42,20 +50,24 @@ class Server():
         usage = "usage: %prog [options]"
         parser = OptionParser(usage)
         parser.add_option("-p", "--port", dest="port",
-                      help="Port to offer command service. Default is 7777.", metavar="port",default="7777") 
+                      help="Port to offer command service. Default is 7777.", metavar="port",default="") 
         
         parser.add_option("-t", "--threads",type="int", dest="threads",
                       help="Number of concurrent processes.",default=1)
-        parser.add_option('-f','--feeder',dest="feederurl",metavar="tcp://hostname:port",default="tcp://localhost:5556",
+        parser.add_option('-f','--feeder',dest="feederurl",metavar="tcp://hostname:port",default="",
                           help="Specify the URL of the new file event service (Saxsdog Feeder)"
                           )
         
         parser.add_option("-w", "--watch", dest="watchdir", default=False,action="store_true",
                       help="Watch directory for changes, using file system events recursively for all sub directories.")
         (self.options, self.args) = parser.parse_args(args=None, values=None)
-   
-        print "server listenes at tcp://*:%s" % self.options.port
-        self.comandosocket.bind("tcp://*:%s" % self.options.port)
+        if self.options.feederurl=="":
+            self.feederurl=conf["Feeder"]
+        if self.options.port=="":
+            serverport=conf['Server'].split(':')[-1]
+        self.secret=conf['Secret']
+        print "server listenes at tcp://*:%s" % serverport
+        self.comandosocket.bind("tcp://*:%s" % serverport)
         self.commandschema=json.load(open(os.path.dirname(__file__)+'/LeashRequestSchema.json'))
         self.imagequeue=None
         self.feederproc=None
@@ -68,15 +80,33 @@ class Server():
                  
                 object=json.loads(message[0])
                 validate(object,self.commandschema)
+                self.authenticate(object)
                 attachment=message[1:]
                 result=self.commandhandler(object,attachment)
             except ValidationError as e:
                 result={"result":"ValidationError in request","data":e.message}
             except ValueError as e:
                 result={"result":"ValueError in request","data":{"Error":e.message}}
+            except  AuthenticationError as e:
+                 result={"result":"AuthenticationError in request","data":{"Error":e.message}}
             self.comandosocket.send(json.dumps(result))
             
+    def authenticate(self,data):
+        sign=data['sign']
+        data["sign"]=""
+        m=hashlib.sha512()
+        now=time.time() 
+        print json.dumps(data)
+        m.update(json.dumps(data, sort_keys=True))
+        m.update(self.secret)
+        if not abs(data["time"]-now)<900:
+            raise AuthenticationError("Untimely request.")
+        if not sign==m.hexdigest():
+            raise AuthenticationError("Wrong signature.")
+        
+                
             
+    
     def commandhandler(self,object,attachment):
          command=object['command']
          if command=='new':
@@ -119,7 +149,7 @@ class Server():
                     o,[object['argument']['directory']])
             self.imagequeueprocess=Process(target=self.imagequeue.start)
             self.imagequeueprocess.start()
-            self.feederproc=Process(target=subscribeToFileChanges,args=(self.imagequeue.picturequeue,self.options.feederurl,object['argument']['directory']))
+            self.feederproc=Process(target=subscribeToFileChanges,args=(self.imagequeue.picturequeue,self.feederurl,object['argument']['directory']))
             self.feederproc.start()
             self.lasttime=time.time()
             self.lastcount=0
@@ -168,7 +198,9 @@ class Server():
         else:
             return{}
 def saxsdogserver():
-     S=Server()
+     serverconf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+     validate(serverconf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
+     S=Server(serverconf)
      S.start()
 if __name__ == '__main__':
      saxsdogserver()

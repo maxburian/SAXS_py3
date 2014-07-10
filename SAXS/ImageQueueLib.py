@@ -58,6 +58,7 @@ class imagequeue:
             self.dirwalker.start()
         else:
             self.dirwalker=Process()
+            self.dirwalker.start()
             filler(self.picturequeue,self.args[0])
         
     def procimage(self,picture,threadid):
@@ -169,6 +170,7 @@ class imagequeue:
         #We let the master process do some work because its useful for matplotlib.
         if not self.dirwalker:
             self.dirwalker=Process()
+            self.dirwalker.start()
         try:
             while (not self.picturequeue.empty()) or self.dirwalker.is_alive() or self.options.watch: 
                     try:

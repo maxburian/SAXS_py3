@@ -1,0 +1,9 @@
+{
+"type":"object",
+"additionalProperties": false,
+"properties":{
+"Server":{"type":"string","pattern": "^tcp://\\w+:\\d+"},
+"Feeder":{"type":"string","pattern": "^tcp://\\w+:\\d+"},
+"Secret":{"type":"string"}
+}
+}
