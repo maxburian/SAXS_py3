@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'LeashMW.ui'
 #
-# Created: Mon Jul 14 10:16:13 2014
+# Created: Mon Jul 14 14:39:16 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -39,9 +39,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.setObjectName(_fromUtf8("verticalLayout_7"))
         self.gridLayout = QtGui.QGridLayout()
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
-        self.commandLinkButtonStartQueue = QtGui.QCommandLinkButton(self.tab_Setup)
-        self.commandLinkButtonStartQueue.setObjectName(_fromUtf8("commandLinkButtonStartQueue"))
-        self.gridLayout.addWidget(self.commandLinkButtonStartQueue, 4, 0, 1, 1)
         self.groupBox = QtGui.QGroupBox(self.tab_Setup)
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
         self.horizontalLayout_5 = QtGui.QHBoxLayout(self.groupBox)
@@ -115,6 +112,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.addLayout(self.gridLayout_2)
         self.gridLayout.addWidget(self.groupBox_2, 3, 0, 1, 1)
         self.verticalLayout_7.addLayout(self.gridLayout)
+        self.pushButtonnew = QtGui.QPushButton(self.tab_Setup)
+        self.pushButtonnew.setObjectName(_fromUtf8("pushButtonnew"))
+        self.verticalLayout_7.addWidget(self.pushButtonnew)
         self.tabWidget.addTab(self.tab_Setup, _fromUtf8(""))
         self.tab_Plot = QtGui.QWidget()
         self.tab_Plot.setObjectName(_fromUtf8("tab_Plot"))
@@ -221,10 +221,13 @@ class Ui_MainWindow(object):
         self.actionSave_Calibration.setObjectName(_fromUtf8("actionSave_Calibration"))
         self.actionRecent_Files = QtGui.QAction(MainWindow)
         self.actionRecent_Files.setObjectName(_fromUtf8("actionRecent_Files"))
+        self.actionSave_Calibration_as = QtGui.QAction(MainWindow)
+        self.actionSave_Calibration_as.setObjectName(_fromUtf8("actionSave_Calibration_as"))
         self.menuSAXS_Leash.addAction(self.actionLoad_Calibration)
         self.menuSAXS_Leash.addAction(self.actionSave_Calibration)
         self.menuSAXS_Leash.addAction(self.actionImport)
         self.menuSAXS_Leash.addAction(self.actionRecent_Files)
+        self.menuSAXS_Leash.addAction(self.actionSave_Calibration_as)
         self.menuQueue.addAction(self.actionClose_Queue)
         self.menuQueue.addAction(self.actionAbort_Queue)
         self.menuBar.addAction(self.menuSAXS_Leash.menuAction())
@@ -237,15 +240,15 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Saxs Leash", None))
-        self.commandLinkButtonStartQueue.setText(_translate("MainWindow", "Start Prosessing Queue With this Setup", None))
         self.groupBox.setTitle(_translate("MainWindow", "Setup", None))
         self.treeWidgetCal.headerItem().setText(1, _translate("MainWindow", "Value", None))
+        self.treeWidgetCal.headerItem().setText(2, _translate("MainWindow", "Units", None))
         __sortingEnabled = self.treeWidgetCal.isSortingEnabled()
         self.treeWidgetCal.setSortingEnabled(False)
         self.treeWidgetCal.topLevelItem(0).setText(0, _translate("MainWindow", "Wavelength:", None))
         self.treeWidgetCal.topLevelItem(0).setText(1, _translate("MainWindow", "jjbf", None))
         self.treeWidgetCal.topLevelItem(0).child(0).setText(0, _translate("MainWindow", "1.5", None))
-        self.treeWidgetCal.topLevelItem(1).setText(0, _translate("MainWindow", "BeamCenter", None))
+        self.treeWidgetCal.topLevelItem(1).setText(0, _translate("MainWindow", "sdas", None))
         self.treeWidgetCal.topLevelItem(1).child(0).setText(0, _translate("MainWindow", "293", None))
         self.treeWidgetCal.topLevelItem(1).child(1).setText(0, _translate("MainWindow", "343", None))
         self.treeWidgetCal.topLevelItem(2).setText(0, _translate("MainWindow", "Tilt", None))
@@ -261,6 +264,7 @@ class Ui_MainWindow(object):
         self.label_userdir.setText(_translate("MainWindow", "User:", None))
         self.label_Setupdir.setText(_translate("MainWindow", "Setup:", None))
         self.label_Exdir.setText(_translate("MainWindow", "Experiment:    ", None))
+        self.pushButtonnew.setText(_translate("MainWindow", "Start Server Queue with this Calibration", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_Setup), _translate("MainWindow", "Setup", None))
         self.groupBox_6.setTitle(_translate("MainWindow", "Diffraction Curve", None))
         self.label_Rate_2.setText(_translate("MainWindow", "Rate:", None))
@@ -286,4 +290,5 @@ class Ui_MainWindow(object):
         self.actionAbort_Queue.setText(_translate("MainWindow", "Abort Queue", None))
         self.actionSave_Calibration.setText(_translate("MainWindow", "&Save Calibration", None))
         self.actionRecent_Files.setText(_translate("MainWindow", "Recent Files", None))
+        self.actionSave_Calibration_as.setText(_translate("MainWindow", "Save Calibration &as", None))
 

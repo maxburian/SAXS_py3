@@ -11,7 +11,7 @@ def startfeeder():
     usage = "usage: %prog [options]  "
     parser = OptionParser(usage)
     parser.add_option("-p", "--port", dest="port",
-                      help="Port to offer file changes service", metavar="port",default="5556")
+                      help="Port to offer file changes service", metavar="port",default="")
     parser.add_option("-d", "--dir", dest="dir",
                       help="Directory to monitor", metavar="dir",default=".")
     (options, args) = parser.parse_args(args=None, values=None)
@@ -20,8 +20,13 @@ def startfeeder():
     
     context = zmq.Context()
     socket = context.socket(zmq.PUB)
-    print "conecting:","tcp://*:%s" % options.port
-    socket.bind("tcp://*:%s" % options.port)
+    if options.port=="":
+        conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork"))) 
+        port=conf['Feeder'].split(':')[-1]
+    else:
+        port=options.port
+    print "conecting:","tcp://*:%s" % port
+    socket.bind("tcp://*:%s" % port)
     
     fileslist=[]
     for path, subdirs, files in os.walk(options.dir):

@@ -15,7 +15,9 @@
 				"close",
 				"abort",
 				"new",
+				"get",
 				"plot",
+				"plotdata",
 				"readdir",
 				"stat"
 			]

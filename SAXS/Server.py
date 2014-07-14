@@ -29,8 +29,9 @@ def subscribeToFileChanges(queue,url,dir):
        
         string = socket.recv()
         obj=json.loads(string)
-        file= os.path.normpath(obj['argument'])
-        if file.startswith( os.path.normpath(dir)):
+        file=os.path.abspath(os.path.normpath(obj['argument']))
+       
+        if file.startswith( os.path.abspath(os.path.normpath(dir))):
             if file.endswith('.tif'):
                 queue.put(obj['argument'])
         

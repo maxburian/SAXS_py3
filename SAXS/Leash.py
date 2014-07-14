@@ -22,7 +22,6 @@ def addauthentication(request,conf):
     m.update(json.dumps(request, sort_keys=True))
     m.update(conf['Secret']+"")
     request['sign']=m.hexdigest()
-    print json.dumps(request)
     return request
 def validateResponse(message):
     """
@@ -49,16 +48,18 @@ def sendabort(options,arg,socket,conf):
     
     validateResponse(message)
     return message
+def sendplotdata(options,arg,socket,conf):
+    request={"command":"plot","argument":{}}
+    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    message=socket.recv()
+    validateResponse(message)
+    return message
 def sendplot(options,arg,socket,conf):
     
     
     plt.ion()
     while True:
-        request={"command":"plot","argument":{}}
-        socket.send_multipart([json.dumps(addauthentication(request,conf))])
-        message=socket.recv()
-        validateResponse(message)
-        object=json.loads(message)
+        object=json.loads(sendplotdata(options,arg,socket,conf))
         print object['data']['filename']
         data=np.array(object['data']['array']).transpose()
       
@@ -160,6 +161,8 @@ def initcommand(options, arg,conf):
          result= sendabort(options,arg,socket,conf)
     elif arg[0]=="plot":
          result= sendplot(options,arg,socket,conf)
+    elif arg[0]=="plotdata":
+         result=sendplotdata(options,arg,socket,conf)
     elif arg[0]=="readdir":
          result= sendreaddir(options,arg,socket,conf)
     elif arg[0]=="stat":
