@@ -23,7 +23,7 @@ def parseopt():
                           help="Skip first N points."
                           , metavar="N",default=0 ,type="int")   
         parser.add_option("-k", "--clip", dest="clip",
-                          help="Clip last N points."
+                          help="Clip last N points." 
                           , metavar="N",default=1 ,type="int")
         parser.add_option("-x",'--xaxsistype',dest='xax',metavar='TYPE',default='linear',
                            help="Select type of X axis scale, might be [linear|log|symlog]")

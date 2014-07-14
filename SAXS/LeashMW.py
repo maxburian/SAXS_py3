@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'LeashMW.ui'
 #
-# Created: Sat Jul 12 00:47:20 2014
+# Created: Mon Jul 14 10:16:13 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -52,6 +52,8 @@ class Ui_MainWindow(object):
         self.treeWidgetCal.setObjectName(_fromUtf8("treeWidgetCal"))
         self.treeWidgetCal.headerItem().setText(0, _fromUtf8("Calibration"))
         item_0 = QtGui.QTreeWidgetItem(self.treeWidgetCal)
+        item_0.setToolTip(0, _fromUtf8(""))
+        item_0.setFlags(QtCore.Qt.ItemIsSelectable|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled|QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
         item_1 = QtGui.QTreeWidgetItem(item_0)
         item_1.setFlags(QtCore.Qt.ItemIsSelectable|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled|QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
         item_0 = QtGui.QTreeWidgetItem(self.treeWidgetCal)
@@ -72,9 +74,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.pushButton_3 = QtGui.QPushButton(self.groupBox_5)
-        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        self.horizontalLayout.addWidget(self.pushButton_3)
+        self.pushButtonLoadMask = QtGui.QPushButton(self.groupBox_5)
+        self.pushButtonLoadMask.setObjectName(_fromUtf8("pushButtonLoadMask"))
+        self.horizontalLayout.addWidget(self.pushButtonLoadMask)
         self.toolButtonRescale = QtGui.QToolButton(self.groupBox_5)
         self.toolButtonRescale.setObjectName(_fromUtf8("toolButtonRescale"))
         self.horizontalLayout.addWidget(self.toolButtonRescale)
@@ -237,9 +239,11 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "Saxs Leash", None))
         self.commandLinkButtonStartQueue.setText(_translate("MainWindow", "Start Prosessing Queue With this Setup", None))
         self.groupBox.setTitle(_translate("MainWindow", "Setup", None))
+        self.treeWidgetCal.headerItem().setText(1, _translate("MainWindow", "Value", None))
         __sortingEnabled = self.treeWidgetCal.isSortingEnabled()
         self.treeWidgetCal.setSortingEnabled(False)
         self.treeWidgetCal.topLevelItem(0).setText(0, _translate("MainWindow", "Wavelength:", None))
+        self.treeWidgetCal.topLevelItem(0).setText(1, _translate("MainWindow", "jjbf", None))
         self.treeWidgetCal.topLevelItem(0).child(0).setText(0, _translate("MainWindow", "1.5", None))
         self.treeWidgetCal.topLevelItem(1).setText(0, _translate("MainWindow", "BeamCenter", None))
         self.treeWidgetCal.topLevelItem(1).child(0).setText(0, _translate("MainWindow", "293", None))
@@ -251,7 +255,7 @@ class Ui_MainWindow(object):
         self.treeWidgetCal.topLevelItem(2).child(1).child(0).setText(0, _translate("MainWindow", "34", None))
         self.treeWidgetCal.setSortingEnabled(__sortingEnabled)
         self.groupBox_5.setTitle(_translate("MainWindow", "Maskfile", None))
-        self.pushButton_3.setText(_translate("MainWindow", "Load Maskfile", None))
+        self.pushButtonLoadMask.setText(_translate("MainWindow", "Load Maskfile", None))
         self.toolButtonRescale.setText(_translate("MainWindow", "Rescale", None))
         self.groupBox_2.setTitle(_translate("MainWindow", "Directory", None))
         self.label_userdir.setText(_translate("MainWindow", "User:", None))
