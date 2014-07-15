@@ -277,10 +277,12 @@ class LeashUI(QMainWindow):
         self.loadmask()
         self.plotworker.start()
         
-if __name__ == "__main__":
+def LeashGUI():
     app=QApplication(sys.argv)
     form=LeashUI()
     form.show()
     app.exec_()
     form.cleanup()
+if __name__ == "__main__":
+    LeashGUI()
         
