@@ -37,7 +37,7 @@ class LeashUI(QMainWindow):
         self.data.queueon=False
         self.ui.resize(1000,800)
         self.plotthread=QThread(parent=self)
-        
+        self.serveronline=False
         self.connect(self.ui.actionLoad_Calibration, SIGNAL("triggered()"),self.newFile)
         self.connect(self.ui.actionSave_Calibration,SIGNAL('triggered()'),self.safecalibration)
         self.connect(self.ui.actionSave_Calibration_as,SIGNAL('triggered()'),self.safecalibrationas)
@@ -247,7 +247,17 @@ class LeashUI(QMainWindow):
         self.connect(self.reconthread,SIGNAL('error(QString)'),self.errmsg.showMessage)
         self.connect(self.reconthread,SIGNAL('connected(QString)'),self.buildcalfromserver)
         self.reconthread.start()
+        self.timer=QTimer()
+        self.timer.start(1000)
+        self.connect(self.timer,SIGNAL('timeout()'),self.connectiontimeout)
+    def connectiontimeout(self):
+        self.timer.stop()
+        if self.serveronline:
+            pass
+        else:
+            self.errmsg.showMessage("Connection to server failed")
     def buildcalfromserver(self,result):
+        self.serveronline=True
         print  unicode(result)
         try:
             cal=json.loads(unicode(result))['data']['cal']
