@@ -258,24 +258,27 @@ class LeashUI(QMainWindow):
             self.errmsg.showMessage("Connection to server failed")
     def buildcalfromserver(self,result):
         self.serveronline=True
-        print  unicode(result)
         try:
-            cal=json.loads(unicode(result))['data']['cal']
-        except KeyError as e:
-            self.errmsg.showMessage("Server has no calibration.")
-            return
-        self.ui.treeWidgetCal.clear()
-        try:
-            validate(cal,self.data.calschema)
-        except ValidationError as e:
-            dialog=QErrorMessage(self)
-            dialog.showMessage(e.message)
+            validate(self.data.cal,self.data.calschema)
+        except:
+            print  unicode(result)
+            try:
+                cal=json.loads(unicode(result))['data']['cal']
+            except KeyError as e:
+                self.errmsg.showMessage("Server has no calibration.")
+                return
+            self.ui.treeWidgetCal.clear()
+            try:
+                validate(cal,self.data.calschema)
+            except ValidationError as e:
+                dialog=QErrorMessage(self)
+                dialog.showMessage(e.message)
+                self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
+                return
+            self.data.cal=cal
             self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
-            return
-        self.data.cal=cal
-        self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
-        self.loadmask()
-        self.plotworker.start()
+            self.loadmask()
+            self.plotworker.start()
         
 def LeashGUI():
     app=QApplication(sys.argv)
