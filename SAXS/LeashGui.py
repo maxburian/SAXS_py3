@@ -1,9 +1,12 @@
 import sys,os
 import json
 
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+ 
 
 import matplotlib.pyplot as plt
-from threading import Thread
+from multiprocessing import Process
 from jsonschema import validate,ValidationError
 from scipy.misc.pilutil import toimage
 from PIL.ImageQt import ImageQt
@@ -16,7 +19,7 @@ import SAXS
 from schematools import schematodefault
 from Leash import initcommand
 from plotthread import plotthread
-
+from reconnectqthread import reconnecthread 
 def nparrayToQPixmap(arrayImage):
     pilImage = toimage(arrayImage)
     
@@ -46,11 +49,23 @@ class LeashUI(QMainWindow):
         self.connect(self.ui.pushButtonLoadMask, SIGNAL("clicked()"), self.pickmask)
         self.ui.lineEditUserDir.setText(".")
         self.connect(self.ui.pushButtonnew, SIGNAL('clicked()'),self.commandnew)
-        
+        self.figure = plt.figure()
+        self.figurehist=plt.figure()
+        self.plotcanvas= FigureCanvas(self.figure)
+        self.canvashist= FigureCanvas(self.figurehist)
+        self.ui.verticalLayout_3.addWidget(self.plotcanvas)
+        self.ui.verticalLayout_5.addWidget( self.canvashist)
+        self.plotworker = plotthread(self)
+        self.data.queueon=True
+        self.connect(self.plotworker, SIGNAL('update(QString)'),self.plotcanvas.draw)   
+        self.connect(self.plotworker, SIGNAL('update(QString)'),self.statupdate)
+        self.errmsg=QErrorMessage(self)
+       
         QShortcut(QKeySequence("Ctrl+Q"), self, self.close)
         QShortcut(QKeySequence("Ctrl+O"), self, self.newFile)
         QShortcut(QKeySequence("Ctrl+S"),self,self.safecalibration)
-        
+        self.connect(self.ui,SIGNAL("reconnect()"),self.reconnect)
+        self.emit(SIGNAL('reconnect()'))
     def newFile(self):
         filename=unicode( QFileDialog.getOpenFileName(self,directory="../test"))
         if filename=="":
@@ -211,22 +226,46 @@ class LeashUI(QMainWindow):
             result=initcommand(o,argu,conf)
             print result
             self.ui.pushButtonnew.setText("Restart Queue with Changed Calibration")
-            self.data.queueon=True
-             
-            self.plotworker = plotthread(parent=None)
-            self.plotworker.moveToThread(self.plotthread)
-            self.plotthread.start()
-            
+            self.plotworker.start()
             os.remove(filename)
         else:
             dialog=QErrorMessage(self)
             dialog.showMessage("Load file first")
    
                     
-             
+    def statupdate(self):
+        
+        self.ui.lcdNumberFiles.display(self.data.stat['images processed'])
+        self.ui.lcdNumberRate.display(self.data.stat['pics']/self.data.stat['time interval'])
+        self.canvashist.draw()
     def cleanup(self):
         print "cleanup"
         self.plotthreadgo=False
+    def reconnect(self):
+        self.data.result="{}"
+        self.reconthread=reconnecthread(self)
+        self.connect(self.reconthread,SIGNAL('error(QString)'),self.errmsg.showMessage)
+        self.connect(self.reconthread,SIGNAL('connected(QString)'),self.buildcalfromserver)
+        self.reconthread.start()
+    def buildcalfromserver(self,result):
+        print  unicode(result)
+        try:
+            cal=json.loads(unicode(result))['data']['cal']
+        except KeyError as e:
+            self.errmsg.showMessage("Server has no calibration.")
+            return
+        self.ui.treeWidgetCal.clear()
+        try:
+            validate(cal,self.data.calschema)
+        except ValidationError as e:
+            dialog=QErrorMessage(self)
+            dialog.showMessage(e.message)
+            self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
+            return
+        self.data.cal=cal
+        self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
+        self.loadmask()
+        self.plotworker.start()
         
 if __name__ == "__main__":
     app=QApplication(sys.argv)

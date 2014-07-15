@@ -9,6 +9,7 @@ import base64
 import traceback
 from optparse import OptionParser
 import hashlib
+from Queue import Empty
 class AuthenticationError(Exception):
      def __init__(self, value):
          self.message = value
@@ -127,9 +128,17 @@ class Server():
          elif command=="readdir":
              result=self.readdir(object)
          elif command=="plot":
-             result=self.plot()
+             if self.imagequeue:
+                result=self.plot()
+             else:
+                result={"result":"no queue","data":{}}
          elif command=="stat":
              result={"result":"stat","data":{"stat":self.stat()}}
+         elif command=="get":
+             if self.imagequeue:
+                 result={"result":"cal","data":{"cal":self.imagequeue.cal.config,"directory":self.directory}}
+             else:
+                 result={"result":"no queue","data":{}}
          else:
              result={"result":"ErrorNotimplemented"}
          print command   
@@ -148,6 +157,7 @@ class Server():
             mskfilename=os.path.join(object['argument']['directory'],
                                      "saxsdogserver"+os.path.basename(maskobj['filename']))
             print mskfilename
+            self.directory=object['argument']['directory']
             mskfile=open(mskfilename,'wb')
             mskfile.write(base64.b64decode(maskobj['data']))
             mskfile.close()
@@ -187,7 +197,11 @@ class Server():
             return result
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
-        picture=self.imagequeue.picturequeue.get(timeout=5)
+        try:
+            picture=self.imagequeue.picturequeue.get(timeout=5)
+        except Empty as e:
+            result={"result":"Empty","data":{}}
+            return result
         (file,data)=self.imagequeue.procimage(picture,0)
         result={"result":"plot","data":{"filename":file,"array":data.tolist(),"stat":self.stat()}}
         return result

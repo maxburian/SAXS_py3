@@ -97,6 +97,12 @@ def sendstat(socket,conf):
     
     validateResponse(message)
     return message
+def sendget(socket,conf):
+    request={"command":"get","argument":{}}
+    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    message=socket.recv()
+    validateResponse(message)
+    return message
     
 def sendnew(options,arg,socket,conf):
     request={ 
@@ -151,7 +157,7 @@ def initcommand(options, arg,conf):
         server=conf['Server']
     else:
         server=options.server
-    print "conecting:",server
+    if __name__=="__main__":print "conecting:",server
     socket.connect (server)
     if arg[0]=="close":
          result= sendclose(options,arg,socket,conf)
@@ -167,6 +173,8 @@ def initcommand(options, arg,conf):
          result= sendreaddir(options,arg,socket,conf)
     elif arg[0]=="stat":
          result= sendstat(socket,conf)
+    elif arg[0]=="get":
+        result=sendget(socket,conf)
     else:
         raise ValueError(arg[0])
     
