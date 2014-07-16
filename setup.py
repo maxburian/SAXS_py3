@@ -12,11 +12,11 @@ setup(
     name="SAXS",
     version="0",
     packages=["SAXS"],
-    package_data={"SAXS": ["schema.json","LeashRequestSchema.json","LeashResultSchema.json","NetworkSchema.json","LeashMW.ui"]},
+    package_data={"SAXS": ["schema.json","LeashRequestSchema.json","LeashResultSchema.json","NetworkSchema.json","LeashMW.ui","importdialog.ui"]},
     author="Christian Meisenbichler",
     author_email="chmberg@gmail.com",
     description="Tools for analysing SAXS Data",
-    install_requires=["numpy","scipy", "matplotlib","jsonschema", "bitarray"," watchdog","sphinxcontrib-programoutput"],
+    install_requires=["numpy","scipy", "matplotlib","jsonschema", "bitarray"," watchdog","sphinxcontrib-programoutput","pyzmq"],
     license="Proprietary",
     entry_points = {
         'console_scripts': [
@@ -26,7 +26,7 @@ setup(
             'saxsdogserver = SAXS:saxsdogserver',
             'saxsleash =SAXS:saxsleash',
             'saxsfeeder=SAXS:saxsfeeder',
-            "saxsnetconf=SAXS.gennetconf"
+            "saxsnetconf=SAXS:gennetconf"
             ],
         'gui_scripts':[
             'Leash=SAXS:LeashGUI'
