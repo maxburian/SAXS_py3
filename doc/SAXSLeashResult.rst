@@ -52,7 +52,7 @@ data
 :Type:
   object
 :Contains:
-  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
+  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`directory <directory>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
 :Required:
   True
 :JSON Path:
@@ -101,6 +101,24 @@ Example JSON:
 .. code:: json
 
     {"Error": {}}
+
+.. _directory:
+
+directory
+--------------------
+
+:Type:
+  string
+:Required:
+  False
+:JSON Path:
+  :ref:`# <root>` [':ref:`data <data>`'][':ref:`directory <directory>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"directory": ""}
 
 .. _stat:
 

@@ -1,10 +1,27 @@
 import json
 from optparse import OptionParser
 import os,re,sys
-from jsonschema import validate
+from jsonschema import validate,ValidationError
 import time
 
-
+def txt2json(text,s):
+            for line in text.split('\n'):
+                word=re.split('\s+', line)
+                if re.search('Refined Beam centre.+pixels',line):
+                   
+                    s['BeamCenter']=[float(word[6]),float(word[5])]
+                elif re.search('Refined sample to detector distance',line):
+                    s['DedectorDistanceMM']=float(word[7])
+                elif re.search(' Refined tilt plane rotation angl',line):
+                    if not "Tilt" in s :s["Tilt"]={}
+                    s['Tilt']['TiltRotDeg']=float(word[7])
+                elif re.search(' Refined tilt angle ',line):
+                    if not "Tilt" in s :s["Tilt"]={}
+                    s['Tilt']['TiltAngleDeg']=float(word[5])
+                elif re.search('Refined wavelength =',line):
+                    s['Wavelength']=float(word[4])
+               
+            return s
 
 def convert():
     """
@@ -32,32 +49,21 @@ def convert():
         schemapath=os.path.dirname(__file__)+'/schema.json'
         print schemapath+",",__file__
         schema=(json.load(open(schemapath)))
-        validate(caldict,schema)
+        try:
+            validate(caldict,schema)
+        except ValidationError as e:
+            print "Validation Error:"+e.message
+            return
         s=caldict
         print "parsed atributes are added replaced in the target file"
  
     else:
         s={}
     with open(args[0])as infile:
-        
-            for line in infile:
-                word=re.split('\s+', line)
-                if re.search('Refined Beam centre.+pixels',line):
-                   
-                    s['BeamCenter']=[float(word[6]),float(word[5])]
-                elif re.search('Refined sample to detector distance',line):
-                    s['DedectorDistanceMM']=float(word[7])
-                elif re.search(' Refined tilt plane rotation angl',line):
-                    if not "Tilt" in s :s["Tilt"]={}
-                    s['Tilt']['TiltRotDeg']=float(word[7])
-                elif re.search(' Refined tilt angle ',line):
-                    if not "Tilt" in s :s["Tilt"]={}
-                    s['Tilt']['TiltAngleDeg']=float(word[5])
-                elif re.search('Refined wavelength =',line):
-                    s['Wavelength']=float(word[4])
-            with open(args[1],"w") as outfile:
-                json.dump(s, outfile,  indent=4, separators=(',', ': '))
-            print json.dumps(s, indent=4, separators=(',', ': '))
+        s=txt2json(infile.read(),s)
+        with open(args[1],"w") as outfile:
+             json.dump(s, outfile,  indent=4, separators=(',', ': '))
+        print json.dumps(s, indent=4, separators=(',', ': '))
 
 if __name__ == '__main__':
     convert()

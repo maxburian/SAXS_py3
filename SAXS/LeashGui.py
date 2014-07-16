@@ -20,6 +20,8 @@ from schematools import schematodefault
 from Leash import initcommand
 from plotthread import plotthread
 from reconnectqthread import reconnecthread 
+from ImportDialogClass import Importdialog
+from converter import txt2json
 def nparrayToQPixmap(arrayImage):
     pilImage = toimage(arrayImage)
     
@@ -29,8 +31,9 @@ def nparrayToQPixmap(arrayImage):
     return qPixmap
 
 class LeashUI(QMainWindow):
-    def __init__(self,parent=None):
+    def __init__(self,app,parent=None):
         super(LeashUI,self).__init__(parent)
+        self.clipboard=app.clipboard()
         self.ui=uic.loadUi(os.path.dirname(__file__)+os.sep+"LeashMW.ui",self)
         self.data=SAXS.AttrDict({})
         self.data.cal=None
@@ -41,6 +44,12 @@ class LeashUI(QMainWindow):
         self.connect(self.ui.actionLoad_Calibration, SIGNAL("triggered()"),self.newFile)
         self.connect(self.ui.actionSave_Calibration,SIGNAL('triggered()'),self.safecalibration)
         self.connect(self.ui.actionSave_Calibration_as,SIGNAL('triggered()'),self.safecalibrationas)
+        self.connect(self.ui.actionImport,SIGNAL('triggered()'),self.importcalib)
+        self.connect(self.ui.actionAbort_Queue ,SIGNAL('triggered()'),self.abortqueue)
+        self.connect(self.ui.actionClose_Queue ,SIGNAL('triggered()'),self.closequeue)
+        
+        self.connect(self.ui.actionOpen_Hep_in_Browser ,SIGNAL('triggered()'),self.help)
+   
         self.data.calschema=json.load(open(os.path.dirname(__file__)+os.sep+'schema.json')) 
         self.ui.treeWidgetCal.clear()
         self.ui.treeWidgetCal.setColumnWidth (0, 200 )
@@ -64,6 +73,7 @@ class LeashUI(QMainWindow):
         QShortcut(QKeySequence("Ctrl+Q"), self, self.close)
         QShortcut(QKeySequence("Ctrl+O"), self, self.newFile)
         QShortcut(QKeySequence("Ctrl+S"),self,self.safecalibration)
+        QShortcut(QKeySequence("Ctrl+I"),self,self.importcalib)
         self.connect(self.ui,SIGNAL("reconnect()"),self.reconnect)
         self.emit(SIGNAL('reconnect()'))
     def newFile(self):
@@ -279,10 +289,49 @@ class LeashUI(QMainWindow):
             self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
             self.loadmask()
             self.plotworker.start()
-        
+    def importcalib(self):
+         
+         self.importdialog=Importdialog(parent=self)
+         self.importdialog.textEditbuffer.setText(self.clipboard.text())
+         self.connect(self.importdialog.pushButtonLoadFile, SIGNAL("clicked()"),self.loadImortFile)
+         self.connect(self.importdialog.pushButtonAbort,SIGNAL('clicked()'),self.importdialog.close)
+         self.connect(self.importdialog.pushButtonOK,SIGNAL('clicked()'),self.importtext)
+         self.importdialog.pushButtonLoadFile.setDefault(True)
+         self.importdialog.show()
+    def loadImortFile(self):
+             file=unicode( QFileDialog.getOpenFileName(self,directory="../test"))
+             self.importdialog.textEditbuffer.setText(open(file,"r").read())  
+    def importtext(self):
+        text=unicode(self.importdialog.textEditbuffer.toPlainText ())
+        if not self.data.cal:
+            self.data.cal=schematodefault(self.data.calschema)
+        try:
+            self.data.cal=txt2json(text,self.data.cal)
+        except ValueError as e:
+            self.errmsg.showMessage(e.message)
+            return
+        self.ui.treeWidgetCal.clear()
+        self.buildcaltree(self.data.cal,self.data.calschema,self.ui.treeWidgetCal)
+        self.importdialog.close()
+    def abortqueue(self):
+        argu=["abort"]
+        o=SAXS.AttrDict({"server":""})
+        conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+        result=initcommand(o,argu,conf)
+        QMessageBox(self).about(self,"aborted",result)
+
+    def closequeue(self):
+        argu=["close"]
+        o=SAXS.AttrDict({"server":""})
+        conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+        result=initcommand(o,argu,conf) 
+        QMessageBox(self).about(self,"closed",result)
+    def help(self):
+        import webbrowser
+        webbrowser.open('http://christianmeisenbichler.github.io/SAXS/Server.html')
 def LeashGUI():
     app=QApplication(sys.argv)
-    form=LeashUI()
+    form=LeashUI(app)
     form.show()
     app.exec_()
     form.cleanup()

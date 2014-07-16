@@ -33,6 +33,7 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.mathjax',
     'sphinxcontrib.programoutput',
+    'sphinxcontrib.programscreenshot',
     'matplotlib.sphinxext.plot_directive'
 ]
 

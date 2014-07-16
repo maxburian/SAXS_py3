@@ -47,12 +47,26 @@ It may subscribe to a "new file" event service.
 The Saxs Leash
 --------------
 
-The "Saxs Leash" client can issue the commands for the Saxsdog Server. It has a commandline interface only, for now.
+The Leash Program is a GUI to load calibrations into the Saxdog Server and monitor the processing of the data.
+It provides a calibration editor, as mask preview and basic data import from :ref:`saxsconverter`. 
+
+The main window has 3 tab cards. The first is for setting up the server, 
+the second to review the currently processed data and the third for basic statistics. The command to launch it is.
+
+.. program-screenshot:: Leash  
+    :prompt:
+
+Saxs Leash Commandline
+----------------------
+
+
+The "Saxs Leash" client can issue the commands for the Saxsdog Server. 
 
 .. command-output::  saxsleash --help
 
 Most of the commandline options are apout the ``plot`` command, but in order to visualize 
 the processed data, one has to send the commands to setup a calibration.
+
 
 New
 ~~~
