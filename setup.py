@@ -16,7 +16,15 @@ setup(
     author="Christian Meisenbichler",
     author_email="chmberg@gmail.com",
     description="Tools for analysing SAXS Data",
-    install_requires=["numpy","scipy", "matplotlib","jsonschema", "bitarray"," watchdog","sphinxcontrib-programoutput","pyzmq"],
+    install_requires=["numpy",
+                      "scipy", 
+                      "matplotlib",
+                      "jsonschema", 
+                      "bitarray",
+                      " watchdog",
+                      "sphinxcontrib-programoutput",
+                      "sphinxcontrib-programscreenshot",
+                      "pyzmq"],
     license="Proprietary",
     entry_points = {
         'console_scripts': [
