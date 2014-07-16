@@ -274,6 +274,7 @@ class LeashUI(QMainWindow):
             print  unicode(result)
             try:
                 cal=json.loads(unicode(result))['data']['cal']
+                print unicode(result)
             except KeyError as e:
                 self.errmsg.showMessage("Server has no calibration.")
                 return
@@ -288,6 +289,16 @@ class LeashUI(QMainWindow):
             self.data.cal=cal
             self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
             self.loadmask()
+            self.directory=json.loads(unicode(result))['data']['directory']
+            dirlist=[".",".","."]
+            i=0
+            for dir in self.directory.split(os.sep):
+                dirlist[i]=dir
+                i+=1
+               
+            self.ui.lineEditUserDir.setText(dirlist[0])
+            self.ui.lineEditExpDir.setText(dirlist[1])
+            self.ui.lineEditSetupDir.setText(dirlist[2])
             self.plotworker.start()
     def importcalib(self):
          
