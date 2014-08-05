@@ -86,7 +86,9 @@ def merge():
     parser.add_option("-b", "--batch", dest="batch",
                       help="Batch mode (no plot).", 
                        action="store_true",default=False)
-    
+    parser.add_option("-l", "--mergedlogfile", dest="mergedlogfile",
+                      help="Write merged dataset to this file (without any image data). Format is derived from the extesion.(.csv|.json|.hdf)", metavar="FILE",default="")
+   
     (options, args) = parser.parse_args(args=None, values=None)
     if len(args)<3:
         parser.error("incorrect number of arguments")
@@ -132,7 +134,16 @@ def merge():
             print options.outfile +" format not supported"
     else:
         print mima.to_string()
-  
+    if options.mergedlogfile!="":
+        if options.mergedlogfile.endswith(".json"):
+            shifted.to_json(options.mergedlogfile)
+        elif options.mergedlogfile.endswith(".csv"):
+            shifted.to_csv(options.mergedlogfile)
+        elif options.mergedlogfile.endswith(".hdf"):
+            shifted.to_hdf(options.mergedlogfile,"merged")
+        else:
+            print options.mergedlogfile +" format not supported"
+    
     
     #print mima.to_json()
 if __name__ == '__main__':
