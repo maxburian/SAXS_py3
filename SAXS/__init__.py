@@ -10,6 +10,10 @@ from plotchi import plotchi,makeplot
 from calibration import calibration,calc_theta, scalemat, openmask
 from NetConf import createsaxdogconf as gennetconf
 from LeashGui import LeashGUI
+try:
+    from datamerge import merge
+except Error as e:
+    print e
 class AttrDict(dict):
     def __init__(self, *args, **kwargs):
         super(AttrDict, self).__init__(*args, **kwargs)

@@ -18,7 +18,7 @@ Schema for requests from Saxs Leash to Saxs Server
 :Required:
   True
 :JSON Path:
-  :ref:`# <root>` 
+  * :ref:`# <root>` 
 
 Example JSON: 
 
@@ -39,7 +39,7 @@ command
 :Required:
   True
 :JSON Path:
-  :ref:`# <root>` [':ref:`command <command>`']
+  * :ref:`# <root>` [':ref:`command <command>`']
 
 Example JSON: 
 
@@ -59,7 +59,7 @@ argument
 :Required:
   False
 :JSON Path:
-  :ref:`# <root>` [':ref:`argument <argument>`']
+  * :ref:`# <root>` [':ref:`argument <argument>`']
 
 Example JSON: 
 
@@ -80,7 +80,7 @@ Directory this queue is going to use. New files in other directories are going t
 :Required:
   False
 :JSON Path:
-  :ref:`# <root>` [':ref:`argument <argument>`'][':ref:`directory <directory>`']
+  * :ref:`# <root>` [':ref:`argument <argument>`'][':ref:`directory <directory>`']
 
 Example JSON: 
 
@@ -103,7 +103,7 @@ Calibrarion data according to :ref:`calib`
 :Required:
   False
 :JSON Path:
-  :ref:`# <root>` [':ref:`argument <argument>`'][':ref:`calibration <calibration>`']
+  * :ref:`# <root>` [':ref:`argument <argument>`'][':ref:`calibration <calibration>`']
 
 Example JSON: 
 
@@ -124,7 +124,7 @@ Signature of request
 :Required:
   False
 :JSON Path:
-  :ref:`# <root>` [':ref:`sign <sign>`']
+  * :ref:`# <root>` [':ref:`sign <sign>`']
 
 Example JSON: 
 
@@ -145,7 +145,7 @@ time in seconds (pythons time.time())
 :Required:
   False
 :JSON Path:
-  :ref:`# <root>` [':ref:`time <time>`']
+  * :ref:`# <root>` [':ref:`time <time>`']
 
 Example JSON: 
 

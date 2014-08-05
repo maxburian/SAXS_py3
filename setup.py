@@ -34,7 +34,8 @@ setup(
             'saxsdogserver = SAXS:saxsdogserver',
             'saxsleash =SAXS:saxsleash',
             'saxsfeeder=SAXS:saxsfeeder',
-            "saxsnetconf=SAXS:gennetconf"
+            "saxsnetconf=SAXS:gennetconf",
+            "saxsdmerge=SAXS:merge"
             ],
         'gui_scripts':[
             'Leash=SAXS:LeashGUI'
