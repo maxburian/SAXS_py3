@@ -38,3 +38,10 @@ The tool "plotchi"  plots a list of ".chi"-files:
 
 .. command-output:: plotchi  --help 
 
+Saxsdmerge
+~~~~~~~~~~
+
+This Tool adresses a very specific problem only aplicable under our special needs.
+
+.. command-output:: saxsdmerge --help
+

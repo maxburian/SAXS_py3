@@ -80,7 +80,7 @@ def merge():
                       help="Sync time by taking the time difference between first shutter action and first image.", 
                       action="store_true",default=False)
     parser.add_option("-o", "--outfile", dest="outfile",
-                      help="Sync time by taking the time difference between first shutter action and first image.", metavar="FILE",default="")
+                      help="Write merged dataset to this file. Format is derived from the extesion.(.csv|.json|.hdf)", metavar="FILE",default="")
     parser.add_option("-i", "--imagedata", dest="imagedata",
                       help=" Load image data from previously stored file (imgdata.pkl).", metavar="FILE",default="")
     parser.add_option("-b", "--batch", dest="batch",
@@ -130,6 +130,8 @@ def merge():
             mima.to_hdf(options.outfile,"merged")
         else:
             print options.outfile +" format not supported"
+    else:
+        print mima.to_string()
   
     
     #print mima.to_json()
