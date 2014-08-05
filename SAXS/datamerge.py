@@ -97,7 +97,8 @@ def merge():
     datalogger=readlog(args[2]) 
     
     a=pd.concat([datalogger,means],join='outer').interpolate(method="zero",axis=0) 
-    merged=a[ a.index.isin(means.index)]
+    #merged=a[ a.index.isin(means.index)]
+    merged=a
     merged=merged[merged['Duration']>0]
     if options.imagedata=="":
         imagedata=readallimages(args[0])
@@ -111,13 +112,20 @@ def merge():
  
     shifted=merged.copy()
     if options.syncfirst:
-        shifted.index=merged.index- ( merged.index.min()-imd.index.min())
+        delta=( merged.index.min()-imd.index.min())
+        shifted.index=merged.index- delta
+        
     if options.timeoffset!=0:
-         shifted.index=shifted.index -timedelta(0,float(options.timeoffset))
-    print shifted.index.min(), imd.index.min()
+        delta=delta + timedelta(0,float(options.timeoffset))
+        shifted.index=merged.index -delta
+    print "total timeshift:"+ str(delta.total_seconds())
     if not options.batch:
         imd['Exposure_time [s]'][:].plot(style="ro")
         shifted['Duration'][:].plot(style="x")
+        plt.legend( ('Exposure from Images', 'Exposure from Shutter'))
+        plt.xlabel("Time")
+        plt.ylabel("Exosure Time [s]")
+        plt.title("Corellation")
         plt.show()
     mim=pd.concat([imd,shifted],join="outer",axis=1).drop('Wavelength [A]',axis=1)
     mima=mim.interpolate(kind="zero" )
