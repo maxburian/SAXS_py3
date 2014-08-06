@@ -128,12 +128,12 @@ def merge():
                       help="Batch mode (no plot).", 
                        action="store_true",default=False)
     parser.add_option("-c", "--includechi", dest="includechi",
-                      help="Include radial intensity data (.chi) into dataframe", 
+                      help="Include radial intensity data (.chi) in hdf.", 
                        action="store_true",default=False)
     parser.add_option("-l", "--mergedlogfile", dest="mergedlogfile",
-                      help="Write merged dataset to this file (without any image data). Format is derived from the extesion.(.csv|.json|.hdf)", metavar="FILE",default="")
-    parser.add_option("-f", "--includetifdata", dest="includetifdata",
-                      help="Include  all image data (Pixel).", 
+                      help="Write merged dataset to this file. The format is derived from the extesion.(.csv|.json|.hdf)", metavar="FILE",default="")
+    parser.add_option("-f", "--includetif", dest="includetifdata",
+                      help="Include  all image data in hdf.", 
                        action="store_true",default=False)
     (options, args) = parser.parse_args(args=None, values=None)
     if len(args)<3:
