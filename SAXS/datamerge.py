@@ -142,9 +142,21 @@ def merge():
     means=readlog(args[1])
     datalogger=readlog(args[2]) 
     
-    a=pd.concat([datalogger,means],join='outer').interpolate(method="zero",axis=0) 
+    a= datalogger.join(means, how='outer').interpolate(method="zero") 
     #merged=a[ a.index.isin(means.index)]
     merged=a
+    if options.mergedlogfile!="":
+        if options.mergedlogfile.endswith(".json"):
+            merged.to_json(options.mergedlogfile)
+        elif options.mergedlogfile.endswith(".csv"):
+            merged.to_csv(options.mergedlogfile)
+        elif options.mergedlogfile.endswith(".hdf"):
+            merged.to_hdf(options.mergedlogfile,"LogData")
+           
+            
+        else:
+            print options.mergedlogfile +" format not supported"
+    
     merged=merged[merged['Duration']>0]
     if options.imagedata=="":
         imd,chi=readallimages(args[0],options.includechi) 
@@ -171,7 +183,8 @@ def merge():
         plt.ylabel("Exosure Time [s]")
         plt.title("Corellation")
         plt.show()
-    mim=pd.concat([imd,shifted],join="outer",axis=1).drop('Wavelength [A]',axis=1)
+    #mim=pd.concat([imd,shifted],join="outer",axis=1).drop('Wavelength [A]',axis=1)
+    mim=shifted.join(imd,how="outer")
     mima=mim.interpolate(kind="zero" )
     mima=mima[mima.index.isin(imd.index)]
     
@@ -188,18 +201,7 @@ def merge():
             print options.outfile +" format not supported"
     else:
         print mima.to_string()
-    if options.mergedlogfile!="":
-        if options.mergedlogfile.endswith(".json"):
-            shifted.to_json(options.mergedlogfile)
-        elif options.mergedlogfile.endswith(".csv"):
-            shifted.to_csv(options.mergedlogfile)
-        elif options.mergedlogfile.endswith(".hdf"):
-            shifted.to_hdf(options.mergedlogfile,"LogData")
-           
-            
-        else:
-            print options.mergedlogfile +" format not supported"
-    
+  
     
     #print mima.to_json()
 if __name__ == '__main__':
