@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 from scipy import misc
 import tables as tb
-import hashlib
+import hashlib,pickle
 def readtiff(imagepath):
   
     f = open(imagepath, "r")
@@ -148,9 +148,11 @@ def merge():
     merged=merged[merged['Duration']>0]
     if options.imagedata=="":
         imd,chi=readallimages(args[0],options.includechi) 
-        imd.to_pickle("imgdata.pkl")
+        pickle.dump({"imd":imd,"chi":chi},open('imgdata.pkl',"w")) 
     else:
-        imd=pd.read_pickle(options.imagedata)
+        dict=pickle.load(open(options.imagedata,"r"))
+        imd=dict['imd']
+        chi=dict['chi']
  
     shifted=merged.copy()
     if options.syncfirst:
