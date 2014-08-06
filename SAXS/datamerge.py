@@ -142,22 +142,8 @@ def merge():
     means=readlog(args[1])
     datalogger=readlog(args[2]) 
     
-    a= datalogger.join(means, how='outer').interpolate(method="zero") 
-    #merged=a[ a.index.isin(means.index)]
-    merged=a
-    if options.mergedlogfile!="":
-        if options.mergedlogfile.endswith(".json"):
-            merged.to_json(options.mergedlogfile)
-        elif options.mergedlogfile.endswith(".csv"):
-            merged.to_csv(options.mergedlogfile)
-        elif options.mergedlogfile.endswith(".hdf"):
-            merged.to_hdf(options.mergedlogfile,"LogData")
-           
-            
-        else:
-            print options.mergedlogfile +" format not supported"
-    
-    merged=merged[merged['Duration']>0]
+    merged=datalogger.join(means, how='outer').interpolate(method="zero") 
+    mergedreduced=merged[merged.index.isin(means.index)]
     if options.imagedata=="":
         imd,chi=readallimages(args[0],options.includechi) 
         pickle.dump({"imd":imd,"chi":chi},open('imgdata.pkl',"w")) 
@@ -167,17 +153,26 @@ def merge():
         chi=dict['chi']
  
     shifted=merged.copy()
+    shiftedreduced=mergedreduced.copy()
+    # shift image timestamp py image exposure time
+    index=[]
+    for pos in range(imd.index.shape[0]):    
+            index.append(imd.index[pos]-timedelta(seconds=imd['Exposure_time [s]'][pos]))
+    imd.index=index   
     if options.syncfirst:
-        delta=( merged.index.min()-imd.index.min())
-        shifted.index=merged.index- delta
-        
+        delta=( mergedreduced.index.min()-imd.index.min())
+       
     if options.timeoffset!=0:
         delta=delta + timedelta(0,float(options.timeoffset))
-        shifted.index=merged.index -delta
+    shifted.index=merged.index -delta
+    shiftedreduced.index=mergedreduced.index  -delta
+    shiftedreduced=shiftedreduced[shiftedreduced['Duration']>0]
     print "total timeshift:"+ str(delta.total_seconds())
+
     if not options.batch:
         imd['Exposure_time [s]'][:].plot(style="ro")
-        shifted['Duration'][:].plot(style="x")
+    
+        shiftedreduced['Duration'][:].plot(style="x")
         plt.legend( ('Exposure from Images', 'Exposure from Shutter'))
         plt.xlabel("Time")
         plt.ylabel("Exosure Time [s]")
@@ -185,7 +180,20 @@ def merge():
         plt.show()
     #mim=pd.concat([imd,shifted],join="outer",axis=1).drop('Wavelength [A]',axis=1)
     mim=shifted.join(imd,how="outer")
-    mima=mim.interpolate(kind="zero" )
+    mima=mim.interpolate(method="zero" )
+    
+    if options.mergedlogfile!="":
+        if options.mergedlogfile.endswith(".json"):
+            mima.to_json(options.mergedlogfile)
+        elif options.mergedlogfile.endswith(".csv"):
+            mima.to_csv(options.mergedlogfile)
+        elif options.mergedlogfile.endswith(".hdf"):
+            mima.to_hdf(options.mergedlogfile,"LogData")
+           
+            
+        else:
+            print options.mergedlogfile +" format not supported"
+    
     mima=mima[mima.index.isin(imd.index)]
     
     if options.outfile!="":
