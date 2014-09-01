@@ -213,7 +213,7 @@ class LeashUI(QMainWindow):
         QMessageBox(self).about(self,"saved",self.filename)
     def safecalibrationas(self):
         
-        filename=unicode( QFileDialog.getOpenFileName(self,directory="../test"))
+        filename=unicode( QFileDialog.getSaveFileName(self,directory="../test"))
         if filename=="":
             return
         else:
