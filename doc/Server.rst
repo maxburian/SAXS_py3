@@ -3,14 +3,14 @@ The Saxsdog Network
 ===================
 
 The network may consist of 3 different services. The "Saxsdog Server" does the image processing. 
-The "Saxs Feeder" puplishes new file Events and the "Saxs Leash" controlls an configures the server. 
+The "Saxs Feeder" publishes new file Events and the "Saxs Leash" controls an configures the server. 
  
 .. figure:: Network.*
 
 The SAXSNetwork configuration
 -----------------------------
 The Saxsdog Server and the Saxsleash have a common configuration file, which tells them how to connect
-with each other and which also includes a shared secred for authentication. 
+with each other and which also includes a shared secret for authentication. 
 If you want two computers to connect via the Saxsleash you need to have a copy of the file on each of them.
 
 To create such a configuration, use the command:
@@ -22,19 +22,19 @@ To create such a configuration, use the command:
 It will ask for the Feeder 
 URL and for the Saxsdog Server URL. Then it will generate a random secret and save the file in
 file in ``$Home/.saxdognetwork``.  You will have to copy the file 
-to the other computers you need to allow to conect to your network. The secret must be the same on all of them.
+to the other computers you need to allow to connect to your network. The secret must be the same on all of them.
 
 
 .. code ::
 
    {
-      "ServerUrl":"tcp://hostname:port",
-      "FeederUrl":"tcp://hostname:port",
+      "Server":"tcp://hostname:port",
+      "Feeder":"tcp://hostname:port",
       "Secret":"Some large random string."
    }
 
-The authentication is done by hashing the request and the secret including a timestamp. 
-The timestamp is checked if it lies within 900 seconds of the servers time.
+The authentication is done by hashing the request and the secret including a time stamp. 
+The time stamp is checked if it lies within 900 seconds of the servers time.
 
 The Saxsdog Server
 ------------------
@@ -64,7 +64,7 @@ The "Saxs Leash" client can issue the commands for the Saxsdog Server.
 
 .. command-output::  saxsleash --help
 
-Most of the commandline options are apout the ``plot`` command, but in order to visualize 
+Most of the command line options are about the ``plot`` command, but in order to visualize 
 the processed data, one has to send the commands to setup a calibration.
 
 
@@ -129,7 +129,7 @@ Read Dir
    $ saxsleash readdir
 
 This command will put all the images in the configured directory into the queue.
-This is usefull to reprocess pictures.
+This is useful to reprocess pictures.
 
 
 

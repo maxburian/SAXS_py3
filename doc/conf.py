@@ -56,7 +56,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'SAXS'
-copyright = u'2014, Christian Meisenbichler'
+copyright = u' 2014, Tu Graz, Christian Meisenbichler, Heinz Amenitsch'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -276,7 +276,7 @@ texinfo_documents = [
 epub_title = u'SAXS'
 epub_author = u'Christian Meisenbichler'
 epub_publisher = u'Christian Meisenbichler'
-epub_copyright = u'2014, Christian Meisenbichler'
+epub_copyright = u'2014, Tu Graz, Christian Meisenbichler, Heinz Amenitsch'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'SAXS'
