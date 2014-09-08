@@ -13,7 +13,6 @@ import hashlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-import SAXS
 from jsonschema import validate,ValidationError
 def addauthentication(request,conf):
     m=hashlib.sha512()

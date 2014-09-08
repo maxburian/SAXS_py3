@@ -3,7 +3,7 @@ from PyQt4.QtGui import  *
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 import json,os
-import SAXS
+import atrdict
 import numpy as np
 from Leash import initcommand
 import time
@@ -28,7 +28,7 @@ class plotthread(QThread):
                     axhist.set_xlabel('time')
                     conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
                     argu=["plotdata"]
-                    o=SAXS.AttrDict({"server":""})
+                    o=atrdict.AttrDict({"server":""})
                     result=initcommand(o,argu,conf)
                      
                    

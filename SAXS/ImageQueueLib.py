@@ -172,7 +172,10 @@ class imagequeue:
             self.dirwalker=Process()
             self.dirwalker.start()
         try:
-            while (not self.picturequeue.empty()) or self.dirwalker.is_alive() or self.options.watch: 
+            while ( self.options.servermode or 
+                    (not self.picturequeue.empty()) 
+                    or self.dirwalker.is_alive() 
+                    or self.options.watch): 
                     try:
                         picture = self.picturequeue.get(timeout=1)
                     except KeyboardInterrupt :

@@ -15,7 +15,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import  *
 from PyQt4 import uic
 import LeashMW
-import SAXS
+import atrdict
+import calibration
 from schematools import schematodefault
 from Leash import initcommand
 from plotthread import plotthread
@@ -35,7 +36,7 @@ class LeashUI(QMainWindow):
         super(LeashUI,self).__init__(parent)
         self.clipboard=app.clipboard()
         self.ui=uic.loadUi(os.path.dirname(__file__)+os.sep+"LeashMW.ui",self)
-        self.data=SAXS.AttrDict({})
+        self.data=atrdict.AttrDict({})
         self.data.cal=None
         self.data.queueon=False
         self.ui.resize(1000,800)
@@ -111,7 +112,7 @@ class LeashUI(QMainWindow):
             dialog.showMessage("Load a calibration file first!")
     def loadmask(self):
         try:
-            self.data.mask=SAXS.openmask(self.data.cal)
+            self.data.mask=calibration.openmask(self.data.cal)
             image=nparrayToQPixmap(self.data.mask)
             self.data.qtmask=image
             maskscene=QGraphicsScene()
@@ -232,7 +233,7 @@ class LeashUI(QMainWindow):
                              unicode(self.ui.lineEditExpDir.text()),
                              unicode(self.ui.lineEditSetupDir.text())]
                                                                         )]
-            o=SAXS.AttrDict({"server":""})
+            o=atrdict.AttrDict({"server":""})
             result=initcommand(o,argu,conf)
             print result
             self.ui.pushButtonnew.setText("Restart Queue with Changed Calibration")
@@ -326,14 +327,14 @@ class LeashUI(QMainWindow):
         self.importdialog.close()
     def abortqueue(self):
         argu=["abort"]
-        o=SAXS.AttrDict({"server":""})
+        o=atrdict.AttrDict({"server":""})
         conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
         result=initcommand(o,argu,conf)
         QMessageBox(self).about(self,"aborted",result)
 
     def closequeue(self):
         argu=["close"]
-        o=SAXS.AttrDict({"server":""})
+        o=atrdict.AttrDict({"server":""})
         conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
         result=initcommand(o,argu,conf) 
         QMessageBox(self).about(self,"closed",result)

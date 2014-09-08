@@ -3,12 +3,14 @@ import zmq
 from multiprocessing import Process
 import time,json
 import os
-import SAXS
+import atrdict
+import calibration
 from jsonschema import validate,ValidationError
 import base64
 import traceback
 from optparse import OptionParser
 import hashlib
+import ImageQueueLib
 from Queue import Empty
 class AuthenticationError(Exception):
      def __init__(self, value):
@@ -153,10 +155,12 @@ class Server():
         self.lastcount=0
         self.queue_abort()
         try:
-            o=SAXS.AttrDict({"plotwindow":False,"threads":self.options.threads,
+            o=atrdict.AttrDict({"plotwindow":False,"threads":self.options.threads,
 		"watch":self.options.watchdir,"watchdir":object['argument']['directory'],
+        "servermode":True,
 		"walkdirinthreads":False,
-                "silent":False,"plotwindow":False,
+        "silent":False,"plotwindow":False
+        ,
 		"outdir":self.options.outdir,
 		"inplace":self.options.inplace,"writesvg":False,
                              "writepng":False,"resume":False
@@ -170,8 +174,8 @@ class Server():
             mskfile.close()
 	    print "saved maskfile"
             object['argument']['calibration']['MaskFile']=mskfilename
-            cal=SAXS.calibration(object['argument']['calibration'])
-            self.imagequeue=SAXS.imagequeue(cal,
+            cal=calibration.calibration(object['argument']['calibration'])
+            self.imagequeue=ImageQueueLib.imagequeue(cal,
                     o,[object['argument']['directory']])
             print "startimgq"
             self.imagequeueprocess=Process(target=self.imagequeue.start)
