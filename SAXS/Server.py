@@ -158,7 +158,7 @@ class Server():
         self.queue_abort()
         try:
             o=atrdict.AttrDict({"plotwindow":False,"threads":self.options.threads,
-		"watch":self.options.watchdir,"watchdir":object['argument']['directory'],
+		"watch":self.options.watchdir,"watchdir":os.sep.join(object['argument']['directory']),
         "servermode":True,
 		"walkdirinthreads":False,
         "silent":False,"plotwindow":False
@@ -170,7 +170,7 @@ class Server():
             maskobj=json.loads(attachment[0])
             mskfilename=os.path.expanduser(os.path.join("~/saxsdogserver"+os.path.basename(maskobj['filename'])))
             print "maskfile:",mskfilename
-            self.directory=object['argument']['directory']
+            self.directory=os.sep.join(object['argument']['directory'])
             mskfile=open(mskfilename,'wb')
             mskfile.write(base64.b64decode(maskobj['data']))
             mskfile.close()
@@ -178,7 +178,7 @@ class Server():
             object['argument']['calibration']['MaskFile']=mskfilename
             cal=calibration.calibration(object['argument']['calibration'])
             self.imagequeue=ImageQueueLib.imagequeue(cal,
-                    o,[object['argument']['directory']])
+                    o,[os.sep.join(object['argument']['directory'])])
             print "startimgq"
             self.imagequeueprocess=Process(target=self.imagequeue.start)
             self.imagequeueprocess.start()
@@ -186,7 +186,8 @@ class Server():
             self.feederproc=Process(target=subscribeToFileChanges,args=
                                     (self.imagequeue.picturequeue,
                                      self.feederurl,
-                                    os.path.abspath(os.path.join(self.args[0],object['argument']['directory'])))
+                                    os.path.abspath(os.path.join(self.args[0],
+                                                        os.sep.join(object['argument']['directory']))))
                                     )
             self.feederproc.start()
             self.lasttime=time.time()

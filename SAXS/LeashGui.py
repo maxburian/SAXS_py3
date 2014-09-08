@@ -228,11 +228,11 @@ class LeashUI(QMainWindow):
             json.dump(self.data.cal,fh)
             fh.close()
             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
-            argu=["new", filename,self.data.cal["MaskFile"],os.sep.join([
+            argu=["new", filename,self.data.cal["MaskFile"], [
                              unicode(self.ui.lineEditUserDir.text()),
                              unicode(self.ui.lineEditExpDir.text()),
                              unicode(self.ui.lineEditSetupDir.text())]
-                                                                        )]
+                                                                        ]
             o=atrdict.AttrDict({"server":""})
             result=initcommand(o,argu,conf)
             print result
