@@ -52,7 +52,7 @@ class Server():
         self.comandosocket = context.socket(zmq.REP)
         
         parser = OptionParser()
-        usage = "usage: %prog [options]"
+        usage = "usage: %prog [options] basedir"
         parser = OptionParser(usage)
         parser.add_option("-p", "--port", dest="port",
                       help="Port to offer command service. Default is 7777.", metavar="port",default="") 
@@ -73,6 +73,8 @@ class Server():
                       help="Files are written, in place, in the directory of the image.")
    
         (self.options, self.args) = parser.parse_args(args=None, values=None)
+        if len(self.args)==0:
+            self.args=["."]
         if self.options.feederurl=="":
             self.feederurl=conf["Feeder"]
         if self.options.port=="":
@@ -181,7 +183,11 @@ class Server():
             self.imagequeueprocess=Process(target=self.imagequeue.start)
             self.imagequeueprocess.start()
             print "startfeeder"
-            self.feederproc=Process(target=subscribeToFileChanges,args=(self.imagequeue.picturequeue,self.feederurl,object['argument']['directory']))
+            self.feederproc=Process(target=subscribeToFileChanges,args=
+                                    (self.imagequeue.picturequeue,
+                                     self.feederurl,
+                                    os.path.abspath(os.path.join(self.args[0],object['argument']['directory'])))
+                                    )
             self.feederproc.start()
             self.lasttime=time.time()
             self.lastcount=0
