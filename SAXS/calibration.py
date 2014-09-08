@@ -317,7 +317,7 @@ def openmask(config):
         mask=maskl[off:x*yb+off].reshape(x, yb)
         cropedmask=np.flipud(mask[0:x,0:y])
         # save the mask in order to controll if it worked
-        misc.imsave("mask.png",cropedmask)
+        #misc.imsave("mask.png",cropedmask)
         return  np.logical_not(cropedmask)
     else:
         mask= np.where(misc.imread(config['MaskFile'])!=0,False,True)

@@ -31,7 +31,8 @@ def subscribeToFileChanges(queue,url,dir):
         string = socket.recv()
         obj=json.loads(string)
         file=os.path.abspath(os.path.normpath(obj['argument']))
-       
+	print "dir", os.path.abspath(os.path.normpath(dir))
+        print "file", file       
         if file.startswith( os.path.abspath(os.path.normpath(dir))):
             if file.endswith('.tif'):
                 queue.put(obj['argument'])
@@ -89,7 +90,9 @@ class Server():
                  
                 object=json.loads(message[0])
                 validate(object,self.commandschema)
+	        print "authenticate"
                 self.authenticate(object)
+                print "auth done"
                 attachment=message[1:]
                 result=self.commandhandler(object,attachment)
             except ValidationError as e:
@@ -118,6 +121,7 @@ class Server():
     
     def commandhandler(self,object,attachment):
          command=object['command']
+         print "do command", command
          if command=='new':
             result= self.start_image_queue(object,attachment)
             
@@ -149,33 +153,39 @@ class Server():
         self.lastcount=0
         self.queue_abort()
         try:
-            o=SAXS.AttrDict({"plotwindow":False,"threads":self.options.threads,"watch":True,"watchdir":self.options.watchdir,"walkdirinthreads":False,
-                             "silent":False,"plotwindow":False,"outdir":self.options.outdir,"inplace":self.options.inplace,"writesvg":False,
+            o=SAXS.AttrDict({"plotwindow":False,"threads":self.options.threads,
+		"watch":self.options.watchdir,"watchdir":object['argument']['directory'],
+		"walkdirinthreads":False,
+                "silent":False,"plotwindow":False,
+		"outdir":self.options.outdir,
+		"inplace":self.options.inplace,"writesvg":False,
                              "writepng":False,"resume":False
                              })
             maskobj=json.loads(attachment[0])
-            mskfilename=os.path.join(object['argument']['directory'],
-                                     "saxsdogserver"+os.path.basename(maskobj['filename']))
-            print mskfilename
+            mskfilename=os.path.expanduser(os.path.join("~/saxsdogserver"+os.path.basename(maskobj['filename'])))
+            print "maskfile:",mskfilename
             self.directory=object['argument']['directory']
             mskfile=open(mskfilename,'wb')
             mskfile.write(base64.b64decode(maskobj['data']))
             mskfile.close()
+	    print "saved maskfile"
             object['argument']['calibration']['MaskFile']=mskfilename
             cal=SAXS.calibration(object['argument']['calibration'])
             self.imagequeue=SAXS.imagequeue(cal,
                     o,[object['argument']['directory']])
+            print "startimgq"
             self.imagequeueprocess=Process(target=self.imagequeue.start)
             self.imagequeueprocess.start()
+            print "startfeeder"
             self.feederproc=Process(target=subscribeToFileChanges,args=(self.imagequeue.picturequeue,self.feederurl,object['argument']['directory']))
             self.feederproc.start()
             self.lasttime=time.time()
             self.lastcount=0
             result={"result":"queue initiated ","data":{"cal":object['argument']['calibration']}}
-        except IOError as (e,v,t): 
-            result={"result":"IOError","data":{"Error": e.message}}
+        except IOError as e: 
+            result={"result":"IOError","data":{"Error": str(e).replace("\n"," ")}}
         except ValueError as e:
-            result={"result":"ValueError","data":{"Error": e.message}}
+            result={"result":"ValueError","data":{"Error": str(e)}}
         return result
     def queue_abort(self):
         if self.imagequeue:
