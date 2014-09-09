@@ -296,15 +296,12 @@ class LeashUI(QMainWindow):
             self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
             self.loadmask()
             self.directory=json.loads(unicode(result))['data']['directory']
-            dirlist=[".",".","."]
-            i=0
-            for dir in self.directory.split(os.sep):
-                dirlist[i]=dir
-                i+=1
-               
-            self.ui.lineEditUserDir.setText(dirlist[0])
-            self.ui.lineEditExpDir.setText(dirlist[1])
-            self.ui.lineEditSetupDir.setText(dirlist[2])
+            
+            
+           
+            self.ui.lineEditUserDir.setText(self.directory[0])
+            self.ui.lineEditExpDir.setText(self.directory[1])
+            self.ui.lineEditSetupDir.setText(self.directory[2])
             self.plotworker.start()
     def importcalib(self):
          

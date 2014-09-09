@@ -10,7 +10,7 @@ import time
 import numpy as np
 import matplotlib
 import hashlib
-matplotlib.use('TkAgg')
+ 
 import matplotlib.pyplot as plt
 
 from jsonschema import validate,ValidationError

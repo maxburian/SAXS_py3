@@ -144,7 +144,7 @@ class Server():
              result={"result":"stat","data":{"stat":self.stat()}}
          elif command=="get":
              if self.imagequeue:
-                 result={"result":"cal","data":{"cal":self.imagequeue.cal.config,"directory":self.directory}}
+                 result={"result":"cal","data":{"cal":self.imagequeue.cal.config,"directory":self.directory.split(os.sep)}}
              else:
                  result={"result":"no queue","data":{}}
          else:
@@ -160,7 +160,6 @@ class Server():
             o=atrdict.AttrDict({"plotwindow":False,"threads":self.options.threads,
 		"watch":self.options.watchdir,"watchdir":os.sep.join(object['argument']['directory']),
         "servermode":True,
-		"walkdirinthreads":False,
         "silent":True,"plotwindow":False
         ,
 		"outdir":self.options.outdir,
