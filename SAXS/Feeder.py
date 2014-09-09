@@ -38,9 +38,9 @@ def startfeeder():
        for file in fileslist:
             messageobj['argument']=file
             message=json.dumps(messageobj)
-            print message
+            print "."
             socket.send(message)
-            time.sleep(.1)
+            time.sleep(.03)
                         
 
 if __name__ == '__main__':

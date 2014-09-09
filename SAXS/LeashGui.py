@@ -4,8 +4,9 @@ import json
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
  
-
+import time
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 from multiprocessing import Process
 from jsonschema import validate,ValidationError
 from scipy.misc.pilutil import toimage
@@ -67,7 +68,7 @@ class LeashUI(QMainWindow):
         self.ui.verticalLayout_5.addWidget( self.canvashist)
         self.plotworker = plotthread(self)
         self.data.queueon=True
-        self.connect(self.plotworker, SIGNAL('update(QString)'),self.plotcanvas.draw)   
+       
         self.connect(self.plotworker, SIGNAL('update(QString)'),self.statupdate)
         self.errmsg=QErrorMessage(self)
        
@@ -77,6 +78,7 @@ class LeashUI(QMainWindow):
         QShortcut(QKeySequence("Ctrl+I"),self,self.importcalib)
         self.connect(self.ui,SIGNAL("reconnect()"),self.reconnect)
         self.emit(SIGNAL('reconnect()'))
+        
     def newFile(self):
         filename=unicode( QFileDialog.getOpenFileName(self,directory="../test"))
         if filename=="":
@@ -249,9 +251,12 @@ class LeashUI(QMainWindow):
         self.ui.lcdNumberFiles.display(self.data.stat['images processed'])
         self.ui.lcdNumberRate.display(self.data.stat['pics']/self.data.stat['time interval'])
         self.canvashist.draw()
+        self.plotcanvas.draw()
+        time.sleep(.5)
+        self.plotworker.start()
     def cleanup(self):
         print "cleanup"
-        self.plotthreadgo=False
+     
     def reconnect(self):
         self.data.result="{}"
         self.reconthread=reconnecthread(self)

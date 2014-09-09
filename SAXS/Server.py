@@ -10,7 +10,7 @@ import base64
 import traceback
 from optparse import OptionParser
 import hashlib
-import ImageQueueLib
+import imagequeuelib
 from Queue import Empty
 class AuthenticationError(Exception):
      def __init__(self, value):
@@ -33,8 +33,6 @@ def subscribeToFileChanges(queue,url,dir):
         string = socket.recv()
         obj=json.loads(string)
         file=os.path.abspath(os.path.normpath(obj['argument']))
-	print "dir", os.path.abspath(os.path.normpath(dir))
-        print "file", file       
         if file.startswith( os.path.abspath(os.path.normpath(dir))):
             if file.endswith('.tif'):
                 queue.put(obj['argument'])
@@ -75,6 +73,8 @@ class Server():
         (self.options, self.args) = parser.parse_args(args=None, values=None)
         if len(self.args)==0:
             self.args=["."]
+        if not os.path.isdir(self.options.outdir) and not self.options.inplace:
+             parser.error('"'+self.options.outdir+'"'+" directory does not exist")
         if self.options.feederurl=="":
             self.feederurl=conf["Feeder"]
         if self.options.port=="":
@@ -161,7 +161,7 @@ class Server():
 		"watch":self.options.watchdir,"watchdir":os.sep.join(object['argument']['directory']),
         "servermode":True,
 		"walkdirinthreads":False,
-        "silent":False,"plotwindow":False
+        "silent":True,"plotwindow":False
         ,
 		"outdir":self.options.outdir,
 		"inplace":self.options.inplace,"writesvg":False,
@@ -177,7 +177,7 @@ class Server():
 	    print "saved maskfile"
             object['argument']['calibration']['MaskFile']=mskfilename
             cal=calibration.calibration(object['argument']['calibration'])
-            self.imagequeue=ImageQueueLib.imagequeue(cal,
+            self.imagequeue=imagequeuelib.imagequeue(cal,
                     o,[os.sep.join(object['argument']['directory'])])
             print "startimgq"
             self.imagequeueprocess=Process(target=self.imagequeue.start)
