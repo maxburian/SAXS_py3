@@ -38,7 +38,6 @@ def startfeeder():
        for file in fileslist:
             messageobj['argument']=file
             message=json.dumps(messageobj)
-            print "."
             socket.send(message)
             time.sleep(.01)
                         

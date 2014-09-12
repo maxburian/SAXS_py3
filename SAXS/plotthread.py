@@ -31,14 +31,17 @@ class plotthread(QThread):
             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
             argu=["plotdata"]
             o=atrdict.AttrDict({"server":""})
+            print "init plot command"
             result=initcommand(o,argu,conf)
-             
+            print result
+            
            
             # discards the old graph
             ax.hold(False)
             # plot data
             object=json.loads(result)
             if object['result']=="Empty":
+                self.emit( SIGNAL('update(QString)'), "from work thread " )
                 return
             data=np.array(object['data']['array']).transpose()
             skip=0

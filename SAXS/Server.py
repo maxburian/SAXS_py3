@@ -181,13 +181,18 @@ class Server():
             print "startimgq"
             self.imagequeueprocess=Process(target=self.imagequeue.start)
             self.imagequeueprocess.start()
-            print "startfeeder"
+            print "listening to feeder"
             self.feederproc=Process(target=subscribeToFileChanges,args=
                                     (self.imagequeue.picturequeue,
                                      self.feederurl,
                                     os.path.abspath(os.path.join(self.args[0],
                                                         os.sep.join(object['argument']['directory']))))
                                     )
+            print "directory to watch "+os.path.normpath(
+                os.path.join(
+                             self.args[0],
+                             os.sep.join(object['argument']['directory']
+                            )))
             self.feederproc.start()
             self.lasttime=time.time()
             self.lastcount=0
@@ -218,7 +223,7 @@ class Server():
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
         try:
-            picture=self.imagequeue.picturequeue.get(timeout=5)
+            picture=self.imagequeue.picturequeue.get(timeout=100)
         except Empty as e:
             result={"result":"Empty","data":{}}
             return result
