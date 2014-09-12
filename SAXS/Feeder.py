@@ -40,7 +40,7 @@ def startfeeder():
             message=json.dumps(messageobj)
             print "."
             socket.send(message)
-            time.sleep(.03)
+            time.sleep(.01)
                         
 
 if __name__ == '__main__':

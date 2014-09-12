@@ -12,7 +12,7 @@ class plotthread(QThread):
         QThread.__init__(self)
         self.mw=mw
         mw.data.rate=np.zeros(50)
-        mw.data.time=np.zeros(50)
+        mw.data.time=np.ones(50)
         mw.plotthreadgo=True
     def run(self):
         
@@ -56,7 +56,12 @@ class plotthread(QThread):
            
             mw.data.time[0]=mw.data.stat['time interval']+ mw.data.time[1]
            
-            axhist.plot(mw.data.time,mw.data.rate)
+            axhist.plot(mw.data.time,mw.data.rate,lw=2)
+            axhist.fill_between(mw.data.time,0,mw.data.rate,alpha=0.4)
+            axhist.set_ylim( [0,np.max(mw.data.rate)])
+            axhist.set_xlim( [np.min(mw.data.time),np.max(mw.data.time)+1])
+            axhist.set_ylabel('Rate [/s]')
+            axhist.set_xlabel('Time [s]')
             mw.data.time=np.roll(mw.data.time,1)
             mw.data.rate=np.roll(mw.data.rate,1)
             axhist.hold(False)
