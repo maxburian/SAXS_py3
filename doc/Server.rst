@@ -47,14 +47,19 @@ It may subscribe to a "new file" event service.
 The Saxs Leash
 --------------
 
+..  image:: screenshot.png
+   
+   
 The Leash Program is a GUI to load calibrations into the Saxdog Server and monitor the processing of the data.
 It provides a calibration editor, as mask preview and basic data import from :ref:`saxsconverter`. 
 
 The main window has 3 tab cards. The first is for setting up the server, 
 the second to review the currently processed data and the third for basic statistics. The command to launch it is.
 
-.. program-screenshot:: Leash  
-    :prompt:
+.. code::
+  
+  leash
+  
 
 Saxs Leash Commandline
 ----------------------

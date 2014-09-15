@@ -276,7 +276,7 @@ class LeashUI(QMainWindow):
             fh=open(filename,"w")
             json.dump(self.data.cal,fh)
             fh.close()
-            conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+            conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
             argu=["new", filename,self.data.cal["MaskFile"], [
                              unicode(self.ui.lineEditUserDir.text()),
                              unicode(self.ui.lineEditExpDir.text()),
@@ -396,14 +396,14 @@ class LeashUI(QMainWindow):
     def abortqueue(self):
         argu=["abort"]
         o=atrdict.AttrDict({"server":""})
-        conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+        conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
         result=initcommand(o,argu,conf)
         QMessageBox(self).about(self,"aborted",result)
 
     def closequeue(self):
         argu=["close"]
         o=atrdict.AttrDict({"server":""})
-        conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+        conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
         result=initcommand(o,argu,conf) 
         QMessageBox(self).about(self,"closed",result)
     def help(self):
@@ -414,9 +414,9 @@ class LeashUI(QMainWindow):
         dialog.setWindowTitle("Server Status")
         textfield=QTextBrowser()
         try:
-            serverc=json.load(open(os.path.expanduser(os.path.join("~",".saxdognetwork"))))
+            serverc=json.load(open(os.path.expanduser(os.path.join("~",".saxsdognetwork"))))
         except IOError:
-            self.errmsg.showMessage("No network configuration in '~/.saxdognetwork'. Use the 'saxsnetconf' command line tool to create one.")
+            self.errmsg.showMessage("No network configuration in '~/.saxsdognetwork'. Use the 'saxsnetconf' command line tool to create one.")
             
         textfield.append(json.dumps(serverc,indent=4, separators=(',', ': ')))
         status=QLabel(self)

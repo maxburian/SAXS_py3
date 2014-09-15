@@ -9,12 +9,12 @@ class reconnecthread(QThread):
         self.mw=mw
     def run(self):
         try:
-            conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+            conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
         except IOError as e:
-            self.emit( SIGNAL('error(QString)'),"IOError: Cannot open:"+os.path.expanduser("~"+os.sep+".saxdognetwork")+" "+e.message )
+            self.emit( SIGNAL('error(QString)'),"IOError: Cannot open:"+os.path.expanduser("~"+os.sep+".saxsdognetwork")+" "+e.message )
             return
         except ValueError as e:
-            self.emit( SIGNAL('error(QString)'),"IOError: Cannot open:"+os.path.expanduser("~"+os.sep+".saxdognetwork")+". Wrong syntax?"+e.message )
+            self.emit( SIGNAL('error(QString)'),"IOError: Cannot open:"+os.path.expanduser("~"+os.sep+".saxsdognetwork")+". Wrong syntax?"+e.message )
             return
         argu=["get"]
         o=atrdict.AttrDict({"server":""})
