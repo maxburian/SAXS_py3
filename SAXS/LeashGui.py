@@ -51,6 +51,7 @@ class LeashUI(QMainWindow):
         self.plotthread=QThread(parent=self)
         self.serveronline=False
         self.connect(self.ui.actionLoad_Calibration, SIGNAL("triggered()"),self.newFile)
+        self.connect(self.ui.actionNew_Calibration, SIGNAL("triggered()"),self.newfromscratch)
         self.connect(self.ui.actionSave_Calibration,SIGNAL('triggered()'),self.safecalibration)
         self.connect(self.ui.actionSave_Calibration_as,SIGNAL('triggered()'),self.safecalibrationas)
         self.connect(self.ui.actionImport,SIGNAL('triggered()'),self.importcalib)
@@ -103,7 +104,13 @@ class LeashUI(QMainWindow):
                 self.plotworker.start()
                 return
         self.emit(SIGNAL('reconnect()'))
-        
+    def newfromscratch(self):
+        self.data.cal=schematodefault(self.data.calschema)
+        self.ui.treeWidgetCal.clear()
+        self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
+        self.loadmask()
+        self.filename="New.saxsconf"
+        self.mainWindow.setWindowTitle("SAXS Leash | "+os.path.basename(self.filename)+"*")
     def newFile(self,filename=None):
       
         if filename:

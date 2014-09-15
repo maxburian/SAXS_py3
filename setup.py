@@ -39,16 +39,14 @@ setup(
             "saxsdmerge=SAXS:merge"
             ],
         'gui_scripts':[
-            'Leash=SAXS:LeashGUI'
+            'leash=SAXS:LeashGUI'
                        ]
         
         
     }
 )
-
+import sys,os
 if sys.argv[1] == 'install':
-    
-    
     if os.name == "nt":
         import _winreg as  wr
       
@@ -62,10 +60,9 @@ if sys.argv[1] == 'install':
             "SAXS",
             "icons",
             "program.ico"))
-        wr.SetValue(wr.HKEY_CURRENT_USER,"Software\Classes\TUG.ortlight\shell\open\command",wr.REG_SZ,pyw_executable+" \""+ script_file+ "\"  \"%1\"")
-      
-        wr.SetValue( wr.HKEY_CURRENT_USER,"Software\Classes\TUG.saxsdog\DefaultIcon",wr.REG_SZ,iconpath)
-        wr.SetValue( wr.HKEY_CURRENT_USER,"Software\Classes\.ortl",wr.REG_SZ, "TUG.SAXSdog");
+        wr.SetValue(wr.HKEY_CURRENT_USER,"Software\Classes\TUG.Leash\shell\open\command",wr.REG_SZ,pyw_executable+" \""+ script_file+ "\"  \"%1\"")
+        wr.SetValue( wr.HKEY_CURRENT_USER,"Software\Classes\TUG.Leash\DefaultIcon",wr.REG_SZ,iconpath)
+        wr.SetValue( wr.HKEY_CURRENT_USER,"Software\Classes\.saxsconf",wr.REG_SZ, "TUG.Leash");
         
         print "added registry values for extensions"
          

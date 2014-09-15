@@ -49,8 +49,8 @@
 			"units": "pixel",
 			"default": 
 			[
-				808.370,
-				387.772
+				800.00,
+				400.00
 			],
 
 			"items": 
@@ -74,7 +74,7 @@
 			"description": "Distance between diffraction center and sensor.",
 			"type": "number",
 			"units": "Millimeters",
-			"default": 1031.657,
+			"default": 1000.00,
 			"required": true
 		},
 
