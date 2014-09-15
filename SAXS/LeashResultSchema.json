@@ -27,6 +27,7 @@
                 		"type": "string"
            				 }
 				},
+				"mask":{},
 				"stat": 
 				{
 					"additionalProperties": false,

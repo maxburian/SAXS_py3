@@ -16,12 +16,12 @@ def startfeeder():
                       help="Directory to monitor", metavar="dir",default=".")
     (options, args) = parser.parse_args(args=None, values=None)
     
- 
+    
     
     context = zmq.Context()
     socket = context.socket(zmq.PUB)
     if options.port=="":
-        conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork"))) 
+        conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork"))) 
         port=conf['Feeder'].split(':')[-1]
     else:
         port=options.port
@@ -29,7 +29,11 @@ def startfeeder():
     socket.bind("tcp://*:%s" % port)
     
     fileslist=[]
-    for path, subdirs, files in os.walk(options.dir):
+    if len(args)>0 and options.dir==".":
+        dirtosearch =args[0]
+    else:
+        dirtosearch =options.dir
+    for path, subdirs, files in os.walk(dirtosearch):
                 for name in files:
                     if name.endswith('tif'):
                         fileslist.append( os.path.join(path, name))

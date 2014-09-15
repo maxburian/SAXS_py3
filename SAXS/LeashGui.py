@@ -3,7 +3,7 @@ import json
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
- 
+import base64
 import time
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -37,6 +37,11 @@ class LeashUI(QMainWindow):
         super(LeashUI,self).__init__(parent)
         self.clipboard=app.clipboard()
         self.ui=uic.loadUi(os.path.dirname(__file__)+os.sep+"LeashMW.ui",self)
+        self.mainWindow=super(LeashUI,self)
+        self.mainWindow.setWindowTitle("SAXS Leash")
+        self.appdir=os.path.dirname(__file__)+os.sep
+        self.mainWindow.setWindowIcon(QIcon(self.appdir+"icons"+os.sep+"program.png"))
+        self.ui.tabWidget.setCurrentIndex(0)
         self.data=atrdict.AttrDict({})
         self.data.cal=None
         self.data.queueon=False
@@ -77,14 +82,28 @@ class LeashUI(QMainWindow):
         QShortcut(QKeySequence("Ctrl+S"),self,self.safecalibration)
         QShortcut(QKeySequence("Ctrl+I"),self,self.importcalib)
         self.connect(self.ui,SIGNAL("reconnect()"),self.reconnect)
+        if len( sys.argv)>1:
+            if os.path.isfile(sys.argv[1]):
+                print sys.argv[1]
+                self.filename=sys.argv[1]
+                self.newFile(filename=self.filename)
+                self.plotworker.start()
+                return
         self.emit(SIGNAL('reconnect()'))
         
-    def newFile(self):
-        filename=unicode( QFileDialog.getOpenFileName(self,directory="../test"))
-        if filename=="":
-            return
-        else:
+    def newFile(self,filename=None):
+        if filename:
             self.filename=filename
+        else:
+            filename=unicode( 
+                    QFileDialog.getOpenFileName(self  ,
+                        caption="Open SAXS Calibration File" , 
+                        filter="SAXS Config (*.saxsconf);;All files (*.*)"
+                        ))
+            if filename=="":
+                return
+            else:
+                self.filename=filename
         
         try:
             filefh=open(self.filename,"r")
@@ -105,7 +124,11 @@ class LeashUI(QMainWindow):
         self.loadmask()
     def pickmask(self):
         if  self.data.cal is not None:
-            self.data.cal['MaskFile']=unicode(QFileDialog.getOpenFileName(self,directory="../doc"))
+            self.data.cal['MaskFile']=unicode(
+                    QFileDialog.getOpenFileName(self,
+                        caption="Open SAXS Mask File" , 
+                        filter="Fit2d Mask (*.msk);;All Image files (*.*)"
+                        ))
             self.loadmask()
             self.ui.treeWidgetCal.clear()
             self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
@@ -216,7 +239,8 @@ class LeashUI(QMainWindow):
         QMessageBox(self).about(self,"saved",self.filename)
     def safecalibrationas(self):
         
-        filename=unicode( QFileDialog.getSaveFileName(self,directory="../test"))
+        filename=unicode( QFileDialog.getSaveFileName(self, caption="Save SAXS Config File as" , 
+                        filter="SAXS Config (*.saxsconf);;All files (*.*)" ))
         if filename=="":
             return
         else:
@@ -246,13 +270,17 @@ class LeashUI(QMainWindow):
             dialog.showMessage("Load file first")
    
                     
-    def statupdate(self):
-        
-        self.ui.lcdNumberFiles.display(self.data.stat['images processed'])
-        self.ui.lcdNumberRate.display(self.data.stat['pics']/self.data.stat['time interval'])
-        self.canvashist.draw()
-        self.plotcanvas.draw()
-        time.sleep(.5)
+    def statupdate(self,mesg):
+   
+        if unicode(mesg)=='data plotted':
+            try:
+                self.ui.lcdNumberFiles.display(self.data.stat['images processed'])
+                self.ui.lcdNumberRate.display(self.data.stat['pics']/self.data.stat['time interval'])
+                self.canvashist.draw()
+                self.plotcanvas.draw()
+            except:
+                pass
+        time.sleep(.2)
         self.plotworker.start()
     def cleanup(self):
         print "cleanup"
@@ -264,7 +292,7 @@ class LeashUI(QMainWindow):
         self.connect(self.reconthread,SIGNAL('connected(QString)'),self.buildcalfromserver)
         self.reconthread.start()
         self.timer=QTimer()
-        self.timer.start(1000)
+        self.timer.start(6000)
         self.connect(self.timer,SIGNAL('timeout()'),self.connectiontimeout)
     def connectiontimeout(self):
         self.timer.stop()
@@ -275,12 +303,15 @@ class LeashUI(QMainWindow):
     def buildcalfromserver(self,result):
         self.serveronline=True
         try:
+            #if there is no valid cal 
             validate(self.data.cal,self.data.calschema)
         except:
-            print  unicode(result)
+            # import new one
+           
             try:
-                cal=json.loads(unicode(result))['data']['cal']
-                print unicode(result)
+                resultjson=json.loads(unicode(result))
+                cal=resultjson['data']['cal']
+                 
             except KeyError as e:
                 self.errmsg.showMessage("Server has no calibration.")
                 return
@@ -292,6 +323,13 @@ class LeashUI(QMainWindow):
                 dialog.showMessage(e.message)
                 self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
                 return
+            
+            mskfilename=os.path.basename(cal['MaskFile'])
+            print "maskfile:",mskfilename
+            mskfile=open(mskfilename,'wb')
+            cal['MaskFile']=mskfilename
+            mskfile.write(base64.b64decode(resultjson['data']['mask']['data']))
+            mskfile.close()
             self.data.cal=cal
             self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
             self.loadmask()

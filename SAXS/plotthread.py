@@ -15,7 +15,7 @@ class plotthread(QThread):
         mw.data.time=np.ones(50)
         mw.plotthreadgo=True
     def run(self):
-        
+            
             mw=self.mw
            
             ax = mw.figure.add_subplot(111)
@@ -31,17 +31,18 @@ class plotthread(QThread):
             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
             argu=["plotdata"]
             o=atrdict.AttrDict({"server":""})
-            print "init plot command"
+      
             result=initcommand(o,argu,conf)
-            print result
+       
             
            
             # discards the old graph
             ax.hold(False)
             # plot data
             object=json.loads(result)
+           
             if object['result']=="Empty":
-                self.emit( SIGNAL('update(QString)'), "from work thread " )
+                self.emit( SIGNAL('update(QString)'), "empty" )
                 return
             data=np.array(object['data']['array']).transpose()
             skip=0
@@ -69,6 +70,6 @@ class plotthread(QThread):
             mw.data.rate=np.roll(mw.data.rate,1)
             axhist.hold(False)
             # refresh canvas
-            self.emit( SIGNAL('update(QString)'), "from work thread " )
+            self.emit( SIGNAL('update(QString)'), "data plotted" )
 
            

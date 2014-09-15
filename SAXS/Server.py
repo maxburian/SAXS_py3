@@ -144,7 +144,11 @@ class Server():
              result={"result":"stat","data":{"stat":self.stat()}}
          elif command=="get":
              if self.imagequeue:
-                 result={"result":"cal","data":{"cal":self.imagequeue.cal.config,"directory":self.directory.split(os.sep)}}
+                 result={"result":"cal","data":{
+                                                "cal":self.imagequeue.cal.config,
+                                                "directory":self.directory.split(os.sep),
+                                                "mask":{"data":base64.b64encode(open(self.imagequeue.cal.config['MaskFile'],"rb").read())}
+                                                }}
              else:
                  result={"result":"no queue","data":{}}
          else:
@@ -223,7 +227,7 @@ class Server():
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
         try:
-            picture=self.imagequeue.picturequeue.get(timeout=100)
+            picture=self.imagequeue.picturequeue.get(timeout=5)
         except Empty as e:
             result={"result":"Empty","data":{}}
             return result
@@ -245,7 +249,7 @@ class Server():
         else:
             return{}
 def saxsdogserver():
-     serverconf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+     serverconf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
      validate(serverconf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
      S=Server(serverconf)
      S.start()

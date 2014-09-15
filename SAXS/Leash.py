@@ -213,7 +213,7 @@ def saxsleash():
     The command line leash.
     """
     (options,arg)=parsecommandline()
-    conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+    conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
     validate(conf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
     try:
         result=initcommand(options,arg,conf)
