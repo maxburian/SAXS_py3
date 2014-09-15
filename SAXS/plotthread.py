@@ -37,7 +37,7 @@ class plotthread(QThread):
             axhist.set_ylabel('Rate')
         
             axhist.set_xlabel('time')
-            conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
+            conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
             argu=["plotdata"]
             o=atrdict.AttrDict({"server":""})
       
