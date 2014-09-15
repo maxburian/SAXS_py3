@@ -14,12 +14,20 @@ class plotthread(QThread):
         mw.data.rate=np.zeros(50)
         mw.data.time=np.ones(50)
         mw.plotthreadgo=True
+        self.yscale="symlog"
+    def setyscale(self,state):
+      
+        if state==0:
+            self.yscale="linear"
+        else:
+            self.yscale="symlog"
+        self.emit( SIGNAL('update(QString)'), "changed scale" )
     def run(self):
             
             mw=self.mw
            
             ax = mw.figure.add_subplot(111)
-           
+          
             axhist=mw.figurehist.add_subplot(111)
          
          
@@ -27,6 +35,7 @@ class plotthread(QThread):
             ax.set_xlabel('q [1/nm]')
            
             axhist.set_ylabel('Rate')
+        
             axhist.set_xlabel('time')
             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxdognetwork")))
             argu=["plotdata"]
@@ -45,6 +54,7 @@ class plotthread(QThread):
                 self.emit( SIGNAL('update(QString)'), "empty" )
                 return
             data=np.array(object['data']['array']).transpose()
+            data[data==0]=np.NaN
             skip=0
             clip=1
             clipat=0
@@ -54,7 +64,7 @@ class plotthread(QThread):
                              np.clip(data[skip:-clip,1]+data[skip:-clip,2],clipat,1e300),
                              facecolor='blue' ,alpha=0.2,linewidth=0,label="Count Error")
             #ui.figure.title(object['data']['filename'])
-            
+            ax.set_yscale(self.yscale)
             mw.data.stat=object['data']["stat"]
             mw.data.rate[0]=mw.data.stat['pics']/mw.data.stat['time interval']
            

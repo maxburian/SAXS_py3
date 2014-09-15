@@ -5,6 +5,7 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 import base64
 import time
+import datetime
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from multiprocessing import Process
@@ -24,6 +25,7 @@ from plotthread import plotthread
 from reconnectqthread import reconnecthread 
 from ImportDialogClass import Importdialog
 from converter import txt2json
+from recentfilemenue import recentfilemenue
 def nparrayToQPixmap(arrayImage):
     pilImage = toimage(arrayImage)
     
@@ -54,6 +56,7 @@ class LeashUI(QMainWindow):
         self.connect(self.ui.actionImport,SIGNAL('triggered()'),self.importcalib)
         self.connect(self.ui.actionAbort_Queue ,SIGNAL('triggered()'),self.abortqueue)
         self.connect(self.ui.actionClose_Queue ,SIGNAL('triggered()'),self.closequeue)
+        self.connect(self.ui.actionShow_Server_Configuration ,SIGNAL('triggered()'),self.showserver)
         
         self.connect(self.ui.actionOpen_Hep_in_Browser ,SIGNAL('triggered()'),self.help)
    
@@ -70,13 +73,23 @@ class LeashUI(QMainWindow):
         self.plotcanvas= FigureCanvas(self.figure)
         self.canvashist= FigureCanvas(self.figurehist)
         self.ui.verticalLayout_3.addWidget(self.plotcanvas)
+        self.ylogchkbox=QCheckBox("Y Log Scale")
+        self.ylogchkbox.setCheckState(2)
+        self.ui.verticalLayout_3.addWidget(self.ylogchkbox)
+     
         self.ui.verticalLayout_5.addWidget( self.canvashist)
         self.plotworker = plotthread(self)
+        self.connect(self.ylogchkbox, SIGNAL("stateChanged(int)"),self.plotworker.setyscale)
         self.data.queueon=True
-       
+        self.recentfilemenue=recentfilemenue(self,self.ui.menuSAXS_Leash )
+        self.connect(self.recentfilemenue, SIGNAL('openFile(QString)'),self.newFile)
         self.connect(self.plotworker, SIGNAL('update(QString)'),self.statupdate)
         self.errmsg=QErrorMessage(self)
-       
+        self.errmsg.setWindowTitle("Error")
+        self.filename=""
+        self.logbox= self.ui.textBrowserLogs
+        self.log("hello")
+      
         QShortcut(QKeySequence("Ctrl+Q"), self, self.close)
         QShortcut(QKeySequence("Ctrl+O"), self, self.newFile)
         QShortcut(QKeySequence("Ctrl+S"),self,self.safecalibration)
@@ -92,8 +105,9 @@ class LeashUI(QMainWindow):
         self.emit(SIGNAL('reconnect()'))
         
     def newFile(self,filename=None):
+      
         if filename:
-            self.filename=filename
+            self.filename=unicode(filename)
         else:
             filename=unicode( 
                     QFileDialog.getOpenFileName(self  ,
@@ -106,6 +120,7 @@ class LeashUI(QMainWindow):
                 self.filename=filename
         
         try:
+           
             filefh=open(self.filename,"r")
             self.data.cal=json.load(filefh)
             filefh.close()
@@ -119,9 +134,10 @@ class LeashUI(QMainWindow):
             dialog.showMessage(e.message)
             return
         self.ui.treeWidgetCal.clear()
-        
+        self.recentfilemenue.append(self.filename)
         self.buildcaltree(self.data.cal,self.data.calschema,self.ui.treeWidgetCal)
         self.loadmask()
+        self.mainWindow.setWindowTitle("SAXS Leash | "+os.path.basename(self.filename))
     def pickmask(self):
         if  self.data.cal is not None:
             self.data.cal['MaskFile']=unicode(
@@ -264,6 +280,7 @@ class LeashUI(QMainWindow):
             print result
             self.ui.pushButtonnew.setText("Restart Queue with Changed Calibration")
             self.plotworker.start()
+            self.log("New calibration loaded onto server.")
             os.remove(filename)
         else:
             dialog=QErrorMessage(self)
@@ -281,7 +298,9 @@ class LeashUI(QMainWindow):
             except:
                 pass
         time.sleep(.2)
-        self.plotworker.start()
+        if unicode(mesg)!='change yscale':
+            self.plotworker.start()
+        
     def cleanup(self):
         print "cleanup"
      
@@ -297,6 +316,7 @@ class LeashUI(QMainWindow):
     def connectiontimeout(self):
         self.timer.stop()
         if self.serveronline:
+            self.log("Reconnected to server")
             pass
         else:
             self.errmsg.showMessage("Connection to server failed")
@@ -340,6 +360,7 @@ class LeashUI(QMainWindow):
             self.ui.lineEditUserDir.setText(self.directory[0])
             self.ui.lineEditExpDir.setText(self.directory[1])
             self.ui.lineEditSetupDir.setText(self.directory[2])
+            self.log("Got calibration from server.")
             self.plotworker.start()
     def importcalib(self):
          
@@ -381,6 +402,29 @@ class LeashUI(QMainWindow):
     def help(self):
         import webbrowser
         webbrowser.open('http://christianmeisenbichler.github.io/SAXS/Server.html')
+    def showserver(self):
+        dialog=QDialog(self)
+        dialog.setWindowTitle("Server Status")
+        textfield=QTextBrowser()
+        try:
+            serverc=json.load(open(os.path.expanduser(os.path.join("~",".saxdognetwork"))))
+        except IOError:
+            self.errmsg.showMessage("No network configuration in '~/.saxdognetwork'. Use the 'saxsnetconf' command line tool to create one.")
+            
+        textfield.append(json.dumps(serverc,indent=4, separators=(',', ': ')))
+        status=QLabel(self)
+        if self.serveronline:
+            status.setText("Server Connected")
+        else:
+            status.setText("Server Offline")
+        layout=QVBoxLayout( )
+        layout.addWidget(textfield)
+        layout.addWidget(status)
+        dialog.setLayout(layout)
+        dialog.exec_()
+    def log(self,text):
+        
+        self.logbox.append(str(datetime.datetime.now())+": "+text)
 def LeashGUI():
     app=QApplication(sys.argv)
     form=LeashUI(app)

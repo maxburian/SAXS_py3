@@ -32,7 +32,7 @@ def createsaxdogconf():
     except ValidationError as e:
         print "Error in config file: ",e.message
         sys.exit()
-    json.dump(content,open(confpath,"w"))
+    json.dump(content,open(confpath,"w"),indent=4, separators=(',', ': '))
     print confpath," created. \n\n Copy it to the other machines who take part in your network"
 
 if __name__ == '__main__':

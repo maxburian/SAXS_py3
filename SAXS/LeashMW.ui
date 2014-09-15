@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_Setup">
        <attribute name="title">
@@ -333,10 +333,12 @@ p, li { white-space: pre-wrap; }
      <string>&amp;File</string>
     </property>
     <addaction name="actionLoad_Calibration"/>
-    <addaction name="actionSave_Calibration"/>
-    <addaction name="actionImport"/>
+    <addaction name="actionNew_Calibration"/>
     <addaction name="actionRecent_Files"/>
+    <addaction name="actionImport"/>
+    <addaction name="actionSave_Calibration"/>
     <addaction name="actionSave_Calibration_as"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuQueue">
     <property name="title">
@@ -408,6 +410,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionShow_Server_Configuration">
    <property name="text">
     <string>Show Server Configuration</string>
+   </property>
+  </action>
+  <action name="actionNew_Calibration">
+   <property name="text">
+    <string>&amp;New Calibration</string>
    </property>
   </action>
  </widget>

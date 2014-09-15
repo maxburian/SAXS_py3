@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'LeashMW.ui'
 #
-# Created: Mon Jul 14 14:39:16 2014
+# Created: Mon Sep 15 12:17:31 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -128,15 +128,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_11.setObjectName(_fromUtf8("horizontalLayout_11"))
         self.verticalLayout_3 = QtGui.QVBoxLayout()
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
-        self.graphicsViewPlot = QtGui.QGraphicsView(self.groupBox_6)
-        self.graphicsViewPlot.setObjectName(_fromUtf8("graphicsViewPlot"))
-        self.verticalLayout_3.addWidget(self.graphicsViewPlot)
-        self.label_Rate_2 = QtGui.QLabel(self.groupBox_6)
-        self.label_Rate_2.setObjectName(_fromUtf8("label_Rate_2"))
-        self.verticalLayout_3.addWidget(self.label_Rate_2)
-        self.label_File = QtGui.QLabel(self.groupBox_6)
-        self.label_File.setObjectName(_fromUtf8("label_File"))
-        self.verticalLayout_3.addWidget(self.label_File)
         self.horizontalLayout_11.addLayout(self.verticalLayout_3)
         self.verticalLayout.addWidget(self.groupBox_6)
         self.horizontalLayout_6.addLayout(self.verticalLayout)
@@ -153,9 +144,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_9.setObjectName(_fromUtf8("horizontalLayout_9"))
         self.verticalLayout_5 = QtGui.QVBoxLayout()
         self.verticalLayout_5.setObjectName(_fromUtf8("verticalLayout_5"))
-        self.graphicsView_Hist = QtGui.QGraphicsView(self.groupBox_4)
-        self.graphicsView_Hist.setObjectName(_fromUtf8("graphicsView_Hist"))
-        self.verticalLayout_5.addWidget(self.graphicsView_Hist)
         self.horizontalLayout_9.addLayout(self.verticalLayout_5)
         self.verticalLayout_4.addWidget(self.groupBox_4)
         self.groupBox_3 = QtGui.QGroupBox(self.tabHistory)
@@ -194,7 +182,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtGui.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 886, 25))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 886, 21))
         self.menuBar.setObjectName(_fromUtf8("menuBar"))
         self.menuSAXS_Leash = QtGui.QMenu(self.menuBar)
         self.menuSAXS_Leash.setObjectName(_fromUtf8("menuSAXS_Leash"))
@@ -223,13 +211,23 @@ class Ui_MainWindow(object):
         self.actionRecent_Files.setObjectName(_fromUtf8("actionRecent_Files"))
         self.actionSave_Calibration_as = QtGui.QAction(MainWindow)
         self.actionSave_Calibration_as.setObjectName(_fromUtf8("actionSave_Calibration_as"))
+        self.actionOpen_Hep_in_Browser = QtGui.QAction(MainWindow)
+        self.actionOpen_Hep_in_Browser.setObjectName(_fromUtf8("actionOpen_Hep_in_Browser"))
+        self.actionShow_Server_Configuration = QtGui.QAction(MainWindow)
+        self.actionShow_Server_Configuration.setObjectName(_fromUtf8("actionShow_Server_Configuration"))
+        self.actionNew_Calibration = QtGui.QAction(MainWindow)
+        self.actionNew_Calibration.setObjectName(_fromUtf8("actionNew_Calibration"))
         self.menuSAXS_Leash.addAction(self.actionLoad_Calibration)
-        self.menuSAXS_Leash.addAction(self.actionSave_Calibration)
-        self.menuSAXS_Leash.addAction(self.actionImport)
+        self.menuSAXS_Leash.addAction(self.actionNew_Calibration)
         self.menuSAXS_Leash.addAction(self.actionRecent_Files)
+        self.menuSAXS_Leash.addAction(self.actionImport)
+        self.menuSAXS_Leash.addAction(self.actionSave_Calibration)
         self.menuSAXS_Leash.addAction(self.actionSave_Calibration_as)
+        self.menuSAXS_Leash.addSeparator()
         self.menuQueue.addAction(self.actionClose_Queue)
         self.menuQueue.addAction(self.actionAbort_Queue)
+        self.menuQueue.addAction(self.actionShow_Server_Configuration)
+        self.menuHelp.addAction(self.actionOpen_Hep_in_Browser)
         self.menuBar.addAction(self.menuSAXS_Leash.menuAction())
         self.menuBar.addAction(self.menuQueue.menuAction())
         self.menuBar.addAction(self.menuHelp.menuAction())
@@ -267,8 +265,6 @@ class Ui_MainWindow(object):
         self.pushButtonnew.setText(_translate("MainWindow", "Start Server Queue with this Calibration", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_Setup), _translate("MainWindow", "Setup", None))
         self.groupBox_6.setTitle(_translate("MainWindow", "Diffraction Curve", None))
-        self.label_Rate_2.setText(_translate("MainWindow", "Rate:", None))
-        self.label_File.setText(_translate("MainWindow", "File:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_Plot), _translate("MainWindow", "Plot", None))
         self.groupBox_4.setTitle(_translate("MainWindow", "Images Processed", None))
         self.groupBox_3.setTitle(_translate("MainWindow", "Meters", None))
@@ -278,8 +274,8 @@ class Ui_MainWindow(object):
         self.textBrowserLogs.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt;\">lhksjdhfjkhh jsdhf </span></p></body></html>", None))
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Ubuntu\'; font-size:11pt;\"><br /></p></body></html>", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabHistory), _translate("MainWindow", "History", None))
         self.menuSAXS_Leash.setTitle(_translate("MainWindow", "&File", None))
         self.menuQueue.setTitle(_translate("MainWindow", "Queue", None))
@@ -291,4 +287,7 @@ class Ui_MainWindow(object):
         self.actionSave_Calibration.setText(_translate("MainWindow", "&Save Calibration", None))
         self.actionRecent_Files.setText(_translate("MainWindow", "Recent Files", None))
         self.actionSave_Calibration_as.setText(_translate("MainWindow", "Save Calibration &as", None))
+        self.actionOpen_Hep_in_Browser.setText(_translate("MainWindow", "Open Hep in Browser", None))
+        self.actionShow_Server_Configuration.setText(_translate("MainWindow", "Show Server Configuration", None))
+        self.actionNew_Calibration.setText(_translate("MainWindow", "&New Calibration", None))
 
