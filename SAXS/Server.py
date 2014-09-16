@@ -199,23 +199,24 @@ class Server():
 	    print "saved maskfile"
             object['argument']['calibration']['MaskFile']=mskfilename
             cal=calibration.calibration(object['argument']['calibration'])
-            self.imagequeue=imagequeuelib.imagequeue(cal,
-                    o,[os.sep.join(object['argument']['directory'])])
-            print "startimgq"
-            self.imagequeueprocess=Process(target=self.imagequeue.start)
-            self.imagequeueprocess.start()
-            print "listening to feeder"
-            self.feederproc=Process(target=subscribeToFileChanges,args=
-                                    (self.imagequeue.picturequeue,
-                                     self.feederurl,
-                                    os.path.abspath(os.path.join(self.args[0],
-                                                        os.sep.join(object['argument']['directory']))))
-                                    )
-            print "directory to watch "+os.path.normpath(
+            dir=os.path.normpath(
                 os.path.join(
                              self.args[0],
                              os.sep.join(object['argument']['directory']
                             )))
+            self.imagequeue=imagequeuelib.imagequeue(cal,
+                    o,[ dir])
+            print "startimgq"
+            self.imagequeueprocess=Process(target=self.imagequeue.start)
+            self.imagequeueprocess.start()
+            print "listening to feeder"
+           
+            self.feederproc=Process(target=subscribeToFileChanges,args=
+                                    (self.imagequeue.picturequeue,
+                                     self.feederurl,
+                                    dir)
+                                    )
+            print "directory to watch "+dir
             self.feederproc.start()
             self.lasttime=time.time()
             self.lastcount=0
