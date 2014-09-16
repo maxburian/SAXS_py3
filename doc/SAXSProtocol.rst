@@ -111,7 +111,7 @@ Request:
       {
          "command":"new queue",
          "argument":{
-            "directory":"directory of data to take into account",
+            "directory":["path","to","data"],
             "calibration":{},
             "maskbin":""
          },
