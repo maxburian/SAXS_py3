@@ -17,7 +17,7 @@ rstfile.close
 
 transform=jsonschematorst( '../SAXS/LeashRequestSchema.json') 
 
-RST= transform.toRsT()
+RST= transform.toRsT(rootref="reqroot")
 #print RST 
 #print RST
 rstfile=open("SAXSLeashRequest.rst",'w')
@@ -26,7 +26,7 @@ rstfile.close
 
 transform=jsonschematorst( '../SAXS/LeashResultSchema.json') 
 
-RST= transform.toRsT()
+RST= transform.toRsT(rootref="resroot")
 #print RST 
 #print RST
 rstfile=open("SAXSLeashResult.rst",'w')

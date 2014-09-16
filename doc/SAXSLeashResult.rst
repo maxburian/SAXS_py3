@@ -4,7 +4,7 @@
 
 .. role:: red
 
-.. _root:.. _required:
+:.. _required:
 
  The ':red:`*`' signifies a required Field.
 
@@ -18,7 +18,7 @@ Schema for requests from Saxs Leash to Saxs Server
 :Required:
   True
 :JSON Path:
-  * :ref:`# <root>` 
+  * :ref:`# <resroot>` 
 
 Example JSON: 
 
@@ -36,7 +36,7 @@ result
 :Required:
   True
 :JSON Path:
-  * :ref:`# <root>` [':ref:`result <result>`']
+  * :ref:`# <resroot>` [':ref:`result <result>`']
 
 Example JSON: 
 
@@ -52,11 +52,11 @@ data
 :Type:
   object
 :Contains:
-  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`directory <directory>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
+  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`directory <directory>`, :ref:`mask <mask>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
 :Required:
   True
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`']
 
 Example JSON: 
 
@@ -74,7 +74,7 @@ cal
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`cal <cal>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`cal <cal>`']
 
 Example JSON: 
 
@@ -94,7 +94,7 @@ Error
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`Error <Error>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`Error <Error>`']
 
 Example JSON: 
 
@@ -107,18 +107,43 @@ Example JSON:
 directory
 --------------------
 
+Directory this queue is going to use. New files in other directories are going to be ignored.
+
+
 :Type:
-  string
+  array() items: string 
 :Required:
   False
+:Default:
+  [u'.', u'', u'']
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`directory <directory>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`directory <directory>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"directory": ""}
+    {"directory": [".","",""]}
+
+.. _mask:
+
+mask
+--------------------
+
+:type:
+  object
+
+
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`mask <mask>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"mask": {}}
 
 .. _stat:
 
@@ -134,7 +159,7 @@ stat
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`']
 
 Example JSON: 
 
@@ -152,7 +177,7 @@ queue length
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`queue length <queue length>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`queue length <queue length>`']
 
 Example JSON: 
 
@@ -170,7 +195,7 @@ images processed
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`images processed <images processed>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`images processed <images processed>`']
 
 Example JSON: 
 
@@ -188,7 +213,7 @@ time interval
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`time interval <time interval>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`time interval <time interval>`']
 
 Example JSON: 
 
@@ -206,7 +231,7 @@ frames per sec
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`frames per sec <frames per sec>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`frames per sec <frames per sec>`']
 
 Example JSON: 
 
@@ -224,7 +249,7 @@ pics
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`pics <pics>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`pics <pics>`']
 
 Example JSON: 
 
@@ -242,7 +267,7 @@ filename
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`filename <filename>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`filename <filename>`']
 
 Example JSON: 
 
@@ -260,7 +285,7 @@ array
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`data <data>`'][':ref:`array <array>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`array <array>`']
 
 Example JSON: 
 

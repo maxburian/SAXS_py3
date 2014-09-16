@@ -237,12 +237,14 @@ In case of error in the Saxsdog Server it will return an error message:
    }
    
    
+.. _reqroot:
 
 Request Schema
 ~~~~~~~~~~~~~~
    
 .. include:: SAXSLeashRequest.rst
    
+.. _resroot:
 
 Response Schema
 ~~~~~~~~~~~~~~~

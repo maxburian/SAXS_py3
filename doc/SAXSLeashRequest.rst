@@ -4,7 +4,7 @@
 
 .. role:: red
 
-.. _root:.. _required:
+:.. _required:
 
  The ':red:`*`' signifies a required Field.
 
@@ -18,7 +18,7 @@ Schema for requests from Saxs Leash to Saxs Server
 :Required:
   True
 :JSON Path:
-  * :ref:`# <root>` 
+  * :ref:`# <reqroot>` 
 
 Example JSON: 
 
@@ -39,7 +39,7 @@ command
 :Required:
   True
 :JSON Path:
-  * :ref:`# <root>` [':ref:`command <command>`']
+  * :ref:`# <reqroot>` [':ref:`command <command>`']
 
 Example JSON: 
 
@@ -59,7 +59,7 @@ argument
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`argument <argument>`']
+  * :ref:`# <reqroot>` [':ref:`argument <argument>`']
 
 Example JSON: 
 
@@ -76,17 +76,19 @@ Directory this queue is going to use. New files in other directories are going t
 
 
 :Type:
-  string
+  array() items: string 
 :Required:
   False
+:Default:
+  [u'.', u'', u'']
 :JSON Path:
-  * :ref:`# <root>` [':ref:`argument <argument>`'][':ref:`directory <directory>`']
+  * :ref:`# <reqroot>` [':ref:`argument <argument>`'][':ref:`directory <directory>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"directory": ""}
+    {"directory": [".","",""]}
 
 .. _calibration:
 
@@ -103,7 +105,7 @@ Calibrarion data according to :ref:`calib`
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`argument <argument>`'][':ref:`calibration <calibration>`']
+  * :ref:`# <reqroot>` [':ref:`argument <argument>`'][':ref:`calibration <calibration>`']
 
 Example JSON: 
 
@@ -124,7 +126,7 @@ Signature of request
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`sign <sign>`']
+  * :ref:`# <reqroot>` [':ref:`sign <sign>`']
 
 Example JSON: 
 
@@ -145,7 +147,7 @@ time in seconds (pythons time.time())
 :Required:
   False
 :JSON Path:
-  * :ref:`# <root>` [':ref:`time <time>`']
+  * :ref:`# <reqroot>` [':ref:`time <time>`']
 
 Example JSON: 
 

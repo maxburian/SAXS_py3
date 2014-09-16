@@ -23,9 +23,10 @@
 				"directory":{
 					"description": "Directory this queue is going to use. New files in other directories are going to be ignored.",
 					 "type": "array",
-            		"items": {
+					 "default":[".","",""],
+            		"items": [{
                 		"type": "string"
-           				 }
+           				 }]
 				},
 				"mask":{},
 				"stat": 

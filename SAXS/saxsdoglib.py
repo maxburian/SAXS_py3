@@ -39,7 +39,7 @@ def saxsdogparseopt():
                       help="Don't scan for files already there, only watch file system if -w flag is given.")
     parser.add_option("-D","--walkdirinthreads",dest="walkdirinthreads",default=False,action="store_true",
                       help="Search all directories in parallel process.")
-    parser.add_option("-S","--servermode",dest="servermode",default=False,action="store_true",
+    parser.add_option("-V","--servermode",dest="servermode",default=False,action="store_true",
                       help="Servermode.")
         
      
