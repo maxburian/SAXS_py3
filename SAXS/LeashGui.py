@@ -58,6 +58,7 @@ class LeashUI(QMainWindow):
         self.connect(self.ui.actionAbort_Queue ,SIGNAL('triggered()'),self.abortqueue)
         self.connect(self.ui.actionClose_Queue ,SIGNAL('triggered()'),self.closequeue)
         self.connect(self.ui.actionShow_Server_Configuration ,SIGNAL('triggered()'),self.showserver)
+        self.connect(self.ui.action_Reread_Directory ,SIGNAL('triggered()'),self.rereaddir)
         
         self.connect(self.ui.actionOpen_Hep_in_Browser ,SIGNAL('triggered()'),self.help)
    
@@ -437,6 +438,17 @@ class LeashUI(QMainWindow):
     def log(self,text):
         
         self.logbox.append(str(datetime.datetime.now())+": "+text)
+    def rereaddir(self):
+        from Leash import initcommand
+        import atrdict
+        conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
+        argu=["readdir"]
+        o=atrdict.AttrDict({"server":""})
+        result=initcommand(o,argu,conf)
+        self.log("reread directory")
+        msgBox=QMessageBox(self)
+        msgBox.setText( result);
+        msgBox.exec_();
 def LeashGUI():
     app=QApplication(sys.argv)
     form=LeashUI(app)

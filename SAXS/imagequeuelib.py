@@ -61,7 +61,7 @@ class imagequeue:
         """
         def filler(queue,dir):
             filequeue=[] 
-            
+            print dir
             for path, subdirs, files in os.walk(dir):
                 for name in files:
                     if name.endswith('tif'):

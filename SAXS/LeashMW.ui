@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_Setup">
        <attribute name="title">
@@ -301,8 +301,8 @@
                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                 </widget>
                </item>
@@ -325,7 +325,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>886</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSAXS_Leash">
@@ -334,7 +334,6 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="actionLoad_Calibration"/>
     <addaction name="actionNew_Calibration"/>
-    <addaction name="actionRecent_Files"/>
     <addaction name="actionImport"/>
     <addaction name="actionSave_Calibration"/>
     <addaction name="actionSave_Calibration_as"/>
@@ -342,15 +341,16 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QMenu" name="menuQueue">
     <property name="title">
-     <string>Queue</string>
+     <string>Q&amp;ueue</string>
     </property>
     <addaction name="actionClose_Queue"/>
     <addaction name="actionAbort_Queue"/>
     <addaction name="actionShow_Server_Configuration"/>
+    <addaction name="action_Reread_Directory"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actionOpen_Hep_in_Browser"/>
    </widget>
@@ -379,12 +379,12 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionClose_Queue">
    <property name="text">
-    <string>Close Queue</string>
+    <string>&amp;Close Queue</string>
    </property>
   </action>
   <action name="actionAbort_Queue">
    <property name="text">
-    <string>Abort Queue</string>
+    <string>&amp;Abort Queue</string>
    </property>
   </action>
   <action name="actionSave_Calibration">
@@ -404,7 +404,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionOpen_Hep_in_Browser">
    <property name="text">
-    <string>Open Hep in Browser</string>
+    <string>&amp;Open Hep in Browser</string>
    </property>
   </action>
   <action name="actionShow_Server_Configuration">
@@ -415,6 +415,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionNew_Calibration">
    <property name="text">
     <string>&amp;New Calibration</string>
+   </property>
+  </action>
+  <action name="action_Reread_Directory">
+   <property name="text">
+    <string>&amp;Reread Directory</string>
    </property>
   </action>
  </widget>

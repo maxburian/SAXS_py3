@@ -183,8 +183,8 @@ class Server():
             o=atrdict.AttrDict({"plotwindow":False,"threads":self.options.threads,
 		"watch":self.options.watchdir,"watchdir":os.sep.join(object['argument']['directory']),
         "servermode":True,
-        "silent":True,"plotwindow":False
-        ,
+        "silent":True,"plotwindow":False,
+        "walkdirinthreads":True,
 		"outdir":self.options.outdir,
 		"inplace":self.options.inplace,"writesvg":False,
                              "writepng":False,"resume":False
@@ -238,8 +238,10 @@ class Server():
             self.feederproc.join(0)
         return {"result":"queue closed","data":{"stat":self.stat()}}
     def readdir(self,object):
+        
+        self.imagequeue .fillqueuewithexistingfiles()
         try:
-            self.imagequeue.fillqueuewithexistingfiles()
+            pass
         except AttributeError as msg:
             result={"result":"ValueError","data":{"Error":"Start Queue first"}}
             return result

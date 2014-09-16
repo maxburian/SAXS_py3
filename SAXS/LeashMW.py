@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'LeashMW.ui'
 #
-# Created: Mon Sep 15 12:17:31 2014
+# Created: Tue Sep 16 16:34:24 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -182,7 +182,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtGui.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 886, 21))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 886, 25))
         self.menuBar.setObjectName(_fromUtf8("menuBar"))
         self.menuSAXS_Leash = QtGui.QMenu(self.menuBar)
         self.menuSAXS_Leash.setObjectName(_fromUtf8("menuSAXS_Leash"))
@@ -217,9 +217,10 @@ class Ui_MainWindow(object):
         self.actionShow_Server_Configuration.setObjectName(_fromUtf8("actionShow_Server_Configuration"))
         self.actionNew_Calibration = QtGui.QAction(MainWindow)
         self.actionNew_Calibration.setObjectName(_fromUtf8("actionNew_Calibration"))
+        self.action_Reread_Directory = QtGui.QAction(MainWindow)
+        self.action_Reread_Directory.setObjectName(_fromUtf8("action_Reread_Directory"))
         self.menuSAXS_Leash.addAction(self.actionLoad_Calibration)
         self.menuSAXS_Leash.addAction(self.actionNew_Calibration)
-        self.menuSAXS_Leash.addAction(self.actionRecent_Files)
         self.menuSAXS_Leash.addAction(self.actionImport)
         self.menuSAXS_Leash.addAction(self.actionSave_Calibration)
         self.menuSAXS_Leash.addAction(self.actionSave_Calibration_as)
@@ -227,13 +228,14 @@ class Ui_MainWindow(object):
         self.menuQueue.addAction(self.actionClose_Queue)
         self.menuQueue.addAction(self.actionAbort_Queue)
         self.menuQueue.addAction(self.actionShow_Server_Configuration)
+        self.menuQueue.addAction(self.action_Reread_Directory)
         self.menuHelp.addAction(self.actionOpen_Hep_in_Browser)
         self.menuBar.addAction(self.menuSAXS_Leash.menuAction())
         self.menuBar.addAction(self.menuQueue.menuAction())
         self.menuBar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -274,20 +276,21 @@ class Ui_MainWindow(object):
         self.textBrowserLogs.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Ubuntu\'; font-size:11pt;\"><br /></p></body></html>", None))
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabHistory), _translate("MainWindow", "History", None))
         self.menuSAXS_Leash.setTitle(_translate("MainWindow", "&File", None))
-        self.menuQueue.setTitle(_translate("MainWindow", "Queue", None))
-        self.menuHelp.setTitle(_translate("MainWindow", "Help", None))
+        self.menuQueue.setTitle(_translate("MainWindow", "Q&ueue", None))
+        self.menuHelp.setTitle(_translate("MainWindow", "&Help", None))
         self.actionLoad_Calibration.setText(_translate("MainWindow", "&Open Calibration", None))
         self.actionImport.setText(_translate("MainWindow", "&Import Calibration", None))
-        self.actionClose_Queue.setText(_translate("MainWindow", "Close Queue", None))
-        self.actionAbort_Queue.setText(_translate("MainWindow", "Abort Queue", None))
+        self.actionClose_Queue.setText(_translate("MainWindow", "&Close Queue", None))
+        self.actionAbort_Queue.setText(_translate("MainWindow", "&Abort Queue", None))
         self.actionSave_Calibration.setText(_translate("MainWindow", "&Save Calibration", None))
         self.actionRecent_Files.setText(_translate("MainWindow", "Recent Files", None))
         self.actionSave_Calibration_as.setText(_translate("MainWindow", "Save Calibration &as", None))
-        self.actionOpen_Hep_in_Browser.setText(_translate("MainWindow", "Open Hep in Browser", None))
+        self.actionOpen_Hep_in_Browser.setText(_translate("MainWindow", "&Open Hep in Browser", None))
         self.actionShow_Server_Configuration.setText(_translate("MainWindow", "Show Server Configuration", None))
         self.actionNew_Calibration.setText(_translate("MainWindow", "&New Calibration", None))
+        self.action_Reread_Directory.setText(_translate("MainWindow", "&Reread Directory", None))
 
