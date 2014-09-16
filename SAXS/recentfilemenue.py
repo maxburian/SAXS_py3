@@ -4,6 +4,9 @@ import json
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 class recentfilemenue(QtCore.QObject):
+    """
+    populates and manages recent files list in File menue
+    """
     def __init__(self,mw,fmenue):
         super(recentfilemenue,self).__init__()
         self.maxrecentfiles=5

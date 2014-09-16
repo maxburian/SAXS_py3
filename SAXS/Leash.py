@@ -15,6 +15,9 @@ import matplotlib.pyplot as plt
 
 from jsonschema import validate,ValidationError
 def addauthentication(request,conf):
+    """
+    sign request for authentication
+    """
     m=hashlib.sha512()
     request['time']=time.time()
     request['sign']=""
@@ -54,7 +57,9 @@ def sendplotdata(options,arg,socket,conf):
     validateResponse(message)
     return message
 def sendplot(options,arg,socket,conf):
-    
+    """
+    remote plot visualization for command line mode
+    """
     
     plt.ion()
     while True:
@@ -81,6 +86,9 @@ def sendplot(options,arg,socket,conf):
             
     
 def sendreaddir(options,arg,socket,conf):
+    """
+    read all the files in the set directory and feed them into the processing server
+    """
     request={"command":"readdir","argument":{}}
      
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
@@ -97,6 +105,9 @@ def sendstat(socket,conf):
     validateResponse(message)
     return message
 def sendget(socket,conf):
+    """
+    get current calibration data
+    """
     request={"command":"get","argument":{}}
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
     message=socket.recv()
@@ -104,6 +115,9 @@ def sendget(socket,conf):
     return message
     
 def sendnew(options,arg,socket,conf):
+    """
+    upload new calibration for image processing
+    """
     request={ 
              "command":"new",
              "argument":{

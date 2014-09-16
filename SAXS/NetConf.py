@@ -5,6 +5,9 @@ from optparse import OptionParser
 from subprocess import call
 from jsonschema import validate,ValidationError
 def createsaxdogconf():
+    """
+    utility to simplify creating config files for SAXSdog  Network
+    """
     parser = OptionParser()
     usage = "usage: %prog [options] "
     parser = OptionParser(usage)

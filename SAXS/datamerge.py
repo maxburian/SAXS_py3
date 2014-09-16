@@ -11,7 +11,9 @@ from scipy import misc
 import tables as tb
 import hashlib,pickle
 def readtiff(imagepath):
-  
+    '''
+    Read the tif header (#strings)
+    '''
     f = open(imagepath, "r")
     i=0
     data={"filename":os.path.basename(imagepath)}
@@ -55,6 +57,7 @@ def readtiff(imagepath):
         if i>20: break
     return data
 def readlog(logfile):
+    '''read CSV into pandas data frame'''
     file=open(logfile)
     dframe=pd.read_csv(logfile,sep="\t" )
     dframe[dframe.columns[0]]= pd.to_datetime(dframe[dframe.columns[0]],unit="s")-( datetime.fromtimestamp(0)-datetime(1904, 1, 1, 0,0,0))
@@ -62,6 +65,9 @@ def readlog(logfile):
     dframe=dframe.set_index(dframe.columns[0])
     return dframe
 def imgtohdf(path,dir):
+    '''
+    add images in dir to hdf5 location
+    '''
     h5file = tb.open_file(path, mode = "a", title = "Test file")
     try:
         group=h5file.get_node("/", "Images")
@@ -83,7 +89,7 @@ def imgtohdf(path,dir):
                                    imagefilename)
     h5file.close()
 def readallimages(dir,includechi):
-  
+    "read header from all images and collect chi files if required"
     frameinit=False
     imgframe=pd.DataFrame()
     chidict={}
@@ -112,6 +118,7 @@ def readallimages(dir,includechi):
                                 
     return imgframe, pd.Panel(chidict) 
 def merge():
+    '''saxs data merger'''
     parser = OptionParser()
     usage = "usage: %prog [options] iMPicture/dir peakinteg.log datalogger.log"
     parser = OptionParser(usage)

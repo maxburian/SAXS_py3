@@ -7,6 +7,9 @@ import json
 from optparse import OptionParser
 
 def startfeeder():
+    """
+    Simulator for new file anounciation service. For development and testing.
+    """
     parser = OptionParser()
     usage = "usage: %prog [options]  "
     parser = OptionParser(usage)

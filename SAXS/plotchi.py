@@ -3,36 +3,39 @@ import matplotlib.pyplot as plt
 from optparse import OptionParser
 
 def parseopt():
-        parser = OptionParser()
-        usage = 'usage: %prog [options] CHIFILE [List of more ".chi" files]'
-        parser = OptionParser(usage)
-        
-        parser.add_option("-o", "--out", dest="plotfile",
-                          help="Write the plot to FILE. The format is derived from the suffix, e.g. '.svg','.pdf'."
-                          , metavar="FILE",default="") 
-        parser.add_option("-c", "--compare", dest="compare",
-                          help="Compare datasets to first one."  , action="store_true",default=False) 
-        parser.add_option("-l", "--log", dest="log",
-                          help="Use log scale."  , action="store_true",default=False) 
-        parser.add_option("-n", "--no-legend", dest="legend",
-                          help="Hide legend."  , action="store_false",default=True) 
-        parser.add_option("-t", "--title", dest="title",
-                          help="Give plot title."
-                          , metavar="TITLE",default="#filename") 
-        parser.add_option("-s", "--skip", dest="skip",
-                          help="Skip first N points."
-                          , metavar="N",default=0 ,type="int")   
-        parser.add_option("-k", "--clip", dest="clip",
-                          help="Clip last N points." 
-                          , metavar="N",default=1 ,type="int")
-        parser.add_option("-x",'--xaxsistype',dest='xax',metavar='TYPE',default='linear',
-                           help="Select type of X axis scale, might be [linear|log|symlog]")
-        parser.add_option("-y",'--yaxsistype',dest='yax',metavar='TYPE',default='linear',
-                           help="Select type of Y axis scale, might be [linear|log|symlog]")
-        
-         
-        (options, args) = parser.parse_args(args=None, values=None)
-        return  (options, args)
+    """
+    Command line plotting tools for .chi files.
+    """
+    parser = OptionParser()
+    usage = 'usage: %prog [options] CHIFILE [List of more ".chi" files]'
+    parser = OptionParser(usage)
+    
+    parser.add_option("-o", "--out", dest="plotfile",
+                      help="Write the plot to FILE. The format is derived from the suffix, e.g. '.svg','.pdf'."
+                      , metavar="FILE",default="") 
+    parser.add_option("-c", "--compare", dest="compare",
+                      help="Compare datasets to first one."  , action="store_true",default=False) 
+    parser.add_option("-l", "--log", dest="log",
+                      help="Use log scale."  , action="store_true",default=False) 
+    parser.add_option("-n", "--no-legend", dest="legend",
+                      help="Hide legend."  , action="store_false",default=True) 
+    parser.add_option("-t", "--title", dest="title",
+                      help="Give plot title."
+                      , metavar="TITLE",default="#filename") 
+    parser.add_option("-s", "--skip", dest="skip",
+                      help="Skip first N points."
+                      , metavar="N",default=0 ,type="int")   
+    parser.add_option("-k", "--clip", dest="clip",
+                      help="Clip last N points." 
+                      , metavar="N",default=1 ,type="int")
+    parser.add_option("-x",'--xaxsistype',dest='xax',metavar='TYPE',default='linear',
+                       help="Select type of X axis scale, might be [linear|log|symlog]")
+    parser.add_option("-y",'--yaxsistype',dest='yax',metavar='TYPE',default='linear',
+                       help="Select type of Y axis scale, might be [linear|log|symlog]")
+    
+     
+    (options, args) = parser.parse_args(args=None, values=None)
+    return  (options, args)
 def plotchi():
     (options, args)= parseopt()
     makeplot(options, args)

@@ -13,13 +13,19 @@ import hashlib
 import imagequeuelib
 from Queue import Empty
 class AuthenticationError(Exception):
-     def __init__(self, value):
-         self.message = value
-         self.value=value
-     def __str__(self):
+    """
+    Custom error class
+    """
+    def __init__(self, value):
+        self.message = value
+        self.value=value
+    def __str__(self):
         return repr(self.message)
 
 def subscribeToFileChanges(queue,url,dir):
+    """
+    Function to connect to file feeder service. Runs in Thread.
+    """
     port = "5556"
  
     # Socket to talk to server
@@ -88,6 +94,9 @@ class Server():
            
            
     def start(self):
+        """
+        start server loop
+        """
         while True:
             try:
                 message=self.comandosocket.recv_multipart()
@@ -108,6 +117,9 @@ class Server():
             self.comandosocket.send(json.dumps(result))
             
     def authenticate(self,data):
+        """
+        check signature of request
+        """
         sign=data['sign']
         data["sign"]=""
         m=hashlib.sha512()
@@ -124,39 +136,46 @@ class Server():
             
     
     def commandhandler(self,object,attachment):
-         command=object['command']
-         print "do command", command
-         if command=='new':
+        """
+        
+        """
+        command=object['command']
+        print "do command", command
+        if command=='new':
             result= self.start_image_queue(object,attachment)
             
-         elif command=='abort':
+        elif command=='abort':
              result=self.queue_abort()
-         elif command=='close':
+        elif command=='close':
              result=self.queue_close()
-         elif command=="readdir":
+        elif command=="readdir":
              result=self.readdir(object)
-         elif command=="plot":
+        elif command=="plot":
              if self.imagequeue:
                 result=self.plot()
              else:
                 result={"result":"no queue","data":{}}
-         elif command=="stat":
+        elif command=="stat":
              result={"result":"stat","data":{"stat":self.stat()}}
-         elif command=="get":
-             if self.imagequeue:
+        elif command=="get":
+            if self.imagequeue:
                  result={"result":"cal","data":{
                                                 "cal":self.imagequeue.cal.config,
                                                 "directory":self.directory.split(os.sep),
                                                 "mask":{"data":base64.b64encode(open(self.imagequeue.cal.config['MaskFile'],"rb").read())}
                                                 }}
-             else:
-                 result={"result":"no queue","data":{}}
-         else:
-             result={"result":"ErrorNotimplemented"}
-         print command   
+            else:
+                result={"result":"no queue","data":{}}
+        else:
+            result={"result":"ErrorNotimplemented"}
+        print command   
          
-         return result
+        return result
     def start_image_queue(self,object,attachment):
+        """
+        prepare new image queue
+        start processing threads
+        """
         self.lasttime=time.time()
         self.lastcount=0
         self.queue_abort()

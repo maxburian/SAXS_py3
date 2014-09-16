@@ -14,18 +14,20 @@ from Queue import Empty
 import matplotlib.pyplot as plt
 #from SAXS.tifffile import   TiffFile 
 def funcworker(self,threadid):
-           
-                while self.stopflag.value==0: 
-                    try:
-                        try:
-                            picture = self.picturequeue.get(timeout=1)
-                        except KeyboardInterrupt:
-                            break
-                        except Empty:
-                            continue
-                        self.procimage(picture,threadid)
-                    except KeyboardInterrupt:
-                        pass 
+   """
+   Function for subprocesses
+   """
+   while self.stopflag.value==0: 
+        try:
+            try:
+                picture = self.picturequeue.get(timeout=1)
+            except KeyboardInterrupt:
+                break
+            except Empty:
+                continue
+            self.procimage(picture,threadid)
+        except KeyboardInterrupt:
+            pass 
 class imagequeue:
     """
     This class keeps a queue of images which may be worked on in threads.

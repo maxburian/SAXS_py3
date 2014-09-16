@@ -105,6 +105,9 @@ class LeashUI(QMainWindow):
                 return
         self.emit(SIGNAL('reconnect()'))
     def newfromscratch(self):
+        """
+        New action from File menue
+        """
         self.data.cal=schematodefault(self.data.calschema)
         self.ui.treeWidgetCal.clear()
         self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
@@ -112,7 +115,9 @@ class LeashUI(QMainWindow):
         self.filename="New.saxsconf"
         self.mainWindow.setWindowTitle("SAXS Leash | "+os.path.basename(self.filename)+"*")
     def newFile(self,filename=None):
-      
+        """
+        Action connected to "Open File" in "File" menue
+        """
         if filename:
             self.filename=unicode(filename)
         else:

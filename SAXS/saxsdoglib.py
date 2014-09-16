@@ -5,9 +5,9 @@ from optparse import OptionParser
 import os,sys
 import time
 def saxsdogparseopt():
-   
-
-
+    """
+    handles commandline options for "saxsdog"
+    """
     parser = OptionParser()
     usage = "usage: %prog [options] directory/to/watch"
     parser = OptionParser(usage,add_help_option=False)
@@ -56,17 +56,19 @@ def saxsdogparseopt():
     return (options, args)
 
 def saxsdogcal(options, args):   
-     
+    """
+    Calculate computation matrices from calibration data
+    """
     from calibration import calibration
     return calibration(options.calfilename) 
    
 def saxsdogintqueue(Cal,options, args):  
+    """
+    Initialize image queue object.
+    """
     from ImageQueueLib import imagequeue  
     imqueue=imagequeue(Cal,options,args)
-    
-   
     if not options.nowalk: imqueue.fillqueuewithexistingfiles()
-       
     return imqueue
 
 def saxsdog():

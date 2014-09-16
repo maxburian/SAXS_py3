@@ -1,7 +1,7 @@
 from watchdog.events import FileSystemEventHandler
 import os
 class addtoqueue(FileSystemEventHandler):
-    '''Sub-class of watchdog event handler'''
+    '''Sub-class of watchdog event handler, used for detecting file system events.'''
     
     def __init__(self, queue,config=None, log=None):
         self.log = log

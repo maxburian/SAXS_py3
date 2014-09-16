@@ -4,6 +4,9 @@ import json,os
 from Leash import initcommand
 import atrdict
 class reconnecthread(QThread):
+    """
+    this thread handles reconnection at startup and timeout
+    """
     def __init__(self,mw):
         QThread.__init__(self)
         self.mw=mw
