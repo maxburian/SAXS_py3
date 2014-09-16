@@ -239,8 +239,9 @@ class Server():
         return {"result":"queue closed","data":{"stat":self.stat()}}
     def readdir(self,object):
         
-        self.imagequeue .fillqueuewithexistingfiles()
+        
         try:
+            self.imagequeue .fillqueuewithexistingfiles()
             pass
         except AttributeError as msg:
             result={"result":"ValueError","data":{"Error":"Start Queue first"}}
