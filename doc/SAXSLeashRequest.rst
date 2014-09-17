@@ -55,7 +55,7 @@ argument
 :Type:
   object
 :Contains:
-  :ref:`directory <directory>`, :ref:`calibration <calibration>`
+  :ref:`directory <directory>`, :ref:`threads <threads>`, :ref:`calibration <calibration>`
 :Required:
   False
 :JSON Path:
@@ -89,6 +89,24 @@ Example JSON:
 .. code:: json
 
     {"directory": [".","",""]}
+
+.. _threads:
+
+threads
+--------------------
+
+:Type:
+  integer
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <reqroot>` [':ref:`argument <argument>`'][':ref:`threads <threads>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"threads": 0}
 
 .. _calibration:
 

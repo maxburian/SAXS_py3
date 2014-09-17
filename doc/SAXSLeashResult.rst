@@ -52,7 +52,7 @@ data
 :Type:
   object
 :Contains:
-  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`directory <directory>`, :ref:`mask <mask>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
+  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`directory <directory>`, :ref:`mask <mask>`, :ref:`threads <threads>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
 :Required:
   True
 :JSON Path:
@@ -144,6 +144,24 @@ Example JSON:
 .. code:: json
 
     {"mask": {}}
+
+.. _threads:
+
+threads
+--------------------
+
+:Type:
+  integer
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`threads <threads>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"threads": 0}
 
 .. _stat:
 

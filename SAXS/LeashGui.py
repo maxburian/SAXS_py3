@@ -368,7 +368,8 @@ class LeashUI(QMainWindow):
             self.loadmask()
             self.ui.Threads.setValue(resultjson['data']['threads'])
             self.directory=json.loads(unicode(result))['data']['directory']
-            
+            for i in range( len(self.directory),3):
+                 self.directory.append("")
             
            
             self.ui.lineEditUserDir.setText(self.directory[0])

@@ -64,10 +64,12 @@ def sendplot(options,arg,socket,conf):
     plt.ion()
     while True:
         object=json.loads(sendplotdata(options,arg,socket,conf))
-        print object['data']['filename']
+        #print json.dumps(object,indent=4, separators=(',', ': ')) 
+        if object["result"]=="Empty":
+          
+            time.sleep(2)
+            continue
         data=np.array(object['data']['array']).transpose()
-      
-        
         skip=options.skip
         clip=options.clip
         clipat=0
@@ -83,8 +85,7 @@ def sendplot(options,arg,socket,conf):
         plt.xscale(options.xax)
         plt.draw()
         plt.clf()
-            
-    
+        
 def sendreaddir(options,arg,socket,conf):
     """
     read all the files in the set directory and feed them into the processing server
