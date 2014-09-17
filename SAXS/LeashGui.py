@@ -265,6 +265,10 @@ class LeashUI(QMainWindow):
             dialog=QErrorMessage(self)
             dialog.showMessage("Load file first")
             return
+        except IOError as e:
+            dialog=QErrorMessage(self)
+            dialog.showMessage(str(e)+"\n try 'Save as'")
+            return
         QMessageBox(self).about(self,"saved",self.filename)
     def safecalibrationas(self):
         
@@ -357,7 +361,7 @@ class LeashUI(QMainWindow):
                 self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
                 return
             
-            mskfilename=os.path.basename(cal['MaskFile'])
+            mskfilename="tmpleash"+os.path.basename(cal['MaskFile']).replace("saxsdogserver","")
             print "maskfile:",mskfilename
             mskfile=open(mskfilename,'wb')
             cal['MaskFile']=mskfilename
