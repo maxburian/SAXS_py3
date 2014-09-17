@@ -91,7 +91,7 @@ class LeashUI(QMainWindow):
         self.filename=""
         self.logbox= self.ui.textBrowserLogs
         self.log("hello")
-        self.ui.Threads.setValue(1)
+        self.ui.Threads.setValue(2)
         QShortcut(QKeySequence("Ctrl+Q"), self, self.close)
         QShortcut(QKeySequence("Ctrl+O"), self, self.newFile)
         QShortcut(QKeySequence("Ctrl+S"),self,self.safecalibration)
@@ -366,6 +366,7 @@ class LeashUI(QMainWindow):
             self.data.cal=cal
             self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
             self.loadmask()
+            self.ui.Threads.setValue(resultjson['data']['threads'])
             self.directory=json.loads(unicode(result))['data']['directory']
             
             
