@@ -252,7 +252,7 @@ class Server():
         try:
             picture=self.imagequeue.picturequeue.get(timeout=5)
         except Empty as e:
-            result={"result":"Empty","data":{}}
+            result={"result":"Empty","data":{"stat":self.stat()}}
             return result
         (file,data)=self.imagequeue.procimage(picture,0)
         result={"result":"plot","data":{"filename":file,"array":data.tolist(),"stat":self.stat()}}

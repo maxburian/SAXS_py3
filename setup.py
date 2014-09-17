@@ -10,7 +10,7 @@ from subprocess import call
 
 setup(
     name="SAXS",
-    version="1.0.1",
+    version="1.0.2",
     packages=["SAXS"],
     package_data={"SAXS": ["icons/*","schema.json","LeashRequestSchema.json","LeashResultSchema.json","NetworkSchema.json","LeashMW.ui","importdialog.ui"]},
     author="Christian Meisenbichler",

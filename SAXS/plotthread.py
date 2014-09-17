@@ -49,33 +49,39 @@ class plotthread(QThread):
         # plot data
         object=json.loads(result)
         if object['result']=="Empty":
-            self.emit( SIGNAL('update(QString)'), "empty" )
-            return
-        data=np.array(object['data']['array']).transpose()
-        data[data==0]=np.NaN
-        skip=0
-        clip=1
-        clipat=0
-        ax.plot(data[skip:-clip,0],data[skip:-clip,1])
-        ax.fill_between( data[skip:-clip,0] ,
-                         np.clip(data[skip:-clip,1]-data[skip:-clip,2],clipat,1e300),
-                         np.clip(data[skip:-clip,1]+data[skip:-clip,2],clipat,1e300),
-                         facecolor='blue' ,alpha=0.2,linewidth=0,label="Count Error")
-        #ui.figure.title(object['data']['filename'])
-        ax.set_yscale(self.yscale)
-        mw.data.stat=object['data']["stat"]
-        mw.data.rate[0]=mw.data.stat['pics']/mw.data.stat['time interval']
-       
-        mw.data.time[0]=mw.data.stat['time interval']+ mw.data.time[1]
-       
-        axhist.plot(mw.data.time,mw.data.rate,lw=2)
-        axhist.fill_between(mw.data.time,0,mw.data.rate,alpha=0.4)
-        axhist.set_ylim( [0,np.max(mw.data.rate)])
-        axhist.set_xlim( [np.min(mw.data.time),np.max(mw.data.time)+1])
-        axhist.set_ylabel('Rate [/s]')
-        axhist.set_xlabel('Time [s]')
-        mw.data.time=np.roll(mw.data.time,1)
-        mw.data.rate=np.roll(mw.data.rate,1)
-        axhist.hold(False)
-        # refresh canvas
+           pass
+        else:
+            try:
+                data=np.array(object['data']['array']).transpose()
+                data[data==0]=np.NaN
+                skip=0
+                clip=1
+                clipat=0
+                ax.plot(data[skip:-clip,0],data[skip:-clip,1])
+                ax.fill_between( data[skip:-clip,0] ,
+                                 np.clip(data[skip:-clip,1]-data[skip:-clip,2],clipat,1e300),
+                                 np.clip(data[skip:-clip,1]+data[skip:-clip,2],clipat,1e300),
+                                 facecolor='blue' ,alpha=0.2,linewidth=0,label="Count Error")
+                #ui.figure.title(object['data']['filename'])
+                ax.set_yscale(self.yscale)
+            except:
+                pass
+        try:
+            mw.data.stat=object['data']["stat"]
+            mw.data.rate[0]=mw.data.stat['pics']/mw.data.stat['time interval']
+           
+            mw.data.time[0]=mw.data.stat['time interval']+ mw.data.time[1]
+           
+            axhist.plot(mw.data.time,mw.data.rate,lw=2)
+            axhist.fill_between(mw.data.time,0,mw.data.rate,alpha=0.4)
+            axhist.set_ylim( [0,np.max(mw.data.rate)])
+            axhist.set_xlim( [np.min(mw.data.time),np.max(mw.data.time)+1])
+            axhist.set_ylabel('Rate [/s]')
+            axhist.set_xlabel('Time [s]')
+            mw.data.time=np.roll(mw.data.time,1)
+            mw.data.rate=np.roll(mw.data.rate,1)
+            axhist.hold(False)
+        except:
+            pass
+            # refresh canvas
         self.emit( SIGNAL('update(QString)'), "data plotted" )
