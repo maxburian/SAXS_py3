@@ -91,7 +91,7 @@ class Server():
         self.commandschema=json.load(open(os.path.dirname(__file__)+'/LeashRequestSchema.json'))
         self.imagequeue=None
         self.feederproc=None
-           
+        self.threads=self.options.threads
            
     def start(self):
         """
@@ -162,6 +162,7 @@ class Server():
                  result={"result":"cal","data":{
                                                 "cal":self.imagequeue.cal.config,
                                                 "directory":self.directory.split(os.sep),
+                                                "threads":self.threads,
                                                 "mask":{"data":base64.b64encode(open(self.imagequeue.cal.config['MaskFile'],"rb").read())}
                                                 }}
             else:
@@ -179,8 +180,13 @@ class Server():
         self.lasttime=time.time()
         self.lastcount=0
         self.queue_abort()
+       
         try:
-            o=atrdict.AttrDict({"plotwindow":False,"threads":self.options.threads,
+            if object['argument']['threads']>0:
+                self.threads=object['argument']['threads']
+            else:
+                self.threads=self.options.threads
+            o=atrdict.AttrDict({"plotwindow":False,"threads":self.threads,
 		"watch":self.options.watchdir,"watchdir":os.sep.join(object['argument']['directory']),
         "servermode":True,
         "silent":True,"plotwindow":False,
@@ -250,7 +256,7 @@ class Server():
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
         try:
-            picture=self.imagequeue.picturequeue.get(timeout=5)
+            picture=self.imagequeue.picturequeue.get(timeout=.2)
         except Empty as e:
             result={"result":"Empty","data":{"stat":self.stat()}}
             return result

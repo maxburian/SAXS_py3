@@ -39,7 +39,7 @@
                 		"type": "string"
            				 }]
 				},
-
+				"threads":{"type":"integer"},
 				"calibration": 
 				{
 					"description": "Calibrarion data according to :ref:`calib`",

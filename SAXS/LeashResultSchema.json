@@ -29,6 +29,7 @@
            				 }]
 				},
 				"mask":{},
+				"threads":{"type":"integer"},
 				"stat": 
 				{
 					"additionalProperties": false,

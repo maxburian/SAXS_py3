@@ -126,14 +126,20 @@ def sendnew(options,arg,socket,conf):
                           
                          }
              }
-    if len(arg)==4:
+    if len(arg)>=4:
         try:
             cal=json.load(open(arg[1]))
             calschema=json.load(open(os.path.dirname(__file__)+'/schema.json'))
             validate(cal,calschema)
             request['argument']['calibration']=cal
-           
-            request['argument']['directory']=arg[3]
+            if type(arg[3])==str:
+                request['argument']['directory']=arg[3].split(os.sep)
+            else:
+                request['argument']['directory']=arg[3]
+            if len(arg)==5:
+                request['argument']['threads']=int(arg[4])
+            elif len(arg)==4:
+                request['argument']['threads']=0
         except (ValueError) as e:
             print e
             print "The calibration File, "+arg[1]+",is not Valid"
@@ -147,7 +153,7 @@ def sendnew(options,arg,socket,conf):
     else:
         print "Error"
         print "new command:"
-        print "usage: leash new clibrationfile.json maskfile.msk directory"
+        print "usage: leash new clibrationfile.json maskfile.msk directory [threads]"
         sys.exit()
     socket.send_multipart((json.dumps(addauthentication(request,conf)),
                            json.dumps({"filename":arg[2],"data":base64.b64encode(open(arg[2],"rb").read())})

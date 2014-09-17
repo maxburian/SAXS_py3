@@ -91,7 +91,7 @@ class LeashUI(QMainWindow):
         self.filename=""
         self.logbox= self.ui.textBrowserLogs
         self.log("hello")
-      
+        self.ui.Threads.setValue(1)
         QShortcut(QKeySequence("Ctrl+Q"), self, self.close)
         QShortcut(QKeySequence("Ctrl+O"), self, self.newFile)
         QShortcut(QKeySequence("Ctrl+S"),self,self.safecalibration)
@@ -286,7 +286,7 @@ class LeashUI(QMainWindow):
             argu=["new", filename,self.data.cal["MaskFile"], [
                              unicode(self.ui.lineEditUserDir.text()),
                              unicode(self.ui.lineEditExpDir.text()),
-                             unicode(self.ui.lineEditSetupDir.text())]
+                             unicode(self.ui.lineEditSetupDir.text())],self.ui.Threads.value()
                                                                         ]
             o=atrdict.AttrDict({"server":""})
             result=initcommand(o,argu,conf)
@@ -310,7 +310,7 @@ class LeashUI(QMainWindow):
                 self.plotcanvas.draw()
             except:
                 pass
-        time.sleep(.2)
+      
         if unicode(mesg)!='change yscale':
             self.plotworker.start()
         
