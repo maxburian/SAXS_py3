@@ -52,8 +52,7 @@ class Server():
     """
     def __init__(self,conf):
         self.files=None
-        context = zmq.Context()
-        self.comandosocket = context.socket(zmq.REP)
+       
         
         parser = OptionParser()
         usage = "usage: %prog [options] basedir"
@@ -75,6 +74,8 @@ class Server():
                       help="Specify output directory. Default is './out'.")
         parser.add_option("-i", "--inplace", dest="inplace", default=False,action="store_true",
                       help="Files are written, in place, in the directory of the image.")
+        parser.add_option("-d", "--daemon", dest="daemon", default=False,action="store_true",
+                      help="Start server  as daemon")
    
         (self.options, self.args) = parser.parse_args(args=None, values=None)
         if len(self.args)==0:
@@ -83,11 +84,9 @@ class Server():
              parser.error('"'+self.options.outdir+'"'+" directory does not exist")
         if self.options.feederurl=="":
             self.feederurl=conf["Feeder"]
-        if self.options.port=="":
-            serverport=conf['Server'].split(':')[-1]
-        self.secret=conf['Secret']
-        print "server listenes at tcp://*:%s" % serverport
-        self.comandosocket.bind("tcp://*:%s" % serverport)
+        self.serverconf=conf
+        self.comandosocket=None
+        
         self.commandschema=json.load(open(os.path.dirname(__file__)+'/LeashRequestSchema.json'))
         self.imagequeue=None
         self.feederproc=None
@@ -97,6 +96,13 @@ class Server():
         """
         start server loop
         """
+        if self.options.port=="":
+            serverport=self.serverconf['Server'].split(':')[-1]
+        self.secret=self.serverconf['Secret']
+        context = zmq.Context()
+        self.comandosocket = context.socket(zmq.REP)
+        print "server listenes at tcp://*:%s" % serverport
+        self.comandosocket.bind("tcp://*:%s" % serverport)
         while True:
             try:
                 message=self.comandosocket.recv_multipart()
@@ -281,7 +287,13 @@ def saxsdogserver():
      serverconf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
      validate(serverconf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
      S=Server(serverconf)
-     S.start()
+     if not S.options.daemon:
+         S.start()
+     else:
+        import daemon
+        logfile=open("saxsdoglog","w")
+        with daemon.DaemonContext(stderr=logfile,stdout=logfile):
+            S.start()
 if __name__ == '__main__':
      saxsdogserver()
     

@@ -10,7 +10,7 @@ from subprocess import call
 
 setup(
     name="SAXS",
-    version="1.0.3",
+    version="1.0.4",
     packages=["SAXS"],
     package_data={"SAXS": ["icons/*","schema.json","LeashRequestSchema.json","LeashResultSchema.json","NetworkSchema.json","LeashMW.ui","importdialog.ui"]},
     author="Christian Meisenbichler",
@@ -23,6 +23,7 @@ setup(
                       "jsonschema", 
                       "bitarray",
                       "watchdog",
+                      "python-daemon"
                       "sphinxcontrib-programoutput",
                       "sphinxcontrib-programscreenshot",
                       "pyzmq"],
