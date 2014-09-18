@@ -23,7 +23,7 @@ setup(
                       "jsonschema", 
                       "bitarray",
                       "watchdog",
-                      "python-daemon"
+                      "python-daemon",
                       "sphinxcontrib-programoutput",
                       "sphinxcontrib-programscreenshot",
                       "pyzmq"],
