@@ -222,27 +222,29 @@ class LeashUI(QMainWindow):
             child=tree.child(position)
             
             label= unicode(child.text(0))
-            if  label in schema["properties"]:
-                if schema["properties"][label]['type']=="string":
-                    jsoncal[label]=unicode(child.text(1))
-                if schema["properties"][label]['type']=="number": 
-                    jsoncal[label]=float(unicode(child.text(1)))
-                if schema["properties"][label]['type']=="integer":
-                    jsoncal[label]=int(unicode(child.text(1)))
-                if schema["properties"][label]['type']=="array":
-                    jsoncal[label]=json.loads(unicode(child.text(1)))
-                if schema["properties"][label]['type']=="object":
-                    if 'required' not in schema["properties"][label] or schema["properties"][label]['required']==False:
-                        if child.checkState(1):
-                            if child.childCount()==0:
-                                jsoncal[label]=schematodefault(schema["properties"][label])
+            try:
+                if  label in schema["properties"]:
+                    if schema["properties"][label]['type']=="string":
+                        jsoncal[label]=unicode(child.text(1))
+                    if schema["properties"][label]['type']=="number": 
+                        jsoncal[label]=float(unicode(child.text(1)))
+                    if schema["properties"][label]['type']=="integer":
+                        jsoncal[label]=int(unicode(child.text(1)))
+                    if schema["properties"][label]['type']=="array":
+                        jsoncal[label]=json.loads(unicode(child.text(1)))
+                    if schema["properties"][label]['type']=="object":
+                        if 'required' not in schema["properties"][label] or schema["properties"][label]['required']==False:
+                            if child.checkState(1):
+                                if child.childCount()==0:
+                                    jsoncal[label]=schematodefault(schema["properties"][label])
+                                else:
+                                    jsoncal[label]=self.treetojson(child,schema["properties"][label])
                             else:
-                                jsoncal[label]=self.treetojson(child,schema["properties"][label])
+                                pass
                         else:
-                            pass
-                    else:
-                        jsoncal[label]=self.treetojson(child,schema["properties"][label])
-                
+                            jsoncal[label]=self.treetojson(child,schema["properties"][label])
+            except ValueError:
+                pass
         return jsoncal
     def updatecalibration(self):
         cal=self.treetojson(self.ui.treeWidgetCal.invisibleRootItem(), self.data.calschema)
@@ -251,7 +253,7 @@ class LeashUI(QMainWindow):
             validate(cal,self.data.calschema)
         except ValidationError as e:
             dialog=QErrorMessage(self)
-            dialog.showMessage(e.message)
+            dialog.showMessage("Check values again!\n"+e.message)
             self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
             return
         self.data.cal=cal
@@ -294,7 +296,7 @@ class LeashUI(QMainWindow):
                                                                         ]
             o=atrdict.AttrDict({"server":""})
             result=initcommand(o,argu,conf)
-            print result
+      
             self.ui.pushButtonnew.setText("Restart Queue with Changed Calibration")
             self.plotworker.start()
             self.log("New calibration loaded onto server.")
@@ -338,6 +340,7 @@ class LeashUI(QMainWindow):
         else:
             self.errmsg.showMessage("Connection to server failed")
     def buildcalfromserver(self,result):
+ 
         self.serveronline=True
         try:
             #if there is no valid cal 
@@ -350,7 +353,11 @@ class LeashUI(QMainWindow):
                 cal=resultjson['data']['cal']
                  
             except KeyError as e:
-                self.errmsg.showMessage("Server has no calibration.")
+                
+                if  resultjson["result"]!="cal":
+                    self.errmsg.showMessage( result)
+                else:
+                    self.errmsg.showMessage("Server has no calibration.")
                 return
             self.ui.treeWidgetCal.clear()
             try:
@@ -361,8 +368,8 @@ class LeashUI(QMainWindow):
                 self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
                 return
             
-            mskfilename="tmpleash"+os.path.basename(cal['MaskFile']).replace("saxsdogserver","")
-            print "maskfile:",mskfilename
+            mskfilename="tmpleash"+os.path.basename(cal['MaskFile']).replace("saxsdogserver","").replace("tmpleash","")
+    
             mskfile=open(mskfilename,'wb')
             cal['MaskFile']=mskfilename
             mskfile.write(base64.b64decode(resultjson['data']['mask']['data']))

@@ -290,7 +290,11 @@ def saxsdogserver():
      if not S.options.daemon:
          S.start()
      else:
-        import daemon
+        try:
+            import daemon
+        except Exception:
+            print "'Daemon mode' requires the 'python-daemon' module and works only on Unix."
+            return
         logfile=open("saxsdoglog","w")
         with daemon.DaemonContext(stderr=logfile,stdout=logfile):
             S.start()
