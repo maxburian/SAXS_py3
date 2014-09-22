@@ -28,6 +28,13 @@ def funcworker(self,threadid):
             self.procimage(picture,threadid)
         except KeyboardInterrupt:
             pass 
+def filler(queue,dir):
+            filequeue=[] 
+            print dir
+            for path, subdirs, files in os.walk(dir):
+                for name in files:
+                    if name.endswith('tif'):
+                        queue.put(os.path.join(path, name))      
 class imagequeue:
     """
     This class keeps a queue of images which may be worked on in threads.
@@ -59,13 +66,7 @@ class imagequeue:
         """
         Fill the queue with the list of images that is already there.
         """
-        def filler(queue,dir):
-            filequeue=[] 
-            print dir
-            for path, subdirs, files in os.walk(dir):
-                for name in files:
-                    if name.endswith('tif'):
-                        queue.put(os.path.join(path, name))      
+       
                 
         if self.options.walkdirinthreads:
             self.dirwalker=Process(target=filler,args=(self.picturequeue,self.args[0]))

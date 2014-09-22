@@ -53,6 +53,7 @@ def plotworker(imagequeue,dumy):
                 lasttime=time.time()
                 lastcount=0
                 print "plotworkerstarted"
+                result={"result":"Empty","data":{ }}
                 while True:
                      timep=time.time()-lasttime
                      lasttime=time.time()
@@ -63,6 +64,7 @@ def plotworker(imagequeue,dumy):
                      "time interval":timep,
                      "pics":newpic,
                      }
+                     
                      try:
                          picture=imagequeue.picturequeue.get(timeout=5)
                      except Empty as e:
