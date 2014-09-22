@@ -12,6 +12,8 @@ from optparse import OptionParser
 import hashlib
 import imagequeuelib
 from Queue import Empty
+internalplotsocked=345834
+
 class AuthenticationError(Exception):
     """
     Custom error class
@@ -44,7 +46,41 @@ def subscribeToFileChanges(queue,url,dir):
                 queue.put(obj['argument'])
         
 
-
+def plotworker(imagequeue,dumy):
+                context = zmq.Context()
+                socket = context.socket(zmq.PUB)
+                socket.bind("tcp://*:%s" % internalplotsocked)
+                lasttime=time.time()
+                lastcount=0
+                print "plotworkerstarted"
+                while True:
+                     timep=time.time()-lasttime
+                     lasttime=time.time()
+                     newpic=imagequeue.allp.value-lastcount
+                     lastcount= imagequeue.allp.value
+                     stat= {"images processed": imagequeue.allp.value,
+                     "queue length": imagequeue.picturequeue.qsize(),
+                     "time interval":timep,
+                     "pics":newpic,
+                     }
+                     try:
+                         picture=imagequeue.picturequeue.get(timeout=5)
+                     except Empty as e:
+                         result["data"]["stat"]=stat
+                         socket.send(json.dumps(result))
+                         continue
+                     (file,data)=imagequeue.procimage(picture,0)
+                     timep=time.time()-lasttime
+                     lasttime=time.time()
+                     newpic=imagequeue.allp.value-lastcount
+                     lastcount= imagequeue.allp.value
+                     stat= {"images processed": imagequeue.allp.value,
+                     "queue length": imagequeue.picturequeue.qsize(),
+                     "time interval":timep,
+                     "pics":newpic,
+                     }
+                     result={"result":"plot","data":{"filename":file,"array":data.tolist(),"stat": stat}}
+                     socket.send(json.dumps(result))
 
 class Server():
     """
@@ -91,6 +127,11 @@ class Server():
         self.imagequeue=None
         self.feederproc=None
         self.threads=self.options.threads
+        self.plotresult={"result":"Empty","data":{  "stat":{"images processed": 0,
+                     "queue length":0,
+                     "time interval":2,
+                     "pics":0,
+                     }}}
            
     def start(self):
         """
@@ -103,6 +144,12 @@ class Server():
         self.comandosocket = context.socket(zmq.REP)
         print "server listenes at tcp://*:%s" % serverport
         self.comandosocket.bind("tcp://*:%s" % serverport)
+        internalplotcontext = zmq.Context()
+        self.getplotsocked = internalplotcontext.socket(zmq.SUB)
+        self.getplotsocked.setsockopt(zmq.SUBSCRIBE,"")
+        self.getplotsocked.connect("tcp://localhost:"+str(internalplotsocked))
+        self.poller = zmq.Poller()
+        self.poller.register(self.getplotsocked, zmq.POLLIN)
         while True:
             try:
                 message=self.comandosocket.recv_multipart()
@@ -185,20 +232,22 @@ class Server():
         """
         self.lasttime=time.time()
         self.lastcount=0
-        self.queue_abort()
-       
+        print "abort old queue"
+        if self.imagequeue:
+             self.queue_abort()
+        print "aborted old queue"
         try:
             if object['argument']['threads']>0:
                 self.threads=object['argument']['threads']
             else:
                 self.threads=self.options.threads
             o=atrdict.AttrDict({"plotwindow":False,"threads":self.threads,
-		"watch":self.options.watchdir,"watchdir":os.sep.join(object['argument']['directory']),
-        "servermode":True,
-        "silent":True,"plotwindow":False,
-        "walkdirinthreads":True,
-		"outdir":self.options.outdir,
-		"inplace":self.options.inplace,"writesvg":False,
+                    		"watch":self.options.watchdir,"watchdir":os.sep.join(object['argument']['directory']),
+                            "servermode":True,
+                            "silent":True,"plotwindow":False,
+                            "walkdirinthreads":True,
+                    		"outdir":self.options.outdir,
+                    		"inplace":self.options.inplace,"writesvg":False,
                              "writepng":False,"resume":False
                              })
             maskobj=json.loads(attachment[0])
@@ -208,7 +257,7 @@ class Server():
             mskfile=open(mskfilename,'wb')
             mskfile.write(base64.b64decode(maskobj['data']))
             mskfile.close()
-	    print "saved maskfile"
+            print "saved maskfile"
             object['argument']['calibration']['MaskFile']=mskfilename
             cal=calibration.calibration(object['argument']['calibration'])
             dir=os.path.normpath(
@@ -232,6 +281,9 @@ class Server():
             self.feederproc.start()
             self.lasttime=time.time()
             self.lastcount=0
+            
+            self.plotproc=Process(target=plotworker,args= (self.imagequeue,None))
+            self.plotproc.start()
             result={"result":"queue initiated ","data":{"cal":object['argument']['calibration']}}
         except IOError as e: 
             result={"result":"IOError","data":{"Error": str(e).replace("\n"," ")}}
@@ -261,28 +313,18 @@ class Server():
             return result
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
-        try:
-            picture=self.imagequeue.picturequeue.get(timeout=.2)
-        except Empty as e:
-            result={"result":"Empty","data":{"stat":self.stat()}}
-            return result
-        (file,data)=self.imagequeue.procimage(picture,0)
-        result={"result":"plot","data":{"filename":file,"array":data.tolist(),"stat":self.stat()}}
-        return result
+        print "print"
+        socks = dict(self.poller.poll(timeout=1))
+        print "pollcall"
+        if self.getplotsocked in socks and socks[self.getplotsocked] == zmq.POLLIN:
+            print "have event #############################################################################"
+            self.plotresult = json.loads(self.getplotsocked.recv())
+        print "endif"
+        return self.plotresult
+    
     def stat(self):
-        if self.imagequeue:
-            timep=time.time()-self.lasttime
-            self.lasttime=time.time()
-            newpic=self.imagequeue.allp.value-self.lastcount
-            self.lastcount=self.imagequeue.allp.value
-            return {"images processed":self.imagequeue.allp.value,
-             "queue length":self.imagequeue.picturequeue.qsize(),
-             "time interval":timep,
-             "pics":newpic,
-             
-             }
-        else:
-            return{}
+        plotresult=self.plot()
+        return plotresult['data']['stat']
 def saxsdogserver():
      serverconf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
      validate(serverconf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))

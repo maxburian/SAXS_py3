@@ -353,11 +353,7 @@ class LeashUI(QMainWindow):
                 cal=resultjson['data']['cal']
                  
             except KeyError as e:
-                
-                if  resultjson["result"]!="cal":
-                    self.errmsg.showMessage( result)
-                else:
-                    self.errmsg.showMessage("Server has no calibration.")
+                self.errmsg.showMessage("Server has no calibration.")
                 return
             self.ui.treeWidgetCal.clear()
             try:

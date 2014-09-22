@@ -37,7 +37,7 @@ class plotthread(QThread):
         initiate the thread.
         """
          
-       
+        time.sleep(1)
         try:       
             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
             argu=["plotdata"]

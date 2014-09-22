@@ -17,6 +17,8 @@ def startfeeder():
                       help="Port to offer file changes service", metavar="port",default="")
     parser.add_option("-d", "--dir", dest="dir",
                       help="Directory to monitor", metavar="dir",default=".")
+    parser.add_option("-s", "--sdir", dest="sdir",
+                      help="server dir, (prefix to filepaths)", metavar="dir",default=".")
     (options, args) = parser.parse_args(args=None, values=None)
     
     
@@ -43,10 +45,11 @@ def startfeeder():
     messageobj={"command":"new file","argument":""}
     while True:
        for file in fileslist:
+            print file
             messageobj['argument']=file
             message=json.dumps(messageobj)
             socket.send(message)
-            time.sleep(.01)
+            time.sleep(7)
                         
 
 if __name__ == '__main__':
