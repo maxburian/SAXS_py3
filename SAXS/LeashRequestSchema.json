@@ -19,7 +19,8 @@
 				"plot",
 				"plotdata",
 				"readdir",
-				"stat"
+				"stat",
+				"listdir"
 			]
 		},
 

@@ -30,6 +30,7 @@
 				},
 				"mask":{},
 				"threads":{"type":"integer"},
+				"dircontent":{},
 				"stat": 
 				{
 					"additionalProperties": false,

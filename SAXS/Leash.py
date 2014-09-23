@@ -114,6 +114,15 @@ def sendget(socket,conf):
     message=socket.recv()
     validateResponse(message)
     return message
+def sendlistdir(arg,socket,conf):
+    """
+    get directory contents
+    """
+    request={"command":"listdir","argument":{"directory":arg[1].split(os.sep)}}
+    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    message=socket.recv()
+    validateResponse(message)
+    return message
     
 def sendnew(options,arg,socket,conf):
     """
@@ -195,6 +204,8 @@ def initcommand(options, arg,conf):
          result= sendstat(socket,conf)
     elif arg[0]=="get":
         result=sendget(socket,conf)
+    elif arg[0]=="listdir":
+        result=sendlistdir(arg,socket,conf)
     else:
         raise ValueError(arg[0])
     

@@ -189,7 +189,16 @@ class Server():
         
                 
             
-    
+    def listdir(self,request):
+        dir=  os.sep.join(request["argument"]['directory'])
+        files=os.listdir(dir)
+        content=[]
+        for item in files:
+            if os.path.isdir(os.path.join(dir,item)):
+                content.append({"isdir":True,"path":item})
+            else:
+                content.append({"isdir":False,"path":item})
+        return {"result":"listdir","data":{"dircontent":content}}
     def commandhandler(self,object,attachment):
         """
         
@@ -205,6 +214,8 @@ class Server():
              result=self.queue_close()
         elif command=="readdir":
              result=self.readdir(object)
+        elif command=="listdir":
+             result=self.listdir(object)
         elif command=="plot":
              if self.imagequeue:
                 result=self.plot()
