@@ -40,22 +40,15 @@ def validateResponse(message):
 def sendclose(options,arg,socket,conf):
     request={"command":"close","argument":{}}
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
-    message=socket.recv()
-    validateResponse(message)
-    return message
+   
 def sendabort(options,arg,socket,conf):
     request={"command":"abort","argument":{}}
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
-    message=socket.recv()
     
-    validateResponse(message)
-    return message
 def sendplotdata(options,arg,socket,conf):
     request={"command":"plot","argument":{}}
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
-    message=socket.recv()
-    validateResponse(message)
-    return message
+   
 def sendplot(options,arg,socket,conf):
     """
     remote plot visualization for command line mode
@@ -63,7 +56,9 @@ def sendplot(options,arg,socket,conf):
     
     plt.ion()
     while True:
-        object=json.loads(sendplotdata(options,arg,socket,conf))
+        sendplotdata(options,arg,socket,conf)
+        object=json.loads()
+        
         #print json.dumps(object,indent=4, separators=(',', ': ')) 
         if object["result"]=="Empty":
           
@@ -93,36 +88,30 @@ def sendreaddir(options,arg,socket,conf):
     request={"command":"readdir","argument":{}}
      
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
-    message=socket.recv()
-    
-    validateResponse(message)
-    return message
+   
    
 def sendstat(socket,conf):
     request={"command":"stat","argument":{}}
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
-    message=socket.recv()
-    
-    validateResponse(message)
-    return message
+  
 def sendget(socket,conf):
     """
     get current calibration data
     """
     request={"command":"get","argument":{}}
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
-    message=socket.recv()
-    validateResponse(message)
-    return message
+   
 def sendlistdir(arg,socket,conf):
     """
     get directory contents
     """
+    if len (arg)<2:
+        arg.append(".")
+    if arg[1]=="":
+        arg[1]="."
     request={"command":"listdir","argument":{"directory":arg[1].split(os.sep)}}
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
-    message=socket.recv()
-    validateResponse(message)
-    return message
+   
     
 def sendnew(options,arg,socket,conf):
     """
@@ -169,11 +158,7 @@ def sendnew(options,arg,socket,conf):
                            json.dumps({"filename":arg[2],"data":base64.b64encode(open(arg[2],"rb").read())})
                            )
                           )
-    message=socket.recv()
-    
-    
-    validateResponse(message)
-    return message
+ 
    
 def initcommand(options, arg,conf):
     """
@@ -208,8 +193,16 @@ def initcommand(options, arg,conf):
         result=sendlistdir(arg,socket,conf)
     else:
         raise ValueError(arg[0])
-    
-    return result
+
+
+    return receive(socket)
+
+
+def receive(socket):   
+    message=socket.recv()
+    validateResponse(message)
+    return message
+  
     
                         
 def parsecommandline():

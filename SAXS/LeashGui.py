@@ -26,6 +26,7 @@ from reconnectqthread import reconnecthread
 from ImportDialogClass import Importdialog
 from converter import txt2json
 from recentfilemenue import recentfilemenue
+from directorypicker import directorypicker
 def nparrayToQPixmap(arrayImage):
     pilImage = toimage(arrayImage)
     
@@ -68,7 +69,7 @@ class LeashUI(QMainWindow):
         self.ui.toolButtonRescale.setText("Fit to Window")
         self.connect(self.ui.toolButtonRescale, SIGNAL("clicked()"), self.resizemask)
         self.connect(self.ui.pushButtonLoadMask, SIGNAL("clicked()"), self.pickmask)
-        self.ui.lineEditUserDir.setText(".")
+       
         self.connect(self.ui.pushButtonnew, SIGNAL('clicked()'),self.commandnew)
         self.figure = plt.figure()
         self.figurehist=plt.figure()
@@ -105,6 +106,8 @@ class LeashUI(QMainWindow):
                 self.plotworker.start()
                 return
         self.emit(SIGNAL('reconnect()'))
+        self.directory=["","",""]
+        self.directorypicker= directorypicker(self)
     def newfromscratch(self):
         """
         New action from File menue
@@ -214,7 +217,7 @@ class LeashUI(QMainWindow):
         self.disconnect(self.ui.treeWidgetCal, SIGNAL("itemChanged(QTreeWidgetItem *,int)"),self.updatecalibration)
         walktree(cal,schema,tree)
         self.connect(self.ui.treeWidgetCal, SIGNAL("itemChanged(QTreeWidgetItem *,int)"),self.updatecalibration)
-        
+        self.directorypicker.setdir(self.directory)
     def treetojson(self,tree,schema):
         jsoncal={}
         
@@ -258,6 +261,7 @@ class LeashUI(QMainWindow):
             return
         self.data.cal=cal
         self.buildcaltree(self.data.cal, self.data.calschema,self.ui.treeWidgetCal)
+     
     def safecalibration(self):
         try:
             fh=open(self.filename,"w")
@@ -289,10 +293,7 @@ class LeashUI(QMainWindow):
             json.dump(self.data.cal,fh)
             fh.close()
             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
-            argu=["new", filename,self.data.cal["MaskFile"], [
-                             unicode(self.ui.lineEditUserDir.text()),
-                             unicode(self.ui.lineEditExpDir.text()),
-                             unicode(self.ui.lineEditSetupDir.text())],self.ui.Threads.value()
+            argu=["new", filename,self.data.cal["MaskFile"],  self.directorypicker.getdirlist() ,self.ui.Threads.value()
                                                                         ]
             o=atrdict.AttrDict({"server":""})
             result=initcommand(o,argu,conf)
@@ -340,14 +341,12 @@ class LeashUI(QMainWindow):
         else:
             self.errmsg.showMessage("Connection to server failed")
     def buildcalfromserver(self,result):
- 
         self.serveronline=True
         try:
             #if there is no valid cal 
             validate(self.data.cal,self.data.calschema)
         except:
             # import new one
-           
             try:
                 resultjson=json.loads(unicode(result))
                 cal=resultjson['data']['cal']
@@ -375,13 +374,8 @@ class LeashUI(QMainWindow):
             self.loadmask()
             self.ui.Threads.setValue(resultjson['data']['threads'])
             self.directory=json.loads(unicode(result))['data']['directory']
-            for i in range( len(self.directory),3):
-                 self.directory.append("")
+            self.directorypicker.setdir(self.directory)
             
-           
-            self.ui.lineEditUserDir.setText(self.directory[0])
-            self.ui.lineEditExpDir.setText(self.directory[1])
-            self.ui.lineEditSetupDir.setText(self.directory[2])
             self.log("Got calibration from server.")
             self.plotworker.start()
     def importcalib(self):

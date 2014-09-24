@@ -54,7 +54,7 @@ def plotworker(imagequeue,dumy):
                 lastcount=0
                 print "plotworkerstarted"
                 result={"result":"Empty","data":{ }}
-                while True:
+                while imagequeue.stopflag.value==0:
                      timep=time.time()-lasttime
                      lasttime=time.time()
                      newpic=imagequeue.allp.value-lastcount
@@ -191,14 +191,17 @@ class Server():
             
     def listdir(self,request):
         dir=  os.sep.join(request["argument"]['directory'])
-        files=os.listdir(dir)
+        try:
+            files=os.listdir(dir)
+        except OSError as e:
+            return {"result":"OSError","data":{"Error":str(e)}}
         content=[]
         for item in files:
             if os.path.isdir(os.path.join(dir,item)):
                 content.append({"isdir":True,"path":item})
             else:
                 content.append({"isdir":False,"path":item})
-        return {"result":"listdir","data":{"dircontent":content}}
+        return {"result":"listdir","data":{"dircontent":content,"directory":dir.split(os.sep)}}
     def commandhandler(self,object,attachment):
         """
         

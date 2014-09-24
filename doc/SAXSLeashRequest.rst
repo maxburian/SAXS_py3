@@ -34,7 +34,7 @@ command
 :Type:
   string
 :values:
-  ``[u'close', u'abort', u'new', u'get', u'plot', u'plotdata', u'readdir', u'stat']``
+  ``[u'close', u'abort', u'new', u'get', u'plot', u'plotdata', u'readdir', u'stat', u'listdir']``
 
 :Required:
   True
