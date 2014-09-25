@@ -1,7 +1,7 @@
 import sys
 import zmq
 from multiprocessing import Process
-import time,json
+import time,json,datetime
 import os
 import atrdict
 import calibration
@@ -171,10 +171,10 @@ class Server():
         
         """
         command=object['command']
-        print "do command", command
+       
         if command=='new':
             result= self.start_image_queue(object,attachment)
-            
+            print str(datetime.datetime.now())+": new queue for '"+  os.sep.join(object['argument']['directory'])+"'"
         elif command=='abort':
              result=self.queue_abort()
         elif command=='close':
@@ -204,7 +204,7 @@ class Server():
                 result={"result":"no queue","data":{}}
         else:
             result={"result":"ErrorNotimplemented"}
-        print command   
+       
          
         return result
     def start_image_queue(self,object,attachment):
