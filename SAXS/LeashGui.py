@@ -312,11 +312,20 @@ class LeashUI(QMainWindow):
       
         try:
             self.ui.lcdNumberFiles.display(self.data.stat['images processed'])
-            self.ui.lcdNumberRate.display(self.data.stat['rate'])
-            self.canvashist.draw()
-            self.plotcanvas.draw()
         except:
             pass
+        try:
+            self.ui.lcdNumberRate.display(self.data.stat['rate'])
+        except:
+            pass
+        try:
+            self.canvashist.draw()
+        except:
+            pass 
+        try:
+            self.plotcanvas.draw()
+        except:
+            pass 
       
         if unicode(mesg)!='change yscale':
             self.plotworker.start()

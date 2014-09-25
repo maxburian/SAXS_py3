@@ -47,7 +47,7 @@ class plotthread(QThread):
             argu=["plotdata"]
             o=atrdict.AttrDict({"server":""})
             result=initcommand(o,argu,conf)
-            # discards the old graph
+         
             time.sleep(.1)
             # plot data
             object=json.loads(result)
@@ -73,36 +73,36 @@ class plotthread(QThread):
                 self.ax.set_title(object['data']['filename'])
                 self.ax.set_yscale(self.yscale)
          
-                        
-                
-                self.axhist.cla() 
-                self.axhist.set_ylabel('Rate [/s]')
-                self.axhist.set_xlabel('Time [s]')
-                stat=object['data']["stat"]
-                self.mw.data.stat=stat
-                timeinterval=stat['time']- self.lasttime
-                
-                picsprocessedinintervall=stat['images processed']- self.lastcount
-                rate=float(picsprocessedinintervall)/timeinterval
-                if self.lastcount==0:
-                    picsprocessedinintervall=0
-                    rate=0
-                self.lastcount=stat['images processed']
-                self.lasttime=stat['time']
-                
-                self.mw.data.rate[0]= rate
-                self.mw.data.stat["rate"]=rate
-                self.mw.data.time[0]= stat['time'] -  self.starttime
-                self.mw.data.time=np.roll(self.mw.data.time,-1)
-                self.mw.data.rate=np.roll(self.mw.data.rate,-1)
-                self.axhist.plot(self.mw.data.time,self.mw.data.rate,lw=2)
-                self.axhist.fill_between(self.mw.data.time,0,self.mw.data.rate,alpha=0.4)
-                self.axhist.set_ylim( [0,np.max([np.max(self.mw.data.rate),1])])
-                self.axhist.set_xlim( [np.min(self.mw.data.time),np.max(self.mw.data.time)+1])
+                    
+            
+            self.axhist.cla() 
+            self.axhist.set_ylabel('Rate [/s]')
+            self.axhist.set_xlabel('Time [s]')
+            stat=object['data']["stat"]
+            self.mw.data.stat=stat
+            timeinterval=stat['time']- self.lasttime
+            
+            picsprocessedinintervall=stat['images processed']- self.lastcount
+            rate=float(picsprocessedinintervall)/timeinterval
+            if self.lastcount==0:
+                picsprocessedinintervall=0
+                rate=0
+            self.lastcount=stat['images processed']
+            self.lasttime=stat['time']
+            
+            self.mw.data.rate[0]= rate
+            self.mw.data.stat["rate"]=rate
+            self.mw.data.time[0]= stat['time'] -  self.starttime
+            self.mw.data.time=np.roll(self.mw.data.time,-1)
+            self.mw.data.rate=np.roll(self.mw.data.rate,-1)
+            self.axhist.plot(self.mw.data.time,self.mw.data.rate,lw=2)
+            self.axhist.fill_between(self.mw.data.time,0,self.mw.data.rate,alpha=0.4)
+            self.axhist.set_ylim( [0,np.max([np.max(self.mw.data.rate),1])])
+            self.axhist.set_xlim( [np.min(self.mw.data.time),np.max(self.mw.data.time)+1])
              
               
                
-                time.sleep(.1)
+            time.sleep(.1)
                     # refresh canvas
         #except Exception as e:
             #print e

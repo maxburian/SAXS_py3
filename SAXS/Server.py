@@ -96,8 +96,8 @@ class Server():
         self.threads=self.options.threads
         self.plotresult={"result":"Empty","data":{  "stat":{"images processed": 0,
                      "queue length":0,
-                     "time interval":2,
-                     "pics":0,
+                     "time":time.time(),
+                     
                      }}}
            
     def start(self):
