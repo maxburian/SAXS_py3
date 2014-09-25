@@ -48,6 +48,7 @@ class directorypicker(QThread ):
         o=atrdict.AttrDict({"server":""})
         result=json.loads(  initcommand(o,argu,self.netconf))
         i=1
+        print result
         box.blockSignals(True)
         box.clear()
         box.addItem("-")

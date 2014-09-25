@@ -190,9 +190,9 @@ class Server():
                 
             
     def listdir(self,request):
-        dir=  os.sep.join(request["argument"]['directory'])
+        dir=  os.path.join(self.args[0], os.sep.join(request["argument"]['directory']))
         try:
-            files=os.listdir(os.path.join(self.args[0], dir))
+            files=os.listdir(os.path.join( dir))
         except OSError as e:
             return {"result":"OSError","data":{"Error":str(e)}}
         content=[]
