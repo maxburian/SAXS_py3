@@ -72,15 +72,7 @@ def plotworker(imagequeue,dumy):
                          socket.send(json.dumps(result))
                          continue
                      (file,data)=imagequeue.procimage(picture,0)
-                     timep=time.time()-lasttime
-                     lasttime=time.time()
-                     newpic=imagequeue.allp.value-lastcount
-                     lastcount= imagequeue.allp.value
-                     stat= {"images processed": imagequeue.allp.value,
-                     "queue length": imagequeue.picturequeue.qsize(),
-                     "time interval":timep,
-                     "pics":newpic,
-                     }
+                     
                      result={"result":"plot","data":{"filename":file,"array":data.tolist(),"stat": stat}}
                      socket.send(json.dumps(result))
 
