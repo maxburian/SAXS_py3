@@ -12,6 +12,8 @@ import numpy as np
 from multiprocessing import Queue ,Value
 from Queue import Empty
 import matplotlib.pyplot as plt
+import zmq
+import json
 #from SAXS.tifffile import   TiffFile 
 def funcworker(self,threadid):
    """
@@ -30,7 +32,7 @@ def funcworker(self,threadid):
             pass 
 def filler(queue,dir):
             filequeue=[] 
-            print dir
+            print "filler" + dir
             for path, subdirs, files in os.walk(dir):
                 for name in files:
                     if name.endswith('tif'):
@@ -59,8 +61,10 @@ class imagequeue:
          self.fig=plt.figure()
          if  options.plotwindow: 
               plt.ion()
-         
-          
+       
+    def getlastdata(self):
+          print "getdatata" + str(self.lastfile)
+          return self.lastfile,self.lastdata
     
     def fillqueuewithexistingfiles(self):
         """
@@ -174,6 +178,13 @@ class imagequeue:
         if not self.dirwalker:
             self.dirwalker=Process()
             self.dirwalker.start()
+        if self.options.servermode:
+             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
+             context = zmq.Context()
+             socket = context.socket(zmq.REQ)
+             server=conf['Server']
+             socket.connect (server)
+             from Leash import addauthentication
         try:
             while ( self.options.servermode or 
                     (not self.picturequeue.empty()) 
@@ -185,14 +196,23 @@ class imagequeue:
                         break
                     except Empty:
                         continue
-                    self.procimage(picture,0)
+                    lastfile, data =self.procimage(picture,0)
+                    if self.options.servermode:
+                        request={"command":"putplotdata","argument":{"data":{
+                                "result":"plot","data":{"filename":lastfile,"array":data.tolist(),"stat":{}}
+                                  }}}
+                        socket.send_multipart([json.dumps(addauthentication( request,conf))])
+                        socket.recv()
+                         
+                    
                     if np.mod(self.allp.value,500)==0:
                         self.timreport()
         except  KeyboardInterrupt:            
             if self.options.watch:
                         observer.stop()
                         observer.join()   
-     
+            if self.options.servermode:
+                 context.destroy()
         self.stop()
         self.timreport()
         return self.allp.value, time.time()-self.starttime

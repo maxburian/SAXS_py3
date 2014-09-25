@@ -46,20 +46,15 @@
 							"type": "integer"
 						},
 
-						"time interval": 
+						"time": 
 						{
 							"type": "number"
 						},
-
-						"frames per sec": 
-						{
-							"type": "number"
-						},
-
-						"pics": 
-						{
-							"type": "integer"
-						}
+ 						"start time":
+ 						{
+ 							"type": "number"
+ 						}
+ 
 					}
 				},
 

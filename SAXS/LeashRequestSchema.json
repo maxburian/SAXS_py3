@@ -20,7 +20,8 @@
 				"plotdata",
 				"readdir",
 				"stat",
-				"listdir"
+				"listdir",
+				"putplotdata"
 			]
 		},
 
@@ -52,7 +53,8 @@
 							"$ref": "schema.json#"
 						}
 					}
-				}
+				},
+				"data":{}
 			}
 		},
 

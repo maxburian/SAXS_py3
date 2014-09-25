@@ -29,17 +29,17 @@ class directorypicker(QThread ):
         print dirlist
         for i, box in enumerate(self.comboBox):
             box.clear()
-            if i<len(dirlist):
+            if i<len(dirlist) and dirlist[i]!="":
                 dirname=dirlist[i]
                 dir =os.sep.join(dirlist[:i])
                 print "dir: "+ dirname +str(i)+"path: "+dir
-                if dirname!="":
+                if dirname!="" :
                     self.fillbox(self.comboBox[i], dir,selected=dirname)
-                elif dirlist[i-1]!="":
+                elif dirlist[i-1]!=""  :
                     self.fillbox(self.comboBox[i], dir)
         self.dirlist=dirlist   
         print "set dirlist"
-        print self.dirlist  
+        #print self.dirlist  
               
     def fillbox(self,box,path,selected="-"):
         currentdirname=os.path.dirname(path)
@@ -48,46 +48,56 @@ class directorypicker(QThread ):
         o=atrdict.AttrDict({"server":""})
         result=json.loads(  initcommand(o,argu,self.netconf))
         i=1
-        print result
+        #print result
         box.blockSignals(True)
         box.clear()
         box.addItem("-")
         box.setCurrentIndex(0)
-        for  dir in  result['data']['dircontent']:
-            if dir['isdir']:
-                box.addItem(dir['path'])
-                if dir['path']==selected:
-                    box.setCurrentIndex(i)
-                   
-                i=i+1
+        if 'dircontent' in result['data']:
+            for  dir in  result['data']['dircontent']:
+                if dir['isdir']:
+                    box.addItem(dir['path'])
+                    if dir['path']==selected:
+                        box.setCurrentIndex(i)
+                       
+                    i=i+1
         box.blockSignals(False)
     def getdirlist(self):
         dirlist=[]
         for i, box in enumerate(self.comboBox):
             dir=unicode(box.currentText())
             if dir=="-": dir=""
-            dirlist.append(dir)
+            if dir!="":
+                dirlist.append(dir)
             
         return dirlist
     def update(self):
         dirlist=self.getdirlist()
         print dirlist
         changed=False
-        for i, dir in enumerate(dirlist):
-            if i<len(self.comboBox)-1:
-                if changed:
-                    self.comboBox[i+1].blockSignals(True)
-                    self.comboBox[i+1].clear()
-                    self.comboBox[i+1].blockSignals(False)
-                elif dir!=self.dirlist[i] and not dir=="":
-                    listpath="."+os.sep+os.sep.join(dirlist[:i+1] )
-                    print "lp"+ listpath
-                    self.fillbox(self.comboBox[i+1], listpath,dirlist[i+1])
-                    changed=True
-                elif dir=="":
-                    self.comboBox[i+1].blockSignals(True)
-                    self.comboBox[i+1].clear()
-                    self.comboBox[i+1].blockSignals(False)
-                    changed=True
-               
+        
+        for i, box in enumerate(self.comboBox):
+            if self.prevdirhaschanged(dirlist,i):
+                 changed=True
+                 self.fillbox(box, os.sep.join(dirlist[0:i]))
+                 continue
+            if changed:
+                box.clear()
         self.dirlist=dirlist
+    def prevdirhaschanged(self,dirlist,i):
+        if i==0:
+            return False
+        if len(dirlist)>=i:
+            newd=dirlist[i-1]
+        else:
+            newd=""
+        if len(self.dirlist)>=i:
+            oldd=self.dirlist[i-1]
+        else:
+            oldd=""
+        if newd!=oldd:
+            return True
+        else:
+            return False
+            
+        

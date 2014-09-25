@@ -309,14 +309,14 @@ class LeashUI(QMainWindow):
                     
     def statupdate(self,mesg):
    
-        if unicode(mesg)=='data plotted':
-            try:
-                self.ui.lcdNumberFiles.display(self.data.stat['images processed'])
-                self.ui.lcdNumberRate.display(self.data.stat['pics']/self.data.stat['time interval'])
-                self.canvashist.draw()
-                self.plotcanvas.draw()
-            except:
-                pass
+      
+        try:
+            self.ui.lcdNumberFiles.display(self.data.stat['images processed'])
+            self.ui.lcdNumberRate.display(self.data.stat['rate'])
+            self.canvashist.draw()
+            self.plotcanvas.draw()
+        except:
+            pass
       
         if unicode(mesg)!='change yscale':
             self.plotworker.start()

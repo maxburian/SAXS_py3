@@ -24,58 +24,30 @@ class AuthenticationError(Exception):
     def __str__(self):
         return repr(self.message)
 
-def subscribeToFileChanges(queue,url,dir):
+def subscribeToFileChanges(imqueue,url,dir):
     """
     Function to connect to file feeder service. Runs in Thread.
     """
     port = "5556"
- 
+    queue=imqueue.picturequeue
     # Socket to talk to server
     context = zmq.Context()
     socket = context.socket(zmq.SUB)
     print "Feeder at: ",url
     socket.connect ( url)
     socket.setsockopt(zmq.SUBSCRIBE,"")
-    while True:
-       
-        string = socket.recv()
-        obj=json.loads(string)
-        file=os.path.abspath(os.path.normpath(obj['argument']))
-        if file.startswith( os.path.abspath(os.path.normpath(dir))):
-            if file.endswith('.tif'):
-                queue.put(obj['argument'])
-        
+    try:
+        while imqueue.stopflag.value==0: 
+           
+            string = socket.recv()
+            obj=json.loads(string)
+            file=os.path.abspath(os.path.normpath(obj['argument']))
+            if file.startswith( os.path.abspath(os.path.normpath(dir))):
+                if file.endswith('.tif'):
+                    queue.put(obj['argument'])
+    except KeyboardInterrupt:
+        context.destroy()
 
-def plotworker(imagequeue,dumy):
-                context = zmq.Context()
-                socket = context.socket(zmq.PUB)
-                socket.bind("tcp://*:%s" % internalplotsocked)
-                lasttime=time.time()
-                lastcount=0
-                print "plotworkerstarted"
-                result={"result":"Empty","data":{ }}
-                while imagequeue.stopflag.value==0:
-                     timep=time.time()-lasttime
-                     lasttime=time.time()
-                     newpic=imagequeue.allp.value-lastcount
-                     lastcount= imagequeue.allp.value
-                     stat= {"images processed": imagequeue.allp.value,
-                     "queue length": imagequeue.picturequeue.qsize(),
-                     "time interval":timep,
-                     "pics":newpic,
-                     }
-                     
-                     try:
-                         picture=imagequeue.picturequeue.get(timeout=5)
-                     except Empty as e:
-                         result["data"]["stat"]=stat
-                         socket.send(json.dumps(result))
-                         continue
-                     (file,data)=imagequeue.procimage(picture,0)
-                     
-                     result={"result":"plot","data":{"filename":file,"array":data.tolist(),"stat": stat}}
-                     socket.send(json.dumps(result))
-                context.destroy()
 
 class Server():
     """
@@ -139,21 +111,14 @@ class Server():
         self.comandosocket = context.socket(zmq.REP)
         print "server listenes at tcp://*:%s" % serverport
         self.comandosocket.bind("tcp://*:%s" % serverport)
-        internalplotcontext = zmq.Context()
-        self.getplotsocked = internalplotcontext.socket(zmq.SUB)
-        self.getplotsocked.setsockopt(zmq.SUBSCRIBE,"")
-        self.getplotsocked.connect("tcp://localhost:"+str(internalplotsocked))
-        self.poller = zmq.Poller()
-        self.poller.register(self.getplotsocked, zmq.POLLIN)
+       
         while True:
             try:
                 message=self.comandosocket.recv_multipart()
                  
                 object=json.loads(message[0])
                 validate(object,self.commandschema)
-	        print "authenticate"
                 self.authenticate(object)
-                print "auth done"
                 attachment=message[1:]
                 result=self.commandhandler(object,attachment)
             except ValidationError as e:
@@ -162,7 +127,13 @@ class Server():
                 result={"result":"ValueError in request","data":{"Error":e.message}}
             except  AuthenticationError as e:
                  result={"result":"AuthenticationError in request","data":{"Error":e.message}}
+            except KeyboardInterrupt:
+                context.destroy()
+                self.queue_abort()
+               
+                return
             self.comandosocket.send(json.dumps(result))
+           
             
     def authenticate(self,data):
         """
@@ -172,7 +143,7 @@ class Server():
         data["sign"]=""
         m=hashlib.sha512()
         now=time.time() 
-        print json.dumps(data)
+         
         m.update(json.dumps(data, sort_keys=True))
         m.update(self.secret)
         if not abs(data["time"]-now)<900:
@@ -212,6 +183,8 @@ class Server():
              result=self.readdir(object)
         elif command=="listdir":
              result=self.listdir(object)
+        elif command=="putplotdata":
+             result=self.updateplot(object)
         elif command=="plot":
              if self.imagequeue:
                 result=self.plot()
@@ -282,17 +255,15 @@ class Server():
             print "listening to feeder"
            
             self.feederproc=Process(target=subscribeToFileChanges,args=
-                                    (self.imagequeue.picturequeue,
+                                    (self.imagequeue,
                                      self.feederurl,
                                     dir)
                                     )
             print "directory to watch "+dir
             self.feederproc.start()
-            self.lasttime=time.time()
-            self.lastcount=0
-            
-            self.plotproc=Process(target=plotworker,args= (self.imagequeue,None))
-            self.plotproc.start()
+            self.queuestatrtime=time.time()
+            self.plotresult={"result":"Empty","data":{"stat":self.stat()}}
+           
             result={"result":"queue initiated ","data":{"cal":object['argument']['calibration']}}
         except IOError as e: 
             result={"result":"IOError","data":{"Error": str(e).replace("\n"," ")}}
@@ -315,25 +286,33 @@ class Server():
         
         
         try:
-            self.imagequeue .fillqueuewithexistingfiles()
+            self.imagequeue.fillqueuewithexistingfiles()
             pass
         except AttributeError as msg:
             result={"result":"ValueError","data":{"Error":"Start Queue first"}}
             return result
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
-        print "print"
-        socks = dict(self.poller.poll(timeout=1))
-        print "pollcall"
-        if self.getplotsocked in socks and socks[self.getplotsocked] == zmq.POLLIN:
-            print "have event #############################################################################"
-            self.plotresult = json.loads(self.getplotsocked.recv())
-        print "endif"
-        return self.plotresult
-    
+        self.plotresult['data']["stat"]=self.stat()
+        return  self.plotresult
+    def updateplot(self,object):
+        self.plotresult=object['argument']["data"]
+        return {"result":"done","data":{}}
     def stat(self):
-        plotresult=self.plot()
-        return plotresult['data']['stat']
+        if self.imagequeue:
+          
+            self.lasttime=time.time()
+            newpic=self.imagequeue.allp.value-self.lastcount
+            self.lastcount=self.imagequeue.allp.value
+            return {"images processed":self.imagequeue.allp.value,
+             "queue length":self.imagequeue.picturequeue.qsize(),
+             "time":time.time(),
+             "start time":self.queuestatrtime
+         
+             
+             }
+        else:
+            return{}
 def saxsdogserver():
      serverconf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
      validate(serverconf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))

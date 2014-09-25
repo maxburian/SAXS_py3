@@ -15,13 +15,15 @@ class plotthread(QThread):
     def __init__(self,mw):
         QThread.__init__(self)
         self.mw=mw
-        self.mw.data.rate=np.zeros(100)
-        self.mw.data.time=np.ones(100)
+        self.mw.data.rate=np.repeat([0.0],100)
+        self.mw.data.time=np.repeat([0.0],100)
         self.mw.plotthreadgo=True
         self.yscale="symlog"
         self.ax = self.mw.figure.add_subplot(111)
         self.axhist=self.mw.figurehist.add_subplot(111)
-        
+        self.lasttime=time.time()
+        self.starttime=time.time()
+        self.lastcount=0
     def setyscale(self,state):
         """
         On check state changed from y-scale check box widget
@@ -37,21 +39,23 @@ class plotthread(QThread):
         initiate the thread.
         """
          
-        time.sleep(1)
-        try:       
+        self.ax = self.mw.figure.add_subplot(111)
+        self.axhist=self.mw.figurehist.add_subplot(111)
+        #try:       
+        if True:
             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
             argu=["plotdata"]
             o=atrdict.AttrDict({"server":""})
             result=initcommand(o,argu,conf)
             # discards the old graph
-            
+            time.sleep(.1)
             # plot data
             object=json.loads(result)
             if object['result']=="Empty":
                 pass
             else:
                  
-            
+                 
                 self.ax.cla()
                 self.ax.set_ylabel('Intensity [counts/pixel]')
                 self.ax.set_xlabel('q [1/nm]')
@@ -70,25 +74,36 @@ class plotthread(QThread):
                 self.ax.set_yscale(self.yscale)
          
                         
-            
-            self.axhist.cla() 
-            self.axhist.set_ylabel('Rate [/s]')
-            self.axhist.set_xlabel('Time [s]')
-            self.mw.data.stat=object['data']["stat"]
-            self.mw.data.rate[0]=self.mw.data.stat['pics']/self.mw.data.stat['time interval']
-           
-            self.mw.data.time[0]=self.mw.data.stat['time interval']+ self.mw.data.time[1]
-           
-            self.axhist.plot(self.mw.data.time,self.mw.data.rate,lw=2)
-            self.axhist.fill_between(self.mw.data.time,0,self.mw.data.rate,alpha=0.4)
-            self.axhist.set_ylim( [0,np.max([np.max(self.mw.data.rate),1])])
-            self.axhist.set_xlim( [np.min(self.mw.data.time),np.max(self.mw.data.time)+1])
-         
-            self.mw.data.time=np.roll(self.mw.data.time,1)
-            self.mw.data.rate=np.roll(self.mw.data.rate,1)
-           
-           
-                # refresh canvas
-        except Exception as e:
-            print e
+                
+                self.axhist.cla() 
+                self.axhist.set_ylabel('Rate [/s]')
+                self.axhist.set_xlabel('Time [s]')
+                stat=object['data']["stat"]
+                self.mw.data.stat=stat
+                timeinterval=stat['time']- self.lasttime
+                
+                picsprocessedinintervall=stat['images processed']- self.lastcount
+                rate=float(picsprocessedinintervall)/timeinterval
+                if self.lastcount==0:
+                    picsprocessedinintervall=0
+                    rate=0
+                self.lastcount=stat['images processed']
+                self.lasttime=stat['time']
+                
+                self.mw.data.rate[0]= rate
+                self.mw.data.stat["rate"]=rate
+                self.mw.data.time[0]= stat['time'] -  self.starttime
+                self.mw.data.time=np.roll(self.mw.data.time,-1)
+                self.mw.data.rate=np.roll(self.mw.data.rate,-1)
+                self.axhist.plot(self.mw.data.time,self.mw.data.rate,lw=2)
+                self.axhist.fill_between(self.mw.data.time,0,self.mw.data.rate,alpha=0.4)
+                self.axhist.set_ylim( [0,np.max([np.max(self.mw.data.rate),1])])
+                self.axhist.set_xlim( [np.min(self.mw.data.time),np.max(self.mw.data.time)+1])
+             
+              
+               
+                time.sleep(.1)
+                    # refresh canvas
+        #except Exception as e:
+            #print e
         self.emit( SIGNAL('update(QString)'), "data plotted" )
