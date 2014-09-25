@@ -75,6 +75,7 @@ def plotworker(imagequeue,dumy):
                      
                      result={"result":"plot","data":{"filename":file,"array":data.tolist(),"stat": stat}}
                      socket.send(json.dumps(result))
+                context.destroy()
 
 class Server():
     """
