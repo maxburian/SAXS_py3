@@ -26,20 +26,18 @@ class directorypicker(QThread ):
        
         if dirlist[0]=="":
             dirlist[0] ="."
-        print dirlist
         for i, box in enumerate(self.comboBox):
+            box.blockSignals(True)
             box.clear()
             if i<len(dirlist) and dirlist[i]!="":
                 dirname=dirlist[i]
                 dir =os.sep.join(dirlist[:i])
-                print "dir: "+ dirname +str(i)+"path: "+dir
                 if dirname!="" :
                     self.fillbox(self.comboBox[i], dir,selected=dirname)
                 elif dirlist[i-1]!=""  :
                     self.fillbox(self.comboBox[i], dir)
+            box.blockSignals(False)
         self.dirlist=dirlist   
-        print "set dirlist"
-        #print self.dirlist  
               
     def fillbox(self,box,path,selected="-"):
         currentdirname=os.path.dirname(path)
@@ -48,7 +46,6 @@ class directorypicker(QThread ):
         o=atrdict.AttrDict({"server":""})
         result=json.loads(  initcommand(o,argu,self.netconf))
         i=1
-        #print result
         box.blockSignals(True)
         box.clear()
         box.addItem("-")
@@ -66,23 +63,35 @@ class directorypicker(QThread ):
         dirlist=[]
         for i, box in enumerate(self.comboBox):
             dir=unicode(box.currentText())
-            if dir=="-": dir=""
-            if dir!="":
+            if dir=="-": 
+                dir=" "
+                return dirlist
+            if dir!=" ":
                 dirlist.append(dir)
             
         return dirlist
     def update(self):
         dirlist=self.getdirlist()
-        print dirlist
         changed=False
         
         for i, box in enumerate(self.comboBox):
-            if self.prevdirhaschanged(dirlist,i):
-                 changed=True
-                 self.fillbox(box, os.sep.join(dirlist[0:i]))
-                 continue
+            box.blockSignals(True)
             if changed:
+                if i < len (dirlist):
+                    dirlist[i]=" "
                 box.clear()
+            elif self.prevdirhaschanged(dirlist,i):
+                 changed=True
+                 if self.previousdir(dirlist,i)==" ":
+                     box.clear()
+                     if i < len (dirlist):
+                         dirlist[i]=" "
+                 else:
+                     self.fillbox(box, os.sep.join(dirlist[0:i]))
+                     if i < len (dirlist):
+                         dirlist[i]=" "
+                 
+            box.blockSignals(False)
         self.dirlist=dirlist
     def prevdirhaschanged(self,dirlist,i):
         if i==0:
@@ -90,14 +99,21 @@ class directorypicker(QThread ):
         if len(dirlist)>=i:
             newd=dirlist[i-1]
         else:
-            newd=""
+            newd=" "
         if len(self.dirlist)>=i:
             oldd=self.dirlist[i-1]
         else:
-            oldd=""
+            oldd=" "
         if newd!=oldd:
             return True
         else:
             return False
-            
+    def previousdir(self,dirlist,i):
+        if i==0:
+            prevdir="."
+        if len(dirlist)>=i:
+            prevdir=dirlist[i-1]
+        else:
+            prevdir=" "
+        return prevdir
         

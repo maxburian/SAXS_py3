@@ -163,8 +163,7 @@ class Server():
         for item in files:
             if os.path.isdir(os.path.join(dir,item)):
                 content.append({"isdir":True,"path":item})
-            else:
-                content.append({"isdir":False,"path":item})
+          
         return {"result":"listdir","data":{"dircontent":content,"directory":dir.split(os.sep)}}
     def commandhandler(self,object,attachment):
         """

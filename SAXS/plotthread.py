@@ -15,8 +15,8 @@ class plotthread(QThread):
     def __init__(self,mw):
         QThread.__init__(self)
         self.mw=mw
-        self.mw.data.rate=np.repeat([0.0],100)
-        self.mw.data.time=np.repeat([0.0],100)
+        self.mw.data.rate=np.repeat([0.0],200)
+        self.mw.data.time=np.repeat([0.0],200)
         self.mw.plotthreadgo=True
         self.yscale="symlog"
         self.ax = self.mw.figure.add_subplot(111)
@@ -95,10 +95,11 @@ class plotthread(QThread):
             self.mw.data.time[0]= stat['time'] -  self.starttime
             self.mw.data.time=np.roll(self.mw.data.time,-1)
             self.mw.data.rate=np.roll(self.mw.data.rate,-1)
-            self.axhist.plot(self.mw.data.time,self.mw.data.rate,lw=2)
-            self.axhist.fill_between(self.mw.data.time,0,self.mw.data.rate,alpha=0.4)
+            plottime=self.mw.data.time-self.mw.data.time.max()
+            self.axhist.plot(plottime,self.mw.data.rate,lw=2)
+            self.axhist.fill_between(plottime,0,self.mw.data.rate,alpha=0.4)
             self.axhist.set_ylim( [0,np.max([np.max(self.mw.data.rate),1])])
-            self.axhist.set_xlim( [np.min(self.mw.data.time),np.max(self.mw.data.time)+1])
+            self.axhist.set_xlim( [np.min(plottime),np.max(plottime)+1])
              
               
                
