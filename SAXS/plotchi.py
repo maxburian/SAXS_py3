@@ -88,6 +88,7 @@ def makeplot(options,args):
         plt.savefig(options.plotfile)
     else:
         plt.show()
+    return plt
     
 def align_yaxis(ax1, v1, ax2, v2):
     """adjust ax2 ylimit so that v2 in ax2 is aligned to v1 in ax1"""

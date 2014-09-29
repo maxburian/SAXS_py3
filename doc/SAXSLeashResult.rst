@@ -193,7 +193,7 @@ stat
 
 
 :Contains:
-  :ref:`queue length <queue length>`, :ref:`images processed <images processed>`, :ref:`time interval <time interval>`, :ref:`frames per sec <frames per sec>`, :ref:`pics <pics>`
+  :ref:`queue length <queue length>`, :ref:`images processed <images processed>`, :ref:`time <time>`, :ref:`start time <start time>`
 :Required:
   False
 :JSON Path:
@@ -241,9 +241,9 @@ Example JSON:
 
     {"images processed": 0}
 
-.. _time interval:
+.. _time:
 
-time interval
+time
 --------------------
 
 :Type:
@@ -251,17 +251,17 @@ time interval
 :Required:
   False
 :JSON Path:
-  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`time interval <time interval>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`time <time>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"time interval": 0}
+    {"time": 0}
 
-.. _frames per sec:
+.. _start time:
 
-frames per sec
+start time
 --------------------
 
 :Type:
@@ -269,31 +269,13 @@ frames per sec
 :Required:
   False
 :JSON Path:
-  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`frames per sec <frames per sec>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`start time <start time>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"frames per sec": 0}
-
-.. _pics:
-
-pics
---------------------
-
-:Type:
-  integer
-:Required:
-  False
-:JSON Path:
-  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`pics <pics>`']
-
-Example JSON: 
-
-.. code:: json
-
-    {"pics": 0}
+    {"start time": 0}
 
 .. _filename:
 
