@@ -5,12 +5,12 @@ except:
     print "No py2exe here"
  
 from subprocess import call
- 
+from SAXS import versionstring
  
 
 setup(
     name="SAXS",
-    version="1.0.5",
+    version=versionstring,
     packages=["SAXS"],
     package_data={"SAXS": ["icons/*","schema.json","LeashRequestSchema.json","LeashResultSchema.json","NetworkSchema.json","LeashMW.ui","importdialog.ui"]},
     author="Christian Meisenbichler",

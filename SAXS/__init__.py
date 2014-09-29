@@ -15,3 +15,4 @@ try:
     from datamerge import merge
 except Error as e:
     print e
+versionstring="1.0.5alpha"
