@@ -85,7 +85,7 @@ class imagequeue:
              
             #im=Image.open(picture,"r")
             #im.tag.tags
-            max=10
+            max=60
             if not self.options.silent: print "[",threadid,"] open: ",picture 
             for i in range(max):
                 try:

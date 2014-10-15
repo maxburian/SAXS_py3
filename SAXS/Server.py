@@ -34,6 +34,8 @@ def subscribeToFileChanges(imqueue,url,dir,serverdir):
     context = zmq.Context()
     socket = context.socket(zmq.SUB)
     print "Feeder at: ",url
+    print "serverdir " + serverdir
+    print "selectdir " + dir
     socket.connect ( url)
     socket.setsockopt(zmq.SUBSCRIBE,"")
     try:
@@ -42,6 +44,8 @@ def subscribeToFileChanges(imqueue,url,dir,serverdir):
             string = socket.recv()
             obj=json.loads(string)
             file=os.path.abspath(os.path.normpath(os.path.join(serverdir, obj['argument'])))
+            print serverdir
+            print file
             if file.startswith( os.path.abspath(os.path.normpath(dir))):
                 if file.endswith('.tif'):
                     queue.put(obj['argument'])
