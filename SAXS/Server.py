@@ -44,7 +44,7 @@ def subscribeToFileChanges(imqueue,url,dir,serverdir):
             file=os.path.abspath(os.path.normpath(os.path.join(serverdir, obj['argument'])))
             if file.startswith( os.path.abspath(os.path.normpath(dir))):
                 if file.endswith('.tif'):
-                    queue.put(obj['argument'])
+                    queue.put( file)
     except KeyboardInterrupt:
         context.destroy()
 
