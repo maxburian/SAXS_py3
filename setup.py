@@ -22,8 +22,7 @@ setup(
                       "matplotlib",
                       "jsonschema", 
                       "bitarray",
-                      "watchdog",
-                     
+                      "watchdog", 
                       "sphinxcontrib-programoutput",
                       "sphinxcontrib-programscreenshot",
                       "pyzmq"],

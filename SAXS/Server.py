@@ -24,7 +24,7 @@ class AuthenticationError(Exception):
     def __str__(self):
         return repr(self.message)
 
-def subscribeToFileChanges(imqueue,url,dir):
+def subscribeToFileChanges(imqueue,url,dir,serverdir):
     """
     Function to connect to file feeder service. Runs in Thread.
     """
@@ -41,7 +41,7 @@ def subscribeToFileChanges(imqueue,url,dir):
            
             string = socket.recv()
             obj=json.loads(string)
-            file=os.path.abspath(os.path.normpath(obj['argument']))
+            file=os.path.abspath(os.path.normpath(os.path.join(serverdir, obj['argument'])))
             if file.startswith( os.path.abspath(os.path.normpath(dir))):
                 if file.endswith('.tif'):
                     queue.put(obj['argument'])
@@ -252,11 +252,13 @@ class Server():
             self.imagequeueprocess=Process(target=self.imagequeue.start)
             self.imagequeueprocess.start()
             print "listening to feeder"
-           
+            serverdir=self.args[0]
             self.feederproc=Process(target=subscribeToFileChanges,args=
                                     (self.imagequeue,
                                      self.feederurl,
-                                    dir)
+                                    dir,
+                                    serverdir
+                                    )
                                     )
             print "directory to watch "+dir
             self.feederproc.start()
