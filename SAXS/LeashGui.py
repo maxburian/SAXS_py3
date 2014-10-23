@@ -296,8 +296,10 @@ class LeashUI(QMainWindow):
             argu=["new", filename,self.data.cal["MaskFile"],  self.directorypicker.getdirlist() ,self.ui.Threads.value()
                                                                         ]
             o=atrdict.AttrDict({"server":""})
-            result=initcommand(o,argu,conf)
-      
+            try:
+                result=initcommand(o,argu,conf)
+            except Exception as e:
+                self.errmsg.showMessage(str(e))
             self.ui.pushButtonnew.setText("Restart Queue with Changed Calibration")
             self.plotworker.start()
             self.log("New calibration loaded onto server.")

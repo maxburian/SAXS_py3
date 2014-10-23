@@ -174,7 +174,7 @@ class Server():
         
         """
         command=object['command']
-       
+        print "got: "+ command 
         if command=='new':
             result= self.start_image_queue(object,attachment)
             print str(datetime.datetime.now())+": new queue for '"+  os.sep.join(object['argument']['directory'])+"'"
