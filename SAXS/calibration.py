@@ -295,7 +295,6 @@ def scalemat(Xsize,Ysize,ov):
                     dtype=np.float,shape=(Ysize*Xsize,Ysize*Xsize*ov**2))
      
     
-
 def openmask(config):
     """
     Open the mask file especialy the \*.msk file. Unfortunately there is no library
@@ -311,9 +310,16 @@ def openmask(config):
         
         maskb.fromfile(open(config['MaskFile'])) 
         maskl=np.array(maskb.tolist())
-        x,y=config['Imagesize']
-        yb=y+11
-        off=256+ 8*yb 
+        fin=open(config['MaskFile'] , "rb")
+        import struct
+        fin.seek(0x10)
+        (y,)= struct.unpack('i', fin.read(4))
+        fin.seek(0x14)
+        x,=struct.unpack('i', fin.read(4))
+        word=32
+        padding= word-mod(y,word)
+        yb=y+padding
+        off=8192
         mask=maskl[off:x*yb+off].reshape(x, yb)
         cropedmask=np.flipud(mask[0:x,0:y])
         # save the mask in order to controll if it worked
@@ -323,4 +329,3 @@ def openmask(config):
         mask= np.where(misc.imread(config['MaskFile'])!=0,False,True)
         print mask
         return mask
-     
