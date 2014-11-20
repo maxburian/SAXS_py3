@@ -317,7 +317,7 @@ def openmask(config):
         fin.seek(0x14)
         x,=struct.unpack('i', fin.read(4))
         word=32
-        padding= word-mod(y,word)
+        padding= word-  y % word
         yb=y+padding
         off=8192
         mask=maskl[off:x*yb+off].reshape(x, yb)
