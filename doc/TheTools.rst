@@ -51,9 +51,24 @@ by interpolating the missing data in the joined table of the the 1 sec interval 
 and the shutter log. 
 The interpolation method takes the closest previous entry. The two logfiles are presumed 
 to have the same clock. This data is then merged with the data 
-extracted from the image headers and written to a output file as a Table.
+extracted from the image headers and dedector logs and is written to a output file as a Table.
 As the image time stamps are from a different clock which might have a significant 
 offset, the ``-1`` and ``-t`` options allow for dealing with that. 
 In order to check if the time synchronization is reasonable, the tool displays a 
 graph with the shutter times and the exposure times from the images.
- 
+
+One of the output file format options is hdf, the hirarchical data format, which ia a way to create portable
+binary data files. If you  specify hdf, the radial average function "``.chi``" and even the 
+image data  can be written to the htf file. The hdf export is done with 
+pandas hdf exporter which in turn uses `PyTables 
+<http://www.pytables.org/>`_. The "``.chi``" files reside under the "Curves" Label, 
+the log data under the "Data" label and the images if present under the "Images" Label
+It can be restored to a Pandas pannel or data frame with:
+
+.. code::
+
+   import pandas as pd
+   store=pd.HDFStore("/home/chm/saxs/merged.hdf")
+   Curves=store["Curves"] # gives Pandas panel with all the curves
+   Data=store["Data"] # gives Pandas data frame of merged log and image parameters
+   
