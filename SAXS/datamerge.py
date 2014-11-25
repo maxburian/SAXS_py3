@@ -56,6 +56,7 @@ def readtiff(imagepath):
         i+=1
         if i>20: break
     return data
+
 def readlog(logfile):
     '''read CSV into pandas data frame'''
     file=open(logfile)
@@ -88,10 +89,39 @@ def imgtohdf(path,dir):
                     h5file.createArray(group, id , data,
                                    imagefilename)
     h5file.close()
+    
+import os,hashlib
+
+
+import StringIO
+
+def readimglog(filename):
+    logf=open(filename) 
+    logfstr=""
+    for i,line in enumerate(logf):
+        if i==0:
+            continue
+        elif line.startswith("----"):
+            continue
+        elif len(line.split())<3:
+             logfstr+="NaN NaN " +line
+        else:
+            logfstr+=line
+    df=pd.read_csv( StringIO.StringIO(logfstr), 
+            sep=" ", 
+            skipinitialspace=True,
+            header=None , 
+            names=["Time Requested","Time Measured","End Date Time" ,"File Name"],
+            )
+    df["End Date Time"]=pd.to_datetime(df["End Date Time"])
+   
+    return df
+ 
 def readallimages(dir,includechi):
     "read header from all images and collect chi files if required"
     frameinit=False
     imgframe=pd.DataFrame()
+    imglogframe=pd.DataFrame()
     chidict={}
     for path, subdirs, files in os.walk(dir):
         for name in files:
@@ -115,8 +145,15 @@ def readallimages(dir,includechi):
                     chidict[imgpath]=chiframe
                     
                 imgframe=imgframe.append(rowframe)
-                                
-    return imgframe, pd.Panel(chidict) 
+              
+            elif  name.endswith('log'):
+                logpath=os.path.join(path, name)
+                imglogframe=imglogframe.append(readimglog(logpath))  
+    imgframe["File Name"]=(imgframe["Image_path"]+imgframe['filename'])
+    merged=pd.merge(imglogframe,imgframe, on="File Name")
+    merged=merged.set_index("End Date Time")
+    return merged, pd.Panel(chidict)
+ 
 def merge():
     '''saxs data merger'''
     parser = OptionParser()
@@ -158,7 +195,7 @@ def merge():
         dict=pickle.load(open(options.imagedata,"r"))
         imd=dict['imd']
         chi=dict['chi']
- 
+       
     shifted=merged.copy()
     shiftedreduced=mergedreduced.copy()
     # shift image timestamp py image exposure time
