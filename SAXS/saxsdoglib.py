@@ -25,7 +25,7 @@ def saxsdogparseopt():
     parser.add_option("-o", "--out", dest="outdir", default="",
                       help="Specify output directory.")
     parser.add_option("-R", "--relpath", dest="relpath", default="../work",
-                      help="Specify output directory.")
+                      help="Specify output directory as relative path to image file. Default: '../work'")
     parser.add_option("-i", "--inplace", dest="inplace", default=False,action="store_true",
                       help="Files are written, in place, in the directory of the image.")
    

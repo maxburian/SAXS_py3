@@ -77,7 +77,8 @@ class Server():
                       help="Watch directory for changes, using file system events recursively for all sub directories.")
       
         parser.add_option("-R", "--relpath", dest="relpath", default="../work",
-                      help="Specify output directory.")
+                      help="Specify output directory as relative path to image file. Default: '../work'")
+    
         parser.add_option("-o", "--out", dest="outdir", default="out",
                       help="Specify output directory. Default is './out'.")
         parser.add_option("-i", "--inplace", dest="inplace", default=False,action="store_true",
