@@ -275,6 +275,7 @@ class LeashUI(QMainWindow):
             dialog=QErrorMessage(self)
             dialog.showMessage(str(e)+"\n try 'Save as'")
             return
+        self.recentfilemenue.append(self.filename)
         QMessageBox(self).about(self,"saved",self.filename)
     def safecalibrationas(self):
         
@@ -285,7 +286,7 @@ class LeashUI(QMainWindow):
         else:
             self.filename=filename
         self.safecalibration()
-        
+        self.recentfilemenue.append(self.filename)
     def commandnew(self):
         if self.data.cal:
             filename="tempcalfile"
