@@ -76,7 +76,8 @@ class Server():
         parser.add_option("-w", "--watch", dest="watchdir", default=False,action="store_true",
                       help="Watch directory for changes, using file system events recursively for all sub directories.")
       
-        
+        parser.add_option("-R", "--relpath", dest="relpath", default="../work",
+                      help="Specify output directory.")
         parser.add_option("-o", "--out", dest="outdir", default="out",
                       help="Specify output directory. Default is './out'.")
         parser.add_option("-i", "--inplace", dest="inplace", default=False,action="store_true",
@@ -232,6 +233,7 @@ class Server():
                             "silent":True,"plotwindow":False,
                             "walkdirinthreads":True,
                     		"outdir":self.options.outdir,
+                            "relpath":self.options.relpath,
                     		"inplace":self.options.inplace,"writesvg":False,
                              "writepng":False,"resume":False
                              })

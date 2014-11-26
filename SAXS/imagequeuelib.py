@@ -119,7 +119,14 @@ class imagequeue:
             
             if self.options.inplace:
                 basename=picture[:-3]
-            
+            elif self.options.relpath:
+                reldir=os.path.join( 
+                                      os.path.dirname(picture),
+                                      self.options.relpath)
+                if not os.path.isdir(reldir):
+                    os.mkdir(reldir)
+                basename=os.path.join( reldir,
+                                      os.path.basename(picture))
             else:
                 basename=self.options.outdir+os.sep+('_'.join(picture.replace('./','').split(os.sep))[:-3]).replace('/',"_")
                 basename=basename.replace(':', '').replace('.','')+'.'
