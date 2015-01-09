@@ -23,7 +23,7 @@ The image we are going to integrate is exactly the array the :py:func:`SAXS.open
    conf=json.load(open('cal.json'))
    img =SAXS.openmask(conf)
    plt.imshow(img)
-   plt.colorbar()
+   plt.colorbar() 
    misc.imsave("mask.tif",img)
    
 The result is constant 1 (where the intensity is not 0), save 2e-12.
@@ -33,7 +33,7 @@ The result is constant 1 (where the intensity is not 0), save 2e-12.
    import SAXS,json
    from scipy import misc
    import matplotlib.pyplot as plt
-   import numpy as np
+   import numpy as np 
    conf=json.load(open('cal.json'))
    img =SAXS.openmask(conf)
    cal=SAXS.calibration(conf)

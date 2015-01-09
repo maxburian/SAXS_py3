@@ -8,7 +8,7 @@
         "TiltAngleDeg": -0.56,
         "TiltRotDeg": 73.569
     },
-    "MaskFile": "../data/AAA_integ.msk",
+    "MaskFile": "data/AAA_integ.msk",
     "PixelSizeMicroM": [
         172.0,
         172.0
