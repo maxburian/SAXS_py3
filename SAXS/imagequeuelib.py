@@ -189,7 +189,7 @@ class imagequeue:
              context = zmq.Context()
              socket = context.socket(zmq.REQ)
              tokenlist=  conf['Server'].split(":")
-             print tokenlist
+             
              server=":".join([tokenlist[0],tokenlist[1],self.options.serverport])
              print server
              socket.connect (server)

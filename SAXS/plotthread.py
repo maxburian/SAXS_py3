@@ -48,7 +48,7 @@ class plotthread(QThread):
             argu=["plotdata"]
             
             result=initcommand(self.options,argu,conf)
-            print result
+           
             time.sleep(.1)
             # plot data
             object=json.loads(result)
