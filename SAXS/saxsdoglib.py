@@ -26,8 +26,7 @@ def saxsdogparseopt():
                       help="Specify output directory.")
     parser.add_option("-R", "--relpath", dest="relpath", default="../work",
                       help="Specify output directory as relative path to image file. Default: '../work'")
-    parser.add_option("-i", "--inplace", dest="inplace", default=False,action="store_true",
-                      help="Files are written, in place, in the directory of the image.")
+     
    
     parser.add_option("-s", "--svg", dest="writesvg",action="store_true",
                       help="Write plot to svg file.",default=False)
@@ -68,7 +67,7 @@ def saxsdogintqueue(Cal,options, args):
     """
     Initialize image queue object.
     """
-    from ImageQueueLib import imagequeue  
+    from imagequeuelib import imagequeue  
     imqueue=imagequeue(Cal,options,args)
     if not options.nowalk: imqueue.fillqueuewithexistingfiles()
     return imqueue

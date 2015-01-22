@@ -130,9 +130,13 @@ class calibration:
         :param string path: Path to save the file to
         :returns: Scattering curve data as numpy array 
         """
-        r=self.I.dot(image.flatten() )
-        data=np.array([self.qgrid ,r ,np.sqrt(r*self.Areas) *self.oneoverA]).transpose()
-        
+        r= self.I.dot(image.flatten() )
+        print len (self.qgrid)
+        print len(r)
+        print len(self.Areas)
+        data=np.array([self.qgrid[len (self.qgrid)-len(r):] , r , np.sqrt(r*self.Areas) *self.oneoverA]).transpose()
+        print "type(dtat)"
+        print type(data)
         
         headerstr=path+"\n"
         headerstr+="q [nm^-1]\n"

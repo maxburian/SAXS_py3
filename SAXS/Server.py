@@ -79,17 +79,16 @@ class Server():
         parser.add_option("-R", "--relpath", dest="relpath", default="../work",
                       help="Specify output directory as relative path to image file. Default: '../work'")
     
-        parser.add_option("-o", "--out", dest="outdir", default="out",
-                      help="Specify output directory. Default is './out'.")
-        parser.add_option("-i", "--inplace", dest="inplace", default=False,action="store_true",
-                      help="Files are written, in place, in the directory of the image.")
+        parser.add_option("-o", "--out", dest="outdir", default="",
+                      help="Specify output directory")
+        
         parser.add_option("-d", "--daemon", dest="daemon", default=False,action="store_true",
                       help="Start server  as daemon")
    
         (self.options, self.args) = parser.parse_args(args=None, values=None)
         if len(self.args)==0:
             self.args=["."]
-        if not os.path.isdir(self.options.outdir) and not self.options.inplace:
+        if   self.options.outdir!="" :
              parser.error('"'+self.options.outdir+'"'+" directory does not exist")
         if self.options.feederurl=="":
             self.feederurl=conf["Feeder"]
@@ -235,7 +234,7 @@ class Server():
                             "walkdirinthreads":True,
                     		"outdir":self.options.outdir,
                             "relpath":self.options.relpath,
-                    		"inplace":self.options.inplace,"writesvg":False,
+                    		 "writesvg":False,
                              "writepng":False,"resume":False
                              })
             maskobj=json.loads(attachment[0])

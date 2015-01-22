@@ -116,10 +116,10 @@ class imagequeue:
                 print "image ", picture, " has wrong format"
                 return
                 
-            
-            if self.options.inplace:
-                basename=picture[:-3]
-            elif self.options.relpath:
+            if self.options.outdir!="":
+                basename=self.options.outdir+os.sep+('_'.join(picture.replace('./','').split(os.sep))[:-3]).replace('/',"_")
+                basename=basename.replace(':', '').replace('.','')+'.'
+            else:
                 reldir=os.path.join( 
                                       os.path.dirname(picture),
                                       self.options.relpath)
@@ -127,9 +127,8 @@ class imagequeue:
                     os.mkdir(reldir)
                 basename=os.path.join( reldir,
                                       os.path.basename(picture)[:-3])
-            else:
-                basename=self.options.outdir+os.sep+('_'.join(picture.replace('./','').split(os.sep))[:-3]).replace('/',"_")
-                basename=basename.replace(':', '').replace('.','')+'.'
+            
+                
             if not self.options.resume or not os.path.isfile(basename+'chi'):
                 data=self.cal.integratechi(image,basename+"chi")
                 if threadid==0 and self.options.plotwindow:
