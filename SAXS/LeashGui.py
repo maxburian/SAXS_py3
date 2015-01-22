@@ -20,13 +20,14 @@ import LeashMW
 import atrdict
 import calibration
 from schematools import schematodefault
-from Leash import initcommand
+from Leash import initcommand,parsecommandline
 from plotthread import plotthread
 from reconnectqthread import reconnecthread 
 from ImportDialogClass import Importdialog
 from converter import txt2json
 from recentfilemenue import recentfilemenue
 from directorypicker import directorypicker
+from optparse import OptionParser
 def nparrayToQPixmap(arrayImage):
     pilImage = toimage(arrayImage)
     
@@ -37,6 +38,11 @@ def nparrayToQPixmap(arrayImage):
 
 class LeashUI(QMainWindow):
     def __init__(self,app,parent=None):
+        usage = ("usage: %prog  [options] [arguments]")
+        parser = OptionParser(usage)
+        parser.add_option("-S", "--server", dest="server",
+                      help='URL of "Saxsdog Server"', metavar="tcp://HOSTNAME:PORT",default="")
+        (self.options, self.args) = parser.parse_args(args=None, values=None)
         super(LeashUI,self).__init__(parent)
         self.clipboard=app.clipboard()
         self.ui=uic.loadUi(os.path.dirname(__file__)+os.sep+"LeashMW.ui",self)
@@ -81,7 +87,7 @@ class LeashUI(QMainWindow):
         self.ui.verticalLayout_3.addWidget(self.ylogchkbox)
      
         self.ui.verticalLayout_5.addWidget( self.canvashist)
-        self.plotworker = plotthread(self)
+        self.plotworker = plotthread(self )
         self.connect(self.ylogchkbox, SIGNAL("stateChanged(int)"),self.plotworker.setyscale)
         self.data.queueon=True
         self.recentfilemenue=recentfilemenue(self,self.ui.menuSAXS_Leash )
@@ -296,9 +302,9 @@ class LeashUI(QMainWindow):
             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
             argu=["new", filename,self.data.cal["MaskFile"],  self.directorypicker.getdirlist() ,self.ui.Threads.value()
                                                                         ]
-            o=atrdict.AttrDict({"server":""})
+             
             try:
-                result=initcommand(o,argu,conf)
+                result=initcommand(self.options,argu,conf)
             except Exception as e:
                 self.errmsg.showMessage(str(e))
             self.ui.pushButtonnew.setText("Restart Queue with Changed Calibration")
@@ -416,16 +422,16 @@ class LeashUI(QMainWindow):
         self.importdialog.close()
     def abortqueue(self):
         argu=["abort"]
-        o=atrdict.AttrDict({"server":""})
+       
         conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
-        result=initcommand(o,argu,conf)
+        result=initcommand(self.options,argu,conf)
         QMessageBox(self).about(self,"aborted",result)
 
     def closequeue(self):
         argu=["close"]
-        o=atrdict.AttrDict({"server":""})
+       
         conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
-        result=initcommand(o,argu,conf) 
+        result=initcommand(self.options,argu,conf) 
         QMessageBox(self).about(self,"closed",result)
     def help(self):
         import webbrowser
@@ -454,22 +460,24 @@ class LeashUI(QMainWindow):
         
         self.logbox.append(str(datetime.datetime.now())+": "+text)
     def rereaddir(self):
-        from Leash import initcommand
+         
         import atrdict
         conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
         argu=["readdir"]
-        o=atrdict.AttrDict({"server":""})
-        result=initcommand(o,argu,conf)
+       
+        result=initcommand(self.options,argu,conf)
         self.log("reread directory")
         msgBox=QMessageBox(self)
         msgBox.setText( result);
         msgBox.exec_();
 def LeashGUI():
+    
     app=QApplication(sys.argv)
     form=LeashUI(app)
     form.show()
     app.exec_()
     form.cleanup()
 if __name__ == "__main__":
-    LeashGUI()
+   
+    LeashGUI( )
     

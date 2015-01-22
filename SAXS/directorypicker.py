@@ -17,6 +17,7 @@ class directorypicker(QThread ):
         else:
             self.comboBox=cboxlist
         self.MW=app.mainWindow
+        self.options=app.options
         self.netconf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
         for box in self.comboBox:
             self.connect(box, SIGNAL("currentIndexChanged( int)"),self.update)
@@ -43,8 +44,8 @@ class directorypicker(QThread ):
         currentdirname=os.path.dirname(path)
         
         argu=["listdir",os.sep.join(path.split(os.sep))]
-        o=atrdict.AttrDict({"server":""})
-        result=json.loads(  initcommand(o,argu,self.netconf))
+        
+        result=json.loads(  initcommand(self.options,argu,self.netconf))
         i=1
         box.blockSignals(True)
         box.clear()

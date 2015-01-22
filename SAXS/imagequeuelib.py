@@ -188,7 +188,10 @@ class imagequeue:
              conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
              context = zmq.Context()
              socket = context.socket(zmq.REQ)
-             server=conf['Server']
+             tokenlist=  conf['Server'].split(":")
+             print tokenlist
+             server=":".join([tokenlist[0],tokenlist[1],self.options.serverport])
+             print server
              socket.connect (server)
              from Leash import addauthentication
         try:

@@ -110,12 +110,14 @@ class Server():
         start server loop
         """
         if self.options.port=="":
-            serverport=self.serverconf['Server'].split(':')[-1]
+            self.serverport=self.serverconf['Server'].split(':')[-1]
+        else:
+            self.serverport=self.options.port
         self.secret=self.serverconf['Secret']
         context = zmq.Context()
         self.comandosocket = context.socket(zmq.REP)
-        print "server listenes at tcp://*:%s" % serverport
-        self.comandosocket.bind("tcp://*:%s" % serverport)
+        print "server listenes at tcp://*:%s" % self.serverport
+        self.comandosocket.bind("tcp://*:%s" % self.serverport)
        
         while True:
             try:
@@ -228,14 +230,16 @@ class Server():
             else:
                 self.threads=self.options.threads
             o=atrdict.AttrDict({"plotwindow":False,"threads":self.threads,
-                    		"watch":self.options.watchdir,"watchdir":os.sep.join(object['argument']['directory']),
+                    		"watch":self.options.watchdir,
+                            "watchdir":os.sep.join(object['argument']['directory']),
                             "servermode":True,
                             "silent":True,"plotwindow":False,
                             "walkdirinthreads":True,
                     		"outdir":self.options.outdir,
                             "relpath":self.options.relpath,
                     		 "writesvg":False,
-                             "writepng":False,"resume":False
+                             "writepng":False,"resume":False,
+                             "serverport":self.serverport
                              })
             maskobj=json.loads(attachment[0])
             mskfilename=os.path.expanduser(os.path.join("~/saxsdogserver"+os.path.basename(maskobj['filename'])))

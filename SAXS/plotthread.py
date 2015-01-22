@@ -15,6 +15,7 @@ class plotthread(QThread):
     def __init__(self,mw):
         QThread.__init__(self)
         self.mw=mw
+        self.options=mw.options
         self.mw.data.rate=np.repeat([0.0],200)
         self.mw.data.time=np.repeat([0.0],200)
         self.mw.plotthreadgo=True
@@ -45,9 +46,9 @@ class plotthread(QThread):
         if True:
             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
             argu=["plotdata"]
-            o=atrdict.AttrDict({"server":""})
-            result=initcommand(o,argu,conf)
-         
+            
+            result=initcommand(self.options,argu,conf)
+            print result
             time.sleep(.1)
             # plot data
             object=json.loads(result)
