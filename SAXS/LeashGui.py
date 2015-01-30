@@ -43,7 +43,9 @@ class LeashUI(QMainWindow):
         parser.add_option("-S", "--server", dest="server",
                       help='URL of "Saxsdog Server"', metavar="tcp://HOSTNAME:PORT",default="")
         (self.options, self.args) = parser.parse_args(args=None, values=None)
+        
         super(LeashUI,self).__init__(parent)
+       
         self.clipboard=app.clipboard()
         self.ui=uic.loadUi(os.path.dirname(__file__)+os.sep+"LeashMW.ui",self)
         self.mainWindow=super(LeashUI,self)
@@ -95,6 +97,7 @@ class LeashUI(QMainWindow):
         self.connect(self.plotworker, SIGNAL('update(QString)'),self.statupdate)
         self.errmsg=QErrorMessage(self)
         self.errmsg.setWindowTitle("Error")
+        self.changeportdialog()
         self.filename=""
         self.logbox= self.ui.textBrowserLogs
         self.log("hello")
@@ -104,6 +107,7 @@ class LeashUI(QMainWindow):
         QShortcut(QKeySequence("Ctrl+S"),self,self.safecalibration)
         QShortcut(QKeySequence("Ctrl+I"),self,self.importcalib)
         self.connect(self.ui,SIGNAL("reconnect()"),self.reconnect)
+        
         if len( sys.argv)>1:
             if os.path.isfile(sys.argv[1]):
                 print sys.argv[1]
@@ -470,6 +474,20 @@ class LeashUI(QMainWindow):
         msgBox=QMessageBox(self)
         msgBox.setText( result);
         msgBox.exec_();
+    def changeportdialog(self):
+        text, ok =  QInputDialog.getText(self, 'Alternative Port ', 
+    'Enter Alternative Port Number (Leave Empty for Default):')
+        if ok:
+            import re
+            if re.match(r"^\s*\d+\s*$",unicode(text)):
+                conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
+                validate(conf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
+                stokens=conf["Server"].split(":")
+                stokens[-1]=unicode(text)
+                self.options.server=":".join(stokens)
+            else:
+                self.errmsg.showMessage("Not a Portnumber")
+                        
 def LeashGUI():
     
     app=QApplication(sys.argv)
