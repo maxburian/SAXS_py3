@@ -1,9 +1,30 @@
 {
-"type":"object",
-"additionalProperties": false,
-"properties":{
-"Server":{"type":"string"},
-"Feeder":{"type":"string"},
-"Secret":{"type":"string"}
-}
+	"type": "array",
+	"items": 
+	{
+		"type": "object",
+		"additionalProperties": false,
+		"properties": 
+		{
+			"Server": 
+			{
+				"type": "string"
+			},
+
+			"Feeder": 
+			{
+				"type": "string"
+			},
+
+			"Secret": 
+			{
+				"type": "string"
+			},
+
+			"Name": 
+			{
+				"type": "string"
+			}
+		}
+	}
 }

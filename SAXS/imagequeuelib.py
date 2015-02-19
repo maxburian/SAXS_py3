@@ -46,10 +46,11 @@ class imagequeue:
     :param list args: List of command line options
     
     """
-    def __init__(self,Cal,options,args):
+    def __init__(self,Cal,options,args,conf):
          
          self.pool=[]
          self.cal=Cal
+         self.conf=conf
          self.options=options
          self.picturequeue=Queue()
          self.args=args
@@ -157,7 +158,7 @@ class imagequeue:
             else:
                 print "[",threadid,"] write: ",basename+"chi" 
             return basename ,data
-    def start(self,):  
+    def start(self):  
         """
         Start threads and directory observer.
         """
@@ -185,10 +186,10 @@ class imagequeue:
             self.dirwalker=Process()
             self.dirwalker.start()
         if self.options.servermode:
-             conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
+             
              context = zmq.Context()
              socket = context.socket(zmq.REQ)
-             tokenlist=  conf['Server'].split(":")
+             tokenlist=  self.conf['Server'].split(":")
              
              server=":".join([tokenlist[0],tokenlist[1],self.options.serverport])
              print server

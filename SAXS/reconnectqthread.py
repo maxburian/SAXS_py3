@@ -7,21 +7,15 @@ class reconnecthread(QThread):
     """
     this thread handles reconnection at startup and timeout
     """
-    def __init__(self,mw):
+    def __init__(self  ,conf):
         QThread.__init__(self)
-        self.mw=mw
+     
+        self.conf=conf
     def run(self):
-        try:
-            conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
-        except IOError as e:
-            self.emit( SIGNAL('error(QString)'),"IOError: Cannot open:"+os.path.expanduser("~"+os.sep+".saxsdognetwork")+" "+e.message )
-            return
-        except ValueError as e:
-            self.emit( SIGNAL('error(QString)'),"IOError: Cannot open:"+os.path.expanduser("~"+os.sep+".saxsdognetwork")+". Wrong syntax?"+e.message )
-            return
+   
         argu=["get"]
-        o=atrdict.AttrDict({"server":""})
-        result=initcommand(self.mw.options,argu,conf)
+        opt=atrdict.AttrDict({"serverno":None,"server":self.conf["Server"]})
+        result=initcommand( opt,argu,self.conf )
         self.emit( SIGNAL('connected(QString)') ,result)
 
            

@@ -475,19 +475,21 @@ class LeashUI(QMainWindow):
         msgBox.setText( result);
         msgBox.exec_();
     def changeportdialog(self):
-        text, ok =  QInputDialog.getText(self, 'Alternative Port ', 
-    'Enter Alternative Port Number (Leave Empty for Default):')
-        if ok:
-            import re
-            if re.match(r"^\s*\d+\s*$",unicode(text)):
-                conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
-                validate(conf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
-                stokens=conf["Server"].split(":")
-                stokens[-1]=unicode(text)
-                self.options.server=":".join(stokens)
+        queuelist=[]
+        try:
+            conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
+            validate(conf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
+        except Exception as e:
+            self.errmsg.showMessage( str(e))
+        for i,sconf in enumerate(conf):
+            if "Name" in sconf:
+                queuelist.append(sconf["Name"])
             else:
-                self.errmsg.showMessage("Not a Portnumber")
-                        
+                queuelist.append(i)
+        text, ok =  QInputDialog.getItem(self, 'Queue:',"Select Queue from", queuelist)
+        if ok:
+           print text
+           self.options.serverno=queuelist.index(text)
 def LeashGUI():
     
     app=QApplication(sys.argv)

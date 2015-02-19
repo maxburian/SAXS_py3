@@ -164,6 +164,7 @@ def initcommand(options, arg,conf):
     """
     Interface for issuing leash commands
     """
+   
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
     
@@ -227,7 +228,8 @@ def parsecommandline():
                        help="plot: Select type of X axis scale, might be [linear|log|symlog]")
     parser.add_option("-y",'--yaxsistype',dest='yax',metavar='TYPE',default='linear',
                        help="plot: Select type of Y axis scale, might be [linear|log|symlog]")
-        
+    parser.add_option("-N",'--serverno',dest='serverno', default=0,
+                       help="select server from config list by index default:0")
     (options, args) = parser.parse_args(args=None, values=None)
     if len(args)<1:
         parser.error("incorrect number of arguments")
@@ -241,7 +243,7 @@ def saxsleash():
     conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
     validate(conf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
     try:
-        result=initcommand(options,arg,conf)
+        result=initcommand(options,arg,conf[options.serverno])
     except ValueError:
         print '"',arg[0],'" is not a valid command. See -h for help.'
         sys.exit()

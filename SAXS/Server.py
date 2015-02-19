@@ -51,16 +51,8 @@ def subscribeToFileChanges(imqueue,url,dir,serverdir):
                     queue.put( file)
     except KeyboardInterrupt:
         context.destroy()
-
-
-class Server():
-    """
-    class to manage a saxsdog server
-    """
-    def __init__(self,conf):
-        self.files=None
-       
-        
+def parsecommandline():
+    
         parser = OptionParser()
         usage = "usage: %prog [options] basedir"
         parser = OptionParser(usage)
@@ -85,7 +77,16 @@ class Server():
         parser.add_option("-d", "--daemon", dest="daemon", default=False,action="store_true",
                       help="Start server  as daemon")
    
-        (self.options, self.args) = parser.parse_args(args=None, values=None)
+        return  parser.parse_args(args=None, values=None)
+
+class Server():
+    """
+    class to manage a saxsdog server
+    """
+    def __init__(self,conf):
+        self.files=None
+       
+        self.options, self.args=parsecommandline()
         if len(self.args)==0:
             self.args=["."]
         if   self.options.outdir!="" :
@@ -95,7 +96,7 @@ class Server():
         self.serverconf=conf
         self.comandosocket=None
         
-        self.commandschema=json.load(open(os.path.dirname(__file__)+'/LeashRequestSchema.json'))
+        self.commandschema=json.load(open(os.path.abspath(os.path.dirname(__file__))+'/LeashRequestSchema.json'))
         self.imagequeue=None
         self.feederproc=None
         self.threads=self.options.threads
@@ -257,7 +258,7 @@ class Server():
                              os.sep.join(object['argument']['directory']
                             )))
             self.imagequeue=imagequeuelib.imagequeue(cal,
-                    o,[ dir])
+                    o,[ dir],self.serverconf)
             print "startimgq"
             self.imagequeueprocess=Process(target=self.imagequeue.start)
             self.imagequeueprocess.start()
@@ -324,21 +325,30 @@ class Server():
              }
         else:
             return{}
-def saxsdogserver():
-     serverconf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
-     validate(serverconf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
+def saxsdogserver(serverconf):
+     
      S=Server(serverconf)
-     if not S.options.daemon:
-         S.start()
+     
+     S.start()
+     
+       
+def startservers(serverconfs):
+    Servers=[]
+    for serverconf in serverconfs:
+        Servers.append(Process(target=saxsdogserver,args=(serverconf,)))
+        Servers[-1].start()
+if __name__ == '__main__':
+     serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
+     validate(serverconfs,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
+     options,args=parsecommandline()
+     if not options.daemon:
+         startservers(serverconfs)
      else:
         try:
             import daemon
         except Exception:
             print "'Daemon mode' requires the 'python-daemon' module and works only on Unix."
-            return
+            sys.exit()
         logfile=open("saxsdoglog","w")
-        with daemon.DaemonContext(stderr=logfile,stdout=logfile):
-            S.start()
-if __name__ == '__main__':
-     saxsdogserver()
-    
+        with daemon.DaemonContext(stderr=logfile,stdout=logfile,working_directory="./"):
+            startservers(serverconfs)
