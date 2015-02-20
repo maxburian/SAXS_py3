@@ -15,6 +15,7 @@ class LeashUI(QtGui.QMainWindow):
         validate( self.confs,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
         self.connectdialog=connectdialog.connectdialog( self.confs)
         self.connectdialog.exec_()
+        self.parscecommandline()
         self.loadui()
     def loadui(self):
         
@@ -24,11 +25,13 @@ class LeashUI(QtGui.QMainWindow):
         self.calib=QtGui.QWidget()
         self.caliblayout=QtGui.QHBoxLayout()
         self.calib.setLayout(self.caliblayout)
-        self.calibeditor=calibeditor.calibeditor()
+        self.calibeditor=calibeditor.calibeditor(self)
         self.caliblayout.addWidget(self.calibeditor)
         self.tab.addTab( self.calib , "Calib")
         self.mainWindow.setCentralWidget (self.tab  )
-       
+    def parscecommandline(self):
+        import Leash
+        self.otions,self.args= Leash.parsecommandline()
     def cleanup(self):
         pass
 def LeashGUI():

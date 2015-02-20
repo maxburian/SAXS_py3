@@ -231,8 +231,7 @@ def parsecommandline():
     parser.add_option("-N",'--serverno',dest='serverno', default=0,
                        help="select server from config list by index default:0")
     (options, args) = parser.parse_args(args=None, values=None)
-    if len(args)<1:
-        parser.error("incorrect number of arguments")
+    
     
     return  (options, args)
 def saxsleash():
@@ -240,6 +239,8 @@ def saxsleash():
     The command line leash.
     """
     (options,arg)=parsecommandline()
+    if len(arg)<1:
+        parser.error("incorrect number of arguments")
     conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
     validate(conf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
     try:

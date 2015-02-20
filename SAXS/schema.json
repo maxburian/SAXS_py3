@@ -54,19 +54,10 @@
 			],
 
 			"items": 
-			[
-				{
-					"type": "number",
-					"default": 0,
-					"required": true
-				},
-
-				{
-					"type": "number",
-					"default": 0,
-					"required": true
-				}
-			]
+			{
+				"type": "number",
+				"required": true
+			}
 		},
 
 		"DedectorDistanceMM": 
@@ -93,21 +84,11 @@
 			],
 
 			"items": 
-			[
-				{
-					"type": "number",
-					"units": "Pixels",
-					"default": 1043,
-					"required": true
-				},
-
-				{
-					"type": "number",
-					"units": "Pixels",
-					"default": 981,
-					"required": true
-				}
-			]
+			{
+				"type": "number",
+				"units": "Pixels",
+				"required": true
+			}
 		},
 
 		"MaskFile": 
@@ -140,14 +121,11 @@
 			],
 
 			"items": 
-			[
-				{
-					"type": "number",
-					"units": "Microns",
-					"default": 172,
-					"required": true
-				}
-			]
+			{
+				"type": "number",
+				"units": "Microns",
+				"required": true
+			}
 		},
 
 		"PixelPerRadialElement": 
@@ -162,7 +140,6 @@
 		{
 			"description": "Refined wavelength.",
 			"units": "Angstrom",
-			
 			"type": "number",
 			"required": true,
 			"default": 1.54000
