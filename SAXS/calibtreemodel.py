@@ -12,6 +12,7 @@ ISENUM=QtCore.Qt.UserRole+1
 ENUM  =  QtCore.Qt.UserRole+2
 SUBSCHEMA=QtCore.Qt.UserRole+3
 ISFILE=QtCore.Qt.UserRole+4
+ISEDITABLEARRAY=QtCore.Qt.UserRole+5
 class calibtreemodel(QtGui.QStandardItemModel ):
     def __init__(self):
       super(calibtreemodel, self).__init__()
@@ -78,16 +79,21 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                         value.setCheckState(0 )
                 elif   schema['properties'][key]['type']=="array" and key in input :
                     for arrayindex,arrayitem in enumerate(input[key]):
-                        if not "maxItems"in schema['properties'][key]:
-                            modelarrayitem=QtGui.QStandardItem(str(arrayindex)+" add/remove")
-                        else:
-                            modelarrayitem=QtGui.QStandardItem(str(arrayindex))
+                       
+                        modelarrayitem=QtGui.QStandardItem(str(arrayindex))
                         modelarrayitem.setColumnCount(3)
                         modelarrayvalue=QtGui.QStandardItem()
                         modelarrayvalue.setData(json.dumps(schema['properties'][key]["items"]),role=SUBSCHEMA)
-                        modelarrayvalue.setData(schema['properties'][key]["items"]["type"],role=TYPE)
+                        if (not "maxItems" in schema['properties'][key] or
+                           schema['properties'][key]["maxItems"]!=schema['properties'][key]["minItems"] ):
+                             value.setData("editablearray",role=ISEDITABLEARRAY)
+                             value.setData("add/remove item",role=QtCore.Qt.DisplayRole)
+                        else:
+                            modelarrayvalue.setData(schema['properties'][key]["items"]["type"],role=TYPE)
+                        
                         modelarrayvalue.setData(QtCore.Qt.AlignRight,role=QtCore.Qt.TextAlignmentRole)
                         if schema['properties'][key]["items"]["type"]=="object":
+                             modelarrayvalue.setData("arrayitem",role=TYPE)
                              item.appendRow([modelarrayitem,modelarrayvalue])
                              self.bulidfromjson(arrayitem, schema['properties'][key]["items"], modelarrayitem)
                         else:
@@ -254,4 +260,15 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                 return QtCore.QVariant("Units")
             
         return QtCore.QVariant(int(section + 1))
-     
+    def flags(self, index):
+        """
+        special class of QStandardItemModel
+        """
+        if not index.isValid():
+            return Qt.ItemIsEnabled
+        if index.column()==1:
+            return QtCore.Qt.ItemFlags(QtGui.QStandardItemModel.flags(self, index)
+                    |QtCore.Qt.ItemIsEditable)
+        else:
+            return QtCore.Qt.ItemFlags(QtGui.QStandardItemModel.flags(self, index)
+                    ^QtCore.Qt.ItemIsEditable)

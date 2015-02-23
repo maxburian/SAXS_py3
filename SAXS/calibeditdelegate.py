@@ -16,44 +16,52 @@ class calibEditDelegate(QtGui.QItemDelegate):
         """
         try:
             subschema=json.loads(unicode(index.model().data(index,role=im.SUBSCHEMA).toString()))
-            type=subschema['type']
-            if "enum" in subschema:
-                isenum="true"
-                enum=subschema['enum']
-            else:
-                isenum="false"
-            isfile=unicode(index.model().data(index,role=im.ISFILE).toString())
-            if type == "integer":
-                spinbox = QtGui.QSpinBox(parent)
-                spinbox.setRange(-200000, 200000)
-                spinbox.setSingleStep(1)
-               
-                spinbox.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
-                return spinbox
-            elif type == "number":
-                spinbox = QtGui.QDoubleSpinBox(parent)
-                spinbox.setRange(-200000, 200000)
-                spinbox.setSingleStep(0.1)
-                spinbox.setDecimals(4)
-                spinbox.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
-                return spinbox
-            elif isenum=="true":
-                combobox = QtGui.QComboBox(parent)
-                combobox.addItems(sorted( enum))
-                return combobox
-            elif isfile=="true":
-                dirname= os.path.dirname(unicode(index.model().filename))
-                filepicker=QtGui.QFileDialog(directory=dirname)
-                filepicker.setMinimumSize(800,500)
-                filepicker.setFileMode(filepicker.ExistingFile)
-                 
-                return filepicker
-          
-            else:
-                return QtGui.QItemDelegate.createEditor(self, parent, option,
-                                                  index)
         except ValueError:
-            pass
+            return None
+            
+        type= unicode(index.model().data(index,role=im.TYPE).toString())
+        editablearray= unicode(index.model().data(index,role=im.ISEDITABLEARRAY).toString())
+        print type
+        if "enum" in subschema:
+            isenum="true"
+            enum=subschema['enum']
+        else:
+            isenum="false"
+        isfile=unicode(index.model().data(index,role=im.ISFILE).toString())
+        if type == "integer":
+            spinbox = QtGui.QSpinBox(parent)
+            spinbox.setRange(-200000, 200000)
+            spinbox.setSingleStep(1) 
+            spinbox.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
+            return spinbox
+        elif type == "number":
+            spinbox = QtGui.QDoubleSpinBox(parent)
+            spinbox.setRange(-200000, 200000)
+            spinbox.setSingleStep(0.1)
+            spinbox.setDecimals(4)
+            spinbox.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
+            return spinbox
+        elif editablearray=="editablearray":
+            arrayeditdialog=arrayediddialog(index,parent)
+            return arrayeditdialog
+        elif  type== "object" or type=="array" or type=="arrayitem" :
+            return None
+        elif isenum=="true":
+            combobox = QtGui.QComboBox(parent)
+            combobox.addItems(sorted( enum))
+            return combobox
+        elif isfile=="true":
+            dirname= os.path.dirname(unicode(index.model().filename))
+            filepicker=QtGui.QFileDialog(directory=dirname)
+            filepicker.setMinimumSize(800,500)
+            filepicker.setFileMode(filepicker.ExistingFile)
+             
+            return filepicker
+      
+        else:
+            return QtGui.QItemDelegate.createEditor(self, parent, option,
+                                              index)
+     
 
     def commitAndCloseEditor(self):
         """
@@ -103,6 +111,7 @@ class calibEditDelegate(QtGui.QItemDelegate):
         """
         subschema=json.loads(unicode(index.model().data(index,role=im.SUBSCHEMA).toString()))
         type=subschema['type']
+        editablearray= unicode(index.model().data(index,role=im.ISEDITABLEARRAY).toString())
         if "enum" in subschema:
             isenum="true"
             enum=subschema['enum']
@@ -113,6 +122,10 @@ class calibEditDelegate(QtGui.QItemDelegate):
              model.setData(index, QtCore.QVariant(editor.value()))
         elif type == "number":
             model.setData(index, QtCore.QVariant(editor.value()))
+        elif editablearray=="editablearray":
+             if editor.ok:
+                 print editor.textValue()
+             model.setData(index, QtCore.QVariant( "add/remove item"))
         elif isenum=="true":
              model.setData(index, QtCore.QVariant(editor.currentText()))
         elif isfile=="true":
@@ -128,3 +141,20 @@ class calibEditDelegate(QtGui.QItemDelegate):
                 model.setData(index,QtCore.QVariant(relname.replace("\\","/")))
         else:
             QtGui.QItemDelegate.setModelData(self, editor, model, index)
+class   arrayediddialog(QtGui.QInputDialog):
+    def __init__(self,index,parent):
+        super(arrayediddialog, self).__init__(  )
+        self.setWindowTitle("Add/Delete")
+        self.setLabelText("Action")
+        self.ok=True
+        tarrayitem=index.model().itemFromIndex(index.sibling(index.row(),0))
+        actions=["Add New Item"]
+        for row in range ( tarrayitem.rowCount()):
+            actions.append("Delete Item "+str(row))
+       
+        self.setComboBoxItems(actions)
+        self.setInputMode(0)
+        self.setAcceptDrops(True)
+    def reject(self):
+        self.ok=False
+        super(arrayediddialog, self).reject()
