@@ -123,8 +123,8 @@ class calibEditDelegate(QtGui.QItemDelegate):
         elif type == "number":
             model.setData(index, QtCore.QVariant(editor.value()))
         elif editablearray=="editablearray":
-             if editor.ok:
-                 print editor.textValue()
+              
+             model.setData(index,editor.textValue(),role=im.ACTION)
              model.setData(index, QtCore.QVariant( "add/remove item"))
         elif isenum=="true":
              model.setData(index, QtCore.QVariant(editor.currentText()))

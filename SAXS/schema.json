@@ -92,7 +92,8 @@
 					{
 						"type": "number",
 						"units": "Microns",
-						"required": true
+						"required": true,
+						"default":172.0
 					}
 				},
 

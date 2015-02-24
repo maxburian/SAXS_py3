@@ -13,6 +13,7 @@ ENUM  =  QtCore.Qt.UserRole+2
 SUBSCHEMA=QtCore.Qt.UserRole+3
 ISFILE=QtCore.Qt.UserRole+4
 ISEDITABLEARRAY=QtCore.Qt.UserRole+5
+ACTION=QtCore.Qt.UserRole+6
 class calibtreemodel(QtGui.QStandardItemModel ):
     def __init__(self):
       super(calibtreemodel, self).__init__()
@@ -88,8 +89,9 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                            schema['properties'][key]["maxItems"]!=schema['properties'][key]["minItems"] ):
                              value.setData("editablearray",role=ISEDITABLEARRAY)
                              value.setData("add/remove item",role=QtCore.Qt.DisplayRole)
-                        else:
-                            modelarrayvalue.setData(schema['properties'][key]["items"]["type"],role=TYPE)
+                        modelarrayvalue.setData(schema['properties'][key]["items"]["type"],role=TYPE)
+                
+                           
                         
                         modelarrayvalue.setData(QtCore.Qt.AlignRight,role=QtCore.Qt.TextAlignmentRole)
                         if schema['properties'][key]["items"]["type"]=="object":
@@ -147,6 +149,7 @@ class calibtreemodel(QtGui.QStandardItemModel ):
             item=self.itemFromIndex(index)
             type=item.data(role=TYPE).toString()
             text=item.data(role=QtCore.Qt.DisplayRole).toString()
+            action=item.data(role=ACTION).toString()
             if  item.isCheckable() and type=="object" and not item.hasChildren() and item.checkState()==2 :
                 subschema=json.loads(unicode(item.data(role=SUBSCHEMA).toString()))
                 default=schematodefault(subschema)
@@ -165,6 +168,27 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                     self.blockSignals(True)
                     item.setCheckState(2)
                     self.blockSignals(False)
+            elif action=="Add New Item":
+                subschema=json.loads(unicode(item.data(role=SUBSCHEMA).toString()))['items']
+                self.setData(index,"",role=ACTION)
+                default=schematodefault(subschema)
+                print json.dumps(default,indent=2)
+                arrayroot=self.itemFromIndex(index.sibling(index.row(),0))
+                print arrayroot.rowCount()
+                nearrayitem=QtGui.QStandardItem(str(arrayroot.rowCount()))
+                value=QtGui.QStandardItem()
+                if subschema['type']!="object":
+                    value.setData(subschema['type'],role=TYPE)
+                    value.setData(json.dumps(subschema),role=SUBSCHEMA)
+                    value.setData(subschema["default"],role=QtCore.Qt.DisplayRole)
+                    if subschema['type']!="string":
+                        value.setData(QtCore.Qt.AlignRight,role=QtCore.Qt.TextAlignmentRole)
+                else:
+                    value.setData("arrayitem",role=TYPE)
+                    self.bulidfromjson(default, 
+                                 subschema , 
+                                  nearrayitem,row=0 )
+                arrayroot.appendRow([nearrayitem,value])
     def allowtodelete(self,parent):
         """
         Delete Dialog
@@ -224,7 +248,8 @@ class calibtreemodel(QtGui.QStandardItemModel ):
             else: value=None
             if child.hasChildren():
                 js[name]=[]
-                if type and  type=="array":
+                if type and  (type=="array" ):
+                    print type + " " +name+"# "+str(child.rowCount())
                     for arrayitemrow in range(child.rowCount()):
                         arrayitemlabel=child.child(arrayitemrow,0)
                         arrayitem=child.child(arrayitemrow,1)
@@ -232,7 +257,7 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                             arraytype=unicode(arrayitem.data(role=TYPE).toString())
                             print arraytype
                             arrayvalue=unicode(arrayitem.data(role=QtCore.Qt.DisplayRole).toString())
-                            if arraytype=="object":
+                            if arraytype=="arrayitem":
                                 js[name].append(self.modeltojson(child.child(arrayitemrow,0), schema))
                             else:
                                 js[name].append(stringtotype(arraytype,arrayvalue,arrayitem))
