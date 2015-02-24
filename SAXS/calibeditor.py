@@ -18,7 +18,7 @@ class calibeditor(QtGui.QWidget):
      self.treeview.setMinimumHeight(800)
   
      self.treeview.setAlternatingRowColors(True)
-     self.treeview.setItemDelegateForColumn(1,calibeditdelegate.calibEditDelegate(  ))
+     self.treeview.setItemDelegateForColumn(1,calibeditdelegate.calibEditDelegate( app ))
      if len(self.app.args)>0:
          filename=self.app.args[0]
          self.model.loadfile(filename)

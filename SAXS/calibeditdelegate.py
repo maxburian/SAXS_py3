@@ -4,10 +4,11 @@ from PyQt4 import  QtCore
  
 import json,os
 import calibtreemodel as im
+from Leash import  initcommand
 class calibEditDelegate(QtGui.QItemDelegate):
-    def __init__(self,  parent=None):
+    def __init__(self,app,  parent=None):
         super(calibEditDelegate, self).__init__(parent)
-
+        self.app=app
  
 
     def createEditor(self, parent, option, index):
@@ -21,13 +22,17 @@ class calibEditDelegate(QtGui.QItemDelegate):
             
         type= unicode(index.model().data(index,role=im.TYPE).toString())
         editablearray= unicode(index.model().data(index,role=im.ISEDITABLEARRAY).toString())
+        editortype=None
+        if subschema.get("appinfo"):
+            editortype= subschema.get("appinfo").get("editor")
+    
         print type
         if "enum" in subschema:
             isenum="true"
             enum=subschema['enum']
         else:
             isenum="false"
-        isfile=unicode(index.model().data(index,role=im.ISFILE).toString())
+        
         if type == "integer":
             spinbox = QtGui.QSpinBox(parent)
             spinbox.setRange(-200000, 200000)
@@ -50,14 +55,14 @@ class calibEditDelegate(QtGui.QItemDelegate):
             combobox = QtGui.QComboBox(parent)
             combobox.addItems(sorted( enum))
             return combobox
-        elif isfile=="true":
+        elif editortype=="File":
             dirname= os.path.dirname(unicode(index.model().filename))
             filepicker=QtGui.QFileDialog(directory=dirname)
             filepicker.setMinimumSize(800,500)
             filepicker.setFileMode(filepicker.ExistingFile)
-             
             return filepicker
-      
+        elif editortype=="RemoteDir":
+            return RemoteDirPicker(self.app,parent,index)
         else:
             return QtGui.QItemDelegate.createEditor(self, parent, option,
                                               index)
@@ -79,6 +84,10 @@ class calibEditDelegate(QtGui.QItemDelegate):
         """
         subschema=json.loads(unicode(index.model().data(index,role=im.SUBSCHEMA).toString()))
         type=subschema['type']
+        editortype=None
+        if subschema.get("appinfo"):
+            editortype= subschema.get("appinfo").get("editor")
+    
         if "enum" in subschema:
             isenum="true"
             enum=subschema['enum']
@@ -86,7 +95,7 @@ class calibEditDelegate(QtGui.QItemDelegate):
             isenum="false"
          
         text = index.model().data(index, QtCore.Qt.DisplayRole).toString()
-        isfile=unicode(index.model().data(index,role=im.ISFILE).toString())
+        
         if  type=="number":
             value = float(text)
             editor.setValue(value)
@@ -94,7 +103,7 @@ class calibEditDelegate(QtGui.QItemDelegate):
             value = int(text)
             editor.setValue(value)
                
-        elif isenum=="true":
+        elif isenum=="true" or editortype=="RemoteDir" :
             i = editor.findText(text)
             if i == -1:
                 i = 0
@@ -112,23 +121,32 @@ class calibEditDelegate(QtGui.QItemDelegate):
         subschema=json.loads(unicode(index.model().data(index,role=im.SUBSCHEMA).toString()))
         type=subschema['type']
         editablearray= unicode(index.model().data(index,role=im.ISEDITABLEARRAY).toString())
+        editortype=None
+        if subschema.get("appinfo"):
+            editortype= subschema.get("appinfo").get("editor")
         if "enum" in subschema:
             isenum="true"
             enum=subschema['enum']
         else:
             isenum="false"
-        isfile=unicode(index.model().data(index,role=im.ISFILE).toString())
+        
         if type == "integer":
              model.setData(index, QtCore.QVariant(editor.value()))
         elif type == "number":
             model.setData(index, QtCore.QVariant(editor.value()))
         elif editablearray=="editablearray":
-              
+             print editor.textValue()
              model.setData(index,editor.textValue(),role=im.ACTION)
              model.setData(index, QtCore.QVariant( "add/remove item"))
         elif isenum=="true":
              model.setData(index, QtCore.QVariant(editor.currentText()))
-        elif isfile=="true":
+        elif editortype=="RemoteDir":
+            model.setData(index, QtCore.QVariant(editor.currentText()))
+            myrow= index.row()
+            parentitem=index.model().itemFromIndex(index.parent())
+            for row in range(myrow+1,parentitem.rowCount()):
+                model.setData(parentitem.child(row,1).index(), ".")
+        elif editortype=="File":
             files=editor.selectedFiles()
             if files:
                 filename=unicode( files[0])
@@ -158,3 +176,23 @@ class   arrayediddialog(QtGui.QInputDialog):
     def reject(self):
         self.ok=False
         super(arrayediddialog, self).reject()
+class RemoteDirPicker(QtGui.QComboBox):
+    def __init__(self,app,parent,index):
+          super(RemoteDirPicker, self).__init__( parent)
+          myrow= index.row()
+          parentitem=index.model().itemFromIndex(index.parent())
+          dirs=[]
+          for row in range(myrow):
+              diritem= parentitem.child(row,1)
+              dirs.append(unicode(diritem.data( QtCore.Qt.DisplayRole).toString()))
+          argu=["listdir", os.sep.join(dirs)]
+          result=json.loads(  initcommand(app.options,argu,app.netconf))
+          print json.dumps(result,indent=2)
+          self.addItem(".")
+          if 'dircontent' in result['data']:
+              for  dir in  result['data']['dircontent']:
+                  if dir['isdir']:
+                    self.addItem(dir['path'])
+                    
+                    
+                    

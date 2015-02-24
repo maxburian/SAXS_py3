@@ -15,6 +15,9 @@ class LeashUI(QtGui.QMainWindow):
         validate( self.confs,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
         self.connectdialog=connectdialog.connectdialog( self.confs)
         self.connectdialog.exec_()
+        selected=self.connectdialog.confindex
+        print selected
+        self.netconf=self.confs[selected]
         self.parscecommandline()
         self.loadui()
     def loadui(self):
@@ -31,7 +34,7 @@ class LeashUI(QtGui.QMainWindow):
         self.mainWindow.setCentralWidget (self.tab  )
     def parscecommandline(self):
         import Leash
-        self.otions,self.args= Leash.parsecommandline()
+        self.options,self.args= Leash.parsecommandline()
     def cleanup(self):
         pass
 def LeashGUI():

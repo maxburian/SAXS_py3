@@ -8,10 +8,8 @@ import os,re
 import collections
 from schematools import schematodefault
 TYPE=QtCore.Qt.UserRole
-ISENUM=QtCore.Qt.UserRole+1
-ENUM  =  QtCore.Qt.UserRole+2
+ 
 SUBSCHEMA=QtCore.Qt.UserRole+3
-ISFILE=QtCore.Qt.UserRole+4
 ISEDITABLEARRAY=QtCore.Qt.UserRole+5
 ACTION=QtCore.Qt.UserRole+6
 class calibtreemodel(QtGui.QStandardItemModel ):
@@ -58,9 +56,7 @@ class calibtreemodel(QtGui.QStandardItemModel ):
             value=QtGui.QStandardItem()
             value.setData(schema['properties'][key]['type'],role=TYPE)
             value.setData(json.dumps(schema['properties'][key]),role=SUBSCHEMA)
-            if key=="MaskFile":
-                value.setData("true",role=ISFILE)
-           
+             
             if schema['properties'][key]['type']!="string":
                 value.setData(QtCore.Qt.AlignRight,role=QtCore.Qt.TextAlignmentRole)
             if schema['properties'][key]['type']!="object":
@@ -90,8 +86,6 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                              value.setData("editablearray",role=ISEDITABLEARRAY)
                              value.setData("add/remove item",role=QtCore.Qt.DisplayRole)
                         modelarrayvalue.setData(schema['properties'][key]["items"]["type"],role=TYPE)
-                
-                           
                         
                         modelarrayvalue.setData(QtCore.Qt.AlignRight,role=QtCore.Qt.TextAlignmentRole)
                         if schema['properties'][key]["items"]["type"]=="object":
@@ -111,20 +105,12 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                         value.setData(str(schema['properties'][key]['default']), role=QtCore.Qt.DisplayRole)
                 if "description"in schema['properties'][key]:
                     value.setToolTip(tooltip)
-                 
-                if 'enum' in schema['properties'][key]:
-                  
-                    value.setData(  True ,role=ISENUM)
-                    value.setData(  json.dumps(schema['properties'][key] ['enum']) ,role=ENUM)
-                else:
-                     value.setData( False ,role=ISENUM)
-               
-                
+             
                 parent.setChild(row,1,value)
                 if 'units' in schema['properties'][key]:
                     units=QtGui.QStandardItem(str(schema['properties'][key]['units']))
                     parent.setChild(row,2,units)  
-            else:## is object
+            if schema['properties'][key]['type']=="object" or schema['properties'][key]['type']=="array":
                 if (("required" in  schema['properties'][key] 
                 and not schema['properties'][key]['required']) 
                 or not  "required" in  schema['properties'][key]):
@@ -135,9 +121,12 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                     else:
                         value.setCheckState(0)
                     
-                    value.setData("object",role=TYPE)
+                   
                     parent.setChild(row,1,value)
-                if key in input: self.bulidfromjson(input[key], schema['properties'][key], item)
+                    print key
+                if key in input and schema['properties'][key]['type']=="object":
+                    value.setData("object",role=TYPE)
+                    self.bulidfromjson(input[key], schema['properties'][key], item)
             row+=1     
     def handleitemchanged(self,index,index2):
         """
@@ -149,46 +138,69 @@ class calibtreemodel(QtGui.QStandardItemModel ):
             item=self.itemFromIndex(index)
             type=item.data(role=TYPE).toString()
             text=item.data(role=QtCore.Qt.DisplayRole).toString()
-            action=item.data(role=ACTION).toString()
-            if  item.isCheckable() and type=="object" and not item.hasChildren() and item.checkState()==2 :
-                subschema=json.loads(unicode(item.data(role=SUBSCHEMA).toString()))
-                default=schematodefault(subschema)
-                self.dontsave=True
-                self.bulidfromjson(default, 
-                                   subschema , 
-                                   self.itemFromIndex(index.sibling(index.row(),0)),row=0 )
-                self.dontsave=False
-            elif item.isCheckable()   and  parent.hasChildren() and item.checkState()==0:
-                if self.allowtodelete(parent):
+            action=unicode(item.data(role=ACTION).toString())
+            if not action:
+                if  (item.isCheckable() 
+                     and type=="object" 
+                     and not item.hasChildren() 
+                     and item.checkState()==2 ):
+                    subschema=json.loads(unicode(item.data(role=SUBSCHEMA).toString()))
+                    default=schematodefault(subschema)
                     self.dontsave=True
-                    for row in range( parent.rowCount()+1):
-                        parent.takeRow(0)
-                    self.dontsave=False
-                else:
-                    self.blockSignals(True)
-                    item.setCheckState(2)
-                    self.blockSignals(False)
-            elif action=="Add New Item":
-                subschema=json.loads(unicode(item.data(role=SUBSCHEMA).toString()))['items']
-                self.setData(index,"",role=ACTION)
-                default=schematodefault(subschema)
-                print json.dumps(default,indent=2)
-                arrayroot=self.itemFromIndex(index.sibling(index.row(),0))
-                print arrayroot.rowCount()
-                nearrayitem=QtGui.QStandardItem(str(arrayroot.rowCount()))
-                value=QtGui.QStandardItem()
-                if subschema['type']!="object":
-                    value.setData(subschema['type'],role=TYPE)
-                    value.setData(json.dumps(subschema),role=SUBSCHEMA)
-                    value.setData(subschema["default"],role=QtCore.Qt.DisplayRole)
-                    if subschema['type']!="string":
-                        value.setData(QtCore.Qt.AlignRight,role=QtCore.Qt.TextAlignmentRole)
-                else:
-                    value.setData("arrayitem",role=TYPE)
                     self.bulidfromjson(default, 
-                                 subschema , 
-                                  nearrayitem,row=0 )
-                arrayroot.appendRow([nearrayitem,value])
+                                       subschema , 
+                                       self.itemFromIndex(index.sibling(index.row(),0)),row=0 )
+                    self.dontsave=False
+                elif  (item.isCheckable() 
+                       and type=="array" 
+                       and not item.hasChildren() 
+                       and item.checkState()==2):
+                        value=self.itemFromIndex(index)
+                        value.setData("editablearray",role=ISEDITABLEARRAY)
+                        value.setData("add/remove item",role=QtCore.Qt.DisplayRole)
+                        
+                elif (item.isCheckable()   
+                      and  parent.hasChildren() 
+                      and item.checkState()==0):
+                    if self.allowtodelete(parent):
+                         
+                        for row in range( parent.rowCount()+1):
+                            parent.takeRow(0)
+                       
+                    else:
+                        self.blockSignals(True)
+                        item.setCheckState(2)
+                        self.blockSignals(False)
+            else:  
+                if action=="Add New Item":
+                    subschema=json.loads(unicode(item.data(role=SUBSCHEMA).toString()))['items']
+                    self.setData(index,"",role=ACTION)
+                    default=schematodefault(subschema)
+                    print json.dumps(default,indent=2)
+                    arrayroot=self.itemFromIndex(index.sibling(index.row(),0))
+                    print arrayroot.rowCount()
+                    nearrayitem=QtGui.QStandardItem(str(arrayroot.rowCount()))
+                    value=QtGui.QStandardItem()
+                    if subschema['type']!="object":
+                        value.setData(subschema['type'],role=TYPE)
+                        value.setData(json.dumps(subschema),role=SUBSCHEMA)
+                        value.setData(subschema["default"],role=QtCore.Qt.DisplayRole)
+                        if subschema['type']!="string":
+                            value.setData(QtCore.Qt.AlignRight,role=QtCore.Qt.TextAlignmentRole)
+                    else:
+                        value.setData("arrayitem",role=TYPE)
+                        self.bulidfromjson(default, 
+                                     subschema , 
+                                      nearrayitem,row=0 )
+                    arrayroot.appendRow([nearrayitem,value])
+                elif action.startswith("Delete Item"):
+                    m=re.match("Delete Item (\d+)",action)
+                    itemnumber=int(m.group(1))
+                    arrayroot=self.itemFromIndex(index.sibling(index.row(),0))
+                    arrayroot.removeRow(itemnumber)
+                    
+                    for row in range(arrayroot.rowCount()):
+                        arrayroot.child(row,0).setData(str(row),role=QtCore.Qt.DisplayRole)
     def allowtodelete(self,parent):
         """
         Delete Dialog
@@ -246,9 +258,10 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                 type=unicode(item.child(childrow,1).data(role=TYPE).toString())
                 value=unicode(item.child(childrow,1).data(role=QtCore.Qt.DisplayRole).toString())
             else: value=None
-            if child.hasChildren():
-                js[name]=[]
-                if type and  (type=="array" ):
+          
+                
+            if type and  (type=="array" ):
+                    js[name]=[]
                     print type + " " +name+"# "+str(child.rowCount())
                     for arrayitemrow in range(child.rowCount()):
                         arrayitemlabel=child.child(arrayitemrow,0)
@@ -261,7 +274,7 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                                 js[name].append(self.modeltojson(child.child(arrayitemrow,0), schema))
                             else:
                                 js[name].append(stringtotype(arraytype,arrayvalue,arrayitem))
-                else:
+            elif child.hasChildren():
                     js[name]=self.modeltojson(child, schema)
             else:
                 js[name]=stringtotype(type,value,item)

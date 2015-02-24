@@ -14,7 +14,7 @@
 		"Geometry": 
 		{
 			"type": "object",
-			"required":true,
+			"required": true,
 			"properties": 
 			{
 				"Tilt": 
@@ -52,7 +52,7 @@
 					"minItems": 2,
 					"maxItems": 2,
 					"required": true,
-					"units": "pixel",
+					"units": "Pixel",
 					"default": 
 					[
 						800.00,
@@ -93,7 +93,7 @@
 						"type": "number",
 						"units": "Microns",
 						"required": true,
-						"default":172.0
+						"default": 172.0
 					}
 				},
 
@@ -124,8 +124,8 @@
 		"Masks": 
 		{
 			"type": "array",
-			"minItems":1,
-			 "required":true,
+			"minItems": 1,
+			"required": true,
 			"items": 
 			{
 				"type": "object",
@@ -136,7 +136,11 @@
 						"description": "Path of Maskfile",
 						"type": "string",
 						"default": "AAA_integ.msk",
-						"required": true
+						"required": true,
+						"appinfo": 
+						{
+							"editor": "File"
+						}
 					},
 
 					"Oversampling": 
@@ -153,6 +157,12 @@
 						"required": true,
 						"type": "number",
 						"default": 1
+					},
+
+					"Name": 
+					{
+						"description": "Name for mask configuration.",
+						"type": "string"
 					}
 				}
 			}
@@ -197,6 +207,20 @@
 					"type": "number",
 					"default": 0.0,
 					"units": "degree"
+				}
+			}
+		},
+
+		"Directory": 
+		{
+			"type": "array",
+			"items":
+			{
+				"type": "string",
+				"default": ".",
+				"appinfo": 
+				{
+					"editor": "RemoteDir"
 				}
 			}
 		}
