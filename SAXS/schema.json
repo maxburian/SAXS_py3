@@ -139,7 +139,8 @@
 						"required": true,
 						"appinfo": 
 						{
-							"editor": "File"
+							"editor": "File",
+							"display":"MaskFile"
 						}
 					},
 
@@ -156,7 +157,8 @@
 						"description": "Expresses the width of a radial step in terms of pixels. '1' means :math:`\\delta R\\approx 1` :ref:`PixelSizeMicroM`.",
 						"required": true,
 						"type": "number",
-						"default": 1
+						"default": 1,
+						"units": "Pixel"
 					},
 
 					"Name": 

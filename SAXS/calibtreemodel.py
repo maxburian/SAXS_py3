@@ -7,6 +7,7 @@ from jsonschema import validate,ValidationError
 import os,re
 import collections
 from schematools import schematodefault
+import maskfileui
 TYPE=QtCore.Qt.UserRole
  
 SUBSCHEMA=QtCore.Qt.UserRole+3
@@ -100,7 +101,21 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                     if key in input:
                        
                         value.setData(str(input[key]), role=QtCore.Qt.DisplayRole)
-                    
+                        if ("appinfo" in schema['properties'][key]
+                            and "display" in schema['properties'][key]["appinfo"]):
+                            display=schema['properties'][key]["appinfo"]['display']
+                            if display=="MaskFile":
+                                maskimage=QtGui.QStandardItem()
+                                image=QtGui.QStandardItem()
+                                item.appendRow([maskimage ,image])
+                                try:
+                                    pixmap=maskfileui.getMaskPixMapFromFile(input[key]).scaledToWidth(200)
+                                    image.setData(
+                                              QtCore.QVariant(pixmap) , 
+                                              role=QtCore.Qt.DecorationRole)
+                                    
+                                except:
+                                    pass
                     elif "default" in schema['properties'][key]:
                         value.setData(str(schema['properties'][key]['default']), role=QtCore.Qt.DisplayRole)
                 if "description"in schema['properties'][key]:
@@ -122,8 +137,8 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                         value.setCheckState(0)
                     
                    
-                    parent.setChild(row,1,value)
-                    print key
+                parent.setChild(row,1,value)
+                 
                 if key in input and schema['properties'][key]['type']=="object":
                     value.setData("object",role=TYPE)
                     self.bulidfromjson(input[key], schema['properties'][key], item)
@@ -226,41 +241,51 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         dialog.exec_()
         return dialog.result()
     def save(self):
-        print json.dumps(self.modeltojson(self.invisibleRootItem(), self.calschema),indent=2)
-    def modeltojson(self, item, schema):
+        data=self.modeltojson(self.invisibleRootItem())
+        print json.dumps(data,indent=2)
+        validate(data,self.calschema)
+       
+    def modeltojson(self, item):
         """
         model to json converter recursive
         """
         js=collections.OrderedDict({})
-        def stringtotype(type,value,item):
-            if  type=="number":
+        def stringtotype(typestr,value,item):
+            if  typestr=="number":
                  value=float(value)
-            elif type=="integer":
+            elif typestr=="integer":
                  value=int(value)
-            elif type=="boolean":
+            elif typestr=="boolean":
                 if item.child(childrow,1).checkState():
                    value=True
                 else:
                     value=False
-            elif type=="object":
+            elif typestr=="object":
                 pass
-            elif type=="string":
+            elif typestr=="string":
                 value= value
             else:
                 pass
             return value
-        type=None
+        
+      
         for childrow in range(item.rowCount()):
             child= item.child(childrow,0)
             name= unicode(child.data(role=QtCore.Qt.DisplayRole).toString())
             
             if item.child(childrow,1):
+                valueitem=item.child(childrow,1)
                 type=unicode(item.child(childrow,1).data(role=TYPE).toString())
                 value=unicode(item.child(childrow,1).data(role=QtCore.Qt.DisplayRole).toString())
-            else: value=None
-          
-                
+            else:
+                print "##### "+name
+                continue
+            
+            print name+":"+type
+            
             if type and  (type=="array" ):
+                    if valueitem.isCheckable() and valueitem.checkState()==0:
+                        continue
                     js[name]=[]
                     print type + " " +name+"# "+str(child.rowCount())
                     for arrayitemrow in range(child.rowCount()):
@@ -271,13 +296,16 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                             print arraytype
                             arrayvalue=unicode(arrayitem.data(role=QtCore.Qt.DisplayRole).toString())
                             if arraytype=="arrayitem":
-                                js[name].append(self.modeltojson(child.child(arrayitemrow,0), schema))
+                                js[name].append(self.modeltojson(child.child(arrayitemrow,0)))
                             else:
                                 js[name].append(stringtotype(arraytype,arrayvalue,arrayitem))
-            elif child.hasChildren():
-                    js[name]=self.modeltojson(child, schema)
-            else:
+            elif child.hasChildren() and type=="object":
+                    js[name]=self.modeltojson(child)
+
+            elif type!="object":
                 js[name]=stringtotype(type,value,item)
+        
+        
         return js
     def headerData(self, section, orientation, role=QtCore.Qt.DisplayRole):
         """

@@ -5,6 +5,7 @@ from PyQt4 import  QtCore
 import json,os
 import calibtreemodel as im
 from Leash import  initcommand
+import maskfileui
 class calibEditDelegate(QtGui.QItemDelegate):
     def __init__(self,app,  parent=None):
         super(calibEditDelegate, self).__init__(parent)
@@ -122,6 +123,10 @@ class calibEditDelegate(QtGui.QItemDelegate):
         type=subschema['type']
         editablearray= unicode(index.model().data(index,role=im.ISEDITABLEARRAY).toString())
         editortype=None
+        display=None
+        if ("appinfo" in subschema 
+        and "display" in subschema["appinfo"]):
+            display=subschema["appinfo"]['display']
         if subschema.get("appinfo"):
             editortype= subschema.get("appinfo").get("editor")
         if "enum" in subschema:
@@ -135,8 +140,8 @@ class calibEditDelegate(QtGui.QItemDelegate):
         elif type == "number":
             model.setData(index, QtCore.QVariant(editor.value()))
         elif editablearray=="editablearray":
-             print editor.textValue()
-             model.setData(index,editor.textValue(),role=im.ACTION)
+              
+             model.setData(index,editor.currentText(),role=im.ACTION)
              model.setData(index, QtCore.QVariant( "add/remove item"))
         elif isenum=="true":
              model.setData(index, QtCore.QVariant(editor.currentText()))
@@ -150,32 +155,33 @@ class calibEditDelegate(QtGui.QItemDelegate):
             files=editor.selectedFiles()
             if files:
                 filename=unicode( files[0])
-                dirname= os.path.dirname(unicode(index.model().filename))
-                try:
-                    relname=os.path.relpath(filename, dirname)
-                except ValueError:
-                    relname=filename
                 
-                model.setData(index,QtCore.QVariant(relname.replace("\\","/")))
+                
+                model.setData(index,QtCore.QVariant(filename.replace("\\","/")))
+                if display=="MaskFile":
+                    myrow= index.row()
+                    image= index.model().itemFromIndex(index.sibling(index.row(),0 ).child(0,1))
+                    try:
+                        pixmap=maskfileui.getMaskPixMapFromFile(filename).scaledToWidth(200)
+                        image.setData(
+                                      QtCore.QVariant(pixmap ), 
+                                      role=QtCore.Qt.DecorationRole)
+                    except Exception as e:
+                        print e
+                        #self.errormessage.
         else:
             QtGui.QItemDelegate.setModelData(self, editor, model, index)
-class   arrayediddialog(QtGui.QInputDialog):
+class   arrayediddialog(QtGui.QComboBox):
     def __init__(self,index,parent):
-        super(arrayediddialog, self).__init__(  )
-        self.setWindowTitle("Add/Delete")
-        self.setLabelText("Action")
-        self.ok=True
+        super(arrayediddialog, self).__init__( parent )
+        
         tarrayitem=index.model().itemFromIndex(index.sibling(index.row(),0))
-        actions=["Add New Item"]
+        actions=["Cancel","Add New Item"]
         for row in range ( tarrayitem.rowCount()):
             actions.append("Delete Item "+str(row))
        
-        self.setComboBoxItems(actions)
-        self.setInputMode(0)
-        self.setAcceptDrops(True)
-    def reject(self):
-        self.ok=False
-        super(arrayediddialog, self).reject()
+        self.addItems(actions)
+ 
 class RemoteDirPicker(QtGui.QComboBox):
     def __init__(self,app,parent,index):
           super(RemoteDirPicker, self).__init__( parent)
@@ -187,12 +193,10 @@ class RemoteDirPicker(QtGui.QComboBox):
               dirs.append(unicode(diritem.data( QtCore.Qt.DisplayRole).toString()))
           argu=["listdir", os.sep.join(dirs)]
           result=json.loads(  initcommand(app.options,argu,app.netconf))
-          print json.dumps(result,indent=2)
+          
           self.addItem(".")
           if 'dircontent' in result['data']:
               for  dir in  result['data']['dircontent']:
                   if dir['isdir']:
                     self.addItem(dir['path'])
-                    
-                    
-                    
+   

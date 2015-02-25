@@ -296,7 +296,7 @@ def scalemat(Xsize,Ysize,ov):
                     dtype=np.float,shape=(Ysize*Xsize,Ysize*Xsize*ov**2))
      
     
-def openmask(config):
+def openmask(mfile):
     """
     Open the mask file especialy the \*.msk file. Unfortunately there is no library
     module for msk files available also no documentation. So, for the msk file, we have a very brittle hack
@@ -305,13 +305,13 @@ def openmask(config):
     :param object config: Calibration config object.
     :returns: Mask as logical numpy array.
     """
-    if config['MaskFile'].endswith('.msk'):
+    if mfile.endswith('.msk'):
         import bitarray
         maskb=bitarray.bitarray( endian='little')
         
-        maskb.fromfile(open(config['MaskFile'])) 
+        maskb.fromfile(open(mfile)) 
         maskl=np.array(maskb.tolist())
-        fin=open(config['MaskFile'] , "rb")
+        fin=open(mfile , "rb")
         import struct
         fin.seek(0x10)
         (y,)= struct.unpack('i', fin.read(4))
@@ -327,6 +327,6 @@ def openmask(config):
         #misc.imsave("mask.png",cropedmask)
         return  np.logical_not(cropedmask)
     else:
-        mask= np.where(misc.imread(config['MaskFile'])!=0,False,True)
+        mask= np.where(misc.imread(mfile)!=0,False,True)
         print mask
         return mask
