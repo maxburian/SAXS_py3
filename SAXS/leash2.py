@@ -5,6 +5,7 @@ from PyQt4 import  QtCore
 import sys,os
 import connectdialog
 import calibeditor
+import Leash
 import json
 from jsonschema import validate,ValidationError
 class LeashUI(QtGui.QMainWindow):
@@ -30,11 +31,23 @@ class LeashUI(QtGui.QMainWindow):
         self.calib.setLayout(self.caliblayout)
         self.calibeditor=calibeditor.calibeditor(self)
         self.caliblayout.addWidget(self.calibeditor)
+        self.submitlayout=QtGui.QVBoxLayout()
+        self.caliblayout.addLayout(self.submitlayout)
+        self.statuslabel=QtGui.QLabel("No queue on server.")
+        self.submitbutton=QtGui.QPushButton("Start Server Queue")
+        self.submitlayout.addWidget(self.statuslabel)
+        self.submitlayout.addWidget(self.submitbutton)
+        
         self.tab.addTab( self.calib , "Calib")
         self.mainWindow.setCentralWidget (self.tab  )
+        self.connect(self.submitbutton,QtCore.SIGNAL('clicked()'),self.startqueue)
     def parscecommandline(self):
-        import Leash
+      
         self.options,self.args= Leash.parsecommandline()
+    def startqueue(self):
+        data=self.calibeditor.model.getjson()
+        argu=["new", data]
+        result=Leash.initcommand(self.options,argu,self.netconf)
     def cleanup(self):
         pass
 def LeashGUI():

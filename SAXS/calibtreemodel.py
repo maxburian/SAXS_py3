@@ -19,7 +19,8 @@ class calibtreemodel(QtGui.QStandardItemModel ):
       self.calschema=json.load(open(os.path.dirname(__file__)+os.sep+'schema.json'),object_pairs_hook=collections.OrderedDict) 
       
       self.connect(self, QtCore.SIGNAL('dataChanged(QModelIndex,QModelIndex)'),self.handleitemchanged)
-      
+      self.errormessage=QtGui.QErrorMessage()
+      self.errormessage.setWindowTitle("Data Structure Error")
     def loadfile(self,filename):
         self.filename=filename
         try:
@@ -31,7 +32,9 @@ class calibtreemodel(QtGui.QStandardItemModel ):
              self.err.showMessage(str(e))
              return
         self.invisibleRootItem().setColumnCount(3)
+        self.blockSignals(True)
         self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
+        self.blockSignals(False)
     def bulidfromjson(self,  input, schema ,parent, row=0):
         """
         generate QStandardItem data structure from json file
@@ -240,11 +243,17 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         self.connect(buttons, QtCore.SIGNAL("rejected()"), dialog, QtCore.SLOT("reject()"));
         dialog.exec_()
         return dialog.result()
-    def save(self):
+    def getjson(self):
         data=self.modeltojson(self.invisibleRootItem())
         print json.dumps(data,indent=2)
-        validate(data,self.calschema)
-       
+        try:
+            validate(data,self.calschema)
+        except Exception as e:
+            self.errormessage.showMessage(str(e))
+        return data
+    def save(self):
+        data=self.getjson()
+        json.dump(data,open(self.filename,"w"),indent=2)
     def modeltojson(self, item):
         """
         model to json converter recursive

@@ -226,13 +226,13 @@ class Server():
              self.queue_abort()
         print "aborted old queue"
         try:
-            if object['argument']['threads']>0:
-                self.threads=object['argument']['threads']
+            if object['argument']['calibration'].get("Threads")>0:
+                self.threads=object['argument']['calibration'].get("Threads")
             else:
                 self.threads=self.options.threads
             o=atrdict.AttrDict({"plotwindow":False,"threads":self.threads,
                     		"watch":self.options.watchdir,
-                            "watchdir":os.sep.join(object['argument']['directory']),
+                            "watchdir":os.sep.join(object['argument']['calibration'].get("Directory")),
                             "servermode":True,
                             "silent":True,"plotwindow":False,
                             "walkdirinthreads":True,
@@ -242,22 +242,19 @@ class Server():
                              "writepng":False,"resume":False,
                              "serverport":self.serverport
                              })
-            maskobj=json.loads(attachment[0])
-            mskfilename=os.path.expanduser(os.path.join("~/saxsdogserver"+os.path.basename(maskobj['filename'])))
-            print "maskfile:",mskfilename
-            self.directory=os.sep.join(object['argument']['directory'])
-            mskfile=open(mskfilename,'wb')
-            mskfile.write(base64.b64decode(maskobj['data']))
-            mskfile.close()
-            print "saved maskfile"
-            object['argument']['calibration']['MaskFile']=mskfilename
-            cal=calibration.calibration(object['argument']['calibration'])
+            cals=[]
+            
             dir=os.path.normpath(
                 os.path.join(
                              self.args[0],
-                             os.sep.join(object['argument']['directory']
+                             os.sep.join(object['argument']['calibration'].get('Directory')
                             )))
-            self.imagequeue=imagequeuelib.imagequeue(cal,
+            for mnumber,mask in enumerate(object['argument']['calibration']["Masks"]):
+                cals.append(calibration.calibration(
+                                            object['argument']['calibration'],
+                                            mask,
+                                            json.loads(attachment[mnumber])))
+            self.imagequeue=imagequeuelib.imagequeue(cals,
                     o,[ dir],self.serverconf)
             print "startimgq"
             self.imagequeueprocess=Process(target=self.imagequeue.start)

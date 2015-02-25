@@ -46,10 +46,10 @@ class imagequeue:
     :param list args: List of command line options
     
     """
-    def __init__(self,Cal,options,args,conf):
+    def __init__(self,Cals,options,args,conf):
          
          self.pool=[]
-         self.cal=Cal
+         self.cals=Cals
          self.conf=conf
          self.options=options
          self.picturequeue=Queue()
@@ -108,7 +108,7 @@ class imagequeue:
                     print "############"
                     print   sys.exc_info()
                     continue
-                if image.shape==tuple(self.cal.config["Imagesize"]):
+                if image.shape==tuple(self.cals[0].config["Imagesize"]):
                     break
                 print "cannot open ", picture, ", lets wait.", max-i ," s"
                 time.sleep(1)
@@ -119,7 +119,7 @@ class imagequeue:
                 
             if self.options.outdir!="":
                 basename=self.options.outdir+os.sep+('_'.join(picture.replace('./','').split(os.sep))[:-3]).replace('/',"_")
-                basename=basename.replace(':', '').replace('.','')+'.'
+                basename=basename.replace(':', '').replace('.','')
             else:
                 reldir=os.path.join( 
                                       os.path.dirname(picture),
@@ -128,44 +128,41 @@ class imagequeue:
                     os.mkdir(reldir)
                 basename=os.path.join( reldir,
                                       os.path.basename(picture)[:-3])
-            
-                
-            if not self.options.resume or not os.path.isfile(basename+'chi'):
-                data=self.cal.integratechi(image,basename+"chi")
-                if threadid==0 and self.options.plotwindow:
-                    # this is a hack it really schould be a proper GUI
+            data=[]
+            for calnum,cal in enumerate(self.cals):   
+                baseneme+="_"+str(calnum) 
+                if not self.options.resume or not os.path.isfile(basename+'.chi'):
+                    data.append(cal.integratechi(image,basename+".chi"))
+                    if threadid==0 and self.options.plotwindow:
+                        # this is a hack it really schould be a proper GUI
+                       
+                        cal.plot(image,fig=self.fig)
+                        plt.draw()
+                       
+                             
+                if self.options.writesvg: 
+                    
+                    if not self.options.resume or not os.path.isfile(basename+'.svg'):
+                         cal.plot(image,basename+".svg",fig=self.fig)
+                if self.options.writepng:
+                     if not self.options.resume or not os.path.isfile(basename+'.svg'):
+                          misc.imsave(basename+".png",image)
                    
-                    self.cal.plot(image,fig=self.fig)
-                    plt.draw()
-                   
-                         
-            if self.options.writesvg: 
                 
-                if not self.options.resume or not os.path.isfile(basename+'svg'):
-                    self.cal.plot(image,basename+"svg",fig=self.fig)
-            if self.options.writepng:
-                 if not self.options.resume or not os.path.isfile(basename+'svg'):
-                      misc.imsave(basename+"png",image)
-               
-            
-            #self.picturequeue.task_done()
-            with self.allp.get_lock():
-                self.allp.value+=1
-            if self.options.silent:
-                
-                if np.mod(self.allp.value,100)==0:
-                    print "[",threadid,"] ",self.allp.value
-            else:
-                print "[",threadid,"] write: ",basename+"chi" 
+                #self.picturequeue.task_done()
+                with self.allp.get_lock():
+                    self.allp.value+=1
+                if self.options.silent:
+                    
+                    if np.mod(self.allp.value,100)==0:
+                        print "[",threadid,"] ",self.allp.value
+                else:
+                    print "[",threadid,"] write: ",basename+".chi" 
             return basename ,data
     def start(self):  
         """
         Start threads and directory observer.
         """
-       
- 
-            
-         
         #start threads
         for threadid in range(1,self.options.threads):
             print "start proc [",threadid,"]"
@@ -209,12 +206,10 @@ class imagequeue:
                     lastfile, data =self.procimage(picture,0)
                     if self.options.servermode:
                         request={"command":"putplotdata","argument":{"data":{
-                                "result":"plot","data":{"filename":lastfile,"array":data.tolist(),"stat":{}}
+                                "result":"plot","data":{"filename":lastfile,"array":data,"stat":{}}
                                   }}}
                         socket.send_multipart([json.dumps(addauthentication( request,conf))])
                         socket.recv()
-                         
-                    
                     if np.mod(self.allp.value,500)==0:
                         self.timreport()
         except  KeyboardInterrupt:            
@@ -226,15 +221,12 @@ class imagequeue:
         self.stop()
         self.timreport()
         return self.allp.value, time.time()-self.starttime
-    
     def stop(self):
         print "\n\nWaiting for the processes to terminate."
         self.stopflag.value=1
         for worker in self.pool:
             worker.join(3)
-            
     def timreport(self):
-        
         tottime=time.time()-self.starttime
         if self.allp.value==0:
             print "We didn't do any pictures "
@@ -243,5 +235,3 @@ class imagequeue:
             print "\nProcessed: ",self.allp.value," pic"
             print " time per pic: ", tottime/self.allp.value,"[s]"
             print " pic per second: ",self.allp.value/tottime,"[/s]"
-        
-    

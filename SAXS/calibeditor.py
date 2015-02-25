@@ -14,7 +14,7 @@ class calibeditor(QtGui.QWidget):
          self.layout().addWidget(self.treeview)
          self.model=calibtreemodel.calibtreemodel( )
          self.treeview.setModel(self.model)
-         self.treeview.setMinimumWidth(600)
+         self.treeview.setMinimumWidth(800)
          self.treeview.setMinimumHeight(800)
       
          self.treeview.setAlternatingRowColors(True)
@@ -27,6 +27,6 @@ class calibeditor(QtGui.QWidget):
              
          QtGui.QShortcut(QtGui.QKeySequence("Ctrl+S"),self,self.model.save)
     def reset(self):
-        self.treeview.setColumnWidth(0,220)
-        self.treeview.setColumnWidth(1,220)
+        self.treeview.setColumnWidth(0,320)
+        self.treeview.setColumnWidth(1,320)
         self.treeview.expandAll()

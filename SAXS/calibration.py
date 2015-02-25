@@ -13,7 +13,7 @@ import pickle
 import hashlib, binascii
 import os, sys
 from threading import Thread,current_thread,active_count 
-
+import StringIO,base64
 #from numba import jit
  
 from jsonschema import validate
@@ -29,7 +29,7 @@ class calibration:
  
     """
     
-    def __init__(self,config):
+    def __init__(self,config,mask=None,attachment=None):
         
         if type(config) is str:
             #open config and check schema
@@ -47,20 +47,24 @@ class calibration:
         #calculate a hash for all configdata
   
         self.config=caldict
-        self._setupcalibration()
+        if not mask:
+            mask=caldict["Masks"][0]
+        self.maskconfig=mask
+    
+        self._setupcalibration(mask,attachment)
          
  
     
     def polcorr(self,Pfrac,rot):
         complexp=self.__complexCoordinatesOfPicture(1)
-        pixelsize=self.config['PixelSizeMicroM'][0]*1e-3 #
+        pixelsize=self.config["Geometry"]['PixelSizeMicroM'][0]*1e-3 #
         r=np.absolute(complexp)*pixelsize
         phi=np.angle(complexp)
         
       
-        d=self.config['DedectorDistanceMM']
-        tilt=self.config['Tilt']['TiltAngleDeg']/180.0*np.pi
-        tiltdir=self.config['Tilt']['TiltRotDeg']/180.0*np.pi
+        d=self.config["Geometry"]['DedectorDistanceMM']
+        tilt=self.config["Geometry"]['Tilt']['TiltAngleDeg']/180.0*np.pi
+        tiltdir=self.config["Geometry"]['Tilt']['TiltRotDeg']/180.0*np.pi
         
         theta=calc_theta(r,phi,d,tilt,tiltdir)
        
@@ -71,39 +75,39 @@ class calibration:
        
         return corr
 
-    def _setupcalibration(self):
+    def _setupcalibration(self,mask,attachment):
         """
         Pre-calculate the data for the integration. This is done at initialization.
         """
         
        
         # Calculate array of size img with the distance from center as entries
-        pixelsize=self.config['PixelSizeMicroM'][0]*1e-3 #all length in millimeters
-        oversampling=self.config['Oversampling']
+        pixelsize=self.config["Geometry"]['PixelSizeMicroM'][0]*1e-3 #all length in millimeters
+        oversampling=mask['Oversampling']
         complexp=self.__complexCoordinatesOfPicture(oversampling)
         r=np.absolute(complexp)*pixelsize
         phi=np.angle(complexp)
 
-        d=self.config['DedectorDistanceMM']
-        tilt=self.config['Tilt']['TiltAngleDeg']/180.0*np.pi
-        tiltdir=self.config['Tilt']['TiltRotDeg']/180.0*np.pi
+        d=self.config["Geometry"]['DedectorDistanceMM']
+        tilt=self.config["Geometry"]['Tilt']['TiltAngleDeg']/180.0*np.pi
+        tiltdir=self.config["Geometry"]['Tilt']['TiltRotDeg']/180.0*np.pi
         theta=calc_theta(r,phi,d,tilt,tiltdir)
-        self.corr=np.ones((self.config['Imagesize'][0],self.config['Imagesize'][1]))
+        self.corr=np.ones((self.config["Geometry"]['Imagesize'][0],self.config["Geometry"]['Imagesize'][1]))
         if 'PolarizationCorrection' in self.config:
             frac = self.config["PolarizationCorrection"]
              #Nanometer
             self.corr=np.divide(self.corr,self.polcorr(frac['Fraction'], frac['Angle']/180.0*np.pi-np.pi/2))
         # rescale the theta that the radial regions connected to a label are about 1 pixel wide
-        if 'PixelPerRadialElement' in self.config:
-            self.scale=1/np.max(theta)*np.max(r)/pixelsize/self.config['PixelPerRadialElement']
-            pixelper=self.config['PixelPerRadialElement']
+        if 'PixelPerRadialElement' in mask:
+            self.scale=1/np.max(theta)*np.max(r)/pixelsize/mask['PixelPerRadialElement']
+            pixelper=mask['PixelPerRadialElement']
         else:
             pixelper=1.0
             self.scale=1/np.max(theta)*np.max(r)/pixelsize
         
         labels=np.array(theta*self.scale,dtype=int)
         self.maxlabel=np.max(labels)
-        mask=openmask(self.config)
+        mask=openmask(mask["MaskFile"],attachment)
         self.A=labelstosparse(labels,mask,oversampling)
         self.ITransposed =self.A
         self.I,self.Areas,self.oneoverA=rescaleI(self.A,self.corr)
@@ -216,8 +220,8 @@ class calibration:
         :param obj config:
         :param int oversampling:
         """
-        imagesize=self.config['Imagesize']
-        beamcenter=self.config['BeamCenter']
+        imagesize=self.config["Geometry"]['Imagesize']
+        beamcenter=self.config["Geometry"]['BeamCenter']
         return cplwcener(imagesize,beamcenter,oversampling)
 def cplwcener(imagesize,beamcenter,oversampling):
         return np.add.outer(
@@ -296,7 +300,7 @@ def scalemat(Xsize,Ysize,ov):
                     dtype=np.float,shape=(Ysize*Xsize,Ysize*Xsize*ov**2))
      
     
-def openmask(mfile):
+def openmask(mfile,attachment=None):
     """
     Open the mask file especialy the \*.msk file. Unfortunately there is no library
     module for msk files available also no documentation. So, for the msk file, we have a very brittle hack
@@ -305,11 +309,15 @@ def openmask(mfile):
     :param object config: Calibration config object.
     :returns: Mask as logical numpy array.
     """
+    if attachment:
+        mfilestream=  base64.b64decode(attachment['data'])
+    else:
+        mfilestream=open(mfile).read()
     if mfile.endswith('.msk'):
         import bitarray
         maskb=bitarray.bitarray( endian='little')
         
-        maskb.fromfile(open(mfile)) 
+        maskb.frombytes(mfilestream) 
         maskl=np.array(maskb.tolist())
         fin=open(mfile , "rb")
         import struct
@@ -327,6 +335,6 @@ def openmask(mfile):
         #misc.imsave("mask.png",cropedmask)
         return  np.logical_not(cropedmask)
     else:
-        mask= np.where(misc.imread(mfile)!=0,False,True)
+        mask= np.where(misc.imread(mfilestream)!=0,False,True)
         print mask
         return mask
