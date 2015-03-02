@@ -2,7 +2,7 @@ from PyQt4 import  QtGui
 from PyQt4 import  uic
 from PyQt4 import  QtCore
  
-import json
+import json,base64
 from jsonschema import validate,ValidationError
 import os,re
 import collections
@@ -31,7 +31,39 @@ class calibtreemodel(QtGui.QStandardItemModel ):
              self.err.setWindowTitle("Schema Error")
              self.err.showMessage(str(e))
              return
-        self.invisibleRootItem().setColumnCount(3)
+        
+        self.blockSignals(True)
+        self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
+        self.blockSignals(False)
+    def loadservercalib(self,servercalib):
+        self.calib=servercalib["data"]["cal"]
+        self.filename="Servercalibration"
+     
+        for attachnr,attachment in enumerate( servercalib["data"]["attachments"]):
+            if os.path.isfile(attachment['filename']):
+                msgBox=QtGui.QMessageBox()
+                msgBox.setText("'"+attachment['filename']+"' already exists")
+                msgBox.setInformativeText("Do you want to replace it with the server version?")
+                msgBox.setStandardButtons(msgBox.Ok |  msgBox.Retry| msgBox.Cancel)
+                msgBox.setDefaultButton(msgBox.Ok)
+                msgBox.setButtonText(msgBox.Ok,"Replace With Server Version")
+                msgBox.setButtonText(msgBox.Retry,"Save As")
+                msgBox.setButtonText(msgBox.Cancel,"Use Local Version")
+                val=msgBox.exec_()
+                if val==msgBox.Cancel:
+                    continue
+                elif val==msgBox.Retry:
+                  
+                    filedialog=QtGui.QFileDialog()
+                    filedialog.setAcceptMode(filedialog.AcceptSave)
+                    filedialog.exec_()
+                    filename=unicode(filedialog.selectedFiles()[0])
+                    attachment['filename']=filename
+                    self.calib["Masks"][attachnr]["MaskFile"]=filename
+            maskfile=open(attachment['filename'],"wb")
+            maskfile.write(base64.b64decode(attachment['data']))
+            maskfile.close()
+            
         self.blockSignals(True)
         self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
         self.blockSignals(False)
@@ -117,7 +149,8 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                                               QtCore.QVariant(pixmap) , 
                                               role=QtCore.Qt.DecorationRole)
                                     
-                                except:
+                                except Exception as e :
+                                    print e
                                     pass
                     elif "default" in schema['properties'][key]:
                         value.setData(str(schema['properties'][key]['default']), role=QtCore.Qt.DisplayRole)

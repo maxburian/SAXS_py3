@@ -140,9 +140,12 @@ class Server():
                 self.queue_abort()
             except Exception as e:
                 result={"result":"ServerError","data":{"Error":e.message}}
-               
-                return
-            self.comandosocket.send(json.dumps(result))
+                print e
+            try:
+                self.comandosocket.send(json.dumps(result))
+            except Exception as e:
+                result={"result":"ServerError","data":{"Error":e.message}}
+                self.comandosocket.send(json.dumps(result))
            
             
     def authenticate(self,data):
@@ -206,10 +209,9 @@ class Server():
         elif command=="get":
             if self.imagequeue:
                  result={"result":"cal","data":{
-                                                "cal":self.imagequeue.cal.config,
-                                                "directory":self.directory.split(os.sep),
-                                                "threads":self.threads,
-                                                "mask":{"data":base64.b64encode(open(self.imagequeue.cal.config['MaskFile'],"rb").read())}
+                                                "cal":self.calibration,
+                                               
+                                                "attachments":self.attachments
                                                 }}
             else:
                 result={"result":"no queue","data":{}}
@@ -225,6 +227,10 @@ class Server():
         """
         self.lasttime=time.time()
         self.lastcount=0
+        self.attachments=[]
+        for attachstr in attachment:
+            self.attachments.append(json.loads(attachstr))
+        self.calibration=object['argument']['calibration']
         print "abort old queue"
         if self.imagequeue:
              self.queue_abort()
@@ -257,7 +263,7 @@ class Server():
                 cals.append(calibration.calibration(
                                             object['argument']['calibration'],
                                             mask,
-                                            json.loads(attachment[mnumber])))
+                                            self.attachments[mnumber]))
             self.imagequeue=imagequeuelib.imagequeue(cals,
                     o,[ dir],self.serverconf)
             print "startimgq"
@@ -286,6 +292,7 @@ class Server():
             result={"result":"ValueError","data":{"Error": str(e)}}
         except Exception as e:
             result={"result":"Error","data":{"Error": str(e)}}
+            print e
         return result
     def queue_abort(self):
         if self.imagequeue:

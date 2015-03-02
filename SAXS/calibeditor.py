@@ -20,13 +20,11 @@ class calibeditor(QtGui.QWidget):
          self.treeview.setAlternatingRowColors(True)
          self.treeview.setItemDelegateForColumn(1,calibeditdelegate.calibEditDelegate( app ))
          self.reset()
-         if len(self.app.args)>0:
-             filename=self.app.args[0]
-             self.model.loadfile(filename)
-             self.reset()
+        
              
          QtGui.QShortcut(QtGui.QKeySequence("Ctrl+S"),self,self.model.save)
     def reset(self):
+        self.model.invisibleRootItem().setColumnCount(3)
         self.treeview.setColumnWidth(0,320)
         self.treeview.setColumnWidth(1,320)
         self.treeview.expandAll()

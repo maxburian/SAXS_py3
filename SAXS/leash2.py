@@ -17,11 +17,14 @@ class LeashUI(QtGui.QMainWindow):
         self.connectdialog=connectdialog.connectdialog( self.confs)
         self.connectdialog.exec_()
         selected=self.connectdialog.confindex
-        print selected
+        if  self.connectdialog.ok:
+            reconnectresult=self.connectdialog.serverstatus[selected].result
+        else:
+            sys.exit()
         self.netconf=self.confs[selected]
         self.parscecommandline()
-        self.loadui()
-    def loadui(self):
+        self.loadui(reconnectresult)
+    def loadui(self,reconnectresult):
         
         self.mainWindow=super(LeashUI,self)
         self.mainWindow.setWindowTitle("SAXS Leash")
@@ -42,6 +45,16 @@ class LeashUI(QtGui.QMainWindow):
         self.tab.addTab( self.calib , "Calib")
         self.mainWindow.setCentralWidget (self.tab  )
         self.connect(self.submitbutton,QtCore.SIGNAL('clicked()'),self.startqueue)
+       
+        if   reconnectresult["result"]=="cal":
+            self.calibeditor.model.loadservercalib(reconnectresult)
+            self.calibeditor.reset()
+            self.mainWindow.setWindowTitle("SAXS Leash: Server Calibration")
+        elif len(self.args)>0:
+            filename=self.args[0]
+            self.calibeditor.model.loadfile(filename)
+            self.calibeditor.reset()
+            self.mainWindow.setWindowTitle("SAXS Leash: "+filename)
     def parscecommandline(self):
       
         self.options,self.args= Leash.parsecommandline()

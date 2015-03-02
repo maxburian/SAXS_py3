@@ -28,7 +28,7 @@
                 		"type": "string"
            				 }]
 				},
-				"mask":{},
+				"attachments":{},
 				"threads":{"type":"integer"},
 				"dircontent":{},
 				"stat": 

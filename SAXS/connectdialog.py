@@ -19,6 +19,7 @@ class serverstatus(QtGui.QWidget):
     def updatestatus(self,message):
         result=json.loads(unicode(message))
         self.status.setText("Online, " +result['result'])
+        self.result=result
         self.accept=QtGui.QPushButton("Take This")
         self.layout.addWidget(self.accept)
         self.connect(self.accept,QtCore.SIGNAL("clicked()"),self.emitservernumber)
@@ -34,6 +35,7 @@ class connectdialog(QtGui.QDialog):
          self.vlayout.addWidget(QtGui.QLabel("You have "+str(len(confs))+" Servers configured:"))
          self.serverstatus=[]
          self.confindex=0
+         self.ok=False
          self.setModal(True)
          for index,conf in enumerate(confs):
              hlayout1=QtGui.QHBoxLayout()
@@ -43,5 +45,6 @@ class connectdialog(QtGui.QDialog):
     def selected(self,index):
         self.confindex=index
         self.accept()
+        self.ok=True
     def getval(self):
         return self.confindex

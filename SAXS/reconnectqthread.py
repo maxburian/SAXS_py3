@@ -16,6 +16,7 @@ class reconnecthread(QThread):
         argu=["get"]
         opt=atrdict.AttrDict({"serverno":None,"server":self.conf["Server"]})
         result=initcommand( opt,argu,self.conf )
+        print result
         self.emit( SIGNAL('connected(QString)') ,result)
 
            
