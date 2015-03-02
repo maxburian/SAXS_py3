@@ -239,7 +239,7 @@ def cplwcener(imagesize,beamcenter,oversampling):
                          )
 
 def labelstosparse(labels,mask,oversampling):
-        ind=np.argsort(labels.flatten())
+        ind=np.argsort(labels.flatten()).astype(int)
         sortedl=labels.flatten()[ind]
         newcol=sortedl-np.roll(sortedl,1)
         length=sortedl.shape[0]
@@ -293,10 +293,10 @@ def scalemat(Xsize,Ysize,ov):
     
         cell=np.add.outer(np.arange(ov)*Ysize*ov,np.arange(ov))
         grid=np.add.outer(np.arange(0,Xsize*Ysize*ov*ov,Ysize*ov*ov),np.arange(0,Ysize*ov,ov))
-        cindices=np.add.outer(grid,cell).flatten()
+        cindices=np.add.outer(grid,cell).flatten().astype(int)
         return sp.csr_matrix((np.ones(len(cindices))/ov**2,
                      cindices,
-                     np.arange(0,Ysize*Xsize*ov**2+1,ov*ov)),
+                     np.arange(0,Ysize*Xsize*ov**2+1,ov*ov,dtype=int)) ,
                     dtype=np.float,shape=(Ysize*Xsize,Ysize*Xsize*ov**2))
      
     

@@ -138,6 +138,8 @@ class Server():
             except KeyboardInterrupt:
                 context.destroy()
                 self.queue_abort()
+            except Exception as e:
+                result={"result":"ServerError","data":{"Error":e.message}}
                
                 return
             self.comandosocket.send(json.dumps(result))
@@ -181,7 +183,9 @@ class Server():
         print "got: "+ command 
         if command=='new':
             result= self.start_image_queue(object,attachment)
-            print str(datetime.datetime.now())+": new queue for '"+  os.sep.join(object['argument']['directory'])+"'"
+            print str(datetime.datetime.now())+": new queue for:"
+            if object['argument']['calibration'].get("Directory"):
+                print "    '"+os.sep.join(object['argument']['calibration'].get("Directory"))+"'"
         elif command=='abort':
              result=self.queue_abort()
         elif command=='close':
@@ -269,7 +273,9 @@ class Server():
                                     )
                                     )
             print "directory to watch "+dir
+        
             self.feederproc.start()
+            
             self.queuestatrtime=time.time()
             self.plotresult={"result":"Empty","data":{"stat":self.stat()}}
            
@@ -278,6 +284,8 @@ class Server():
             result={"result":"IOError","data":{"Error": str(e).replace("\n"," ")}}
         except ValueError as e:
             result={"result":"ValueError","data":{"Error": str(e)}}
+        except Exception as e:
+            result={"result":"Error","data":{"Error": str(e)}}
         return result
     def queue_abort(self):
         if self.imagequeue:

@@ -37,6 +37,7 @@ class LeashUI(QtGui.QMainWindow):
         self.submitbutton=QtGui.QPushButton("Start Server Queue")
         self.submitlayout.addWidget(self.statuslabel)
         self.submitlayout.addWidget(self.submitbutton)
+        self.submitlayout.addStretch()
         
         self.tab.addTab( self.calib , "Calib")
         self.mainWindow.setCentralWidget (self.tab  )
@@ -48,6 +49,7 @@ class LeashUI(QtGui.QMainWindow):
         data=self.calibeditor.model.getjson()
         argu=["new", data]
         result=Leash.initcommand(self.options,argu,self.netconf)
+        print result
     def cleanup(self):
         pass
 def LeashGUI():
