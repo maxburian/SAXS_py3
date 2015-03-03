@@ -5,6 +5,7 @@ from PyQt4 import  QtCore
 import sys,os
 import connectdialog
 import calibeditor
+import leashmenue
 import Leash
 import json
 from jsonschema import validate,ValidationError
@@ -36,16 +37,20 @@ class LeashUI(QtGui.QMainWindow):
         self.caliblayout.addWidget(self.calibeditor)
         self.submitlayout=QtGui.QVBoxLayout()
         self.caliblayout.addLayout(self.submitlayout)
-        self.statuslabel=QtGui.QLabel("No queue on server.")
+        self.queuestatuslabel=QtGui.QLabel("No queue on server.")
+        self.filestatuslabel=QtGui.QLabel("")
         self.submitbutton=QtGui.QPushButton("Start Server Queue")
-        self.submitlayout.addWidget(self.statuslabel)
+        self.submitlayout.addWidget(self.queuestatuslabel)
+        self.submitlayout.addWidget( self.filestatuslabel)
         self.submitlayout.addWidget(self.submitbutton)
         self.submitlayout.addStretch()
-        
         self.tab.addTab( self.calib , "Calib")
         self.mainWindow.setCentralWidget (self.tab  )
         self.connect(self.submitbutton,QtCore.SIGNAL('clicked()'),self.startqueue)
-       
+        self.connect(self.calibeditor.model,QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),self.statusmodified)
+        self.errormessage=QtGui.QErrorMessage()
+        self.menue=leashmenue.menueitems(self)
+        self.connect(self.calibeditor.model, QtCore.SIGNAL("fileNameChanged()"),self.updatewindowtitle)
         if   reconnectresult["result"]=="cal":
             self.calibeditor.model.loadservercalib(reconnectresult)
             self.calibeditor.reset()
@@ -55,14 +60,29 @@ class LeashUI(QtGui.QMainWindow):
             self.calibeditor.model.loadfile(filename)
             self.calibeditor.reset()
             self.mainWindow.setWindowTitle("SAXS Leash: "+filename)
+            self.menue.appendrecentfile(filename)
     def parscecommandline(self):
       
         self.options,self.args= Leash.parsecommandline()
     def startqueue(self):
         data=self.calibeditor.model.getjson()
         argu=["new", data]
-        result=Leash.initcommand(self.options,argu,self.netconf)
-        print result
+        try:
+            result=json.loads(Leash.initcommand(self.options,argu,self.netconf))
+        except Exception as e:
+            self.errormessage.showMessage( str(e))
+        if result['result']=="new queue":
+            print result
+            self.queuestatuslabel.setText("Queue started.")
+            self.filestatuslabel.setText("Local calibration synced")
+            self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
+        else:
+            self.errormessage.showMessage(json.dumps(result,indent=2))
+    def statusmodified(self):
+        self.filestatuslabel.setText ("Local calibration modified.")
+        self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename+"*")
+    def updatewindowtitle(self):
+        self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
     def cleanup(self):
         pass
 def LeashGUI():

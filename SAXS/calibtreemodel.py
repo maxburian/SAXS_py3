@@ -21,8 +21,9 @@ class calibtreemodel(QtGui.QStandardItemModel ):
       self.connect(self, QtCore.SIGNAL('dataChanged(QModelIndex,QModelIndex)'),self.handleitemchanged)
       self.errormessage=QtGui.QErrorMessage()
       self.errormessage.setWindowTitle("Data Structure Error")
+      self.filename=None
     def loadfile(self,filename):
-        self.filename=filename
+       
         try:
             self.calib=json.load(open(filename),object_pairs_hook=collections.OrderedDict)
             validate(self.calib,self.calschema)
@@ -30,9 +31,12 @@ class calibtreemodel(QtGui.QStandardItemModel ):
              self.err=QtGui.QErrorMessage()
              self.err.setWindowTitle("Schema Error")
              self.err.showMessage(str(e))
+            
              return
-        
+        self.filename=filename
+        self.emit(QtCore.SIGNAL("fileNameChanged()"))
         self.blockSignals(True)
+        self.clear()
         self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
         self.blockSignals(False)
     def loadservercalib(self,servercalib):
@@ -65,6 +69,7 @@ class calibtreemodel(QtGui.QStandardItemModel ):
             maskfile.close()
             
         self.blockSignals(True)
+        self.clear()
         self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
         self.blockSignals(False)
     def bulidfromjson(self,  input, schema ,parent, row=0):
@@ -286,7 +291,15 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         return data
     def save(self):
         data=self.getjson()
+        if not self.filename:
+             dialog=QtGui.QFileDialog()
+             self.filename= unicode(dialog.getSaveFileName())
         json.dump(data,open(self.filename,"w"),indent=2)
+        self.emit(QtCore.SIGNAL("fileNameChanged()"))
+    def saveAs(self):
+        dialog=QtGui.QFileDialog()
+        self.filename= unicode(dialog.getSaveFileName())
+        self.save()
     def modeltojson(self, item):
         """
         model to json converter recursive

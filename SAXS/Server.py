@@ -285,7 +285,7 @@ class Server():
             self.queuestatrtime=time.time()
             self.plotresult={"result":"Empty","data":{"stat":self.stat()}}
            
-            result={"result":"queue initiated ","data":{"cal":object['argument']['calibration']}}
+            result={"result":"new queue","data":{"cal":object['argument']['calibration']}}
         except IOError as e: 
             result={"result":"IOError","data":{"Error": str(e).replace("\n"," ")}}
         except ValueError as e:
