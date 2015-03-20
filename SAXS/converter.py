@@ -5,12 +5,13 @@ from jsonschema import validate,ValidationError
 import time
 import schematools
 def txt2json(text,s):
+            if not "Geometry" in s:
+                s["Geometry"]={}
+            print text
             for line in text.split('\n'):
                 word=re.split('\s+', line)
-                if not "Geometry" in s:
-                    s["Geometry"]={}
+                
                 if re.search('Refined Beam centre.+pixels',line):
-                   
                     s["Geometry"]['BeamCenter']=[float(word[6]),float(word[5])]
                 elif re.search('Refined sample to detector distance',line):
                     s["Geometry"]['DedectorDistanceMM']=float(word[7])
@@ -24,7 +25,50 @@ def txt2json(text,s):
                     s['Wavelength']=float(word[4])
                
             return s
-
+def jsontojson(fromjson,s):
+    schemalist=[ {"path":os.path.dirname(__file__)+'/schema_1.json',
+                  "pathtable":[{"old":['Tilt'],"new":["Geometry","Tilt"]}
+                               ]
+                  
+                  }]
+    for schemadesc in schemalist:
+          schema=(json.load(open(schemadesc["path"])))
+         
+          validate(fromjson,schema)
+          for pathpair in schemadesc["pathtable"]:
+              value=valuebypath(fromjson,pathpair["old"])
+               
+              s=setvaluebypath(s,pathpair["new"],value)
+             
+              
+          
+       
+         
+    print "unknown file format"
+def valuebypath(jsonobj,path):
+    subtree=jsonobj
+    for key in path:
+        if type(key) is str:
+            if key in subtree:
+                subtree=subtree[key]
+            else:
+                subtree=None
+        elif type(key) is int:
+            try:
+                subtree=subtree[key]
+            except:
+                subtree=None
+    return subtree
+def setvaluebypath(jsonobj,path,value):
+    if len(path)>1:
+        if path[0] not in jsonobj:
+            jsonobj[path[0]]={}
+        jsonobj=setvaluebypath(jsonobj[path[0]],path[1:],value)
+    else:
+        jsonobj[path[0]]=value
+        print jsonobj
+    return jsonobj
+       
 def convert():
     """
     This implements the functionality oft :ref:`converter`.
@@ -32,7 +76,9 @@ def convert():
     Fit2d info file to the JSON data used by the SAXS.callibration class.
     """
     parser = OptionParser()
-    usage = "usage: %prog [options] calibration.txt ouput.saxsconf"
+    usage = ("usage: %prog [options] calibration.txt ouput.saxsconf\n"
+    +"or\n"
+    +"%prog [options] cal.saxsconf ouput.saxsconf\n")
     parser = OptionParser(usage)
     parser.add_option("-t", "--template", dest="templatepath",
                       help="Path to calibration file which serves as template.", metavar="FILE",default="")
@@ -62,8 +108,17 @@ def convert():
  
     else:
         s=schematools.schematodefault(schema)
+        
     with open(args[0])as infile:
-        s=txt2json(infile.read(),s)
+        fromjson=None
+        try:
+            fromjson=json.load(infile)
+        except Exception as e:
+            print e
+        if fromjson:
+             jsontojson(fromjson,s)
+        else:
+             txt2json(open(args[0]).read(),s)
         with open(args[1],"w") as outfile:
              json.dump(s, outfile,  indent=4, separators=(',', ': '))
         print json.dumps(s, indent=4, separators=(',', ': '))
