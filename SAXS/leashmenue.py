@@ -3,12 +3,17 @@ from PyQt4 import  QtGui
 from PyQt4 import  uic
 from PyQt4 import  QtCore
 import os,json,collections
+import schematools
 class menueitems(QtGui.QWidget):
     def __init__(self,app):
         super(menueitems, self).__init__()
         self.app=app
         self.filemenue=self.app.menuBar().addMenu('&File')
         self.actionOpen=self.filemenue.addAction("&Open")
+        self.actionNew=self.filemenue.addAction("&New")
+        self.importmenue= self.app.menuBar().addMenu('&Import')
+        self.actionImportFit2d=self.importmenue.addAction("&Import Fit2d")
+        self.actionImportOlder=self.importmenue.addAction("&Import Older SAXS calibration Files")
         self.actionSave=self.filemenue.addAction("&Save")
         self.actionSaveAs=self.filemenue.addAction("Save &As")
         self.connect(self.actionOpen, 
@@ -20,6 +25,9 @@ class menueitems(QtGui.QWidget):
         self.connect(self.actionSaveAs, 
                       QtCore.SIGNAL("triggered()"),
                       self.app.calibeditor.model.saveAs)
+        self.connect(self.actionNew, 
+                      QtCore.SIGNAL("triggered()"),
+                      self.newfile)
         self.userconffilename=os.path.expanduser(os.path.join('~',".saxsleashrc"))
         maxrecentfiles=5
         self.recentfiles=collections.deque( json.load(open(self.userconffilename))['recentFiles'], maxrecentfiles)
@@ -34,6 +42,16 @@ class menueitems(QtGui.QWidget):
        self.app.calibeditor.model.loadfile(filename)
        self.app.calibeditor.reset()
        self.appendrecentfile(filename)
+    def newfile(self):
+        dialog=QtGui.QFileDialog()
+        filename= unicode(dialog.getSaveFileName(  caption= "Create New File AS" ))
+        default= schematools.schematodefault(self.app.calibeditor.model.calschema)
+        json.dump(
+                 default,  open(filename,"w")
+                  )
+        self.app.calibeditor.model.loadfile(filename)
+        self.app.calibeditor.reset()
+        self.appendrecentfile(filename)
     def openrecent(self):
        action=self.sender()
        filename=unicode(action.data().toString ())

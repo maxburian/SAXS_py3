@@ -7,5 +7,13 @@ def schematodefault(schema):
         return data
     elif 'default' in schema:
         return schema['default']
+    elif schema["type"]=="array":
+        if "minItems" in schema:
+            array=[]
+            for i in range(schema['minItems']):
+                array.append(schematodefault(schema['items']))
+            return array
+        else:
+            return []
     else:
         return ""

@@ -266,7 +266,8 @@
 				{
 					"editor": "RemoteDir"
 				}
-			}
+			},
+			"default":[".",".","."]
 		},
 		"Threads":{
 		"default":2,

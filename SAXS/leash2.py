@@ -29,6 +29,8 @@ class LeashUI(QtGui.QMainWindow):
         
         self.mainWindow=super(LeashUI,self)
         self.mainWindow.setWindowTitle("SAXS Leash")
+        self.appdir=os.path.dirname(__file__)+os.sep
+        self.mainWindow.setWindowIcon(QtGui.QIcon(self.appdir+"icons"+os.sep+"program.png"))
         self.tab=QtGui.QTabWidget()
         self.calib=QtGui.QWidget()
         self.caliblayout=QtGui.QHBoxLayout()
