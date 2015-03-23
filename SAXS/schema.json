@@ -85,7 +85,7 @@
 					"required": true,
 					"default": 
 					[
-						172.0
+						100.0
 					],
 
 					"items": 
@@ -93,7 +93,7 @@
 						"type": "number",
 						"units": "Microns",
 						"required": true,
-						"default": 172.0
+						"default": 100.0
 					}
 				},
 
@@ -107,8 +107,8 @@
 					"required": true,
 					"default": 
 					[
-						1043,
-						981
+						1000,
+						900
 					],
 
 					"items": 
