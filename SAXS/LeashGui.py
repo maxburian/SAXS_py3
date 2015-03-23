@@ -404,12 +404,12 @@ class LeashUI(QMainWindow):
          
          self.importdialog=Importdialog(parent=self)
          self.importdialog.textEditbuffer.setText(self.clipboard.text())
-         self.connect(self.importdialog.pushButtonLoadFile, SIGNAL("clicked()"),self.loadImortFile)
+         self.connect(self.importdialog.pushButtonLoadFile, SIGNAL("clicked()"),self.loadImportFile)
          self.connect(self.importdialog.pushButtonAbort,SIGNAL('clicked()'),self.importdialog.close)
          self.connect(self.importdialog.pushButtonOK,SIGNAL('clicked()'),self.importtext)
          self.importdialog.pushButtonLoadFile.setDefault(True)
          self.importdialog.show()
-    def loadImortFile(self):
+    def loadImportFile(self):
              file=unicode( QFileDialog.getOpenFileName(self,directory="../test"))
              self.importdialog.textEditbuffer.setText(open(file,"r").read())  
     def importtext(self):

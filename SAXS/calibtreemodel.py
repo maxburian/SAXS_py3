@@ -22,6 +22,12 @@ class calibtreemodel(QtGui.QStandardItemModel ):
       self.errormessage=QtGui.QErrorMessage()
       self.errormessage.setWindowTitle("Data Structure Error")
       self.filename=None
+      self.calib=None
+    def ifNoneInitFromDefault(self):
+        if self.calib==None:
+            self.InitFromDefault()
+    def InitFromDefault(self):
+        self.calib=schematodefault(self.calschema)
     def loadfile(self,filename):
        
         try:
@@ -72,6 +78,8 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         self.clear()
         self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
         self.blockSignals(False)
+    def rebuildModel(self):
+        self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
     def bulidfromjson(self,  input, schema ,parent, row=0):
         """
         generate QStandardItem data structure from json file

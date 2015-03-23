@@ -3,7 +3,7 @@ from PyQt4 import  QtGui
 from PyQt4 import  uic
 from PyQt4 import  QtCore
 import os,json,collections
-import schematools
+import schematools,converter
 class menueitems(QtGui.QWidget):
     def __init__(self,app):
         super(menueitems, self).__init__()
@@ -28,6 +28,13 @@ class menueitems(QtGui.QWidget):
         self.connect(self.actionNew, 
                       QtCore.SIGNAL("triggered()"),
                       self.newfile)
+        self.connect(self.actionImportFit2d, 
+                      QtCore.SIGNAL("triggered()"),
+                      self.importFit2d)
+        self.connect(self.actionImportOlder, 
+                      QtCore.SIGNAL("triggered()"),
+                      self.importOlderJson)
+        
         self.userconffilename=os.path.expanduser(os.path.join('~',".saxsleashrc"))
         maxrecentfiles=5
         self.recentfiles=collections.deque( json.load(open(self.userconffilename))['recentFiles'], maxrecentfiles)
@@ -35,6 +42,46 @@ class menueitems(QtGui.QWidget):
         for i in range(maxrecentfiles):
             self.recentfileactions.append(self.filemenue.addAction(""))
         self.updaterecenfileslist()
+    def importFit2d(self):
+        self.importFrom("Open Fit2d Output Text File",converter.txt2json)
+    def importOlderJson(self):
+        self.importFrom("Open JSON From Older Versions",converter.jsontojson)
+            
+    def importFrom(self,buttontext,converterfun):
+        dialog=QtGui.QDialog()
+        layout=QtGui.QVBoxLayout()
+        dialog.setLayout(layout)
+        textarea=QtGui.QTextBrowser()
+        textarea.setMinimumSize(600, 300)
+        layout.addWidget(textarea)
+        openbutton=QtGui.QPushButton(buttontext)
+        layout.addWidget(openbutton)
+        buttonbox=QtGui.QDialogButtonBox()
+        cancelbutton=buttonbox.addButton(buttonbox.Cancel)
+        okbutton=buttonbox.addButton(buttonbox.Ok)
+        okbutton.setText("Import Data")
+        layout.addWidget(buttonbox)
+        self.connect(okbutton, QtCore.SIGNAL("clicked()"),dialog.accept)
+        self.connect(cancelbutton, QtCore.SIGNAL("clicked()"),dialog.reject)
+      
+        def pickImportFile():
+            filedialog=QtGui.QFileDialog()
+            filename=filedialog.getOpenFileName()
+            textarea.setText(open(filename).read())
+        
+        self.connect(openbutton, QtCore.SIGNAL("clicked()"),pickImportFile)
+      
+        def importText():
+            text=unicode( textarea.toPlainText())
+            if not  self.app.calibeditor.model.filename:
+                 filedialog=QtGui.QFileDialog()
+                 self.app.calibeditor.model.filename= unicode(filedialog.getSaveFileName(  caption= "Create New File AS" ))
+            
+            self.app.calibeditor.model.ifNoneInitFromDefault()
+            converterfun(text,self.app.calibeditor.model.calib)
+            self.app.calibeditor.model.rebuildModel()
+        self.connect(dialog, QtCore.SIGNAL("accepted()"),importText)
+        dialog.exec_()
     def openfile(self):
        dialog=QtGui.QFileDialog()
        filename= unicode(dialog.getOpenFileName( ))

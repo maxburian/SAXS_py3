@@ -25,7 +25,8 @@ def txt2json(text,s):
                     s['Wavelength']=float(word[4])
                
             return s
-def jsontojson(fromjson,s):
+def jsontojson(fromjsontext,s):
+    fromjson=json.loads(fromjsontext)
     schemalist=[{"path":os.path.dirname(__file__)+'/schema_1.json',
                   "pathtable":[
                        {"old":['Tilt'],                 "new":["Geometry","Tilt"]},
@@ -130,7 +131,7 @@ def convert():
         except Exception as e:
             print e
         if fromjson:
-             jsontojson(fromjson,s)
+             jsontojson(json.dumps(fromjson),s)
         else:
              txt2json(open(args[0]).read(),s)
         with open(args[1],"w") as outfile:
