@@ -26,19 +26,29 @@ def txt2json(text,s):
                
             return s
 def jsontojson(fromjson,s):
-    schemalist=[ {"path":os.path.dirname(__file__)+'/schema_1.json',
-                  "pathtable":[{"old":['Tilt'],"new":["Geometry","Tilt"]}
-                               ]
+    schemalist=[{"path":os.path.dirname(__file__)+'/schema_1.json',
+                  "pathtable":[
+                       {"old":['Tilt'],                 "new":["Geometry","Tilt"]},
+                       {"old":['Imagesize'],            "new":["Geometry","Imagesize"]},
+                       {"old":['DedectorDistanceMM'],   "new":["Geometry","DedectorDistanceMM"]},
+                       {"old":['BeamCenter'],           "new":["Geometry","BeamCenter"]},
+                       {"old":['PolarizationCorrection'],"new":["PolarizationCorrection" ]},
+                       {"old":['Wavelength'],           "new":["Wavelength"]},
+                       {"old":['Title'],                "new":["Geometry","Title"]},
+                       {"old":['PixelSizeMicroM'],      "new":["Geometry","PixelSizeMicroM"]},
+                       {"old":['MaskFile'],             "new":["Masks",0,"MaskFile"]},
+                       {"old":['PixelPerRadialElement'],"new":["Masks",0,"PixelPerRadialElement"]},
+                       {"old":['Oversampling'],         "new":["Masks",0,"Oversampling"]}
+                    ]
                   
-                  }]
+            }]
     for schemadesc in schemalist:
           schema=(json.load(open(schemadesc["path"])))
          
           validate(fromjson,schema)
           for pathpair in schemadesc["pathtable"]:
               value=valuebypath(fromjson,pathpair["old"])
-               
-              s=setvaluebypath(s,pathpair["new"],value)
+              setvaluebypath(s,pathpair["new"],value)
              
               
           
@@ -60,14 +70,18 @@ def valuebypath(jsonobj,path):
                 subtree=None
     return subtree
 def setvaluebypath(jsonobj,path,value):
-    if len(path)>1:
-        if path[0] not in jsonobj:
-            jsonobj[path[0]]={}
-        jsonobj=setvaluebypath(jsonobj[path[0]],path[1:],value)
-    else:
-        jsonobj[path[0]]=value
-        print jsonobj
-    return jsonobj
+    
+        if len(path)>1:
+            if type(path[0]) is str and path[0] not in jsonobj:
+                jsonobj[path[0]]={}
+            setvaluebypath(jsonobj[path[0]],path[1:],value)
+        else:
+            if value:
+                jsonobj[path[0]]=value
+                print jsonobj
+            elif path[0] in jsonobj:
+                jsonobj.pop(path[0])
+    
        
 def convert():
     """
