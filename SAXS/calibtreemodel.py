@@ -79,6 +79,7 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
         self.blockSignals(False)
     def rebuildModel(self):
+        self.clear()
         self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
     def bulidfromjson(self,  input, schema ,parent, row=0):
         """

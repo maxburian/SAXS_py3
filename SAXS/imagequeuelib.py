@@ -108,7 +108,7 @@ class imagequeue:
                     print "############"
                     print   sys.exc_info()
                     continue
-                if image.shape==tuple(self.cals[0].config["Imagesize"]):
+                if image.shape==tuple(self.cals[0].config["Geometry"]["Imagesize"]):
                     break
                 print "cannot open ", picture, ", lets wait.", max-i ," s"
                 time.sleep(1)
@@ -116,7 +116,7 @@ class imagequeue:
             else:
                 print "image ", picture, " has wrong format"
                 return
-                
+            
             if self.options.outdir!="":
                 basename=self.options.outdir+os.sep+('_'.join(picture.replace('./','').split(os.sep))[:-3]).replace('/',"_")
                 basename=basename.replace(':', '').replace('.','')
@@ -130,9 +130,9 @@ class imagequeue:
                                       os.path.basename(picture)[:-3])
             data=[]
             for calnum,cal in enumerate(self.cals):   
-                baseneme+="_"+str(calnum) 
+                basename+="_"+str(calnum) 
                 if not self.options.resume or not os.path.isfile(basename+'.chi'):
-                    data.append(cal.integratechi(image,basename+".chi"))
+                    data.append((cal.integratechi(image,basename+".chi").tolist()))
                     if threadid==0 and self.options.plotwindow:
                         # this is a hack it really schould be a proper GUI
                        
@@ -206,9 +206,10 @@ class imagequeue:
                     lastfile, data =self.procimage(picture,0)
                     if self.options.servermode:
                         request={"command":"putplotdata","argument":{"data":{
-                                "result":"plot","data":{"filename":lastfile,"array":data,"stat":{}}
+                                "result":"plot","data":{"filename":lastfile,"array":data,
+                                                        "stat":{}}
                                   }}}
-                        socket.send_multipart([json.dumps(addauthentication( request,conf))])
+                        socket.send_multipart([json.dumps(addauthentication( request,self.conf))])
                         socket.recv()
                     if np.mod(self.allp.value,500)==0:
                         self.timreport()

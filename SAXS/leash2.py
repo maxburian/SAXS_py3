@@ -9,6 +9,8 @@ import leashmenue
 import Leash
 import json
 from jsonschema import validate,ValidationError
+import plotdatathread
+import plotpanel
 class LeashUI(QtGui.QMainWindow):
     def __init__(self,app,parent=None):
         super(LeashUI,self).__init__(parent)
@@ -47,39 +49,54 @@ class LeashUI(QtGui.QMainWindow):
         self.submitlayout.addWidget(self.submitbutton)
         self.submitlayout.addStretch()
         self.tab.addTab( self.calib , "Calib")
+        self.plotplanel=plotpanel.plotpanel()
+        self.tab.addTab( self.plotplanel , "Plots")
         self.mainWindow.setCentralWidget (self.tab  )
         self.connect(self.submitbutton,QtCore.SIGNAL('clicked()'),self.startqueue)
         self.connect(self.calibeditor.model,QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),self.statusmodified)
         self.errormessage=QtGui.QErrorMessage()
         self.menue=leashmenue.menueitems(self)
         self.connect(self.calibeditor.model, QtCore.SIGNAL("fileNameChanged()"),self.updatewindowtitle)
+        self.plotthread=plotdatathread.plotthread(self)
         if   reconnectresult["result"]=="cal":
             self.calibeditor.model.loadservercalib(reconnectresult)
             self.calibeditor.reset()
             self.mainWindow.setWindowTitle("SAXS Leash: Server Calibration")
+            self.setqueuesynced()
+            self.plotthread.start()
         elif len(self.args)>0:
             filename=self.args[0]
             self.calibeditor.model.loadfile(filename)
             self.calibeditor.reset()
             self.mainWindow.setWindowTitle("SAXS Leash: "+filename)
             self.menue.appendrecentfile(filename)
+        
+        self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.plotplanel.plot)
     def parscecommandline(self):
       
         self.options,self.args= Leash.parsecommandline()
     def startqueue(self):
         data=self.calibeditor.model.getjson()
         argu=["new", data]
+        result={}
         try:
             result=json.loads(Leash.initcommand(self.options,argu,self.netconf))
         except Exception as e:
+            self.errormessage.setWindowTitle("Server Error")
+            self.errormessage.setMinimumSize(400, 300)
             self.errormessage.showMessage( str(e))
-        if result['result']=="new queue":
+        if 'result' in result and result['result']=="new queue":
             print result
-            self.queuestatuslabel.setText("Queue started.")
-            self.filestatuslabel.setText("Local calibration synced")
-            self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
+            self.setqueuesynced()
+            self.plotthread.start()
         else:
+            self.errormessage.setWindowTitle("Server Error")
+            self.errormessage.setMinimumSize(400, 300)
             self.errormessage.showMessage(json.dumps(result,indent=2))
+    def setqueuesynced(self):
+        self.queuestatuslabel.setText("Queue started.")
+        self.filestatuslabel.setText("Local calibration synced")
+        self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
     def statusmodified(self):
         self.filestatuslabel.setText ("Local calibration modified.")
         self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename+"*")

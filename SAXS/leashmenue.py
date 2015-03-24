@@ -4,6 +4,7 @@ from PyQt4 import  uic
 from PyQt4 import  QtCore
 import os,json,collections
 import schematools,converter
+import Leash
 class menueitems(QtGui.QWidget):
     def __init__(self,app):
         super(menueitems, self).__init__()
@@ -16,6 +17,9 @@ class menueitems(QtGui.QWidget):
         self.actionImportOlder=self.importmenue.addAction("&Import Older SAXS calibration Files")
         self.actionSave=self.filemenue.addAction("&Save")
         self.actionSaveAs=self.filemenue.addAction("Save &As")
+        self.queuemenue= self.app.menuBar().addMenu('&Queue')
+        self.queueRedoAllImmagesAction =self.queuemenue.addAction("&Redo All Images")
+        self.queueAbortAction=self.queuemenue.addAction("A&bort Queue")
         self.connect(self.actionOpen, 
                      QtCore.SIGNAL("triggered()"),
                      self.openfile)
@@ -34,7 +38,9 @@ class menueitems(QtGui.QWidget):
         self.connect(self.actionImportOlder, 
                       QtCore.SIGNAL("triggered()"),
                       self.importOlderJson)
-        
+        self.connect(self.queueRedoAllImmagesAction, 
+                      QtCore.SIGNAL("triggered()"),
+                      self.queueRedoAllImmages)
         self.userconffilename=os.path.expanduser(os.path.join('~',".saxsleashrc"))
         maxrecentfiles=5
         self.recentfiles=collections.deque( json.load(open(self.userconffilename))['recentFiles'], maxrecentfiles)
@@ -80,6 +86,7 @@ class menueitems(QtGui.QWidget):
             self.app.calibeditor.model.ifNoneInitFromDefault()
             converterfun(text,self.app.calibeditor.model.calib)
             self.app.calibeditor.model.rebuildModel()
+            self.app.calibeditor.reset()
         self.connect(dialog, QtCore.SIGNAL("accepted()"),importText)
         dialog.exec_()
     def openfile(self):
@@ -123,3 +130,10 @@ class menueitems(QtGui.QWidget):
         user=json.load(open(self.userconffilename))
         user["recentFiles"]=list(self.recentfiles)
         json.dump(user, open(self.userconffilename,"w"))
+    def queueRedoAllImmages(self):
+        argu=["readdir"]
+        result=Leash.initcommand(self.app.options,argu,self.app.netconf)
+        #self.log("reread directory")
+        msgBox=QtGui.QMessageBox(self)
+        msgBox.setText( result);
+        msgBox.exec_();

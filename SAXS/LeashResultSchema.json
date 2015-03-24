@@ -73,7 +73,7 @@
 							"items": 
 							[
 								{
-									"type": "number"
+									"type": "array"
 								}
 							]
 						}

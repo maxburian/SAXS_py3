@@ -57,14 +57,15 @@ def sendplot(options,arg,socket,conf):
     plt.ion()
     while True:
         sendplotdata(options,arg,socket,conf)
-        object=json.loads()
+        object=json.loads( receive(socket))
         
         #print json.dumps(object,indent=4, separators=(',', ': ')) 
         if object["result"]=="Empty":
           
             time.sleep(2)
             continue
-        data=np.array(object['data']['array']).transpose()
+        
+        data=np.array(object['data']['array'][0]).transpose()
         skip=options.skip
         clip=options.clip
         clipat=0
@@ -80,6 +81,7 @@ def sendplot(options,arg,socket,conf):
         plt.xscale(options.xax)
         plt.draw()
         plt.clf()
+        time.sleep(.5)
         
 def sendreaddir(options,arg,socket,conf):
     """
@@ -207,7 +209,7 @@ def receive(socket):
   
     
                         
-def parsecommandline():
+def parsecommandline(mode=""):
     
     parser = OptionParser()
     usage = ("usage: %prog "+
@@ -232,22 +234,23 @@ def parsecommandline():
     parser.add_option("-N",'--serverno',dest='serverno', default=0,
                        help="select server from config list by index default:0")
     (options, args) = parser.parse_args(args=None, values=None)
-    
+    if mode=="commandline" and len(args)<1:
+        parser.error("incorrect number of arguments")
     
     return  (options, args)
 def saxsleash():
     """
     The command line leash.
     """
-    (options,arg)=parsecommandline()
-    if len(arg)<1:
-        parser.error("incorrect number of arguments")
+    (options,arg)=parsecommandline(mode="commandline")
+    
     conf=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
     validate(conf,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
     try:
-        result=initcommand(options,arg,conf[options.serverno])
-    except ValueError:
-        print '"',arg[0],'" is not a valid command. See -h for help.'
+        result=initcommand(options,arg,conf[int(options.serverno)])
+    except ValueError as e:
+        print '"'+arg[0]+'" is not a valid command. See -h for help.'
+        print e
         sys.exit()
     print json.dumps(json.loads(result),indent=4, separators=(',', ': '))
     validateResponse(result)
