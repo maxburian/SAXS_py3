@@ -14,6 +14,7 @@ from Queue import Empty
 import matplotlib.pyplot as plt
 import zmq
 import json
+import time
 #from SAXS.tifffile import   TiffFile 
 def funcworker(self,threadid):
    """
@@ -28,8 +29,11 @@ def funcworker(self,threadid):
             except Empty:
                 continue
             self.procimage(picture,threadid)
+            self.histqueue.put(time.time())
         except KeyboardInterrupt:
             pass 
+        except Exception as e:
+            print e
 def filler(queue,dir):
             filequeue=[] 
             print "filler" + dir
@@ -53,6 +57,7 @@ class imagequeue:
          self.conf=conf
          self.options=options
          self.picturequeue=Queue()
+         self.histqueue=Queue()
          self.args=args
          self.allp=Value('i',0)
          self.stopflag=Value('i',0)
@@ -204,6 +209,7 @@ class imagequeue:
                     except Empty:
                         continue
                     lastfile, data =self.procimage(picture,0)
+                    self.histqueue.put(time.time())
                     if self.options.servermode:
                         request={"command":"putplotdata","argument":{"data":{
                                 "result":"plot","data":{"filename":lastfile,"array":data,

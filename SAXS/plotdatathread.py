@@ -18,4 +18,6 @@ class plotthread(QtCore.QThread):
                 self.lastcount=result['data']["stat"]['images processed']
                 plotdata=result=initcommand(self.app.options,["plotdata"],self.app.netconf)
                 self.emit(QtCore.SIGNAL('plotdata(QString)'), plotdata)
+            else:
+                 self.emit(QtCore.SIGNAL('histupdate()'))
             

@@ -23,7 +23,23 @@ class AuthenticationError(Exception):
         self.value=value
     def __str__(self):
         return repr(self.message)
-
+class history():
+    def __init__(self):
+        self.hist=[]
+    def update(self,queue):
+        hist=[]
+        now=time.time()
+        for timest in self.hist:
+            if now-timest<100:
+                hist.append(timest)
+        while True:
+            try:
+                print "GET !!!!"
+                hist.append(queue.get(False))
+            except :
+                print "BROKE"
+                break
+        self.hist=hist
 def subscribeToFileChanges(imqueue,url,dir,serverdir):
     """
     Function to connect to file feeder service. Runs in Thread.
@@ -227,6 +243,7 @@ class Server():
         """
         self.lasttime=time.time()
         self.lastcount=0
+        self.history=history()
         self.attachments=[]
         for attachstr in attachment:
             self.attachments.append(json.loads(attachstr))
@@ -318,21 +335,21 @@ class Server():
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
         self.plotresult['data']["stat"]=self.stat()
+        self.plotresult['data']["history"]=self.history.hist
         return  self.plotresult
     def updateplot(self,object):
         self.plotresult=object['argument']["data"]
         return {"result":"done","data":{}}
     def stat(self):
         if self.imagequeue:
-          
             self.lasttime=time.time()
             newpic=self.imagequeue.allp.value-self.lastcount
             self.lastcount=self.imagequeue.allp.value
+            self.history.update(self.imagequeue.histqueue)
             return {"images processed":self.imagequeue.allp.value,
              "queue length":self.imagequeue.picturequeue.qsize(),
              "time":time.time(),
              "start time":self.queuestatrtime
-         
              
              }
         else:
@@ -364,3 +381,5 @@ if __name__ == '__main__':
         logfile=open("saxsdoglog","w")
         with daemon.DaemonContext(stderr=logfile,stdout=logfile,working_directory="./"):
             startservers(serverconfs)
+
+    

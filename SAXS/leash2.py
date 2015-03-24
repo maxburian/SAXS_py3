@@ -11,6 +11,7 @@ import json
 from jsonschema import validate,ValidationError
 import plotdatathread
 import plotpanel
+import histpanel
 class LeashUI(QtGui.QMainWindow):
     def __init__(self,app,parent=None):
         super(LeashUI,self).__init__(parent)
@@ -51,6 +52,8 @@ class LeashUI(QtGui.QMainWindow):
         self.tab.addTab( self.calib , "Calib")
         self.plotplanel=plotpanel.plotpanel()
         self.tab.addTab( self.plotplanel , "Plots")
+        self.histpanel=histpanel.histpanel(self)
+        self.tab.addTab( self.histpanel , "History")
         self.mainWindow.setCentralWidget (self.tab  )
         self.connect(self.submitbutton,QtCore.SIGNAL('clicked()'),self.startqueue)
         self.connect(self.calibeditor.model,QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),self.statusmodified)
@@ -58,6 +61,9 @@ class LeashUI(QtGui.QMainWindow):
         self.menue=leashmenue.menueitems(self)
         self.connect(self.calibeditor.model, QtCore.SIGNAL("fileNameChanged()"),self.updatewindowtitle)
         self.plotthread=plotdatathread.plotthread(self)
+        self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.plotplanel.plot)
+        self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.histpanel.plot)
+        self.connect(self.plotthread,QtCore.SIGNAL("histupdate()"),self.histpanel.timestep)
         if   reconnectresult["result"]=="cal":
             self.calibeditor.model.loadservercalib(reconnectresult)
             self.calibeditor.reset()
@@ -71,7 +77,7 @@ class LeashUI(QtGui.QMainWindow):
             self.mainWindow.setWindowTitle("SAXS Leash: "+filename)
             self.menue.appendrecentfile(filename)
         
-        self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.plotplanel.plot)
+        
     def parscecommandline(self):
       
         self.options,self.args= Leash.parsecommandline()
