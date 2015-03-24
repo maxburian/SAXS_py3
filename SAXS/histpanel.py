@@ -22,16 +22,19 @@ class histpanel(QtGui.QWidget):
     def plot(self,datastr):
         data=json.loads(unicode(datastr))
         self.histdata=np.array(data["data"]["history"])
-        self.timestep()
+        self.timestep(datastr)
          
-    def timestep(self):
-        print  self.app.tab.currentIndex()
+    def timestep(self,resultstr):
+        data=json.loads(unicode(resultstr))
+        timestamp=data["data"]["stat"]["time"]
+     
         if ((self.histdata is not None) and 
             self.app.tab.currentIndex()==2 ):
             self.figure.clf()
             ax=self.figure.add_subplot(111)
-            ax.hist(self.histdata-np.ceil(time.time()),bins=100,range=(-100,0))
+            ax.hist(self.histdata-np.ceil(timestamp),bins=100,range=(-100,0))
             ax.set_xlim((-100,0))
-            ax.set_title(time.ctime())
+            tstr= datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+            ax.set_title(tstr)
             self.canvas.draw()
           

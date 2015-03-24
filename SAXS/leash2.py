@@ -63,7 +63,7 @@ class LeashUI(QtGui.QMainWindow):
         self.plotthread=plotdatathread.plotthread(self)
         self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.plotplanel.plot)
         self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.histpanel.plot)
-        self.connect(self.plotthread,QtCore.SIGNAL("histupdate()"),self.histpanel.timestep)
+        self.connect(self.plotthread,QtCore.SIGNAL("histupdate(QString)"),self.histpanel.timestep)
         if   reconnectresult["result"]=="cal":
             self.calibeditor.model.loadservercalib(reconnectresult)
             self.calibeditor.reset()

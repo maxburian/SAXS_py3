@@ -12,12 +12,13 @@ class plotthread(QtCore.QThread):
          self.lastcount=0
     def run(self):
         while True:
-            result=json.loads(initcommand(self.app.options,["stat"],self.app.netconf))
+            resultstr=initcommand(self.app.options,["stat"],self.app.netconf)
+            result=json.loads(resultstr)
             time.sleep(1)
             if result['data']["stat"]['images processed']!=self.lastcount:
                 self.lastcount=result['data']["stat"]['images processed']
                 plotdata=result=initcommand(self.app.options,["plotdata"],self.app.netconf)
                 self.emit(QtCore.SIGNAL('plotdata(QString)'), plotdata)
             else:
-                 self.emit(QtCore.SIGNAL('histupdate()'))
+                self.emit(QtCore.SIGNAL('histupdate(QString)'),resultstr)
             
