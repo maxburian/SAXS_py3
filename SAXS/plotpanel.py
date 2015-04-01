@@ -1,3 +1,4 @@
+# coding: utf8
 from PyQt4 import  QtGui
 from PyQt4 import  QtCore
 
@@ -5,24 +6,44 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 import json
 import matplotlib.pyplot as plt
-class plotpanel(QtGui.QWidget):
+import prettyplotlib as ppl
+import matplotlib as mpl 
+from prettyplotlib import brewer2mpl
+import numpy as np
+class plotpanel(QtGui.QScrollArea):
     def __init__(self):
         super(plotpanel,self).__init__()
+        self.widget=QtGui.QWidget()
+        self.widget.setMaximumSize(500, 500)
+        #self.setWidget(self.widget)
         self.layout =QtGui.QVBoxLayout()
         self.setLayout(self.layout )
-         
         self.canvases=[]
         self.figures=[]
     def plot(self,datastr):
         data=json.loads(unicode(datastr))
-        for maskindex,set in enumerate(data["data"]["array"]):
-            if len(self.canvases)<=maskindex:
-                self.figures.append(plt.figure())
-                self.canvases.append(FigureCanvas(self.figures[maskindex]))
-                self.layout.addWidget(self.canvases[maskindex])
-            figure=self.figures[maskindex]
-            figure.clf()
-            ax=figure.add_subplot(111)
-            ax.plot(set[0],set[1])
-            self.canvases[maskindex].draw()
-            print "plot "+str(maskindex)
+        if  "data" in data and "array" in data["data"]:
+            arraydata=np.array(data["data"]["array"])
+            for maskindex,set in enumerate(arraydata):
+                if len(self.canvases)<=maskindex:
+                    self.figures.append(plt.figure( ))
+                    self.canvases.append(FigureCanvas(self.figures[maskindex]))
+                    self.layout.addWidget(self.canvases[maskindex])
+                figure=self.figures[maskindex]
+                figure.clf()
+                figure.set_frameon(False)
+               
+                ax=figure.add_subplot(111)
+                ax.set_yscale('symlog')
+                ax.set_xlabel(u"Scattering Vector  θ")
+                ax.set_ylabel("Intensity (Count/Pixel)")
+                ax.set_title("Mask "+str(maskindex))
+                ax.patch.set_alpha(0)
+                nonzero=set[1]>0
+                x=set[0][nonzero]
+                y=set[1][nonzero]
+                e=set[2][nonzero]
+                ppl.plot(ax,x,y,lw=1.0)
+                ppl.fill_between(ax,x,y-e,y+e)
+                self.canvases[maskindex].draw()
+                print "plot "+str(maskindex)

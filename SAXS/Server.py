@@ -34,10 +34,8 @@ class history():
                 hist.append(timest)
         while True:
             try:
-                print "GET !!!!"
                 hist.append(queue.get(False))
-            except :
-                print "BROKE"
+            except : 
                 break
         self.hist=hist
 def subscribeToFileChanges(imqueue,url,dir,serverdir):

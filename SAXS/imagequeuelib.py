@@ -155,14 +155,15 @@ class imagequeue:
                    
                 
                 #self.picturequeue.task_done()
-                with self.allp.get_lock():
-                    self.allp.value+=1
+               
                 if self.options.silent:
                     
                     if np.mod(self.allp.value,100)==0:
                         print "[",threadid,"] ",self.allp.value
                 else:
                     print "[",threadid,"] write: ",basename+".chi" 
+            with self.allp.get_lock():
+                self.allp.value+=1
             return basename ,data
     def start(self):  
         """
