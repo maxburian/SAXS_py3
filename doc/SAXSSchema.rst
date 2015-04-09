@@ -383,8 +383,11 @@ Example JSON:
 Slices
 --------------------
 
+Slices are designed to analyse GISAXS data.It allows you to specify slices along the sensor axis and get intensity along :math:`q_x`,:math:`q_z` directions.
+
+
 :Type:
-  array() items: {:ref:`direction`, :ref:`range`}
+  array() items: {:ref:`Direction`, :ref:`Plane`, :ref:`CutPosition`, :ref:`CutWidth`, :ref:`IncidentAngle`}
 :Required:
   False
 :JSON Path:
@@ -396,10 +399,13 @@ Example JSON:
 
     {"Slices": []}
 
-.. _direction:
+.. _Direction:
 
-direction
+Direction
 --------------------
+
+'x' or 'y' direction in sensor coordinates.
+
 
 :Type:
   string
@@ -408,70 +414,111 @@ direction
 
 :Required:
   True
+:Default:
+  x
 :JSON Path:
-  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`direction <direction>`']
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`Direction <Direction>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"direction": "x"}
+    {"Direction": "x"}
 
-.. _range:
+.. _Plane:
 
-range
+Plane
 --------------------
 
+Whether the direction is in plane with scattering surface or vertical to it.
+
+
 :Type:
-  object
-:Contains:
-  :ref:`start <start>`:red:`*`, :ref:`stop <stop>`:red:`*`
+  string
+:values:
+  ``[u'InPlane', u'Vertical']``
+
 :Required:
   True
+:Default:
+  x
 :JSON Path:
-  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`range <range>`']
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`Plane <Plane>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"range": {"start": 0,"stop": 0}}
+    {"Plane": "InPlane"}
 
-.. _start:
+.. _CutPosition:
 
-start
+CutPosition
 --------------------
 
+Cut position in pixel coordinates in the other coodinate then specified in 'Direction'.
+
+
 :Type:
-  number
+  integer in Pixel
 :Required:
   True
+:Default:
+  0
 :JSON Path:
-  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`range <range>`'][':ref:`start <start>`']
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`CutPosition <CutPosition>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"start": 0}
+    {"CutPosition": "0"}
 
-.. _stop:
+.. _CutWidth:
 
-stop
+CutWidth
 --------------------
 
+Number of pixels in normal direction to include in cut average.
+
+
 :Type:
-  number
+  integer in Pixel
 :Required:
   True
+:Default:
+  1
 :JSON Path:
-  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`range <range>`'][':ref:`stop <stop>`']
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`CutWidth <CutWidth>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"stop": 0}
+    {"CutWidth": 1}
+
+.. _IncidentAngle:
+
+IncidentAngle
+--------------------
+
+Angle of Incidence in GISAXS setup.
+
+
+:Type:
+  number in degree
+:Required:
+  True
+:Default:
+  0
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`IncidentAngle <IncidentAngle>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"IncidentAngle": 0}
 
 .. _Wavelength:
 

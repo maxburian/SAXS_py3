@@ -173,6 +173,7 @@
 		"Slices": 
 		{
 			"type": "array",
+			"description": "Slices are designed to analyse GISAXS data.It allows you to specify slices along the sensor axis and get intensity along :math:`q_x`,:math:`q_z` directions.",
 			"items": 
 			{
 				"type": "object",
@@ -182,34 +183,55 @@
 					{
 						"type": "string",
 						"required": true,
-						"default":"x",
+						"default": "x",
 						"enum": 
 						[
 							"x",
 							"y"
-						]
+						],
+
+						"description": "'x' or 'y' direction in sensor coordinates."
 					},
 
-					"Range": 
+					"Plane": 
 					{
-						"type": "object",
+						"type": "string",
 						"required": true,
-						"properties": 
-						{
-							"Start": 
-							{
-								"type": "number",
-								"required": true,
-								"default":"0"
-							},
+						"default": "x",
+						"enum": 
+						[
+							"InPlane",
+							"Vertical"
+						],
 
-							"Stop": 
-							{
-								"type": "number",
-								"required": true,
-								"default":0
-							}
-						}
+						"description": "Whether the direction is in plane with scattering surface or vertical to it."
+					},
+
+					"CutPosition": 
+					{
+						"type": "integer",
+						"required": true,
+						"default": "0",
+						"units": "Pixel",
+						"description": "Cut position in pixel coordinates in the other coodinate then specified in 'Direction'."
+					},
+
+					"CutWidth": 
+					{
+						"type": "integer",
+						"required": true,
+						"default": 1,
+						"units": "Pixel",
+						"description": "Number of pixels in normal direction to include in cut average."
+					},
+
+					"IncidentAngle": 
+					{
+						"type": "number",
+						"required": true,
+						"units": "degree",
+						"default": 0,
+						"description": "Angle of Incidence in GISAXS setup."
 					}
 				}
 			}
@@ -261,8 +283,8 @@
 		"Directory": 
 		{
 			"type": "array",
-			"required":true,
-			"minItems":1,
+			"required": true,
+			"minItems": 1,
 			"items": 
 			{
 				"type": "string",
@@ -272,11 +294,12 @@
 					"editor": "RemoteDir"
 				}
 			}
-			 
 		},
-		"Threads":{
-		"default":2,
-		"type":"integer"
+
+		"Threads": 
+		{
+			"default": 2,
+			"type": "integer"
 		}
 	}
 }
