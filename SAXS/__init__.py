@@ -12,7 +12,6 @@ from NetConf import createsaxdogconf as gennetconf
 #from LeashGui import LeashGUI
 from leash2 import  LeashGUI
 from atrdict import AttrDict
-try:
-    from datamerge import merge
-except Exception as e:
-    print e
+
+from datamerge import merge
+
