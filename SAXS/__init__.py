@@ -16,4 +16,3 @@ try:
     from datamerge import merge
 except Exception as e:
     print e
-versionstring="1.0.5alpha"
