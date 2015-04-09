@@ -52,7 +52,7 @@ data
 :Type:
   object
 :Contains:
-  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`directory <directory>`, :ref:`mask <mask>`, :ref:`threads <threads>`, :ref:`dircontent <dircontent>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
+  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`directory <directory>`, :ref:`attachments <attachments>`, :ref:`threads <threads>`, :ref:`dircontent <dircontent>`, :ref:`history <history>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
 :Required:
   True
 :JSON Path:
@@ -111,7 +111,7 @@ Directory this queue is going to use. New files in other directories are going t
 
 
 :Type:
-  array() items: string 
+  array() items: 
 :Required:
   False
 :Default:
@@ -125,9 +125,9 @@ Example JSON:
 
     {"directory": [".","",""]}
 
-.. _mask:
+.. _attachments:
 
-mask
+attachments
 --------------------
 
 :type:
@@ -137,13 +137,13 @@ mask
 :Required:
   False
 :JSON Path:
-  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`mask <mask>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`attachments <attachments>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"mask": {}}
+    {"attachments": {}}
 
 .. _threads:
 
@@ -182,6 +182,26 @@ Example JSON:
 .. code:: json
 
     {"dircontent": {}}
+
+.. _history:
+
+history
+--------------------
+
+:type:
+  object
+
+
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`history <history>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"history": {}}
 
 .. _stat:
 
@@ -301,7 +321,7 @@ array
 --------------------
 
 :Type:
-  array() items: array 
+  array() items: 
 :Required:
   False
 :JSON Path:
@@ -311,5 +331,5 @@ Example JSON:
 
 .. code:: json
 
-    {"array": null}
+    {"array": []}
 

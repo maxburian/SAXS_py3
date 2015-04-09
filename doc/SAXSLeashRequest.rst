@@ -76,7 +76,7 @@ Directory this queue is going to use. New files in other directories are going t
 
 
 :Type:
-  array() items: string 
+  array() items: 
 :Required:
   False
 :Default:

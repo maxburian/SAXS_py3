@@ -178,10 +178,11 @@
 				"type": "object",
 				"properties": 
 				{
-					"direction": 
+					"Direction": 
 					{
 						"type": "string",
 						"required": true,
+						"default":"x",
 						"enum": 
 						[
 							"x",
@@ -189,22 +190,24 @@
 						]
 					},
 
-					"range": 
+					"Range": 
 					{
 						"type": "object",
 						"required": true,
 						"properties": 
 						{
-							"start": 
+							"Start": 
 							{
 								"type": "number",
-								"required": true
+								"required": true,
+								"default":"0"
 							},
 
-							"stop": 
+							"Stop": 
 							{
 								"type": "number",
-								"required": true
+								"required": true,
+								"default":0
 							}
 						}
 					}

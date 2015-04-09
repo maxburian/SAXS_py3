@@ -27,11 +27,12 @@ to the other computers you need to allow to connect to your network. The secret 
 
 .. code ::
 
-   {
+   [{
       "Server":"tcp://hostname:port",
       "Feeder":"tcp://hostname:port",
       "Secret":"Some large random string."
-   }
+      "Name":"Pilatus1M"
+   }]
 
 The authentication is done by hashing the request and the secret including a time stamp. 
 The time stamp is checked if it lies within 900 seconds of the servers time.

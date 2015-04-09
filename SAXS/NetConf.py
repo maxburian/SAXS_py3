@@ -22,7 +22,7 @@ def createsaxdogconf():
         server="tcp://localhost:9723"
         feeder="tcp://localhost:9823"
         secret='%030x' % random.randrange(16**30)
-        content={"Server":server,"Feeder":feeder,"Secret":secret}
+        content=[{"Server":server,"Feeder":feeder,"Secret":secret,"Name":"Queue1"}]
         json.dump(content,open(confpath,"w"),indent=4, separators=(',', ': '))
     
     if  os.name == "nt":

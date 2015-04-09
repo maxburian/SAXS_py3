@@ -14,7 +14,7 @@ The SAXS configuration file specifies the parameters of a SAXS sensor calibratio
 :Type:
   object
 :Contains:
-  :ref:`Title <Title>`, :ref:`Tilt <Tilt>`:red:`*`, :ref:`BeamCenter <BeamCenter>`:red:`*`, :ref:`DedectorDistanceMM <DedectorDistanceMM>`:red:`*`, :ref:`Imagesize <Imagesize>`:red:`*`, :ref:`MaskFile <MaskFile>`:red:`*`, :ref:`Oversampling <Oversampling>`:red:`*`, :ref:`PixelSizeMicroM <PixelSizeMicroM>`:red:`*`, :ref:`PixelPerRadialElement <PixelPerRadialElement>`:red:`*`, :ref:`Wavelength <Wavelength>`:red:`*`, :ref:`PolarizationCorrection <PolarizationCorrection>`
+  :ref:`Title <Title>`, :ref:`Geometry <Geometry>`:red:`*`, :ref:`Masks <Masks>`:red:`*`, :ref:`Slices <Slices>`, :ref:`Wavelength <Wavelength>`:red:`*`, :ref:`PolarizationCorrection <PolarizationCorrection>`, :ref:`Directory <Directory>`:red:`*`, :ref:`Threads <Threads>`
 :Required:
   True
 :JSON Path:
@@ -25,26 +25,31 @@ Example JSON:
 .. code:: json
 
     {
-      "PixelSizeMicroM": [
-        172.0
-      ],
-      "Imagesize": [
-        1043,
-        981
-      ],
-      "PixelPerRadialElement": 1,
-      "Tilt": {
-        "TiltRotDeg": 0,
-        "TiltAngleDeg": 0
+      "Geometry": {
+        "Tilt": {
+          "TiltRotDeg": 0,
+          "TiltAngleDeg": 0
+        },
+        "Imagesize": [
+          1000,
+          900
+        ],
+        "BeamCenter": [
+          800.0,
+          400.0
+        ],
+        "PixelSizeMicroM": [
+          100.0
+        ],
+        "DedectorDistanceMM": 1000.0
       },
-      "MaskFile": "AAA_integ.msk",
-      "Oversampling": 3,
       "Wavelength": 1.54,
-      "BeamCenter": [
-        800.0,
-        400.0
+      "Directory": [
+        0
       ],
-      "DedectorDistanceMM": 1000.0
+      "Masks": [
+        0
+      ]
     }
 
 .. _Title:
@@ -65,6 +70,45 @@ Example JSON:
 
     {"Title": ""}
 
+.. _Geometry:
+
+Geometry
+--------------------
+
+:Type:
+  object
+:Contains:
+  :ref:`Tilt <Tilt>`:red:`*`, :ref:`BeamCenter <BeamCenter>`:red:`*`, :ref:`DedectorDistanceMM <DedectorDistanceMM>`:red:`*`, :ref:`PixelSizeMicroM <PixelSizeMicroM>`:red:`*`, :ref:`Imagesize <Imagesize>`:red:`*`
+:Required:
+  True
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Geometry <Geometry>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {
+      "Geometry": {
+        "Tilt": {
+          "TiltRotDeg": 0,
+          "TiltAngleDeg": 0
+        },
+        "Imagesize": [
+          1000,
+          900
+        ],
+        "BeamCenter": [
+          800.0,
+          400.0
+        ],
+        "PixelSizeMicroM": [
+          100.0
+        ],
+        "DedectorDistanceMM": 1000.0
+      }
+    }
+
 .. _Tilt:
 
 Tilt
@@ -80,7 +124,7 @@ The sensor, usually is not perfectly perpenticular to the ray direction. The til
 :Required:
   True
 :JSON Path:
-  * :ref:`# <root>` [':ref:`Tilt <Tilt>`']
+  * :ref:`# <root>` [':ref:`Geometry <Geometry>`'][':ref:`Tilt <Tilt>`']
 
 Example JSON: 
 
@@ -103,7 +147,7 @@ This gives the angel of the tilt direction.
 :Default:
   0
 :JSON Path:
-  * :ref:`# <root>` [':ref:`Tilt <Tilt>`'][':ref:`TiltRotDeg <TiltRotDeg>`']
+  * :ref:`# <root>` [':ref:`Geometry <Geometry>`'][':ref:`Tilt <Tilt>`'][':ref:`TiltRotDeg <TiltRotDeg>`']
 
 Example JSON: 
 
@@ -126,7 +170,7 @@ This gives the angle between the ray direction and the normal to the sensor plan
 :Default:
   0
 :JSON Path:
-  * :ref:`# <root>` [':ref:`Tilt <Tilt>`'][':ref:`TiltAngleDeg <TiltAngleDeg>`']
+  * :ref:`# <root>` [':ref:`Geometry <Geometry>`'][':ref:`Tilt <Tilt>`'][':ref:`TiltAngleDeg <TiltAngleDeg>`']
 
 Example JSON: 
 
@@ -143,13 +187,13 @@ Gives the beam center in pixel coorinates.
 
 
 :Type:
-  array(2) items: number number 
+  array(2) items: number 
 :Required:
   True
 :Default:
   [800.0, 400.0]
 :JSON Path:
-  * :ref:`# <root>` [':ref:`BeamCenter <BeamCenter>`']
+  * :ref:`# <root>` [':ref:`Geometry <Geometry>`'][':ref:`BeamCenter <BeamCenter>`']
 
 Example JSON: 
 
@@ -172,13 +216,36 @@ Distance between diffraction center and sensor.
 :Default:
   1000.0
 :JSON Path:
-  * :ref:`# <root>` [':ref:`DedectorDistanceMM <DedectorDistanceMM>`']
+  * :ref:`# <root>` [':ref:`Geometry <Geometry>`'][':ref:`DedectorDistanceMM <DedectorDistanceMM>`']
 
 Example JSON: 
 
 .. code:: json
 
     {"DedectorDistanceMM": 1000.0}
+
+.. _PixelSizeMicroM:
+
+PixelSizeMicroM
+--------------------
+
+The pixel size on the sensor.
+
+
+:Type:
+  array(2) items: number 
+:Required:
+  True
+:Default:
+  [100.0]
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Geometry <Geometry>`'][':ref:`PixelSizeMicroM <PixelSizeMicroM>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"PixelSizeMicroM": [100.0]}
 
 .. _Imagesize:
 
@@ -189,19 +256,37 @@ Size of sensor image in pixel.
 
 
 :Type:
-  array(2) items: number number 
+  array(2) items: integer 
 :Required:
   True
 :Default:
-  [1043, 981]
+  [1000, 900]
 :JSON Path:
-  * :ref:`# <root>` [':ref:`Imagesize <Imagesize>`']
+  * :ref:`# <root>` [':ref:`Geometry <Geometry>`'][':ref:`Imagesize <Imagesize>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"Imagesize": [1043,981]}
+    {"Imagesize": [1000,900]}
+
+.. _Masks:
+
+Masks
+--------------------
+
+:Type:
+  array() items: {:ref:`MaskFile`, :ref:`Oversampling`, :ref:`PixelPerRadialElement`, :ref:`Name`}
+:Required:
+  True
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Masks <Masks>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"Masks": [0]}
 
 .. _MaskFile:
 
@@ -218,7 +303,7 @@ Path of Maskfile
 :Default:
   AAA_integ.msk
 :JSON Path:
-  * :ref:`# <root>` [':ref:`MaskFile <MaskFile>`']
+  * :ref:`# <root>` [':ref:`Masks <Masks>`'][0][':ref:`MaskFile <MaskFile>`']
 
 Example JSON: 
 
@@ -241,36 +326,13 @@ Oversampling factor for radial integration. The higher, the longer the setup but
 :Default:
   3
 :JSON Path:
-  * :ref:`# <root>` [':ref:`Oversampling <Oversampling>`']
+  * :ref:`# <root>` [':ref:`Masks <Masks>`'][0][':ref:`Oversampling <Oversampling>`']
 
 Example JSON: 
 
 .. code:: json
 
     {"Oversampling": 3}
-
-.. _PixelSizeMicroM:
-
-PixelSizeMicroM
---------------------
-
-The pixel size on the sensor.
-
-
-:Type:
-  array(2) items: number 
-:Required:
-  True
-:Default:
-  [172.0]
-:JSON Path:
-  * :ref:`# <root>` [':ref:`PixelSizeMicroM <PixelSizeMicroM>`']
-
-Example JSON: 
-
-.. code:: json
-
-    {"PixelSizeMicroM": [172.0]}
 
 .. _PixelPerRadialElement:
 
@@ -281,19 +343,135 @@ Expresses the width of a radial step in terms of pixels. '1' means :math:`\delta
 
 
 :Type:
-  number
+  number in Pixel
 :Required:
   True
 :Default:
   1
 :JSON Path:
-  * :ref:`# <root>` [':ref:`PixelPerRadialElement <PixelPerRadialElement>`']
+  * :ref:`# <root>` [':ref:`Masks <Masks>`'][0][':ref:`PixelPerRadialElement <PixelPerRadialElement>`']
 
 Example JSON: 
 
 .. code:: json
 
     {"PixelPerRadialElement": 1}
+
+.. _Name:
+
+Name
+--------------------
+
+Name for mask configuration.
+
+
+:Type:
+  string
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Masks <Masks>`'][0][':ref:`Name <Name>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"Name": ""}
+
+.. _Slices:
+
+Slices
+--------------------
+
+:Type:
+  array() items: {:ref:`direction`, :ref:`range`}
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Slices <Slices>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"Slices": []}
+
+.. _direction:
+
+direction
+--------------------
+
+:Type:
+  string
+:values:
+  ``[u'x', u'y']``
+
+:Required:
+  True
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`direction <direction>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"direction": "x"}
+
+.. _range:
+
+range
+--------------------
+
+:Type:
+  object
+:Contains:
+  :ref:`start <start>`:red:`*`, :ref:`stop <stop>`:red:`*`
+:Required:
+  True
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`range <range>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"range": {"start": 0,"stop": 0}}
+
+.. _start:
+
+start
+--------------------
+
+:Type:
+  number
+:Required:
+  True
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`range <range>`'][':ref:`start <start>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"start": 0}
+
+.. _stop:
+
+stop
+--------------------
+
+:Type:
+  number
+:Required:
+  True
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`range <range>`'][':ref:`stop <stop>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"stop": 0}
 
 .. _Wavelength:
 
@@ -388,4 +566,42 @@ Example JSON:
 .. code:: json
 
     {"Angle": 0.0}
+
+.. _Directory:
+
+Directory
+--------------------
+
+:Type:
+  array() items: string 
+:Required:
+  True
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Directory <Directory>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"Directory": [0]}
+
+.. _Threads:
+
+Threads
+--------------------
+
+:Type:
+  integer
+:Required:
+  False
+:Default:
+  2
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Threads <Threads>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"Threads": 2}
 

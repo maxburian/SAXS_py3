@@ -1,11 +1,6 @@
 from setuptools import setup
-try:
-    import py2exe
-except:
-    print "No py2exe here"
- 
-from subprocess import call
-from SAXS import versionstring
+
+versionstring="1.0.5alpha"
  
 
 setup(
@@ -25,7 +20,8 @@ setup(
                       "watchdog", 
                       "sphinxcontrib-programoutput",
                       "sphinxcontrib-programscreenshot",
-                      "pyzmq"],
+                      "pyzmq",
+                      "pandas"],
     license="Proprietary",
     entry_points = {
         'console_scripts': [
@@ -45,6 +41,12 @@ setup(
         
     }
 )
+try:
+    import py2exe
+except:
+    print "No py2exe here"
+ 
+from subprocess import call
 import sys,os
 if sys.argv[1] == 'install':
     if os.name == "nt":
