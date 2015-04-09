@@ -10,11 +10,10 @@ import prettyplotlib as ppl
 import matplotlib as mpl 
 from prettyplotlib import brewer2mpl
 import numpy as np
-class plotpanel(QtGui.QScrollArea):
+class plotpanel(QtGui.QWidget):
     def __init__(self):
         super(plotpanel,self).__init__()
-        self.widget=QtGui.QWidget()
-        self.widget.setMaximumSize(500, 500)
+        
         #self.setWidget(self.widget)
         self.layout =QtGui.QVBoxLayout()
         self.setLayout(self.layout )
@@ -24,6 +23,12 @@ class plotpanel(QtGui.QScrollArea):
         data=json.loads(unicode(datastr))
         if  "data" in data and "array" in data["data"]:
             arraydata=np.array(data["data"]["array"])
+            if len(arraydata)<len(self.canvases):
+                for i in reversed(range(self.layout.count())): 
+                    self.layout.itemAt(i).widget().deleteLater()
+                
+                self.canvases=[]
+                self.figures=[]
             for maskindex,set in enumerate(arraydata):
                 if len(self.canvases)<=maskindex:
                     self.figures.append(plt.figure( ))
