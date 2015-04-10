@@ -12,6 +12,8 @@ from jsonschema import validate,ValidationError
 import plotdatathread
 import plotpanel
 import histpanel
+import checkServerCalibchanged
+import collections
 class LeashUI(QtGui.QMainWindow):
     def __init__(self,app,parent=None):
         super(LeashUI,self).__init__(parent)
@@ -64,12 +66,16 @@ class LeashUI(QtGui.QMainWindow):
         self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.plotplanel.plot)
         self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.histpanel.plot)
         self.connect(self.plotthread,QtCore.SIGNAL("histupdate(QString)"),self.histpanel.timestep)
+      
+        self.checkServerCalibchanged=checkServerCalibchanged.checkServerCalibChangedThread(self)
+        self.connect(self.plotthread,QtCore.SIGNAL("ServerQueueTimeChanged()"),  self.checkServerCalibchanged.start)
+        self.connect(self.checkServerCalibchanged,QtCore.SIGNAL("ServerQueueChanged(QString)"),self.notifyServerChange)
         if   reconnectresult["result"]=="cal":
             self.calibeditor.model.loadservercalib(reconnectresult)
             self.calibeditor.reset()
             self.mainWindow.setWindowTitle("SAXS Leash: Server Calibration")
             self.setqueuesynced()
-            self.plotthread.start()
+           
         elif len(self.args)>0:
             filename=self.args[0]
             self.calibeditor.model.loadfile(filename)
@@ -77,12 +83,14 @@ class LeashUI(QtGui.QMainWindow):
             self.mainWindow.setWindowTitle("SAXS Leash: "+filename)
             self.menue.appendrecentfile(filename)
         
+        self.plotthread.start()
         
     def parscecommandline(self):
       
         self.options,self.args= Leash.parsecommandline()
     def startqueue(self):
         data=self.calibeditor.model.getjson()
+        self.calibeditor.model.save()
         argu=["new", data]
         result={}
         try:
@@ -102,12 +110,30 @@ class LeashUI(QtGui.QMainWindow):
     def setqueuesynced(self):
         self.queuestatuslabel.setText("Queue started.")
         self.filestatuslabel.setText("Local calibration synced")
-        self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
+        if self.calibeditor.model.filename:
+            self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
+        else:
+            self.mainWindow.setWindowTitle("SAXS Leash: Servercalibration")
     def statusmodified(self):
         self.filestatuslabel.setText ("Local calibration modified.")
-        self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename+"*")
+        if self.calibeditor.model.filename:
+            self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
+        else:
+            self.mainWindow.setWindowTitle("SAXS Leash: Servercalibration")
     def updatewindowtitle(self):
         self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
+    def notifyServerChange(self,serverdata):
+        message =QtGui.QMessageBox()
+        message.setText("The Server Calibration Changed")
+        message.setInformativeText("Do you want to load the new Calibration from the server")
+        message.setStandardButtons( message.Cancel)
+        Okbutton=message.addButton( "Load", message.AcceptRole)
+        result=message.exec_()
+       
+        if result==0:
+              ServerData=json.loads(unicode(serverdata),object_pairs_hook=collections.OrderedDict)
+              self.calibeditor.model.loadservercalib(ServerData)
+              self.calibeditor.reset()
     def cleanup(self):
         pass
 def LeashGUI():

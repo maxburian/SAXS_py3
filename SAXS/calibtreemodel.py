@@ -14,10 +14,10 @@ SUBSCHEMA=QtCore.Qt.UserRole+3
 ISEDITABLEARRAY=QtCore.Qt.UserRole+5
 ACTION=QtCore.Qt.UserRole+6
 class calibtreemodel(QtGui.QStandardItemModel ):
-    def __init__(self):
+    def __init__(self,app):
       super(calibtreemodel, self).__init__()
+      self.app=app
       self.calschema=json.load(open(os.path.dirname(__file__)+os.sep+'schema.json'),object_pairs_hook=collections.OrderedDict) 
-      
       self.connect(self, QtCore.SIGNAL('dataChanged(QModelIndex,QModelIndex)'),self.handleitemchanged)
       self.errormessage=QtGui.QErrorMessage()
       self.errormessage.setWindowTitle("Data Structure Error")
@@ -29,7 +29,6 @@ class calibtreemodel(QtGui.QStandardItemModel ):
     def InitFromDefault(self):
         self.calib=schematodefault(self.calschema)
     def loadfile(self,filename):
-       
         try:
             self.calib=json.load(open(filename),object_pairs_hook=collections.OrderedDict)
             validate(self.calib,self.calschema)
@@ -37,17 +36,17 @@ class calibtreemodel(QtGui.QStandardItemModel ):
              self.err=QtGui.QErrorMessage()
              self.err.setWindowTitle("Schema Error")
              self.err.showMessage(str(e))
-            
              return
         self.filename=filename
         self.emit(QtCore.SIGNAL("fileNameChanged()"))
+        self.app.statusmodified()
         self.blockSignals(True)
         self.clear()
         self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
         self.blockSignals(False)
     def loadservercalib(self,servercalib):
         self.calib=servercalib["data"]["cal"]
-        self.filename="Servercalibration"
+        self.filename=None
      
         for attachnr,attachment in enumerate( servercalib["data"]["attachments"]):
             if os.path.isfile(attachment['filename']):
@@ -65,19 +64,20 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                 elif val==msgBox.Retry:
                   
                     filedialog=QtGui.QFileDialog()
-                    filedialog.setAcceptMode(filedialog.AcceptSave)
-                    filedialog.exec_()
-                    filename=unicode(filedialog.selectedFiles()[0])
+                    filename=unicode(filedialog.getSaveFileName(parent=None, caption="Save Mask File As"))
                     attachment['filename']=filename
                     self.calib["Masks"][attachnr]["MaskFile"]=filename
+            print "write mask"
             maskfile=open(attachment['filename'],"wb")
             maskfile.write(base64.b64decode(attachment['data']))
             maskfile.close()
-            
-        self.blockSignals(True)
+          
+        print "load new"  
         self.clear()
+        self.blockSignals(True)
         self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
         self.blockSignals(False)
+        
     def rebuildModel(self):
         self.clear()
         self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
@@ -302,12 +302,13 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         data=self.getjson()
         if not self.filename:
              dialog=QtGui.QFileDialog()
-             self.filename= unicode(dialog.getSaveFileName())
+             self.filename= unicode(dialog.getSaveFileName(None,"Save File As"))
         json.dump(data,open(self.filename,"w"),indent=2)
         self.emit(QtCore.SIGNAL("fileNameChanged()"))
     def saveAs(self):
         dialog=QtGui.QFileDialog()
-        self.filename= unicode(dialog.getSaveFileName())
+        self.filename= unicode(dialog.getSaveFileName(None,"Save File As"))
+        
         self.save()
     def modeltojson(self, item):
         """

@@ -12,7 +12,7 @@ class calibeditor(QtGui.QWidget):
          self.setLayout(QtGui.QVBoxLayout())
          self.treeview=QtGui.QTreeView()
          self.layout().addWidget(self.treeview)
-         self.model=calibtreemodel.calibtreemodel( )
+         self.model=calibtreemodel.calibtreemodel(app )
          self.treeview.setModel(self.model)
          self.treeview.setMinimumWidth(800)
          self.treeview.setMinimumHeight(800)
