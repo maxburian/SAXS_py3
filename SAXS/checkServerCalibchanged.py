@@ -23,9 +23,9 @@ class checkServerCalibChangedThread(QtCore.QThread):
           hash1.update(json.dumps(ServerCalib["data"]["cal"],sort_keys=True))
           hash2.update(json.dumps(LocalCalib,sort_keys=True))
           # hash attachments
-          if False:
+          if True:
               for attachment in ServerCalib["data"]['attachments']:
-                  hash1.update(json.dumps(attachment['data']))
+                  hash1.update( attachment['data'])
               for mask in LocalCalib["Masks"]:
                   hash2.update(base64.b64encode(open(mask["MaskFile"],"rb").read()))
           if hash1.hexdigest()!=hash2.hexdigest():
