@@ -6,7 +6,7 @@ from PyQt4 import  QtCore
 import base64
 import json
 import hashlib
-import json_delta
+ 
 class checkServerCalibChangedThread(QtCore.QThread):
     def __init__(self,app):
          super(checkServerCalibChangedThread, self).__init__()

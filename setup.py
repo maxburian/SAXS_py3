@@ -20,7 +20,7 @@ setup(
                       "watchdog", 
                       "sphinxcontrib-programoutput",
                       "sphinxcontrib-programscreenshot",
-                      "pyzmq",
+                      "pyzmq","prettyplotlib",
                       "pandas"],
     license="Proprietary",
     entry_points = {
