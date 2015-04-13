@@ -106,7 +106,7 @@ class LeashUI(QtGui.QMainWindow):
         else:
             self.errormessage.setWindowTitle("Server Error")
             self.errormessage.setMinimumSize(400, 300)
-            self.errormessage.showMessage(json.dumps(result,indent=2))
+            self.errormessage.showMessage( result["data"]["Error"])
     def setqueuesynced(self):
         self.queuestatuslabel.setText("Queue started.")
         self.filestatuslabel.setText("Local calibration synced")

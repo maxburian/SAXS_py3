@@ -13,6 +13,9 @@ import hashlib
 import imagequeuelib
 from Queue import Empty
 internalplotsocked=345834
+import Leash
+class DirectoryCollisionException(Exception):
+    pass
 
 class AuthenticationError(Exception):
     """
@@ -97,9 +100,9 @@ class Server():
     """
     class to manage a saxsdog server
     """
-    def __init__(self,conf):
+    def __init__(self,conf,serverid):
         self.files=None
-       
+        self.serverid=serverid
         self.options, self.args=parsecommandline()
         if len(self.args)==0:
             self.args=["."]
@@ -244,18 +247,23 @@ class Server():
         self.lastcount=0
         self.history=history()
         self.attachments=[]
-        for attachstr in attachment:
-            self.attachments.append(json.loads(attachstr))
-        self.calibration=object['argument']['calibration']
-        print "abort old queue"
-        if self.imagequeue:
-             self.queue_abort()
-        print "aborted old queue"
+        
+        
         try:
+            self._checkdirectorycollision(object['argument']['calibration']['Directory'])
+            for attachstr in attachment:
+                self.attachments.append(json.loads(attachstr))
+            self.calibration=object['argument']['calibration']
             if object['argument']['calibration'].get("Threads")>0:
                 self.threads=object['argument']['calibration'].get("Threads")
             else:
                 self.threads=self.options.threads
+            
+            print "abort old queue"
+            if self.imagequeue:
+                 self.queue_abort()
+            print "aborted old queue"
+            
             o=atrdict.AttrDict({"plotwindow":False,"threads":self.threads,
                     		"watch":self.options.watchdir,
                             "watchdir":os.sep.join(object['argument']['calibration'].get("Directory")),
@@ -353,17 +361,35 @@ class Server():
              }
         else:
             return{}
-def saxsdogserver(serverconf):
+    def _checkdirectorycollision(self,pathlist):
+         serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
+         mydir=os.path.normpath(os.sep.join(pathlist))
+         
+         for i,conf in enumerate(serverconfs):
+            if i!=self.serverid:
+                argu=["get"]
+                opt=atrdict.AttrDict({"serverno":i,"server":conf["Server"]})
+                result=json.loads(Leash.initcommand(opt,argu,conf))
+                if result['result']=="cal":
+                    otherpath=os.path.normpath(os.sep.join(result["data"]["cal"]['Directory']))
+                    print "mydir: "+mydir
+                    print "other: "+otherpath
+                
+                    if ((otherpath.startswith(mydir) or mydir.startswith(otherpath))
+                        or (otherpath=="." or mydir==".")):
+                        raise DirectoryCollisionException("Directory collides with: "+otherpath)
+            
+def saxsdogserver(serverconf,serverid):
      
-     S=Server(serverconf)
+     S=Server(serverconf,serverid)
      
      S.start()
      
        
 def startservers(serverconfs):
     Servers=[]
-    for serverconf in serverconfs:
-        Servers.append(Process(target=saxsdogserver,args=(serverconf,)))
+    for serverid,serverconf in enumerate(serverconfs):
+        Servers.append(Process(target=saxsdogserver,args=(serverconf,serverid)))
         Servers[-1].start()
 if __name__ == '__main__':
      serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))

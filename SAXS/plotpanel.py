@@ -42,7 +42,7 @@ class plotpanel(QtGui.QWidget):
                 ax.set_yscale('symlog')
                 ax.set_xlabel(u"Scattering Vector  θ")
                 ax.set_ylabel("Intensity (Count/Pixel)")
-                ax.set_title("Mask "+str(maskindex))
+                ax.set_title("Mask "+str(maskindex)+", "+data["data"]['filename'])
                 ax.patch.set_alpha(0)
                 nonzero=set[1]>0
                 x=set[0][nonzero]
