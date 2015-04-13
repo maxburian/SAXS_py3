@@ -311,7 +311,7 @@ def openmask(mfile,attachment=None):
     """
     if attachment:
         mfilestream=  base64.b64decode(attachment['data'])
-        fin=SringIO.StingIO(mfilestream)
+        fin=StringIO.StringIO(mfilestream)
     else:
         mfilestream=open(mfile).read()
         fin=open(mfile , "rb")
