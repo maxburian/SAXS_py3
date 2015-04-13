@@ -181,6 +181,7 @@ class Server():
                 
             
     def listdir(self,request):
+        print self.args[0]
         dir=  os.path.join(self.args[0], os.sep.join(request["argument"]['directory']))
         try:
             files=os.listdir(os.path.join( dir))

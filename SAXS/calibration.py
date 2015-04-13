@@ -311,15 +311,17 @@ def openmask(mfile,attachment=None):
     """
     if attachment:
         mfilestream=  base64.b64decode(attachment['data'])
+        fin=SringIO.StingIO(mfilestream)
     else:
         mfilestream=open(mfile).read()
+        fin=open(mfile , "rb")
     if mfile.endswith('.msk'):
         import bitarray
         maskb=bitarray.bitarray( endian='little')
         
         maskb.frombytes(mfilestream) 
         maskl=np.array(maskb.tolist())
-        fin=open(mfile , "rb")
+       
         import struct
         fin.seek(0x10)
         (y,)= struct.unpack('i', fin.read(4))
