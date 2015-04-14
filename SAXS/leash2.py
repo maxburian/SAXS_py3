@@ -30,10 +30,12 @@ class LeashUI(QtGui.QMainWindow):
         self.netconf=self.confs[selected]
         self.parscecommandline()
         self.loadui(reconnectresult)
+        if not "Name" in self.netconf:
+            self.netconf["Name"]="Unnamed"
     def loadui(self,reconnectresult):
         
         self.mainWindow=super(LeashUI,self)
-        self.mainWindow.setWindowTitle("SAXS Leash")
+        self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash")
         self.appdir=os.path.dirname(__file__)+os.sep
         self.mainWindow.setWindowIcon(QtGui.QIcon(self.appdir+"icons"+os.sep+"program.png"))
         self.tab=QtGui.QTabWidget()
@@ -73,14 +75,14 @@ class LeashUI(QtGui.QMainWindow):
         if   reconnectresult["result"]=="cal":
             self.calibeditor.model.loadservercalib(reconnectresult)
             self.calibeditor.reset()
-            self.mainWindow.setWindowTitle("SAXS Leash: Server Calibration")
+            self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash: Server Calibration")
             self.setqueuesynced()
            
         elif len(self.args)>0:
             filename=self.args[0]
             self.calibeditor.model.loadfile(filename)
             self.calibeditor.reset()
-            self.mainWindow.setWindowTitle("SAXS Leash: "+filename)
+            self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash: "+filename)
             self.menue.appendrecentfile(filename)
         
         self.plotthread.start()
@@ -111,17 +113,17 @@ class LeashUI(QtGui.QMainWindow):
         self.queuestatuslabel.setText("Queue started.")
         self.filestatuslabel.setText("Local calibration synced")
         if self.calibeditor.model.filename:
-            self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
+            self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash: "+self.calibeditor.model.filename)
         else:
-            self.mainWindow.setWindowTitle("SAXS Leash: Servercalibration")
+            self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash: Servercalibration")
     def statusmodified(self):
         self.filestatuslabel.setText ("Local calibration modified.")
         if self.calibeditor.model.filename:
-            self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
+            self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash: "+self.calibeditor.model.filename)
         else:
-            self.mainWindow.setWindowTitle("SAXS Leash: Servercalibration")
+            self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash: Servercalibration")
     def updatewindowtitle(self):
-        self.mainWindow.setWindowTitle("SAXS Leash: "+self.calibeditor.model.filename)
+        self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash: "+self.calibeditor.model.filename)
     def notifyServerChange(self,serverdata):
         message =QtGui.QMessageBox()
         message.setText("The Server Calibration Changed")

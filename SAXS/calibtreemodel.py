@@ -302,8 +302,13 @@ class calibtreemodel(QtGui.QStandardItemModel ):
     def save(self):
         data=self.getjson()
         if not self.filename:
-             dialog=QtGui.QFileDialog()
-             self.filename= unicode(dialog.getSaveFileName(None,"Save File As"))
+            dialog=QtGui.QFileDialog()
+            filename= unicode(dialog.getSaveFileName(None,"Save File As",directory=self.lastdir))
+            if filename:
+                self.filename=filename
+                self.lastdir=os.path.dirname( filename)
+            else:
+                return
         json.dump(data,open(self.filename,"w"),indent=2)
         self.emit(QtCore.SIGNAL("fileNameChanged()"))
     def saveAs(self):
