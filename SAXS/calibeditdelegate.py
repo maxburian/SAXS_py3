@@ -75,8 +75,8 @@ class calibEditDelegate(QtGui.QItemDelegate):
         """
         editor = self.sender()
         if isinstance(editor, (QtGui.QTextEdit, QtGui.QLineEdit)):
-            self.emit(SIGNAL("commitData(QWidget*)"), editor)
-            self.emit(SIGNAL("closeEditor(QWidget*)"), editor)
+            self.emit(QtCore.SIGNAL("commitData(QWidget*)"), editor)
+            self.emit(QtCore.SIGNAL("closeEditor(QWidget*)"), editor)
 
 
     def setEditorData(self, editor, index):

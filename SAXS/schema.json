@@ -190,7 +190,7 @@
 							"y"
 						],
 
-						"description": "'x' or 'y' direction in sensor coordinates."
+						"description": "'x' or 'y' direction in sensor pixel coordinates."
 					},
 
 					"Plane": 
@@ -222,7 +222,7 @@
 						"required": true,
 						"default": 1,
 						"units": "Pixel",
-						"description": "Number of pixels in normal direction to include in cut average."
+						"description": "Number of pixels left and right from  cut to include into the average ."
 					},
 
 					"IncidentAngle": 
@@ -231,7 +231,7 @@
 						"required": true,
 						"units": "degree",
 						"default": 0,
-						"description": "Angle of Incidence in GISAXS setup."
+						"description": "Angle of incidence in GISAXS setup."
 					}
 				}
 			}
