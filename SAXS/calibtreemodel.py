@@ -23,6 +23,7 @@ class calibtreemodel(QtGui.QStandardItemModel ):
       self.errormessage.setWindowTitle("Data Structure Error")
       self.filename=None
       self.calib=None
+      self.lastdir="."
     def ifNoneInitFromDefault(self):
         if self.calib==None:
             self.InitFromDefault()
@@ -307,9 +308,11 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         self.emit(QtCore.SIGNAL("fileNameChanged()"))
     def saveAs(self):
         dialog=QtGui.QFileDialog()
-        self.filename= unicode(dialog.getSaveFileName(None,"Save File As"))
-        
-        self.save()
+        filename= unicode(dialog.getSaveFileName(None,caption="Save File As",directory=self.lastdir))
+        self.lastdir=os.path.dirname( filename)
+        if filename:
+            self.filename=filename
+            self.save()
     def modeltojson(self, item):
         """
         model to json converter recursive

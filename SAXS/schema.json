@@ -216,7 +216,7 @@
 						"description": "Cut position in pixel coordinates in the other coodinate then specified in 'Direction'."
 					},
 
-					"CutWidth": 
+					"CutMargin": 
 					{
 						"type": "integer",
 						"required": true,
