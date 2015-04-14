@@ -1,8 +1,6 @@
 from PyQt4 import  QtGui
-from PyQt4 import  uic
-from PyQt4 import  QtCore
  
-import json
+ 
 import calibtreemodel
 import calibeditdelegate
 class calibeditor(QtGui.QWidget):

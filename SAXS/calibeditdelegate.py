@@ -171,6 +171,7 @@ class calibEditDelegate(QtGui.QItemDelegate):
                         #self.errormessage.
         else:
             QtGui.QItemDelegate.setModelData(self, editor, model, index)
+    
 class   arrayediddialog(QtGui.QComboBox):
     def __init__(self,index,parent):
         super(arrayediddialog, self).__init__( parent )

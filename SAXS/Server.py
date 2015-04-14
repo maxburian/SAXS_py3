@@ -6,12 +6,12 @@ import os
 import atrdict
 import calibration
 from jsonschema import validate,ValidationError
-import base64
-import traceback
+ 
+
 from optparse import OptionParser
 import hashlib
 import imagequeuelib
-from Queue import Empty
+
 internalplotsocked=345834
 import Leash
 class DirectoryCollisionException(Exception):
@@ -45,7 +45,7 @@ def subscribeToFileChanges(imqueue,url,dir,serverdir):
     """
     Function to connect to file feeder service. Runs in Thread.
     """
-    port = "5556"
+  
     queue=imqueue.picturequeue
     # Socket to talk to server
     context = zmq.Context()
@@ -107,7 +107,8 @@ class Server():
         if len(self.args)==0:
             self.args=["."]
         if   self.options.outdir!="" :
-             parser.error('"'+self.options.outdir+'"'+" directory does not exist")
+              print '"'+self.options.outdir+'"'+" directory does not exist"
+              sys.exit()
         if self.options.feederurl=="":
             self.feederurl=conf["Feeder"]
         self.serverconf=conf
@@ -336,7 +337,7 @@ class Server():
         try:
             self.imagequeue.fillqueuewithexistingfiles()
             pass
-        except AttributeError as msg:
+        except AttributeError  :
             result={"result":"ValueError","data":{"Error":"Start Queue first"}}
             return result
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
@@ -350,7 +351,7 @@ class Server():
     def stat(self):
         if self.imagequeue:
             self.lasttime=time.time()
-            newpic=self.imagequeue.allp.value-self.lastcount
+          
             self.lastcount=self.imagequeue.allp.value
             self.history.update(self.imagequeue.histqueue)
             return {"images processed":self.imagequeue.allp.value,

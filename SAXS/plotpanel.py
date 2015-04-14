@@ -1,14 +1,12 @@
 # coding: utf8
 from PyQt4 import  QtGui
 from PyQt4 import  QtCore
-
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 import json
 import matplotlib.pyplot as plt
 import prettyplotlib as ppl
-import matplotlib as mpl 
-from prettyplotlib import brewer2mpl
+ 
 import numpy as np
 class plotpanel(QtGui.QWidget):
     def __init__(self):
