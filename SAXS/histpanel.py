@@ -25,8 +25,9 @@ class histpanel(QtGui.QWidget):
        
     def plot(self,datastr):
         data=json.loads(unicode(datastr))
-        self.histdata=np.array(data["data"]["history"])
-        self.timestep(datastr)
+        if "history" in data["data"]:
+            self.histdata=np.array(data["data"]["history"])
+            self.timestep(datastr)
          
     def timestep(self,resultstr):
         data=json.loads(unicode(resultstr))

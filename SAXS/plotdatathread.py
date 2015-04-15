@@ -11,7 +11,6 @@ class plotthread(QtCore.QThread):
          self.app=app
          self.lastcount=0
          self.queuestarttime=None
-        
     def run(self):
         self.queuestarttime=None
        
@@ -37,4 +36,6 @@ class plotthread(QtCore.QThread):
                     self.emit(QtCore.SIGNAL('plotdata(QString)'), plotdata)
                 else:
                     self.emit(QtCore.SIGNAL('histupdate(QString)'),resultstr)
+            elif result["result"]=="Error":
+                self.emit(QtCore.SIGNAL('ProtocolError(QString)'), plotdata)
             

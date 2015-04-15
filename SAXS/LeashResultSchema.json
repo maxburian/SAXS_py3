@@ -18,20 +18,56 @@
 			"type": "object",
 			"additionalProperties": false,
 			"properties": 
-			{	"cal":{"type":"object"},
-				"Error":{},
-				"directory":{
-					"description": "Directory this queue is going to use. New files in other directories are going to be ignored.",
-					 "type": "array",
-					 "default":[".","",""],
-            		"items": [{
-                		"type": "string"
-           				 }]
+			{
+				"cal": 
+				{
+					"type": "object"
 				},
-				"attachments":{},
-				"threads":{"type":"integer"},
-				"dircontent":{},
- 				"history":{},
+
+				"Error": 
+				{
+					
+				},
+
+				"directory": 
+				{
+					"description": "Directory this queue is going to use. New files in other directories are going to be ignored.",
+					"type": "array",
+					"default": 
+					[
+						".",
+						"",
+						""
+					],
+
+					"items": 
+					[
+						{
+							"type": "string"
+						}
+					]
+				},
+
+				"attachments": 
+				{
+					
+				},
+
+				"threads": 
+				{
+					"type": "integer"
+				},
+
+				"dircontent": 
+				{
+					
+				},
+
+				"history": 
+				{
+					
+				},
+
 				"stat": 
 				{
 					"additionalProperties": false,
@@ -51,11 +87,11 @@
 						{
 							"type": "number"
 						},
- 						"start time":
- 						{
- 							"type": "number"
- 						}
- 
+
+						"start time": 
+						{
+							"type": "number"
+						}
 					}
 				},
 
@@ -64,21 +100,54 @@
 					"type": "string"
 				},
 
-				"array": 
+				"graphs": 
 				{
 					"type": "array",
 					"items": 
-					[
+					{
+						"type": "object",
+						"properties": 
 						{
-							"type": "array",
-							"items": 
-							[
+							"kind": 
+							{
+								"type": "string",
+								"enum": 
+								[
+									"Radial",
+									"Slice"
+								]
+							},
+
+							"conf": 
+							{
+								"type": "object"
+							},
+
+							"columnLabels": 
+							{
+								"type": "array",
+								"items": 
 								{
-									"type": "array"
+									"type": "string"
 								}
-							]
+							},
+
+							"array": 
+							{
+								"type": "array",
+								"items": 
+								[
+									{
+										"type": "array",
+										"items": 
+										{
+											"type": "number"
+										}
+									}
+								]
+							}
 						}
-					]
+					}
 				}
 			}
 		}

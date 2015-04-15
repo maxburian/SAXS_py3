@@ -147,7 +147,7 @@
 					"Oversampling": 
 					{
 						"description": "Oversampling factor for radial integration. The higher, the longer the setup but the higher the accuracy. More then 3 is probably overkill. ",
-						"type": "number",
+						"type": "integer",
 						"default": 3,
 						"required": true
 					},
@@ -232,6 +232,12 @@
 						"units": "degree",
 						"default": 0,
 						"description": "Angle of incidence in GISAXS setup."
+					},
+					"MaskRef":{
+					"required": true,
+					"type":"integer",
+					"default":0,
+					"description":"Chose which mask to use for the sclice. '-1' means don't use mask"
 					}
 				}
 			}

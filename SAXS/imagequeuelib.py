@@ -1,3 +1,4 @@
+# coding: utf8
 from threading import Thread,current_thread,active_count
 
 import time
@@ -87,18 +88,11 @@ class imagequeue:
             filler(self.picturequeue,self.args[0])
         
     def procimage(self,picture,threadid):
-       
-             
-            #im=Image.open(picture,"r")
-            #im.tag.tags
             max=60
             if not self.options.silent: print "[",threadid,"] open: ",picture 
             for i in range(max):
                 try:
                     image=misc.imread(picture)
-                    #tif = TiffFile(picture)
-                    #image = tif.asarray()
-                    
                 except KeyboardInterrupt:
                     return
                 except IOError as e:
@@ -137,7 +131,8 @@ class imagequeue:
             for calnum,cal in enumerate(self.cals):   
                 basename+="_"+str(calnum) 
                 if not self.options.resume or not os.path.isfile(basename+'.chi'):
-                    data.append((cal.integratechi(image,basename+".chi").tolist()))
+                    result=cal.integratechi(image,basename+".chi")
+                    data.append(result)
                     if threadid==0 and self.options.plotwindow:
                         # this is a hack it really schould be a proper GUI
                        
@@ -152,12 +147,7 @@ class imagequeue:
                 if self.options.writepng:
                      if not self.options.resume or not os.path.isfile(basename+'.svg'):
                           misc.imsave(basename+".png",image)
-                   
-                
-                #self.picturequeue.task_done()
-               
                 if self.options.silent:
-                    
                     if np.mod(self.allp.value,100)==0:
                         print "[",threadid,"] ",self.allp.value
                 else:
@@ -213,7 +203,7 @@ class imagequeue:
                     self.histqueue.put(time.time())
                     if self.options.servermode:
                         request={"command":"putplotdata","argument":{"data":{
-                                "result":"plot","data":{"filename":lastfile,"array":data,
+                                "result":"plot","data":{"filename":lastfile,"graphs":data,
                                                         "stat":{}}
                                   }}}
                         socket.send_multipart([json.dumps(addauthentication( request,self.conf))])

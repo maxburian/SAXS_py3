@@ -1,3 +1,4 @@
+# coding: utf8
 '''
 Created on 22.04.2014
 
@@ -135,8 +136,11 @@ class calibration:
         :returns: Scattering curve data as numpy array 
         """
         r= self.I.dot(image.flatten() )
-
-        data=np.array([self.qgrid[len (self.qgrid)-len(r):] , r , np.sqrt(r*self.Areas) *self.oneoverA]).transpose()
+     
+        data=np.array([self.qgrid[len (self.qgrid)-len(r):] ,
+                        r , 
+                        np.sqrt(r*self.Areas) *self.oneoverA] # Poisson Error sclaed
+                      ).transpose()
       
         
         headerstr=path+"\n"
@@ -147,8 +151,15 @@ class calibration:
         np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')
         
         
-        
-        return data.transpose()
+        return {"array":data.transpose().tolist(),
+                    "columnLabels":[
+                    "Scattering Vector  θ",
+                    "Intensity (Count/Pixel)",
+                    "Error Margin"],
+                    "kind":"Radial",
+                    "conf":self.config
+        }
+         
    
     def integrateerror(self,image):
         """
@@ -253,8 +264,8 @@ def labelstosparse(labels,mask,oversampling):
 def rescaleI(sparse,corr):
         areas=sparse.transpose().dot(np.ones(sparse.shape[0]))
         #corect for sensor shape 
-        areaswithoutzero=np.where(areas>0.0 ,areas,-1.0)
-        oneoverA=np.where(areaswithoutzero>0,1.0/areaswithoutzero,0)
+         
+        oneoverA=np.where(areas>0,1.0/areas,np.NAN)
         #calculate factors for area
         l=sparse.indptr
         b=np.roll(sparse.indptr,1) # l-b is repeating count for each column

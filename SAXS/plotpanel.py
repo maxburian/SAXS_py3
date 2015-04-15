@@ -19,15 +19,15 @@ class plotpanel(QtGui.QWidget):
         self.figures=[]
     def plot(self,datastr):
         data=json.loads(unicode(datastr))
-        if  "data" in data and "array" in data["data"]:
-            arraydata=np.array(data["data"]["array"])
-            if len(arraydata)<len(self.canvases):
+        if  "data" in data and "graphs" in data["data"]:
+            graphdata= data["data"]["graphs"]
+            if len(graphdata)<len(self.canvases):
                 for i in reversed(range(self.layout.count())): 
                     self.layout.itemAt(i).widget().deleteLater()
                 
                 self.canvases=[]
                 self.figures=[]
-            for maskindex,set in enumerate(arraydata):
+            for maskindex,set in enumerate(graphdata):
                 if len(self.canvases)<=maskindex:
                     self.figures.append(plt.figure( ))
                     self.canvases.append(FigureCanvas(self.figures[maskindex]))
@@ -38,14 +38,15 @@ class plotpanel(QtGui.QWidget):
                
                 ax=figure.add_subplot(111)
                 ax.set_yscale('symlog')
-                ax.set_xlabel(u"Scattering Vector  θ")
-                ax.set_ylabel("Intensity (Count/Pixel)")
-                ax.set_title("Mask "+str(maskindex)+", "+data["data"]['filename'])
+                ax.set_xlabel(set["columnLabels"][0])
+                ax.set_ylabel(set["columnLabels"][1])
+                ax.set_title( set["kind"]+" "+data["data"]['filename'])
                 ax.patch.set_alpha(0)
-                nonzero=set[1]>0
-                x=set[0][nonzero]
-                y=set[1][nonzero]
-                e=set[2][nonzero]
+                nonzero=np.array(set["array"][1])>0
+                x=np.array(set["array"][0])[:]
+                
+                y=np.array(set["array"][1])[:]
+                e=np.array(set["array"][2])[:]
                 ppl.plot(ax,x,y,lw=1.0)
                 ppl.fill_between(ax,x,y-e,y+e)
                 self.canvases[maskindex].draw()

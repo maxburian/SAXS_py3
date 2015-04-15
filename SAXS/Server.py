@@ -6,7 +6,7 @@ import os
 import atrdict
 import calibration
 from jsonschema import validate,ValidationError
- 
+import GISAXSSlices
 
 from optparse import OptionParser
 import hashlib
@@ -289,6 +289,8 @@ class Server():
                                             object['argument']['calibration'],
                                             mask,
                                             self.attachments[mnumber]))
+            for slice in object['argument']['calibration']["Slices"]:
+                cals.append(GISAXSSlices.slice( object['argument']['calibration'],slice,self.attachments))
             self.imagequeue=imagequeuelib.imagequeue(cals,
                     o,[ dir],self.serverconf)
             print "startimgq"

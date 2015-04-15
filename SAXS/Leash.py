@@ -33,9 +33,13 @@ def validateResponse(message):
         resp=json.loads(message)
         respschema=json.load((open(os.path.dirname(__file__)+os.sep+'LeashResultSchema.json')) )
         validate(resp,respschema)
+        return message
     except ValidationError as e:
         print "\nError in response data format:\n"
         print e.message
+        json.dump(resp, open("dump.json","w"),  indent=2)
+        print """Message dumped "dump.json"""
+        return json.dumps({"result":"Error","data":{"Error":e.message}})
     
 def sendclose(options,arg,socket,conf):
     request={"command":"close","argument":{}}
@@ -203,9 +207,8 @@ def initcommand(options, arg,conf):
 
 
 def receive(socket):   
-    message=socket.recv()
-    validateResponse(message)
-    return message
+    return validateResponse(socket.recv())
+     
   
     
                         
