@@ -50,7 +50,7 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         self.filename=None
      
         for attachnr,attachment in enumerate( servercalib["data"]["attachments"]):
-            if os.path.isfile(attachment['filename']):
+            if True:
                 msgBox=QtGui.QMessageBox()
                 msgBox.setText("'"+attachment['filename']+"' already exists")
                 msgBox.setInformativeText("Do you want to replace it with the server version?")
