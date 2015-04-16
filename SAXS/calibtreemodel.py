@@ -50,7 +50,7 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         self.filename=None
      
         for attachnr,attachment in enumerate( servercalib["data"]["attachments"]):
-            if True:
+            if os.path.isfile(attachment['filename']):
                 msgBox=QtGui.QMessageBox()
                 msgBox.setText("'"+attachment['filename']+"' already exists")
                 msgBox.setInformativeText("Do you want to replace it with the server version?")
@@ -68,7 +68,15 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                     filename=unicode(filedialog.getSaveFileName(parent=None, caption="Save Mask File As"))
                     attachment['filename']=filename
                     self.calib["Masks"][attachnr]["MaskFile"]=filename
+            else:
+                filedialog=QtGui.QFileDialog()
+                filename=unicode(filedialog.getSaveFileName(parent=None, caption="Save Mask File As"))
+                attachment['filename']=filename
+                self.calib["Masks"][attachnr]["MaskFile"]=filename
+      
+                
             print "write mask"
+            
             maskfile=open(attachment['filename'],"wb")
             maskfile.write(base64.b64decode(attachment['data']))
             maskfile.close()
