@@ -20,6 +20,9 @@ class menueitems(QtGui.QWidget):
         self.queuemenue= self.app.menuBar().addMenu('&Queue')
         self.queueRedoAllImmagesAction =self.queuemenue.addAction("&Redo All Images")
         self.queueAbortAction=self.queuemenue.addAction("A&bort Queue")
+        self.connect(self.queueAbortAction, 
+                     QtCore.SIGNAL("triggered()"),
+                     self.abortqueue)
         self.connect(self.actionOpen, 
                      QtCore.SIGNAL("triggered()"),
                      self.openfile)
@@ -137,3 +140,15 @@ class menueitems(QtGui.QWidget):
         msgBox=QtGui.QMessageBox(self)
         msgBox.setText( result);
         msgBox.exec_();
+    def abortqueue(self):
+        argu=["abort"]
+        result=Leash.initcommand(self.app.options,argu,self.app.netconf)
+        #self.log("reread directory")
+        msgBox=QtGui.QMessageBox(self)
+        msgBox.setText( result);
+        msgBox.exec_();
+        
+        
+        
+        
+        
