@@ -327,6 +327,7 @@ class Server():
             self.imagequeueprocess.terminate()
             self.imagequeueprocess.join(1)
         self.queue_close()
+        self.imagequeue=None
         return {"result":"queue aborted","data":{"stat":self.stat()}}
     def queue_close(self):
         if self.feederproc:

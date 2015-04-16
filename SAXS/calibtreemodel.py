@@ -70,7 +70,9 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                     self.calib["Masks"][attachnr]["MaskFile"]=filename
             else:
                 filedialog=QtGui.QFileDialog()
-                filename=unicode(filedialog.getSaveFileName(parent=None, caption="Save Mask File As"))
+                filename=unicode(filedialog.getSaveFileName(parent=None,
+                                                             caption="Save Mask File As"
+                                                             ))
                 attachment['filename']=filename
                 self.calib["Masks"][attachnr]["MaskFile"]=filename
       
