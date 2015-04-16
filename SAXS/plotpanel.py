@@ -50,4 +50,4 @@ class plotpanel(QtGui.QWidget):
                 ppl.plot(ax,x,y,lw=1.0)
                 ppl.fill_between(ax,x,y-e,y+e)
                 self.canvases[maskindex].draw()
-                print "plot "+str(maskindex)
+               

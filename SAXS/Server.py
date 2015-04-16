@@ -61,7 +61,7 @@ def subscribeToFileChanges(imqueue,url,dir,serverdir):
             string = socket.recv()
             obj=json.loads(string)
             file=os.path.abspath(os.path.normpath(os.path.join(serverdir, obj['argument'])))
-            print serverdir
+          
             print file
             if file.startswith( os.path.abspath(os.path.normpath(dir))):
                 if file.endswith('.tif'):
@@ -375,8 +375,7 @@ class Server():
                 result=json.loads(Leash.initcommand(opt,argu,conf))
                 if result['result']=="cal":
                     otherpath=os.path.normpath(os.sep.join(result["data"]["cal"]['Directory']))
-                    print "mydir: "+mydir
-                    print "other: "+otherpath
+                    
                 
                     if ((otherpath.startswith(mydir) or mydir.startswith(otherpath))
                         or (otherpath=="." or mydir==".")):

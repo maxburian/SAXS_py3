@@ -57,13 +57,12 @@ class slice():
         :returns: Scattering curve data as numpy array 
         """
         r= self.Projector.dot(image.flatten() ) 
-        print len(r)
-        print len(self.grid)
+      
         data=np.array([self.grid,
                         r *self.oneoverA, 
                         np.sqrt(r ) *self.oneoverA # Poisson Error scaled
                       ]).transpose()
-        print data
+      
         
         headerstr=path+" GISAXS Slice\n"
         headerstr+="Pixel"

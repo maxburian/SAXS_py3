@@ -349,5 +349,5 @@ def openmask(mfile,attachment=None):
         return  np.logical_not(cropedmask)
     else:
         mask= np.where(misc.imread(mfilestream)!=0,False,True)
-        print mask
+       
         return mask
