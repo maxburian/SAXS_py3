@@ -393,7 +393,8 @@ def startservers(serverconfs):
     for serverid,serverconf in enumerate(serverconfs):
         Servers.append(Process(target=saxsdogserver,args=(serverconf,serverid)))
         Servers[-1].start()
-if __name__ == '__main__':
+
+def launcher():
      serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
      validate(serverconfs,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
      options,args=parsecommandline()
@@ -408,5 +409,6 @@ if __name__ == '__main__':
         logfile=open("saxsdoglog","w")
         with daemon.DaemonContext(stderr=logfile,stdout=logfile,working_directory="./"):
             startservers(serverconfs)
-
+if __name__ == '__main__':
+    launcher()
     

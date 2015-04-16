@@ -28,7 +28,7 @@ setup(
             'saxsconverter = SAXS:convert',
             'saxsdog = SAXS:saxsdog',
             'plotchi=SAXS:plotchi',
-            'saxsdogserver = SAXS:saxsdogserver',
+            'saxsdogserver = SAXS:launcher',
             'saxsleash =SAXS:saxsleash',
             'saxsfeeder=SAXS:saxsfeeder',
             "saxsnetconf=SAXS:gennetconf",
