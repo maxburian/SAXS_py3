@@ -292,7 +292,7 @@ class Server():
             for slice in object['argument']['calibration']["Slices"]:
                 cals.append(GISAXSSlices.slice( object['argument']['calibration'],slice,self.attachments))
             self.imagequeue=imagequeuelib.imagequeue(cals,
-                    o,[ dir],self.serverconf)
+                    o,dir,self.serverconf)
             print "startimgq"
             self.imagequeueprocess=Process(target=self.imagequeue.start)
             self.imagequeueprocess.start()

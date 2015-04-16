@@ -51,7 +51,7 @@ class imagequeue:
     :param list args: List of command line options
     
     """
-    def __init__(self,Cals,options,args,conf):
+    def __init__(self,Cals,options,directory,conf):
          
          self.pool=[]
          self.cals=Cals
@@ -59,7 +59,7 @@ class imagequeue:
          self.options=options
          self.picturequeue=Queue()
          self.histqueue=Queue()
-         self.args=args
+         self.directory=directory
          self.allp=Value('i',0)
          self.stopflag=Value('i',0)
          self.dirwalker=False
@@ -80,12 +80,12 @@ class imagequeue:
        
                 
         if self.options.walkdirinthreads:
-            self.dirwalker=Process(target=filler,args=(self.picturequeue,self.args[0]))
+            self.dirwalker=Process(target=filler,args=(self.picturequeue,self.directory))
             self.dirwalker.start()
         else:
             self.dirwalker=Process()
             self.dirwalker.start()
-            filler(self.picturequeue,self.args[0])
+            filler(self.picturequeue,self.directory)
         
     def procimage(self,picture,threadid):
             max=60
