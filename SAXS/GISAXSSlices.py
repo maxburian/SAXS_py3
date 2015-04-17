@@ -68,21 +68,15 @@ class slice():
         :returns: Scattering curve data as numpy array 
         """
         r= self.Projector.dot(image.flatten() ) 
- 
         data=np.array([self.grid,
                         r *self.oneoverA, 
                         np.sqrt(r ) *self.oneoverA # Poisson Error scaled
                       ]).transpose()
-      
-        
         headerstr=path+" GISAXS Slice\n"
         headerstr+="Pixel"
         headerstr+="Intensity\n"
         headerstr+="   "+str(data.shape[0])+""
-        
         np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')
-        
-        
         return {"array":data.transpose().tolist(),
                     "columnLabels":[
                     self.qname,
@@ -96,7 +90,6 @@ class slice():
         """
         pass
     def makegrid(self):
-        
         Angstrom=1.00001495e-1
         if ((self.sliceconf["Plane"]=="Vertical" and self.sliceconf["Direction"]=="y")
             or(self.sliceconf["Plane"]=="InPlane" and self.sliceconf["Direction"]=="x")):
@@ -115,7 +108,7 @@ class slice():
             VerticalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][1]/1000.0
             HorizontalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][0]/1000.0
         else:
-             raise Exception("Invalid Plane orientation: "+ self.sliceconf["Plane"])
+            raise Exception("Invalid Plane orientation: "+ self.sliceconf["Plane"])
         alphaF=np.arctan((np.arange(VerticalPixelN,dtype=np.float)-VerticalBeamCenter)
                        * VerticalPixelsize
                        /self.conf["Geometry"]['DedectorDistanceMM']
@@ -129,7 +122,6 @@ class slice():
             self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(alphaF)
                                                   +np.sin(self.sliceconf["IncidentAngle"]))
         elif self.sliceconf["Plane"]=="InPlane":
-            
             self.qname="GISAXS Scattering Vector  $ q_{y} $"
             self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(twothetaF)
                                                     *np.cos( alphaF[self.sliceconf["CutPosition"]]))

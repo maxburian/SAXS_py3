@@ -55,4 +55,7 @@ class plotpanel(QtGui.QWidget):
                 ppl.fill_between(ax,x,y-e,y+e)
                 plt.subplots_adjust(bottom=0.2)
                 self.canvases[maskindex].draw()
-        
+                
+                
+                
+                
