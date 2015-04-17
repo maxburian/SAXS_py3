@@ -54,8 +54,10 @@ class LeashUI(QtGui.QMainWindow):
         self.submitlayout.addWidget(self.submitbutton)
         self.submitlayout.addStretch()
         self.tab.addTab( self.calib , "Calib")
-        self.plotplanel=plotpanel.plotpanel()
-        self.tab.addTab( self.plotplanel , "Plots")
+        self.plotpanel=plotpanel.plotpanel(self.tab)
+        plottab=self.tab.addTab( self.plotpanel , "Plots")
+        
+        
         self.histpanel=histpanel.histpanel(self)
         self.tab.addTab( self.histpanel , "History")
         self.mainWindow.setCentralWidget (self.tab  )
@@ -65,7 +67,7 @@ class LeashUI(QtGui.QMainWindow):
         self.menue=leashmenue.menueitems(self)
         self.connect(self.calibeditor.model, QtCore.SIGNAL("fileNameChanged()"),self.updatewindowtitle)
         self.plotthread=plotdatathread.plotthread(self)
-        self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.plotplanel.plot)
+        self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.plotpanel.plot)
         self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.histpanel.plot)
         self.connect(self.plotthread,QtCore.SIGNAL("histupdate(QString)"),self.histpanel.timestep)
       

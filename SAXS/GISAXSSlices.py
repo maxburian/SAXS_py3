@@ -1,14 +1,14 @@
 import numpy as np
-from calibration import openmask,labelstosparse
+from  calibration import openmask,labelstosparse
  
-def yDirSliceProjector(x,y,x1,x2,mask):
+def yDirSliceProjector(y,x,x1,x2,mask):
     a=np.repeat(np.arange(x),y).reshape((x,y))
     maskx=np.ones((x,y),dtype=bool)
     maskx[np.logical_not(mask)]=0
     maskx[:,:x1]=0
     maskx[:,x2:]=0
     return labelstosparse(a, maskx,1)
-def xDirSliceProjector(x,y,y1,y2,mask):
+def xDirSliceProjector(y,x,y1,y2,mask):
     a=np.tile(np.arange(y),x).reshape(x,y)
     masky=np.ones((x,y),dtype=bool)
     masky[np.logical_not(mask)]=0
@@ -22,8 +22,8 @@ class slice():
         sliceconf dictionary:
         Direction "x"|"y", Plane "InPlane'|'Vertical", CutPosition, CutMargin, IncidentAngle}
         """
-        x=conf["Geometry"]["Imagesize"][0]
-        y=conf["Geometry"]["Imagesize"][1]
+        x=conf["Geometry"]["Imagesize"][1]
+        y=conf["Geometry"]["Imagesize"][0]
         self.x=x
         self.y=y
         self.conf=conf
@@ -45,13 +45,10 @@ class slice():
        
         if sliceconf["Direction"]=="x":
             self.Projector=xDirSliceProjector(x,y,start,stop,self.mask).transpose()
-           
-            
-            
+ 
         elif sliceconf["Direction"]=="y":
             self.Projector=yDirSliceProjector(x,y,start,stop,self.mask).transpose()
-            
-           
+ 
         else :
             raise Exception("Invalid Direction: "+ sliceconf["Direction"])
         self.makegrid()
@@ -71,7 +68,7 @@ class slice():
         :returns: Scattering curve data as numpy array 
         """
         r= self.Projector.dot(image.flatten() ) 
-      
+ 
         data=np.array([self.grid,
                         r *self.oneoverA, 
                         np.sqrt(r ) *self.oneoverA # Poisson Error scaled
@@ -100,12 +97,12 @@ class slice():
         pass
     def makegrid(self):
         
-       
+        Angstrom=1.00001495e-1
         if ((self.sliceconf["Plane"]=="Vertical" and self.sliceconf["Direction"]=="y")
             or(self.sliceconf["Plane"]=="InPlane" and self.sliceconf["Direction"]=="x")):
             VerticalPixelN=self.y
             HorizontalPixeN=self.x
-            VerticalBeamCenter=self.conf["Geometry"]['BeamCenter'][0]
+            VerticalBeamCenter=VerticalPixelN-self.conf["Geometry"]['BeamCenter'][0]
             HorizontalBeamCenter=self.conf["Geometry"]['BeamCenter'][1]
             VerticalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][0]/1000.0
             HorizontalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][1]/1000.0
@@ -114,7 +111,7 @@ class slice():
             VerticalPixelN=self.x
             HorizontalPixeN=self.y
             VerticalBeamCenter=self.conf["Geometry"]['BeamCenter'][1]
-            HorizontalBeamCenter=self.conf["Geometry"]['BeamCenter'][0]
+            HorizontalBeamCenter=HorizontalPixeN-self.conf["Geometry"]['BeamCenter'][0]
             VerticalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][1]/1000.0
             HorizontalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][0]/1000.0
         else:
@@ -128,11 +125,12 @@ class slice():
                                  /self.conf["Geometry"]['DedectorDistanceMM']
                                  )
         if self.sliceconf["Plane"]=="Vertical":
-            self.qname="$q_z$"
-            self.grid=2.0*np.pi/self.conf['Wavelength']*(np.sin(alphaF)
+            self.qname="GISAXS Scattering Vector $q_{z} $"
+            self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(alphaF)
                                                   +np.sin(self.sliceconf["IncidentAngle"]))
         elif self.sliceconf["Plane"]=="InPlane":
             
-            self.qname="$q_y$"
-            self.grid=2.0*np.pi/self.conf['Wavelength']*(np.sin(twothetaF)
+            self.qname="GISAXS Scattering Vector  $ q_{y} $"
+            self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(twothetaF)
                                                     *np.cos( alphaF[self.sliceconf["CutPosition"]]))
+       
