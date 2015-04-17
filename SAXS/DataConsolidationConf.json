@@ -1,0 +1,128 @@
+{
+	"type": "object",
+	"$schema": "http://json-schema.org/draft-03/schema",
+	"properties": 
+	{	"TimeOffset": 
+					{
+						"type": "number",
+						"default": "0",
+						"units": "Seconds",
+						"description": "If offset is not found otherwise, use this as offset  for all log data"
+					},
+		"LogDataTables": 
+		{
+			"description": "Define log files to consolidate with image data. If more then one defined, they will be joined and missing values will be interpolated.",
+			"type": "array",
+			"required": true,
+			"items": 
+			{
+				"description": "One log data table is one set of logfiles with identical collumn definitions.",
+				"type": "object",
+				"properties": 
+				{
+					"TimeOffset": 
+					{
+						"type": "number",
+						"default": "0",
+						"units": "Seconds",
+						"description": "If offset is not found otherwise, use this as offset."
+					},
+					"FirstImageCorrelation":{
+					"description":"Find offset for all log data by correlating first image with first entry of this table. ",
+					"type":"boolean"
+					},
+					"Name": 
+					{
+						"description": "Name field to be used as prefix in the joined collumn names.",
+						"required": true,
+						"type": "string"
+					},
+
+					"Files": 
+					{
+						"required": true,
+						"description": "One log table may be one file, or a list of files to be concatenated.",
+						"type": "array",
+						"minitems": 1,
+						"items": 
+						{
+							"type": "object",
+							"properties": 
+							{
+								"Path": 
+								{
+									"type": "array",
+									"items": 
+									{
+										"type": "string",
+										"default": "."
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"OutputFormats": 
+		{
+			"description": "List of outputformats to write the consolidated log or the consolidated 'hdf' file.",
+			"type": "object",
+			"properties": 
+			{
+				"csv": 
+				{
+					"required": true,
+					"type": "boolean"
+				},
+
+				"hdf": 
+				{
+					"required": true,
+					"type": "boolean"
+				},
+
+				"xls": 
+				{
+					"required": true,
+					"type": "boolean"
+				},
+
+				"json": 
+				{
+					"required": true,
+					"type": "boolean"
+				}
+			}
+		},
+
+		"OutputFileBaseName": 
+		{
+			"type": "string",
+			"default": "merged"
+		},
+
+		"HDFOptions": 
+		{
+			"description": "Options only relevant to hdf export.",
+			"type": "object",
+			"properties": 
+			{
+				"IncludeCHI": 
+				{
+					"description": "Whether to include the .chi files as strings.",
+					"type": "boolean",
+					"default": true
+				},
+
+				"IncludetTIF": 
+				{
+					"description": "Whether to include the images as integer array.",
+					"type": "boolean",
+					"default": true
+				}
+			}
+		}
+	}
+}
