@@ -213,7 +213,7 @@
 						"required": true,
 						"default": "0",
 						"units": "Pixel",
-						"description": "Cut position in pixel coordinates in the other coodinate then specified in 'Direction'."
+						"description": "Cut position in pixel coordinates in the other coodinate then specified in 'Direction'. Origin is top left Corner."
 					},
 
 					"CutMargin": 

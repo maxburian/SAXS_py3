@@ -17,30 +17,44 @@ def xDirSliceProjector(x,y,y1,y2,mask):
     return labelstosparse(a, masky,1)
  
 class slice():
-    def __init__(self,conf,sliceconf,attachments):
+    def __init__(self,conf,sliceconf,attachments=[]):
         """ 
         sliceconf dictionary:
         Direction "x"|"y", Plane "InPlane'|'Vertical", CutPosition, CutMargin, IncidentAngle}
         """
         x=conf["Geometry"]["Imagesize"][0]
         y=conf["Geometry"]["Imagesize"][1]
+        self.x=x
+        self.y=y
         self.conf=conf
         self.sliceconf=sliceconf
         start=sliceconf["CutPosition"]-sliceconf["CutMargin"]
         stop=sliceconf["CutPosition"]+sliceconf["CutMargin"]
         if len (conf["Masks"])>0 and sliceconf['MaskRef']>=0:
+             
+            if  len ( attachments)>sliceconf['MaskRef']:
+                attachment=attachments[sliceconf['MaskRef']]
+            else:
+                atachment=None
             self.mask=openmask(conf["Masks"][sliceconf['MaskRef']]["MaskFile"],
-                               attachments[sliceconf['MaskRef']])
+                              )
         else:
             self.mask=np.zeros((x,y))
+        if len(conf["Geometry"]['PixelSizeMicroM'])==1:
+            conf["Geometry"]['PixelSizeMicroM'].append(conf["Geometry"]['PixelSizeMicroM'][0])
+       
         if sliceconf["Direction"]=="x":
             self.Projector=xDirSliceProjector(x,y,start,stop,self.mask).transpose()
-            self.grid=np.arange(y,dtype=np.float)
+           
+            
+            
         elif sliceconf["Direction"]=="y":
             self.Projector=yDirSliceProjector(x,y,start,stop,self.mask).transpose()
-            self.grid=np.arange(x,dtype=np.float)
+            
+           
         else :
             raise Exception("Invalid Direction: "+ sliceconf["Direction"])
+        self.makegrid()
         self.areas=self.Projector.dot(np.ones((x,y)).flatten())
         #areaswithoutzero=np.where(self.areas>0.0 ,self.areas,-1.0)
         self.oneoverA=np.where(self.areas>0.0,1.0/self.areas ,np.NAN)
@@ -74,7 +88,7 @@ class slice():
         
         return {"array":data.transpose().tolist(),
                     "columnLabels":[
-                    "Pixel Index",
+                    self.qname,
                     "Intensity (Count/Pixel)",
                     "Error Margin"],
                     "kind":"Slice",
@@ -84,4 +98,41 @@ class slice():
         dummy function in order to not trip up image queue
         """
         pass
+    def makegrid(self):
         
+       
+        if ((self.sliceconf["Plane"]=="Vertical" and self.sliceconf["Direction"]=="y")
+            or(self.sliceconf["Plane"]=="InPlane" and self.sliceconf["Direction"]=="x")):
+            VerticalPixelN=self.y
+            HorizontalPixeN=self.x
+            VerticalBeamCenter=self.conf["Geometry"]['BeamCenter'][0]
+            HorizontalBeamCenter=self.conf["Geometry"]['BeamCenter'][1]
+            VerticalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][0]/1000.0
+            HorizontalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][1]/1000.0
+        elif ((self.sliceconf["Plane"]=="Vertical" and self.sliceconf["Direction"]=="x")
+            or(self.sliceconf["Plane"]=="InPlane" and self.sliceconf["Direction"]=="y")):
+            VerticalPixelN=self.x
+            HorizontalPixeN=self.y
+            VerticalBeamCenter=self.conf["Geometry"]['BeamCenter'][1]
+            HorizontalBeamCenter=self.conf["Geometry"]['BeamCenter'][0]
+            VerticalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][1]/1000.0
+            HorizontalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][0]/1000.0
+        else:
+             raise Exception("Invalid Plane orientation: "+ self.sliceconf["Plane"])
+        alphaF=np.arctan((np.arange(VerticalPixelN,dtype=np.float)-VerticalBeamCenter)
+                       * VerticalPixelsize
+                       /self.conf["Geometry"]['DedectorDistanceMM']
+                       )
+        twothetaF=np.arctan((np.arange(HorizontalPixeN,dtype=np.float)- HorizontalBeamCenter)
+                                 * self.conf["Geometry"]['PixelSizeMicroM'][1]/1000.0
+                                 /self.conf["Geometry"]['DedectorDistanceMM']
+                                 )
+        if self.sliceconf["Plane"]=="Vertical":
+            self.qname="$q_z$"
+            self.grid=2.0*np.pi/self.conf['Wavelength']*(np.sin(alphaF)
+                                                  +np.sin(self.sliceconf["IncidentAngle"]))
+        elif self.sliceconf["Plane"]=="InPlane":
+            
+            self.qname="$q_y$"
+            self.grid=2.0*np.pi/self.conf['Wavelength']*(np.sin(twothetaF)
+                                                    *np.cos( alphaF[self.sliceconf["CutPosition"]]))

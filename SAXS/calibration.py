@@ -1,132 +1,67 @@
-# coding: utf8
-'''
-Created on 22.04.2014
-
-@author: chm
-'''
- 
 import numpy as np
-from scipy import misc
-import matplotlib.pyplot as plt
-import scipy.sparse as sp
-import json
-import pickle
-import hashlib, binascii
-import os, sys
-from threading import Thread,current_thread,active_count 
-import StringIO,base64
-#from numba import jit
+from calibration import openmask,labelstosparse
  
-from jsonschema import validate
-"""
-Module ...
-"""
-class calibration:
-    """
-    This class represents a calibration for SAXS diffraction. 
-    After initialization, the :py:meth:`integrate` method can compute the radial intensity very fast.
-    
-    :param string config: is the path to the :ref:`root`:
+def yDirSliceProjector(y,x,x1,x2,mask):
+    a=np.repeat(np.arange(x),y).reshape((x,y))
+    maskx=np.ones((x,y),dtype=bool)
+    maskx[np.logical_not(mask)]=0
+    maskx[:,:x1]=0
+    maskx[:,x2:]=0
+    return labelstosparse(a, maskx,1)
+def xDirSliceProjector(y,x,y1,y2,mask):
+    a=np.tile(np.arange(y),x).reshape(x,y)
+    masky=np.ones((x,y),dtype=bool)
+    masky[np.logical_not(mask)]=0
+    masky[:y1]=0
+    masky[y2:]=0
+    return labelstosparse(a, masky,1)
  
-    """
-    
-    def __init__(self,config,mask=None,attachment=None):
-        
-        if type(config) is str:
-            #open config and check schema
-            caldict=json.load(open(config))
-        elif  type(config) is dict:
-            caldict=config
+class slice():
+    def __init__(self,conf,sliceconf,attachments=[]):
+        """ 
+        sliceconf dictionary:
+        Direction "x"|"y", Plane "InPlane'|'Vertical", CutPosition, CutMargin, IncidentAngle}
+        """
+        x=conf["Geometry"]["Imagesize"][1]
+        y=conf["Geometry"]["Imagesize"][0]
+        self.x=x
+        self.y=y
+        self.conf=conf
+        self.sliceconf=sliceconf
+        start=sliceconf["CutPosition"]-sliceconf["CutMargin"]
+        stop=sliceconf["CutPosition"]+sliceconf["CutMargin"]
+        if len (conf["Masks"])>0 and sliceconf['MaskRef']>=0:
+             
+            if  len ( attachments)>sliceconf['MaskRef']:
+                attachment=attachments[sliceconf['MaskRef']]
+            else:
+                atachment=None
+            self.mask=openmask(conf["Masks"][sliceconf['MaskRef']]["MaskFile"],
+                              )
+        else:
+            self.mask=np.zeros((x,y))
+        if len(conf["Geometry"]['PixelSizeMicroM'])==1:
+            conf["Geometry"]['PixelSizeMicroM'].append(conf["Geometry"]['PixelSizeMicroM'][0])
+       
+        if sliceconf["Direction"]=="x":
+            self.Projector=xDirSliceProjector(x,y,start,stop,self.mask).transpose()
            
-        else:
-            print "calibrarion takes a config object as path or dictionary"
-            raise TypeError (config)
-        schemapath=os.path.dirname(__file__)+'/schema.json'
-       
-        schema=(json.load(open(schemapath)))
-        validate(caldict,schema)
-        #calculate a hash for all configdata
-  
-        self.config=caldict
-        if not mask:
-            mask=caldict["Masks"][0]
-        self.maskconfig=mask
-    
-        self._setupcalibration(mask,attachment)
-         
- 
-    
-    def polcorr(self,Pfrac,rot):
-        complexp=self.__complexCoordinatesOfPicture(1)
-        pixelsize=self.config["Geometry"]['PixelSizeMicroM'][0]*1e-3 #
-        r=np.absolute(complexp)*pixelsize
-        phi=np.angle(complexp)
+            
+            
+        elif sliceconf["Direction"]=="y":
+            self.Projector=yDirSliceProjector(x,y,start,stop,self.mask).transpose()
+           
+           
+        else :
+            raise Exception("Invalid Direction: "+ sliceconf["Direction"])
+        self.makegrid()
+        self.areas=self.Projector.dot(np.ones((x,y)).flatten())
+        #areaswithoutzero=np.where(self.areas>0.0 ,self.areas,-1.0)
+        self.oneoverA=np.where(self.areas>0.0,1.0/self.areas ,np.NAN)
         
-      
-        d=self.config["Geometry"]['DedectorDistanceMM']
-        tilt=self.config["Geometry"]['Tilt']['TiltAngleDeg']/180.0*np.pi
-        tiltdir=self.config["Geometry"]['Tilt']['TiltRotDeg']/180.0*np.pi
-        
-        theta=calc_theta(r,phi,d,tilt,tiltdir)
-       
-        
-       
-        corr=(Pfrac*(1.0 -np.square(np.sin(phi-rot)*np.sin(theta)))+
-            (1.0-Pfrac)*(1.0-np.square(np.cos(phi-rot)*np.sin(theta))))
-       
-        return corr
-
-    def _setupcalibration(self,mask,attachment):
-        """
-        Pre-calculate the data for the integration. This is done at initialization.
-        """
-        
-       
-        # Calculate array of size img with the distance from center as entries
-        pixelsize=self.config["Geometry"]['PixelSizeMicroM'][0]*1e-3 #all length in millimeters
-        oversampling=mask['Oversampling']
-        complexp=self.__complexCoordinatesOfPicture(oversampling)
-        r=np.absolute(complexp)*pixelsize
-        phi=np.angle(complexp)
-
-        d=self.config["Geometry"]['DedectorDistanceMM']
-        tilt=self.config["Geometry"]['Tilt']['TiltAngleDeg']/180.0*np.pi
-        tiltdir=self.config["Geometry"]['Tilt']['TiltRotDeg']/180.0*np.pi
-        theta=calc_theta(r,phi,d,tilt,tiltdir)
-        self.corr=np.ones((self.config["Geometry"]['Imagesize'][0],self.config["Geometry"]['Imagesize'][1]))
-        if 'PolarizationCorrection' in self.config:
-            frac = self.config["PolarizationCorrection"]
-             #Nanometer
-            self.corr=np.divide(self.corr,self.polcorr(frac['Fraction'], frac['Angle']/180.0*np.pi-np.pi/2))
-        # rescale the theta that the radial regions connected to a label are about 1 pixel wide
-        if 'PixelPerRadialElement' in mask:
-            self.scale=1/np.max(theta)*np.max(r)/pixelsize/mask['PixelPerRadialElement']
-            pixelper=mask['PixelPerRadialElement']
-        else:
-            pixelper=1.0
-            self.scale=1/np.max(theta)*np.max(r)/pixelsize
-        
-        labels=np.array(theta*self.scale,dtype=int)
-        self.maxlabel=np.max(labels)
-        mask=openmask(mask["MaskFile"],attachment)
-        self.A=labelstosparse(labels,mask,oversampling)
-        self.ITransposed =self.A
-        self.I,self.Areas,self.oneoverA=rescaleI(self.A,self.corr)
-        
-        self.thetagrid=(np.arange(self.maxlabel+1)+0)/self.scale   
-        if "Wavelength" in self.config:
-            Angstrom=1.00001495e-1
-            self.qgrid=4*np.pi*np.sin(self.thetagrid/2)/self.config['Wavelength']/Angstrom
-        
-      
-    def integrate(self,image):
-        """
-        Integrate a picture.
-        
-        :param numpy.array(dim=2) image: Sensor image to integrate as 2d `NumPy` array 
-        :returns: Returns Angle and intensity vector as a tuple (angle,intensity)
-        """
-        return  (self.thetagrid,self.I.dot(image.flatten() ))
+    def integrate(self,picture):
+        return self.Projector.dot(picture.flatten())*self.oneoverA
+   
     def integratechi(self,image,path):
         """
         Integrate and save to file in "chi" format.
@@ -135,16 +70,16 @@ class calibration:
         :param string path: Path to save the file to
         :returns: Scattering curve data as numpy array 
         """
-        r= self.I.dot(image.flatten() )
-     
-        data=np.array([self.qgrid[len (self.qgrid)-len(r):] ,
-                        r , 
-                        np.sqrt(r*self.Areas) *self.oneoverA] # Poisson Error sclaed
-                      ).transpose()
+        r= self.Projector.dot(image.flatten() ) 
+         
+        data=np.array([self.grid,
+                        r *self.oneoverA, 
+                        np.sqrt(r ) *self.oneoverA # Poisson Error scaled
+                      ]).transpose()
       
         
-        headerstr=path+"\n"
-        headerstr+="q [nm^-1]\n"
+        headerstr=path+" GISAXS Slice\n"
+        headerstr+="Pixel"
         headerstr+="Intensity\n"
         headerstr+="   "+str(data.shape[0])+""
         
@@ -153,201 +88,52 @@ class calibration:
         
         return {"array":data.transpose().tolist(),
                     "columnLabels":[
-                    "Scattering Vector  θ",
+                    self.qname,
                     "Intensity (Count/Pixel)",
                     "Error Margin"],
-                    "kind":"Radial",
-                    "conf":self.config
-        }
-         
-   
-    def integrateerror(self,image):
-        """
-        Integrates an image and computes error estimates.
-        
-        :param np.array() image: Image to integrate as numpy array
-        :returns: The intensity the standard deviation and the Poisson statistics error in a numpy array.
-        """
-        radial=self.I.dot(image.flatten()) 
-        means=self.ITransposed.dot(radial*self.Areas)
-        dev=np.square(image.flatten()-means)
-        stddev=np.sqrt(self.I.dot(dev))
-        poissonerr=np.sqrt(radial*self.Areas)*self.oneoverA
-        rsq=(2*np.sin(self.thetagrid)*self.config['DedectorDistanceMM']
-             *np.pi*self.config['PixelSizeMicroM'][0]*1e-3**2)
-        return  np.array([radial,stddev ,poissonerr])
-    
+                    "kind":"Slice",
+                    "conf":self.sliceconf}
     def plot(self,image,outputfile="",startplotat=0 ,fig=None):
         """
-        Plot integrated function for image in argument.
-        
-        :param numpy.array(dim=2) image: Sensor image to integrate as 2d `NumPy` array
-        :param string outputfile: File to write plot to. Might be any image format supported by matplotlib.
-        :param integer startplotat: radial point from which to start the plot
+        dummy function in order to not trip up image queue
         """
-        ## Do not use that in a multithread environment!!
-        #if active_count()>0:
-       
-            
-                    
-        fun=self.integrateerror(image)
-       
-        nonzero=fun[0]>0
-        #print "error:" ,np.sum(fun[1][nonzero])
-        if not fig:fig=plt.figure()
-        fig.clf()
-        
-        ax = fig.add_subplot(111)
-        ax.fill_between( self.qgrid[nonzero], np.clip(fun[0][nonzero]-fun[1][nonzero],1,1.0e300),fun[0][nonzero]+fun[1][nonzero],facecolor='yellow' ,linewidth=0,alpha=0.5)
-        ax.fill_between( self.qgrid[nonzero], np.clip(fun[0][nonzero]-fun[2][nonzero],1,1.0e300),fun[0][nonzero]+fun[2][nonzero],facecolor='blue' ,alpha=0.2,linewidth=0)
-        ax.plot(self.qgrid[nonzero],fun[0][nonzero])
-      
-        
-        plt.ylabel('Intensity [counts/pixel]')
-        plt.xlabel('q [1/nm]')
-        plt.yscale('log')
-        plt.title(outputfile)
+        pass
+    def makegrid(self):
         
        
-      
-        if outputfile=="":   
-               #.show()
-               pass
+        if ((self.sliceconf["Plane"]=="Vertical" and self.sliceconf["Direction"]=="y")
+            or(self.sliceconf["Plane"]=="InPlane" and self.sliceconf["Direction"]=="x")):
+            VerticalPixelN=self.y
+            HorizontalPixeN=self.x
+            VerticalBeamCenter=VerticalPixelN-self.conf["Geometry"]['BeamCenter'][0]
+            HorizontalBeamCenter=self.conf["Geometry"]['BeamCenter'][1]
+            VerticalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][0]/1000.0
+            HorizontalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][1]/1000.0
+        elif ((self.sliceconf["Plane"]=="Vertical" and self.sliceconf["Direction"]=="x")
+            or(self.sliceconf["Plane"]=="InPlane" and self.sliceconf["Direction"]=="y")):
+            VerticalPixelN=self.x
+            HorizontalPixeN=self.y
+            VerticalBeamCenter=self.conf["Geometry"]['BeamCenter'][1]
+            HorizontalBeamCenter=HorizontalPixeN-self.conf["Geometry"]['BeamCenter'][0]
+            VerticalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][1]/1000.0
+            HorizontalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][0]/1000.0
         else:
-               fig.savefig(outputfile)
-         
-        return fig
-         
+             raise Exception("Invalid Plane orientation: "+ self.sliceconf["Plane"])
+        alphaF=np.arctan((np.arange(VerticalPixelN,dtype=np.float)-VerticalBeamCenter)
+                       * VerticalPixelsize
+                       /self.conf["Geometry"]['DedectorDistanceMM']
+                       )
+        twothetaF=np.arctan((np.arange(HorizontalPixeN,dtype=np.float)- HorizontalBeamCenter)
+                                 * self.conf["Geometry"]['PixelSizeMicroM'][1]/1000.0
+                                 /self.conf["Geometry"]['DedectorDistanceMM']
+                                 )
+        if self.sliceconf["Plane"]=="Vertical":
+            self.qname="$q_z$"
+            self.grid=2.0*np.pi/self.conf['Wavelength']*(np.sin(alphaF)
+                                                  +np.sin(self.sliceconf["IncidentAngle"]))
+        elif self.sliceconf["Plane"]=="InPlane":
             
-    
-    
-       
-   
-    def __complexCoordinatesOfPicture(self,oversampling):
-        """
-        Generates array containing coordinates relative to beam center as complex numbers. 
-        This is used to calculate the angles
-        
-        :param obj config:
-        :param int oversampling:
-        """
-        imagesize=self.config["Geometry"]['Imagesize']
-        beamcenter=self.config["Geometry"]['BeamCenter']
-        return cplwcener(imagesize,beamcenter,oversampling)
-def cplwcener(imagesize,beamcenter,oversampling):
-        return np.add.outer(
-                         1j*(np.arange(0,
-                                             imagesize[0],
-                                             1./oversampling,
-                                             dtype=np.float_)
-                                   -imagesize[0]
-                                   +beamcenter[0]),
-                        (np.arange(0,
-                                             imagesize[1],
-                                             1./oversampling,
-                                             dtype=np.float_)
-                                   - beamcenter[1])
-                         )
-
-def labelstosparse(labels,mask,oversampling):
-        ind=np.argsort(labels.flatten()).astype(int)
-        sortedl=labels.flatten()[ind]
-        newcol=sortedl-np.roll(sortedl,1)
-        length=sortedl.shape[0]
-        coli=np.array(np.where(newcol>0)[0])
-        coliptr= np.concatenate(([0],coli,[length]))
-        m= sp.csc_matrix((np.ones(length),ind,coliptr))
-        sc=scalemat(mask.shape[0],mask.shape[1],oversampling)
-        A=sp.csc_matrix((sc.dot(m)))
-        return sp.csc_matrix((A.data*mask.flatten()[A.indices],A.indices,A.indptr))
-
-def rescaleI(sparse,corr):
-        areas=sparse.transpose().dot(np.ones(sparse.shape[0]))
-        #corect for sensor shape 
+            self.qname="$q_y$"
+            self.grid=2.0*np.pi/self.conf['Wavelength']*(np.sin(twothetaF)
+                                                    *np.cos( alphaF[self.sliceconf["CutPosition"]]))
          
-        oneoverA=np.where(areas>0,1.0/areas,np.NAN)
-        #calculate factors for area
-        l=sparse.indptr
-        b=np.roll(sparse.indptr,1) # l-b is repeating count for each column
-        #update sparse data
-        data=sparse.data*np.repeat(oneoverA,(l-b)[1:])*corr.flatten()[sparse.indices] 
-        sparse.data=data
-        return sparse.transpose(), areas,  oneoverA
-def calc_theta(r,phi,d,tilt,tiltdir):
-        """
-        Calculates the difraction angle from pixel coordinates. It does work when called with arrays. 
-        See :ref:`geometry`
-        
-        :param float r: Distance to beamcenter.
-        :param float phi: Angle[rad] from polar sensor plane coordinates.
-        :param float d: distance to difraction center.
-        :param float tilt: Angle[rad] of sensor plane tilt.
-        :param float tiltdir: Angle[rad] of direction of tilt.
-        :returns:  theta
-        """
-        alpha=np.arcsin(np.sin(tilt)*np.sin(phi+tiltdir+np.pi/2))
-        lsquared=d**2 +r**2 -2*d*r*np.cos(np.pi/2+alpha)
-        return np.arccos(-(r**2-lsquared-d**2)/(2*np.sqrt(lsquared)*d))
-    
-   
-        
-def scalemat(Xsize,Ysize,ov):
-        """
-        Computes a scaling projection for use in computing the pixel weights for integration
-        
-        :param int Xsize: Picture size in X direction.
-        :param int Ysize: Picture size in Ydirection.
-        :param int ov: Number of oversampling ticks in x ynd y direction
-        :param array corr: Polarizationn an other correction factors
-        :returns: sparce matrix toing the scaling
-        """
-    
-        cell=np.add.outer(np.arange(ov)*Ysize*ov,np.arange(ov))
-        grid=np.add.outer(np.arange(0,Xsize*Ysize*ov*ov,Ysize*ov*ov),np.arange(0,Ysize*ov,ov))
-        cindices=np.add.outer(grid,cell).flatten().astype(int)
-        return sp.csr_matrix((np.ones(len(cindices))/ov**2,
-                     cindices,
-                     np.arange(0,Ysize*Xsize*ov**2+1,ov*ov,dtype=int)) ,
-                    dtype=np.float,shape=(Ysize*Xsize,Ysize*Xsize*ov**2))
-     
-    
-def openmask(mfile,attachment=None):
-    """
-    Open the mask file especialy the \*.msk file. Unfortunately there is no library
-    module for msk files available also no documentation. So, for the msk file, we have a very brittle hack
-    it works for our sensor. Nevermind any other resolution or size.
-    
-    :param object config: Calibration config object.
-    :returns: Mask as logical numpy array.
-    """
-    if attachment:
-        mfilestream=  base64.b64decode(attachment['data'])
-        fin=StringIO.StringIO(mfilestream)
-    else:
-        mfilestream=open(mfile).read()
-        fin=open(mfile , "rb")
-    if mfile.endswith('.msk'):
-        import bitarray
-        maskb=bitarray.bitarray( endian='little')
-        
-        maskb.frombytes(mfilestream) 
-        maskl=np.array(maskb.tolist())
-       
-        import struct
-        fin.seek(0x10)
-        (y,)= struct.unpack('i', fin.read(4))
-        fin.seek(0x14)
-        x,=struct.unpack('i', fin.read(4))
-        word=32
-        padding= word - y % word
-        yb=y+padding
-        off=8192
-        mask=maskl[off:x*yb+off].reshape(x, yb)
-        cropedmask=np.flipud(mask[0:x,0:y])
-        # save the mask in order to controll if it worked
-        #misc.imsave("mask.png",cropedmask)
-        return  np.logical_not(cropedmask)
-    else:
-        mask= np.where(misc.imread(mfilestream)!=0,False,True)
-       
-        return mask
