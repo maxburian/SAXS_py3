@@ -284,13 +284,15 @@ class Server():
                              self.args[0],
                              os.sep.join(object['argument']['calibration'].get('Directory')
                             )))
-            for mnumber,mask in enumerate(object['argument']['calibration']["Masks"]):
-                cals.append(calibration.calibration(
-                                            object['argument']['calibration'],
-                                            mask,
-                                            self.attachments[mnumber]))
-            for slice in object['argument']['calibration']["Slices"]:
-                cals.append(GISAXSSlices.slice( object['argument']['calibration'],slice,self.attachments))
+            if "Masks" in object['argument']['calibration']:
+                for mnumber,mask in enumerate(object['argument']['calibration']["Masks"]):
+                    cals.append(calibration.calibration(
+                                                object['argument']['calibration'],
+                                                mask,
+                                                self.attachments[mnumber]))
+            if "Slices" in   object['argument']['calibration']:
+                for slice in object['argument']['calibration']["Slices"]:
+                    cals.append(GISAXSSlices.slice( object['argument']['calibration'],slice,self.attachments))
             self.imagequeue=imagequeuelib.imagequeue(cals,
                     o,dir,self.serverconf)
             print "startimgq"

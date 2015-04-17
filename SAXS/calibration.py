@@ -53,7 +53,7 @@ class calibration:
         self.maskconfig=mask
     
         self._setupcalibration(mask,attachment)
-         
+        self.kind="Radial"
  
     
     def polcorr(self,Pfrac,rot):

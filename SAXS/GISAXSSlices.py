@@ -26,6 +26,7 @@ class slice():
         y=conf["Geometry"]["Imagesize"][0]
         self.x=x
         self.y=y
+        self.kind="Slice"
         self.conf=conf
         self.sliceconf=sliceconf
         start=sliceconf["CutPosition"]-sliceconf["CutMargin"]

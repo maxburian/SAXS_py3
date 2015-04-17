@@ -126,12 +126,13 @@ class imagequeue:
                 if not os.path.isdir(reldir):
                     os.mkdir(reldir)
                 basename=os.path.join( reldir,
-                                      os.path.basename(picture)[:-3])
+                                      os.path.basename(picture)[:-4])
             data=[]
             for calnum,cal in enumerate(self.cals):   
-                basename+="_"+str(calnum) 
-                if not self.options.resume or not os.path.isfile(basename+'.chi'):
-                    result=cal.integratechi(image,basename+".chi")
+                filename=basename+cal.kind+str(calnum)
+                chifilename=filename+".chi"
+                if not self.options.resume or not os.path.isfile(chifilename):
+                    result=cal.integratechi(image,chifilename)
                     data.append(result)
                     if threadid==0 and self.options.plotwindow:
                         # this is a hack it really schould be a proper GUI
@@ -142,16 +143,16 @@ class imagequeue:
                              
                 if self.options.writesvg: 
                     
-                    if not self.options.resume or not os.path.isfile(basename+'.svg'):
-                         cal.plot(image,basename+".svg",fig=self.fig)
+                    if not self.options.resume or not os.path.isfile(filename+'.svg'):
+                         cal.plot(image,filename+".svg",fig=self.fig)
                 if self.options.writepng:
-                     if not self.options.resume or not os.path.isfile(basename+'.svg'):
-                          misc.imsave(basename+".png",image)
+                     if not self.options.resume or not os.path.isfile(filename+'.svg'):
+                          misc.imsave(filename+".png",image)
                 if self.options.silent:
                     if np.mod(self.allp.value,100)==0:
                         print "[",threadid,"] ",self.allp.value
                 else:
-                    print "[",threadid,"] write: ",basename+".chi" 
+                    print "[",threadid,"] write: ",filename+".chi" 
             with self.allp.get_lock():
                 self.allp.value+=1
             return basename ,data
