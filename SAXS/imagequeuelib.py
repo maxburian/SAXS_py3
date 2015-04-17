@@ -129,7 +129,7 @@ class imagequeue:
                                       os.path.basename(picture)[:-4])
             data=[]
             for calnum,cal in enumerate(self.cals):   
-                filename=basename+cal.kind+str(calnum)
+                filename=basename+cal.kind[1]+str(calnum)
                 chifilename=filename+".chi"
                 if not self.options.resume or not os.path.isfile(chifilename):
                     result=cal.integratechi(image,chifilename)
