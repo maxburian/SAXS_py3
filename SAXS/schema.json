@@ -197,7 +197,7 @@
 					{
 						"type": "string",
 						"required": true,
-						"default": "x",
+						"default": "InPlane",
 						"enum": 
 						[
 							"InPlane",
