@@ -119,11 +119,11 @@ class slice():
                                  /self.conf["Geometry"]['DedectorDistanceMM']
                                  )
         if self.sliceconf["Plane"]=="Vertical":
-            self.qname="GISAXS Scattering Vector $q_{z} $"
+            self.qname="GISAXS Scattering Vector $q_{z} [$nm^{-1}$]$"
             self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(alphaF)
                                                   +np.sin(self.sliceconf["IncidentAngle"]/180.0*np.pi))
         elif self.sliceconf["Plane"]=="InPlane":
-            self.qname="GISAXS Scattering Vector  $ q_{y} $"
+            self.qname="GISAXS Scattering Vector  $ q_{y} [$nm^{-1}$]$"
             self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(twothetaF)
                                                     *np.cos( alphaF[self.sliceconf["CutPosition"]]))
        

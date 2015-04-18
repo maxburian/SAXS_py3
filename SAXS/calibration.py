@@ -153,7 +153,7 @@ class calibration:
         
         return {"array":data.transpose().tolist(),
                     "columnLabels":[
-                    "Scattering Vector  q",
+                    "Scattering Vector  q [$nm^{-1}$]",
                     "Intensity (Count/Pixel)",
                     "Error Margin"],
                     "kind":"Radial",
