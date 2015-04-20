@@ -320,7 +320,7 @@ Oversampling factor for radial integration. The higher, the longer the setup but
 
 
 :Type:
-  number
+  integer
 :Required:
   True
 :Default:
@@ -387,7 +387,7 @@ Slices are designed to analyse GISAXS data.It allows you to specify slices along
 
 
 :Type:
-  array() items: {:ref:`Direction`, :ref:`Plane`, :ref:`CutPosition`, :ref:`CutWidth`, :ref:`IncidentAngle`}
+  array() items: {:ref:`Direction`, :ref:`Plane`, :ref:`CutPosition`, :ref:`CutMargin`, :ref:`IncidentAngle`, :ref:`MaskRef`}
 :Required:
   False
 :JSON Path:
@@ -404,7 +404,7 @@ Example JSON:
 Direction
 --------------------
 
-'x' or 'y' direction in sensor coordinates.
+'x' or 'y' direction in sensor pixel coordinates.
 
 
 :Type:
@@ -441,7 +441,7 @@ Whether the direction is in plane with scattering surface or vertical to it.
 :Required:
   True
 :Default:
-  x
+  InPlane
 :JSON Path:
   * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`Plane <Plane>`']
 
@@ -456,7 +456,7 @@ Example JSON:
 CutPosition
 --------------------
 
-Cut position in pixel coordinates in the other coodinate then specified in 'Direction'.
+Cut position in pixel coordinates in the other coodinate then specified in 'Direction'. Origin is top left Corner.
 
 
 :Type:
@@ -474,12 +474,12 @@ Example JSON:
 
     {"CutPosition": "0"}
 
-.. _CutWidth:
+.. _CutMargin:
 
-CutWidth
+CutMargin
 --------------------
 
-Number of pixels in normal direction to include in cut average.
+Number of pixels left and right from  cut to include into the average .
 
 
 :Type:
@@ -489,20 +489,20 @@ Number of pixels in normal direction to include in cut average.
 :Default:
   1
 :JSON Path:
-  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`CutWidth <CutWidth>`']
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`CutMargin <CutMargin>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"CutWidth": 1}
+    {"CutMargin": 1}
 
 .. _IncidentAngle:
 
 IncidentAngle
 --------------------
 
-Angle of Incidence in GISAXS setup.
+Angle of incidence in GISAXS setup.
 
 
 :Type:
@@ -519,6 +519,29 @@ Example JSON:
 .. code:: json
 
     {"IncidentAngle": 0}
+
+.. _MaskRef:
+
+MaskRef
+--------------------
+
+Chose which mask to use for the sclice. '-1' means don't use mask
+
+
+:Type:
+  integer
+:Required:
+  True
+:Default:
+  0
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Slices <Slices>`'][0][':ref:`MaskRef <MaskRef>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"MaskRef": 0}
 
 .. _Wavelength:
 

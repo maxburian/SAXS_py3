@@ -10,7 +10,9 @@ import matplotlib.pyplot as plt
 from scipy import misc
 import tables as tb
 import hashlib,pickle
+import re
 from jsonschema import validate,ValidationError
+__file__="/home/chm/Dropbox/git/SAXS/SAXS/datamerge.py"
 def readtiff(imagepath):
     '''
     Read the tif header (#strings)
@@ -149,7 +151,7 @@ def readallimages(dir):
     imgframe["File Name"]=(imgframe["Image_path"]+imgframe['filename'])
     merged=pd.merge(imglogframe,imgframe, on="File Name")
     merged=merged.set_index("End Date Time")
-    return merged,chislist
+    return merged,chilisttodict(chilist)
  
 def merge():
     '''saxs data merger'''
@@ -294,7 +296,28 @@ def merge2():
 def compileconffromoptions(options, args):
     pass
 def cleanuplog(logframe,logTable):
-    pass
+    logframe.columns+=" ("+logTable["Name"]+")"
+def chilisttodict(chi):
+    chidict={}
+    for chifile in chi:
+        parts=chifile.split("_c")
+        if len(parts)==1:
+            basename=chifile[:-4]
+            typelabel="R"
+        else:
+            basename="_c".join(parts[:-1]).split(os.sep)[-1]
+            saxdogpart=parts[-1]
+            typelabel=saxdogpart[0]
+            nummatch=re.match(r"(\w\d+)",saxdogpart)
+            if nummatch:
+                typelabel=nummatch.group(1)
+                
+           
+        if basename not in chidict:
+            chidict[basename]=[{typelabel:chifile}]
+        else:
+            chidict[basename].append({typelabel:chifile})
+    return chidict
 def mergedata(conf,dir):
     schema=json.load(open(os.path.dirname(__file__)
                         +os.sep+'DataConsolidationConf.json'))
@@ -303,11 +326,19 @@ def mergedata(conf,dir):
     
     if not "LogDataTables" in conf:
          conf["LogDataTables"]=[]
+    tablea=None
+    tableb=None
     for tnumber,logTable in enumerate(conf["LogDataTables"]):
-        logframe=pd.DataFrame()
-        for logfile in logtable["Files"]:
-            logframe.append(readlog(os.sep.join(logfile["Path"])))
+        
+        for filenum ,logfile in enumerate(logTable["Files"]):
+            
+            tmplog=readlog(os.sep.join(logfile["Path"]))
+            if filenum==0:
+                logframe=tmplog
+            else:
+                logframe.append(tmplog)
         cleanuplog(logframe,logTable)
+        
         if tnumber >=1:
             tableb=logframe
             tablea=tablea.join(tableb, how='outer') 
@@ -315,7 +346,5 @@ def mergedata(conf,dir):
             tablea=logframe
     mergedt=imd.join(tablea,how="outer").interpolate(method="zero")
     mergedt=mergedt[mergedt.index.isin(imd.index)]
-                                                      
-if __name__ == '__main__':
-    merge()
+    return mergedt,chi
    

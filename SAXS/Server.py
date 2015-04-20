@@ -29,6 +29,7 @@ class AuthenticationError(Exception):
 class history():
     def __init__(self):
         self.hist=[]
+        self.filelist={}
     def update(self,queue):
         hist=[]
         now=time.time()
@@ -37,9 +38,14 @@ class history():
                 hist.append(timest)
         while True:
             try:
-                hist.append(queue.get(False))
-            except : 
+                item=queue.get(False)
+            except Exception as e : 
+                print e# if for example empty
                 break
+            if item:
+                hist.append(item["Time"])
+                self.filelist[item["BaseName"]]=item["FileList"]
+            
         self.hist=hist
 def subscribeToFileChanges(imqueue,url,dir,serverdir):
     """
@@ -234,6 +240,8 @@ class Server():
                                                 }}
             else:
                 result={"result":"no queue","data":{}}
+        elif command=="fileslist":
+            result=self.getresultfileslists()
         else:
             result={"result":"ErrorNotimplemented"}
        
@@ -367,6 +375,16 @@ class Server():
              }
         else:
             return{}
+    def getresultfileslists(self):
+        filelists={}
+        for basename in self.history.filelist.keys():
+            fileset= self.history.filelist[basename]
+            for kind in fileset.keys():
+                if kind in  filelists :
+                    filelists[kind].append(fileset[kind])
+                else:
+                    filelists[kind]=  [fileset[kind]]
+        return {"result":"resultfileslists","data":{"fileslist":filelists}}
     def _checkdirectorycollision(self,pathlist):
          serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
          mydir=os.path.normpath(os.sep.join(pathlist))

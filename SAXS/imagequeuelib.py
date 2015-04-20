@@ -30,7 +30,7 @@ def funcworker(self,threadid):
             except Empty:
                 continue
             self.procimage(picture,threadid)
-            self.histqueue.put(time.time())
+         
         except KeyboardInterrupt:
             pass 
         except Exception as e:
@@ -88,6 +88,7 @@ class imagequeue:
             filler(self.picturequeue,self.directory)
         
     def procimage(self,picture,threadid):
+            filelist={}
             max=60
             if not self.options.silent: print "[",threadid,"] open: ",picture 
             for i in range(max):
@@ -129,8 +130,9 @@ class imagequeue:
                                       os.path.basename(picture)[:-4])
             data=[]
             for calnum,cal in enumerate(self.cals):   
-                filename=basename+cal.kind[0]+str(calnum)
+                filename=basename+"_c"+cal.kind[0]+str(calnum)
                 chifilename=filename+".chi"
+                filelist[cal.kind+str(calnum)]=chifilename
                 if not self.options.resume or not os.path.isfile(chifilename):
                     result=cal.integratechi(image,chifilename)
                     data.append(result)
@@ -155,6 +157,7 @@ class imagequeue:
                     print "[",threadid,"] write: ",filename+".chi" 
             with self.allp.get_lock():
                 self.allp.value+=1
+            self.histqueue.put({"Time":time.time(),"FileList":filelist,"BaseName":basename})
             return basename ,data
     def start(self):  
         """
@@ -201,7 +204,7 @@ class imagequeue:
                     except Empty:
                         continue
                     lastfile, data =self.procimage(picture,0)
-                    self.histqueue.put(time.time())
+                    
                     if self.options.servermode:
                         request={"command":"putplotdata","argument":{"data":{
                                 "result":"plot","data":{"filename":lastfile,"graphs":data,

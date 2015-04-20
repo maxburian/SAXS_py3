@@ -57,12 +57,14 @@ class calibration:
  
     
     def polcorr(self,Pfrac,rot):
+        """
+        Polarization Correction
+        """
         complexp=self.__complexCoordinatesOfPicture(1)
         pixelsize=self.config["Geometry"]['PixelSizeMicroM'][0]*1e-3 #
         r=np.absolute(complexp)*pixelsize
         phi=np.angle(complexp)
         
-      
         d=self.config["Geometry"]['DedectorDistanceMM']
         tilt=self.config["Geometry"]['Tilt']['TiltAngleDeg']/180.0*np.pi
         tiltdir=self.config["Geometry"]['Tilt']['TiltRotDeg']/180.0*np.pi

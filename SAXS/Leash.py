@@ -106,6 +106,12 @@ def sendget(socket,conf):
     """
     request={"command":"get","argument":{}}
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
+def sendgetfileslist(socket,conf):
+    """
+    get list of chi files
+    """
+    request={"command":"fileslist","argument":{}}
+    socket.send_multipart([json.dumps(addauthentication(request,conf))])
    
 def sendlistdir(arg,socket,conf):
     """
@@ -199,6 +205,8 @@ def initcommand(options, arg,conf):
         result=sendget(socket,conf)
     elif arg[0]=="listdir":
         result=sendlistdir(arg,socket,conf)
+    elif arg[0]=="fileslist":
+        result=sendgetfileslist(socket,conf)
     else:
         raise ValueError(arg[0])
 

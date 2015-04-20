@@ -21,7 +21,8 @@
 				"readdir",
 				"stat",
 				"listdir",
-				"putplotdata"
+				"putplotdata",
+				"fileslist"
 			]
 		},
 
@@ -32,16 +33,8 @@
 			"required": false,
 			"properties": 
 			{
-				"directory": 
-				{
-					"description": "Directory this queue is going to use. New files in other directories are going to be ignored.",
-					"default":[".","",""],
-					"type": "array",
-            		"items": [{
-                		"type": "string"
-           				 }]
-				},
-				"threads":{"type":"integer"},
+				 
+				 
 				"calibration": 
 				{
 					"description": "Calibrarion data according to :ref:`calib`",
@@ -54,7 +47,9 @@
 						}
 					}
 				},
-				"data":{}
+				"data":{},
+				"directory":{}
+				
 			}
 		},
 

@@ -52,7 +52,7 @@ data
 :Type:
   object
 :Contains:
-  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`directory <directory>`, :ref:`attachments <attachments>`, :ref:`threads <threads>`, :ref:`dircontent <dircontent>`, :ref:`history <history>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`array <array>`
+  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`directory <directory>`, :ref:`attachments <attachments>`, :ref:`threads <threads>`, :ref:`dircontent <dircontent>`, :ref:`history <history>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`graphs <graphs>`
 :Required:
   True
 :JSON Path:
@@ -315,6 +315,81 @@ Example JSON:
 
     {"filename": ""}
 
+.. _graphs:
+
+graphs
+--------------------
+
+:Type:
+  array() items: {:ref:`kind`, :ref:`conf`, :ref:`columnLabels`, :ref:`array`}
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`graphs <graphs>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"graphs": []}
+
+.. _kind:
+
+kind
+--------------------
+
+:Type:
+  string
+:values:
+  ``[u'Radial', u'Slice']``
+
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`graphs <graphs>`'][0][':ref:`kind <kind>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"kind": "Radial"}
+
+.. _conf:
+
+conf
+--------------------
+
+:Type:
+  object
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`graphs <graphs>`'][0][':ref:`conf <conf>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"conf": null}
+
+.. _columnLabels:
+
+columnLabels
+--------------------
+
+:Type:
+  array() items: string 
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`graphs <graphs>`'][0][':ref:`columnLabels <columnLabels>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"columnLabels": []}
+
 .. _array:
 
 array
@@ -325,7 +400,7 @@ array
 :Required:
   False
 :JSON Path:
-  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`array <array>`']
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`graphs <graphs>`'][0][':ref:`array <array>`']
 
 Example JSON: 
 
