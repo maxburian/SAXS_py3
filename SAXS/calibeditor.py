@@ -1,7 +1,7 @@
 from PyQt4 import  QtGui
  
  
-import calibtreemodel
+import jsonschematreemodel
 import calibeditdelegate
 class calibeditor(QtGui.QWidget):
     def __init__(self,app):
@@ -10,7 +10,7 @@ class calibeditor(QtGui.QWidget):
          self.setLayout(QtGui.QVBoxLayout())
          self.treeview=QtGui.QTreeView()
          self.layout().addWidget(self.treeview)
-         self.model=calibtreemodel.calibtreemodel(app )
+         self.model=jsonschematreemodel.jsonschematreemodel(app )
          self.treeview.setModel(self.model)
          self.treeview.setMinimumWidth(800)
          self.treeview.setMinimumHeight(800)

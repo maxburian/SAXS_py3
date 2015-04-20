@@ -102,7 +102,7 @@ class menueitems(QtGui.QWidget):
     def newfile(self):
         dialog=QtGui.QFileDialog()
         filename= unicode(dialog.getSaveFileName(  caption= "Create New File AS" ))
-        default= schematools.schematodefault(self.app.calibeditor.model.calschema)
+        default= schematools.schematodefault(self.app.calibeditor.model.schema)
         json.dump(
                  default,  open(filename,"w")
                   )

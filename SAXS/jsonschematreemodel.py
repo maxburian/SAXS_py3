@@ -13,11 +13,14 @@ TYPE=QtCore.Qt.UserRole
 SUBSCHEMA=QtCore.Qt.UserRole+3
 ISEDITABLEARRAY=QtCore.Qt.UserRole+5
 ACTION=QtCore.Qt.UserRole+6
-class calibtreemodel(QtGui.QStandardItemModel ):
-    def __init__(self,app):
-      super(calibtreemodel, self).__init__()
+class jsonschematreemodel(QtGui.QStandardItemModel ):
+    def __init__(self,app,schema=None):
+      super(jsonschematreemodel, self).__init__()
       self.app=app
-      self.calschema=json.load(open(os.path.dirname(__file__)+os.sep+'schema.json'),object_pairs_hook=collections.OrderedDict) 
+      if not schema:
+          self.schema=json.load(open(os.path.dirname(__file__)+os.sep+'schema.json'),object_pairs_hook=collections.OrderedDict) 
+      else:
+          self.schema=schema
       self.connect(self, QtCore.SIGNAL('dataChanged(QModelIndex,QModelIndex)'),self.handleitemchanged)
       self.errormessage=QtGui.QErrorMessage()
       self.errormessage.setWindowTitle("Data Structure Error")
@@ -28,11 +31,11 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         if self.calib==None:
             self.InitFromDefault()
     def InitFromDefault(self):
-        self.calib=schematodefault(self.calschema)
+        self.calib=schematodefault(self.schema)
     def loadfile(self,filename):
         try:
             self.calib=json.load(open(filename),object_pairs_hook=collections.OrderedDict)
-            validate(self.calib,self.calschema)
+            validate(self.calib,self.schema)
         except Exception as e:
              self.err=QtGui.QErrorMessage()
              self.err.setWindowTitle("Schema Error")
@@ -43,7 +46,7 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         self.app.statusmodified()
         self.blockSignals(True)
         self.clear()
-        self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
+        self.bulidfromjson(self.calib,self.schema,self.invisibleRootItem())
         self.blockSignals(False)
     def loadservercalib(self,servercalib):
         self.calib=servercalib["data"]["cal"]
@@ -92,12 +95,12 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         print "load new"  
         self.clear()
         self.blockSignals(True)
-        self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
+        self.bulidfromjson(self.calib,self.schema,self.invisibleRootItem())
         self.blockSignals(False)
         
     def rebuildModel(self):
         self.clear()
-        self.bulidfromjson(self.calib,self.calschema,self.invisibleRootItem())
+        self.bulidfromjson(self.calib,self.schema,self.invisibleRootItem())
     def bulidfromjson(self,  input, schema ,parent, row=0):
         """
         generate QStandardItem data structure from json file
@@ -258,9 +261,9 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                     subschema=json.loads(unicode(item.data(role=SUBSCHEMA).toString()))['items']
                     self.setData(index,"",role=ACTION)
                     default=schematodefault(subschema)
-                    print json.dumps(default,indent=2)
+                   
                     arrayroot=self.itemFromIndex(index.sibling(index.row(),0))
-                    print arrayroot.rowCount()
+                    
                     nearrayitem=QtGui.QStandardItem(str(arrayroot.rowCount()))
                     value=QtGui.QStandardItem()
                     if subschema['type']!="object":
@@ -309,9 +312,9 @@ class calibtreemodel(QtGui.QStandardItemModel ):
         return dialog.result()
     def getjson(self):
         data=self.modeltojson(self.invisibleRootItem())
-        print json.dumps(data,indent=2)
+     
         try:
-            validate(data,self.calschema)
+            validate(data,self.schema)
         except Exception as e:
             self.errormessage.showMessage(str(e))
         return data
@@ -370,19 +373,18 @@ class calibtreemodel(QtGui.QStandardItemModel ):
                 print "##### "+name
                 continue
             
-            print name+":"+type
             
             if type and  (type=="array" ):
                     if valueitem.isCheckable() and valueitem.checkState()==0:
                         continue
                     js[name]=[]
-                    print type + " " +name+"# "+str(child.rowCount())
+                 
                     for arrayitemrow in range(child.rowCount()):
                         arrayitemlabel=child.child(arrayitemrow,0)
                         arrayitem=child.child(arrayitemrow,1)
                         if arrayitemlabel and arrayitem :
                             arraytype=unicode(arrayitem.data(role=TYPE).toString())
-                            print arraytype
+                           
                             arrayvalue=unicode(arrayitem.data(role=QtCore.Qt.DisplayRole).toString())
                             if arraytype=="arrayitem":
                                 js[name].append(self.modeltojson(child.child(arrayitemrow,0)))

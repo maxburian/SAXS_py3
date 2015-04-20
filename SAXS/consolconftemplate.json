@@ -1,0 +1,40 @@
+{
+  "TimeOffset": 0.0, 
+  "LogDataTables": [
+    {
+      "TimeOffset": 0.0, 
+      "FirstImageCorrelation": false, 
+      "Name": "Shutter", 
+      "Files": [
+        {
+          "Path": [
+            "."
+          ]
+        }
+      ]
+    }, 
+    {
+      "TimeOffset": 0.0, 
+      "FirstImageCorrelation": false, 
+      "Name": "Continuous", 
+      "Files": [
+        {
+          "Path": [
+            "."
+          ]
+        }
+      ]
+    }
+  ], 
+  "OutputFormats": {
+    "csv": true, 
+    "hdf": false, 
+    "xls": false, 
+    "json": false
+  }, 
+  "OutputFileBaseName": "merged", 
+  "HDFOptions": {
+    "IncludeCHI": true, 
+    "IncludetTIF": true
+  }
+}

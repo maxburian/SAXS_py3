@@ -14,6 +14,7 @@ import plotpanel
 import histpanel
 import checkServerCalibchanged
 import collections
+import consolidatepanel
 class LeashUI(QtGui.QMainWindow):
     def __init__(self,app,parent=None):
         super(LeashUI,self).__init__(parent)
@@ -88,7 +89,8 @@ class LeashUI(QtGui.QMainWindow):
             self.menue.appendrecentfile(filename)
         
         self.plotthread.start()
-        
+        self.consolidatepanel=consolidatepanel.consolidatepanel(self)
+        self.tab.addTab( self.consolidatepanel , "Consolidate")
     def parscecommandline(self):
       
         self.options,self.args= Leash.parsecommandline()

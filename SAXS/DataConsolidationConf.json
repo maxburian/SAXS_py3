@@ -13,7 +13,8 @@
 		{
 			"description": "Define log files to consolidate with image data. If more then one defined, they will be joined and missing values will be interpolated.",
 			"type": "array",
-			"required": true,
+			"required": false,
+		 
 			"items": 
 			{
 				"description": "One log data table is one set of logfiles with identical collumn definitions.",
@@ -29,18 +30,20 @@
 					},
 					"FirstImageCorrelation":{
 					"description":"Find offset for all log data by correlating first image with first entry of this table. ",
-					"type":"boolean"
+					"type":"boolean",
+					"default":false
 					},
 					"Name": 
 					{
 						"description": "Name field to be used as prefix in the joined collumn names.",
 						"required": true,
-						"type": "string"
+						"type": "string",
+						"default":"log"
 					},
 
 					"Files": 
 					{
-						"required": true,
+						"required": false,
 						"description": "One log table may be one file, or a list of files to be concatenated.",
 						"type": "array",
 						"minitems": 1,
@@ -73,26 +76,30 @@
 			{
 				"csv": 
 				{
-					"required": true,
-					"type": "boolean"
+					 
+					"type": "boolean",
+					"default":false
 				},
 
 				"hdf": 
 				{
-					"required": true,
-					"type": "boolean"
+					 
+					"type": "boolean",
+					"default":false
 				},
 
 				"xls": 
 				{
-					"required": true,
-					"type": "boolean"
+					 
+					"type": "boolean",
+					"default":false
 				},
 
 				"json": 
 				{
-					"required": true,
-					"type": "boolean"
+				 
+					"type": "boolean",
+					"default":false
 				}
 			}
 		},
