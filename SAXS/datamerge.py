@@ -64,7 +64,7 @@ def readlog(logfile):
     '''read CSV into pandas data frame'''
     file=open(logfile)
     dframe=pd.read_csv(logfile,sep="\t" )
-    dframe[dframe.columns[0]]= pd.to_datetime(dframe[dframe.columns[0]],unit="s")-( datetime.fromtimestamp(0)-datetime(1904, 1, 1, 0,0,0))
+    dframe[dframe.columns[0]]= (pd.to_datetime(dframe[dframe.columns[0]],unit="s"))
     dframe.reset_index()
     dframe=dframe.set_index(dframe.columns[0])
     return dframe
@@ -152,7 +152,57 @@ def readallimages(dir):
     merged=pd.merge(imglogframe,imgframe, on="File Name")
     merged=merged.set_index("End Date Time")
     return merged,chilisttodict(chilist)
- 
+  
+def compileconffromoptions(options, args):
+     
+    conf= {
+     "TimeOffset": float(options.timeoffset), 
+     "LogDataTables": [
+       {
+         "TimeOffset": 0.0, 
+         "TimeEpoc":"Mac",
+         "FirstImageCorrelation": options.syncfirst, 
+         "Name": "Peak", 
+         "Files": [
+           {
+             "Path": [
+                args[1]
+             ]
+           } 
+         ]
+       }, 
+       {
+         "TimeOffset": 0.0, 
+    "TimeEpoc":"Mac",
+         "FirstImageCorrelation": False, 
+         "Name": "Dlog", 
+         "Files": [
+           {
+             "Path": [
+               args[2]
+             ]
+           } 
+           
+         ]
+       }
+     ], 
+     "OutputFormats": {
+       "csv": False, 
+       "hdf": False, 
+       "exel": False, 
+       "json": False
+     }, 
+     "OutputFileBaseName": "merged", 
+     "HDFOptions": {
+       "IncludeCHI": options.includechi, 
+       "IncludetTIF": options.includetifdata
+     }
+    } 
+    suffix=options.outfile.split(".")[-1]
+    for format in conf["OutputFormats"]:
+        if suffix==format:
+            conf["OutputFormats"][format]==True
+    return conf
 def merge():
     '''saxs data merger'''
     parser = OptionParser()
@@ -165,120 +215,12 @@ def merge():
                       action="store_true",default=False)
     parser.add_option("-o", "--outfile", dest="outfile",
                       help="Write merged dataset to this file. Format is derived from the extesion.(.csv|.json|.hdf)", metavar="FILE",default="")
-    parser.add_option("-i", "--imagedata", dest="imagedata",
-                      help=" Load image data from previously stored file (imgdata.pkl).", metavar="FILE",default="")
     parser.add_option("-b", "--batch", dest="batch",
                       help="Batch mode (no plot).", 
                        action="store_true",default=False)
     parser.add_option("-c", "--includechi", dest="includechi",
                       help="Include radial intensity data (.chi) in hdf.", 
                        action="store_true",default=False)
-    parser.add_option("-l", "--mergedlogfile", dest="mergedlogfile",
-                      help="Write merged dataset to this file. The format is derived from the extesion.(.csv|.json|.hdf)", metavar="FILE",default="")
-    parser.add_option("-f", "--includetif", dest="includetifdata",
-                      help="Include  all image data in hdf.", 
-                       action="store_true",default=False)
-    (options, args) = parser.parse_args(args=None, values=None)
-    if len(args)<3:
-        parser.error("incorrect number of arguments")
-        sys.exit()
-    means=readlog(args[1])
-    datalogger=readlog(args[2]) 
-    merged=datalogger.join(means, how='outer').interpolate(method="zero") 
-    mergedreduced=merged[merged.index.isin(means.index)]
-    
-    if options.imagedata=="":
-        imd,chi=readallimages(args[0],options.includechi) 
-        pickle.dump({"imd":imd,"chi":chi},open('imgdata.pkl',"w")) 
-    else:
-        dict=pickle.load(open(options.imagedata,"r"))
-        imd=dict['imd']
-        chi=dict['chi']
-       
-    shifted=merged.copy()
-    shiftedreduced=mergedreduced.copy()
-    # shift image timestamp py image exposure time
-    index=[]
-    for pos in range(imd.index.shape[0]):    
-            index.append(imd.index[pos]-timedelta(seconds=imd['Exposure_time [s]'][pos]))
-    imd.index=index   
-    delta=timedelta(0)
-    if options.syncfirst:
-        delta=(  imd.index.min()- mergedreduced.index.min())
-       
-    if options.timeoffset!=0:
-        delta=delta + timedelta(0,float(options.timeoffset))
-    shifted.index=merged.index -delta
-    shiftedreduced.index=mergedreduced.index  +delta
-    shiftedreduced=shiftedreduced[shiftedreduced['Duration']>0]
-    print "total timeshift: "+ str(delta.total_seconds()) +" Seconds"
-
-    if not options.batch:
-        imd['Exposure_time [s]'][:].plot(style="ro")
-    
-        shiftedreduced['Duration'][:].plot(style="x")
-        plt.legend( ('Exposure from Images', 'Exposure from Shutter'))
-        plt.xlabel("Time")
-        plt.ylabel("Exosure Time [s]")
-        plt.title("Corellation")
-        plt.show()
-     
-    mim=shifted.join(imd,how="outer")
-    mima=mim.interpolate(method="zero" )
-    
-    if options.mergedlogfile!="":
-        if options.mergedlogfile.endswith(".json"):
-            mima.to_json(options.mergedlogfile)
-        elif options.mergedlogfile.endswith(".csv"):
-            mima.to_csv(options.mergedlogfile)
-        elif options.mergedlogfile.endswith(".hdf"):
-            mima.to_hdf(options.mergedlogfile,"LogData")
-           
-            
-        else:
-            print options.mergedlogfile +" format not supported"
-    
-    mima=mima[mima.index.isin(imd.index)]
-    
-    if options.outfile!="":
-        if options.outfile.endswith(".json"):
-            mima.to_json(options.outfile)
-        elif options.outfile.endswith(".csv"):
-            mima.to_csv(options.outfile)
-        elif options.outfile.endswith(".hdf"):
-            mima.to_hdf(options.outfile,"Data")
-            chi.to_hdf(options.outfile,"Curves")
-            if options.includetifdata: imgtohdf(options.outfile,args[0])
-        else:
-            print options.outfile +" format not supported"
-    else:
-        print mima.to_string()
-  
-    
-    #print mima.to_json()
-    
-def merge2():
-    '''saxs data merger'''
-    parser = OptionParser()
-    usage = "usage: %prog [options] iMPicture/dir peakinteg.log datalogger.log"
-    parser = OptionParser(usage)
-    parser.add_option("-t", "--timeoffset", dest="timeoffset",
-                      help="Time offset between logging time and time in imagedata.", metavar="SEC",default=0)
-    parser.add_option("-1", "--syncfirst", dest="syncfirst",
-                      help="Sync time by taking the time difference between first shutter action and first image.", 
-                      action="store_true",default=False)
-    parser.add_option("-o", "--outfile", dest="outfile",
-                      help="Write merged dataset to this file. Format is derived from the extesion.(.csv|.json|.hdf)", metavar="FILE",default="")
-    parser.add_option("-i", "--imagedata", dest="imagedata",
-                      help=" Load image data from previously stored file (imgdata.pkl).", metavar="FILE",default="")
-    parser.add_option("-b", "--batch", dest="batch",
-                      help="Batch mode (no plot).", 
-                       action="store_true",default=False)
-    parser.add_option("-c", "--includechi", dest="includechi",
-                      help="Include radial intensity data (.chi) in hdf.", 
-                       action="store_true",default=False)
-    parser.add_option("-l", "--mergedlogfile", dest="mergedlogfile",
-                      help="Write merged dataset to this file. The format is derived from the extesion.(.csv|.json|.hdf)", metavar="FILE",default="")
     parser.add_option("-f", "--includetif", dest="includetifdata",
                       help="Include  all image data in hdf.", 
                        action="store_true",default=False)
@@ -291,12 +233,37 @@ def merge2():
         conf=json.load(open(options.conffile,"r"))
     else:
         conf=compileconffromoptions(options, args)
+    if len(args)<1:
+         parser.error("incorrect number of arguments")
     directory=args[0]
-    mergedata(conf,directory)
-def compileconffromoptions(options, args):
-    pass
+    mergedTable,filelists,plotdata=mergedata(conf,directory)
+    if not options.batch:
+        plt.show()
+    writeTable(conf,mergedTable)
+    writeFileLists(conf ,filelists)
+def writeTable(conf,mergedTable):
+    for format in conf["OutputFormats"]:
+        if conf["OutputFormats"][format]:
+            print "write: " + conf["OutputFileBaseName"]+"."+format
+            if format=="json":
+                mergedTable.to_json(conf["OutputFileBaseName"]+"."+format)
+            elif format=="csv":
+                mergedTable.to_csv(conf["OutputFileBaseName"]+"."+format)
+            elif  format=="xls":
+                mergedTable.to_excel(conf["OutputFileBaseName"]+"."+format)
+def writeFileLists(conf ,filelists):
+    for kind in filelists:
+        listfile=open(kind+".txt","w")
+        for file in filelists[kind]:
+            listfile.write(file)
+        listfile.close()
+        print "write: " +kind+".txt"
+
 def cleanuplog(logframe,logTable):
     logframe.columns+=" ("+logTable["Name"]+")"
+    logframe.index=logframe.index-timedelta(seconds=logTable["TimeOffset"])
+    if logTable["TimeEpoc"]=="Mac":
+       logframe.index=logframe.index- ( datetime.fromtimestamp(0)-datetime(1904, 1, 1, 0,0,0))
 def chilisttodict(chi):
     chidict={}
     for chifile in chi:
@@ -317,17 +284,31 @@ def chilisttodict(chi):
             chidict[basename]=[{typelabel:chifile}]
         else:
             chidict[basename].append({typelabel:chifile})
-    return chidict
+     
+    filelists={}
+    for basename in sorted(chidict.keys()):
+            fileset= chidict[basename]
+            for file in fileset :
+                kind= file.keys()[0]
+                if kind in  filelists :
+                    filelists[kind].append(file[kind])
+                else:
+                    filelists[kind]=  [file[kind]]
+    return filelists
 def mergedata(conf,dir):
     schema=json.load(open(os.path.dirname(__file__)
                         +os.sep+'DataConsolidationConf.json'))
     validate(conf,schema)
     imd,chi=readallimages(dir)
-    
+    index=[]
+    for pos in range(imd.index.shape[0]):    
+            index.append(imd.index[pos]-timedelta(seconds=imd['Exposure_time [s]'][pos]))
+    imd.index=index  
     if not "LogDataTables" in conf:
          conf["LogDataTables"]=[]
     tablea=None
     tableb=None
+    firstImage=None
     for tnumber,logTable in enumerate(conf["LogDataTables"]):
         
         for filenum ,logfile in enumerate(logTable["Files"]):
@@ -338,13 +319,40 @@ def mergedata(conf,dir):
             else:
                 logframe.append(tmplog)
         cleanuplog(logframe,logTable)
-        
+        if logTable["FirstImageCorrelation"]:
+            firstImage=logframe.index.min()
+            peakframe=logframe
+        elif logTable["Name"]=="Peak":
+            peakframe=logframe
+        elif type(peakframe)==type(None):
+            peakframe=logframe
         if tnumber >=1:
             tableb=logframe
             tablea=tablea.join(tableb, how='outer') 
         else:
             tablea=logframe
+    if firstImage:
+        delta=(  imd.index.min()- firstImage)
+        tablea.index=tablea.index+delta
+        peakframe.index=peakframe.index+delta
+        print "Time shift:" +str(delta)
+    syncplotdata=syncplot(peakframe,imd)
     mergedt=imd.join(tablea,how="outer").interpolate(method="zero")
     mergedt=mergedt[mergedt.index.isin(imd.index)]
-    return mergedt,chi
+    
+    return mergedt,chi,syncplotdata
+def syncplot(shiftedreduced,imd):
+        imd['Exposure_time [s]'][:].plot(style="ro")  
+        shiftedreduced['Duration (Peak)'][:].plot(style="x")
+        plt.legend( ('Exposure from Images', 'Exposure from Shutter'))
+        plt.xlabel("Time")
+        plt.ylabel("Exosure Time [s]")
+        plt.title("Corellation")
+       
+        data= {"Images":json.loads(imd['Exposure_time [s]'][:].to_json()),
+                "Shutter":json.loads(shiftedreduced['Duration (Peak)'][:].to_json())}
+        
+        return data
+if __name__ == '__main__':
+    merge()
    

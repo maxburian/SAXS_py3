@@ -377,7 +377,7 @@ class Server():
             return{}
     def getresultfileslists(self):
         filelists={}
-        for basename in self.history.filelist.keys():
+        for basename in sorted(self.history.filelist.keys()):
             fileset= self.history.filelist[basename]
             for kind in fileset.keys():
                 if kind in  filelists :

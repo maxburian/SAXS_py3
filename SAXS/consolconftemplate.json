@@ -3,6 +3,7 @@
   "LogDataTables": [
     {
       "TimeOffset": 0.0, 
+       "TimeEpoc":"Mac",
       "FirstImageCorrelation": false, 
       "Name": "Shutter", 
       "Files": [
@@ -15,6 +16,7 @@
     }, 
     {
       "TimeOffset": 0.0, 
+      "TimeEpoc":"Mac",
       "FirstImageCorrelation": false, 
       "Name": "Continuous", 
       "Files": [
@@ -29,7 +31,7 @@
   "OutputFormats": {
     "csv": true, 
     "hdf": false, 
-    "xls": false, 
+    "exel": false, 
     "json": false
   }, 
   "OutputFileBaseName": "merged", 

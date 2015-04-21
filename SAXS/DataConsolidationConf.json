@@ -2,25 +2,33 @@
 	"type": "object",
 	"$schema": "http://json-schema.org/draft-03/schema",
 	"properties": 
-	{	"TimeOffset": 
-					{
-						"type": "number",
-						"default": "0",
-						"units": "Seconds",
-						"description": "If offset is not found otherwise, use this as offset  for all log data"
-					},
+	{
+		"TimeOffset": 
+		{
+			"type": "number",
+			"default": "0",
+			"units": "Seconds",
+			"description": "If offset is not found otherwise, use this as offset  for all log data"
+		},
+
 		"LogDataTables": 
 		{
 			"description": "Define log files to consolidate with image data. If more then one defined, they will be joined and missing values will be interpolated.",
 			"type": "array",
 			"required": false,
-		 
 			"items": 
 			{
 				"description": "One log data table is one set of logfiles with identical collumn definitions.",
 				"type": "object",
 				"properties": 
 				{
+					"TimeEpoc": 
+					{
+						"required":true,
+						"type":"string",
+						"enum":["Mac","Unix"]
+					},
+
 					"TimeOffset": 
 					{
 						"type": "number",
@@ -28,17 +36,20 @@
 						"units": "Seconds",
 						"description": "If offset is not found otherwise, use this as offset."
 					},
-					"FirstImageCorrelation":{
-					"description":"Find offset for all log data by correlating first image with first entry of this table. ",
-					"type":"boolean",
-					"default":false
+
+					"FirstImageCorrelation": 
+					{
+						"description": "Find offset for all log data by correlating first image with first entry of this table. ",
+						"type": "boolean",
+						"default": false
 					},
+
 					"Name": 
 					{
 						"description": "Name field to be used as prefix in the joined collumn names.",
 						"required": true,
 						"type": "string",
-						"default":"log"
+						"default": "log"
 					},
 
 					"Files": 
@@ -76,30 +87,26 @@
 			{
 				"csv": 
 				{
-					 
 					"type": "boolean",
-					"default":false
+					"default": false
 				},
 
 				"hdf": 
 				{
-					 
 					"type": "boolean",
-					"default":false
+					"default": false
 				},
 
-				"xls": 
+				"exel": 
 				{
-					 
 					"type": "boolean",
-					"default":false
+					"default": false
 				},
 
 				"json": 
 				{
-				 
 					"type": "boolean",
-					"default":false
+					"default": false
 				}
 			}
 		},
