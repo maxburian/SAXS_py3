@@ -22,7 +22,8 @@
 				"stat",
 				"listdir",
 				"putplotdata",
-				"fileslist"
+				"fileslist",
+				"mergedata"
 			]
 		},
 
@@ -33,8 +34,6 @@
 			"required": false,
 			"properties": 
 			{
-				 
-				 
 				"calibration": 
 				{
 					"description": "Calibrarion data according to :ref:`calib`",
@@ -47,9 +46,29 @@
 						}
 					}
 				},
-				"data":{},
-				"directory":{}
-				
+
+				"mergeconf": 
+				{
+					"description": "Datamerger Configuratioin",
+					"type": "object",
+					"properties": 
+					{
+						"/": 
+						{
+							"$ref": "DataConsolidationConf.json#"
+						}
+					}
+				},
+
+				"data": 
+				{
+					
+				},
+
+				"directory": 
+				{
+					
+				}
 			}
 		},
 
@@ -61,7 +80,7 @@
 
 		"time": 
 		{
-			"description":"time in seconds (pythons time.time())",
+			"description": "time in seconds (pythons time.time())",
 			"type": "number"
 		}
 	}

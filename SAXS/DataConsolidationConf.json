@@ -24,9 +24,13 @@
 				{
 					"TimeEpoc": 
 					{
-						"required":true,
-						"type":"string",
-						"enum":["Mac","Unix"]
+						"required": true,
+						"type": "string",
+						"enum": 
+						[
+							"Mac",
+							"Unix"
+						]
 					},
 
 					"TimeOffset": 
@@ -69,7 +73,11 @@
 									"items": 
 									{
 										"type": "string",
-										"default": "."
+										"default": ".",
+										"appinfo": 
+										{
+											"editor": "RemoteFile"
+										}
 									}
 								}
 							}

@@ -130,6 +130,7 @@ def readallimages(dir):
         for name in files:
             if name.endswith('tif'):
                 imgpath=os.path.join(path, name)
+              
                 row=readtiff(imgpath)
                 row['filepath']=imgpath
                 row['id']="h"+hashlib.sha224(imgpath).hexdigest()
@@ -145,6 +146,7 @@ def readallimages(dir):
               
             elif  name.endswith('log'):
                 logpath=os.path.join(path, name)
+                
                 imglogframe=imglogframe.append(readimglog(logpath))
             elif name.endswith("chi"):
                 chilist.append(os.path.join(path, name))
@@ -241,23 +243,31 @@ def merge():
         plt.show()
     writeTable(conf,mergedTable)
     writeFileLists(conf ,filelists)
-def writeTable(conf,mergedTable):
+def writeTable(conf,mergedTable,directory="."):
+    print "################"
+    print os.path.normpath(directory)
+    basename=os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]])
     for format in conf["OutputFormats"]:
         if conf["OutputFormats"][format]:
-            print "write: " + conf["OutputFileBaseName"]+"."+format
+           
             if format=="json":
-                mergedTable.to_json(conf["OutputFileBaseName"]+"."+format)
+                mergedTable.to_json(basename+"."+format)
             elif format=="csv":
-                mergedTable.to_csv(conf["OutputFileBaseName"]+"."+format)
-            elif  format=="xls":
-                mergedTable.to_excel(conf["OutputFileBaseName"]+"."+format)
-def writeFileLists(conf ,filelists):
+                mergedTable.to_csv(basename+"."+format)
+            elif  format=="exel":
+                mergedTable.to_excel(basename+"."+"xls")
+                format="xls"
+            print "write: " + basename+"."+format
+def writeFileLists(conf ,filelists,directory=".",serverdir=""):
+    basename=os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]])
     for kind in filelists:
-        listfile=open(kind+".txt","w")
+        texfilename= basename+kind+".txt"
+        listfile=open(texfilename,"w")
         for file in filelists[kind]:
-            listfile.write(file)
+            
+            listfile.write(os.path.normpath(file[len(serverdir):])+"\n")
         listfile.close()
-        print "write: " +kind+".txt"
+        print "write: " +texfilename
 
 def cleanuplog(logframe,logTable):
     logframe.columns+=" ("+logTable["Name"]+")"
@@ -349,8 +359,9 @@ def syncplot(shiftedreduced,imd):
         plt.ylabel("Exosure Time [s]")
         plt.title("Corellation")
        
-        data= {"Images":json.loads(imd['Exposure_time [s]'][:].to_json()),
-                "Shutter":json.loads(shiftedreduced['Duration (Peak)'][:].to_json())}
+        data= {"Images":json.loads(pd.DataFrame(imd['Exposure_time [s]']).to_json(orient="index")),
+                "Shutter":json.loads(pd.DataFrame(shiftedreduced['Duration (Peak)']).to_json(orient="index"))}
+        
         
         return data
 if __name__ == '__main__':

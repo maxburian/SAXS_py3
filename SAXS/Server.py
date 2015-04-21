@@ -7,7 +7,7 @@ import atrdict
 import calibration
 from jsonschema import validate,ValidationError
 import GISAXSSlices
-
+import datamerge
 from optparse import OptionParser
 import hashlib
 import imagequeuelib
@@ -40,7 +40,7 @@ class history():
             try:
                 item=queue.get(False)
             except Exception as e : 
-                print e# if for example empty
+              
                 break
             if item:
                 hist.append(item["Time"])
@@ -119,7 +119,7 @@ class Server():
             self.feederurl=conf["Feeder"]
         self.serverconf=conf
         self.comandosocket=None
-        
+        self.serverdir=self.args[0]
         self.commandschema=json.load(open(os.path.abspath(os.path.dirname(__file__))+'/LeashRequestSchema.json'))
         self.imagequeue=None
         self.feederproc=None
@@ -201,7 +201,8 @@ class Server():
         for item in files:
             if os.path.isdir(os.path.join(dir,item)):
                 content.append({"isdir":True,"path":item})
-          
+            else:
+                content.append({"isdir":False,"path":item})
         return {"result":"listdir","data":{"dircontent":content,"directory":dir.split(os.sep)}}
     def commandhandler(self,object,attachment):
         """
@@ -242,8 +243,10 @@ class Server():
                 result={"result":"no queue","data":{}}
         elif command=="fileslist":
             result=self.getresultfileslists()
+        elif command=="mergedata":
+            result=self.mergedatacommand( object['argument']["mergeconf"])
         else:
-            result={"result":"ErrorNotimplemented"}
+            result={"result":"ErrorNotimplemented","data":{"Error":command+" not implemented"}}
        
          
         return result
@@ -385,6 +388,21 @@ class Server():
                 else:
                     filelists[kind]=  [fileset[kind]]
         return {"result":"resultfileslists","data":{"fileslist":filelists}}
+    def mergedatacommand(self,conf):
+        directory=os.path.normpath(
+                    os.path.join(self.serverdir, os.sep.join(self.calibration["Directory"])))
+        conf["OutputFileBaseName"]= directory.split(os.sep)[-1]+conf["OutputFileBaseName"]
+        print "Dir: "+ directory
+        for table in conf["LogDataTables"]:
+            for file in table["Files"]:
+                file["Path"].insert(0,self.serverdir)
+        mergedTable,filelists,plotdata=datamerge.mergedata(conf,directory)
+        resultdir=os.path.join(directory,"../result")
+        if not  os.path.isdir(resultdir):
+            os.mkdir(resultdir)
+        datamerge.writeTable(conf,mergedTable,directory=resultdir)
+        datamerge.writeFileLists(conf ,filelists,directory=resultdir,serverdir=self.serverdir)
+        return {"result":"mergedata","data":{"syncplot":plotdata,"fileslist":filelists}}
     def _checkdirectorycollision(self,pathlist):
          serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
          mydir=os.path.normpath(os.sep.join(pathlist))

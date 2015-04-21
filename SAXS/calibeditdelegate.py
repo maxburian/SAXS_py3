@@ -64,6 +64,8 @@ class calibEditDelegate(QtGui.QItemDelegate):
             return filepicker
         elif editortype=="RemoteDir":
             return RemoteDirPicker(self.app,parent,index)
+        elif editortype=="RemoteFile":
+            return RemoteDirPicker(self.app,parent,index,showfiles=True)
         else:
             return QtGui.QItemDelegate.createEditor(self, parent, option,
                                               index)
@@ -184,7 +186,7 @@ class   arrayediddialog(QtGui.QComboBox):
         self.addItems(actions)
  
 class RemoteDirPicker(QtGui.QComboBox):
-    def __init__(self,app,parent,index):
+    def __init__(self,app,parent,index,showfiles=False):
           super(RemoteDirPicker, self).__init__( parent)
           myrow= index.row()
           parentitem=index.model().itemFromIndex(index.parent())
@@ -194,10 +196,10 @@ class RemoteDirPicker(QtGui.QComboBox):
               dirs.append(unicode(diritem.data( QtCore.Qt.DisplayRole).toString()))
           argu=["listdir", os.sep.join(dirs)]
           result=json.loads(  initcommand(app.options,argu,app.netconf))
-          
+
           self.addItem(".")
           if 'dircontent' in result['data']:
               for  dir in  result['data']['dircontent']:
-                  if dir['isdir']:
+                  if dir['isdir'] or showfiles :
                     self.addItem(dir['path'])
    

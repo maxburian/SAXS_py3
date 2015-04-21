@@ -2,27 +2,37 @@
   "TimeOffset": 0.0, 
   "LogDataTables": [
     {
+      "TimeEpoc": "Mac", 
       "TimeOffset": 0.0, 
-       "TimeEpoc":"Mac",
       "FirstImageCorrelation": false, 
-      "Name": "Shutter", 
+      "Name": "Peak", 
       "Files": [
         {
           "Path": [
-            "."
+            "140721_peakInteg_01.log"
+          ]
+        }, 
+        {
+          "Path": [
+            "140722_peakInteg_01.log"
           ]
         }
       ]
     }, 
     {
+      "TimeEpoc": "Mac", 
       "TimeOffset": 0.0, 
-      "TimeEpoc":"Mac",
       "FirstImageCorrelation": false, 
-      "Name": "Continuous", 
+      "Name": "Dlogger", 
       "Files": [
         {
           "Path": [
-            "."
+            "140721_datalogger_01.log"
+          ]
+        }, 
+        {
+          "Path": [
+            "140722_datalogger_01.log"
           ]
         }
       ]
@@ -31,8 +41,8 @@
   "OutputFormats": {
     "csv": true, 
     "hdf": false, 
-    "exel": false, 
-    "json": false
+    "exel": true, 
+    "json": true
   }, 
   "OutputFileBaseName": "merged", 
   "HDFOptions": {

@@ -124,7 +124,14 @@ def sendlistdir(arg,socket,conf):
     request={"command":"listdir","argument":{"directory":arg[1].split(os.sep)}}
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
    
-    
+def senddatamerge(options,arg,socket,conf):
+    request={ 
+             "command":"mergedata",
+             "argument":{ 
+                         "mergeconf":json.load(open(arg[1],"r")), 
+                          }
+             }
+    socket.send_multipart([json.dumps(addauthentication(request,conf))])
 def sendnew(options,arg,socket,conf):
     """
     upload new calibration for image processing
@@ -134,7 +141,7 @@ def sendnew(options,arg,socket,conf):
              "argument":{
                          
                          "calibration":{},
-                          
+                          "data":{}
                          }
              }
     if len(arg)>=2:
@@ -191,6 +198,8 @@ def initcommand(options, arg,conf):
          result= sendclose(options,arg,socket,conf)
     elif arg[0]=="new":
          result= sendnew(options,arg,socket,conf)
+    elif arg[0]=="mergedata":
+         result=senddatamerge(options,arg,socket,conf)
     elif arg[0]=="abort":
          result= sendabort(options,arg,socket,conf)
     elif arg[0]=="plot":
