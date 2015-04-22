@@ -135,7 +135,8 @@ class imagequeue:
                 chifilename=filename+".chi"
                 filelist[cal.kind+str(calnum)]=chifilename
                 if not self.options.resume or not os.path.isfile(chifilename):
-                    result=cal.integratechi(image,chifilename)
+                    result=cal.integratechi(image,chifilename,picture)
+                    result["Image"]=picture
                     data.append(result)
                     if threadid==0 and self.options.plotwindow:
                         # this is a hack it really schould be a proper GUI

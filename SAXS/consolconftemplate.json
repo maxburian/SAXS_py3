@@ -9,7 +9,12 @@
       "Files": [
         {
           "Path": [
-            "peak.log"
+            "140721_peakInteg_01.log"
+          ]
+        }, 
+        {
+          "Path": [
+            "140722_peakInteg_01.log"
           ]
         }
       ]
@@ -35,13 +40,13 @@
   ], 
   "OutputFormats": {
     "csv": true, 
-    "hdf": false, 
+    "hdf": true, 
     "exel": true, 
     "json": true
   }, 
   "OutputFileBaseName": "../result/merged", 
   "HDFOptions": {
     "IncludeCHI": true, 
-    "IncludetTIF": true
+    "IncludeTIF": false
   }
 }

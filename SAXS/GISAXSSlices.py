@@ -28,6 +28,7 @@ class slice():
         self.y=y
         self.kind="Slice"
         self.conf=conf
+        self.qname=""
         self.sliceconf=sliceconf
         start=sliceconf["CutPosition"]-sliceconf["CutMargin"]
         stop=sliceconf["CutPosition"]+sliceconf["CutMargin"]
@@ -60,7 +61,7 @@ class slice():
     def integrate(self,picture):
         return self.Projector.dot(picture.flatten())*self.oneoverA
    
-    def integratechi(self,image,path):
+    def integratechi(self,image,path,picture):
         """
         Integrate and save to file in "chi" format.
         
@@ -73,8 +74,8 @@ class slice():
                         r *self.oneoverA, 
                         np.sqrt(r ) *self.oneoverA # Poisson Error scaled
                       ]).transpose()
-        headerstr=path+" GISAXS Slice\n"
-        headerstr+="Pixel"
+        headerstr=picture+", GISAXS Slice\n"
+        headerstr+=self.qname+"\n"
         headerstr+="Intensity\n"
         headerstr+="   "+str(data.shape[0])+""
         np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')

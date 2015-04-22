@@ -404,6 +404,10 @@ class Server():
             os.mkdir(resultdir)
         datamerge.writeTable(conf,mergedTable,directory=resultdir)
         datamerge.writeFileLists(conf ,filelists,directory=resultdir,serverdir=self.serverdir)
+        if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
+            datamerge.imgtohdf(conf,directory,resultdir)
+        if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeCHI"]:
+            datamerge.graphstohdf(conf,filelists,resultdir)
         return {"result":"mergedata","data":{"syncplot":plotdata,"fileslist":filelists}}
     def _checkdirectorycollision(self,pathlist):
          serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))

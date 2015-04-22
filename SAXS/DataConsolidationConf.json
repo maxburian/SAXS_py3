@@ -138,7 +138,7 @@
 					"default": true
 				},
 
-				"IncludetTIF": 
+				"IncludeTIF": 
 				{
 					"description": "Whether to include the images as integer array.",
 					"type": "boolean",

@@ -68,17 +68,21 @@ def readlog(logfile):
     dframe.reset_index()
     dframe=dframe.set_index(dframe.columns[0])
     return dframe
-def imgtohdf(path,dir):
+
+def imgtohdf(conf,imgdirectory,outputdirecory):
     '''
     add images in dir to hdf5 location
     '''
-    h5file = tb.open_file(path, mode = "a", title = "Test file")
+    filename=os.path.normpath(os.sep.join([os.path.normpath(outputdirecory),
+                                       conf["OutputFileBaseName"]]))+".hdf"
+    h5file = tb.open_file(filename, mode = "a", title = "Test file")
+    print "open: "+filename
     try:
         group=h5file.get_node("/", "Images")
     except tb.exceptions.NoSuchNodeError:
         group = h5file.create_group("/", 'Images', 'Dedector Images')
    
-    for path, subdirs, files in os.walk(dir):
+    for path, subdirs, files in os.walk(imgdirectory):
         for name in files:
             if name.endswith('tif'):
                 imagefilename=os.path.join(path, name)
@@ -91,6 +95,51 @@ def imgtohdf(path,dir):
                     
                     h5file.createArray(group, id , data,
                                    imagefilename)
+    h5file.close()
+
+def graphstohdf(conf,fileslist,outputdirecory):
+    '''
+    add images in dir to hdf5 location
+    '''
+    filename=os.path.normpath(os.sep.join([os.path.normpath(outputdirecory),
+                                       conf["OutputFileBaseName"]]))+".hdf"
+    h5file = tb.open_file(filename, mode = "a", title = "Test file")
+    print "open: "+filename
+    try:
+        group=h5file.get_node("/", "Graphs")
+    except tb.exceptions.NoSuchNodeError:
+        group = h5file.create_group("/", 'Graphs', 'Plotable Graphs')
+    for kind in fileslist:
+        try:
+            h5file.get_node("/Graphs", kind)
+        except tb.exceptions.NoSuchNodeError:
+            h5file.create_group("/Graphs", kind,   kind)
+       
+        
+        for graphfile in fileslist[kind]:
+            
+            if kind=="JSON":
+                jsondata=json.load(open(graphfile,"r"))
+                 
+                try:
+                    imagefilename=jsondata[0]["Image"]
+                except Exception as e:
+                    print e
+                    continue
+                 
+            else:
+                chifile=open(graphfile,"r").readlines()
+                imagefilename= chifile[0].split(",")[0]
+            
+            id="h"+hashlib.sha224(imagefilename).hexdigest()
+            try:
+                node= h5file.get_node("/Graphs/"+kind, id)
+            except tb.exceptions.NoSuchNodeError:
+                node= h5file.create_group("/Graphs/"+kind, id ,   imagefilename)
+            if kind=="JSON":
+                h5file.createArray(node, "JSON", json.dumps(jsondata,indent=2), "chifile" )
+            else:
+                h5file.createArray(node, "CHI", "".join(chifile), "chifile" )
     h5file.close()
     
 import os,hashlib
@@ -126,6 +175,7 @@ def readallimages(dir):
     imgframe=pd.DataFrame()
     imglogframe=pd.DataFrame()
     chilist=[]
+    imagecount=0
     for path, subdirs, files in os.walk(dir):
         for name in files:
             if name.endswith('tif'):
@@ -148,8 +198,9 @@ def readallimages(dir):
                 logpath=os.path.join(path, name)
                 
                 imglogframe=imglogframe.append(readimglog(logpath))
-            elif name.endswith("chi"):
+            elif name.endswith("chi") or name.endswith("json") :
                 chilist.append(os.path.join(path, name))
+
     imgframe["File Name"]=(imgframe["Image_path"]+imgframe['filename'])
     merged=pd.merge(imglogframe,imgframe, on="File Name")
     merged=merged.set_index("End Date Time")
@@ -197,13 +248,19 @@ def compileconffromoptions(options, args):
      "OutputFileBaseName": "merged", 
      "HDFOptions": {
        "IncludeCHI": options.includechi, 
-       "IncludetTIF": options.includetifdata
+       "IncludeTIF": options.includetifdata
      }
     } 
     suffix=options.outfile.split(".")[-1]
+    knownoutput=False
     for format in conf["OutputFormats"]:
+        
         if suffix==format:
-            conf["OutputFormats"][format]==True
+            conf["OutputFormats"][format]=True
+            knownoutput=True
+    #print json.dumps(conf,  indent=2)
+    if not knownoutput:
+        print options.outfile +": File format not supported."
     return conf
 def merge():
     '''saxs data merger'''
@@ -241,8 +298,14 @@ def merge():
     mergedTable,filelists,plotdata=mergedata(conf,directory)
     if not options.batch:
         plt.show()
+    print conf
     writeTable(conf,mergedTable)
     writeFileLists(conf ,filelists)
+    if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
+        imgtohdf(conf,directory,".")
+    if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeCHI"]:
+        graphstohdf(conf,filelists,".")
+    
 def writeTable(conf,mergedTable,directory="."):
     print "################"
     print os.path.normpath(directory)
@@ -258,16 +321,21 @@ def writeTable(conf,mergedTable,directory="."):
                 mergedTable.to_excel(basename+"."+"xls")
                 format="xls"
             elif format=="hdf":
-                  mergedTable.to_hdf(basename+"."+"hdf","LogData")
+                try:
+                    os.remove(basename+"."+"hdf")
+                except:
+                    pass
+                mergedTable.to_hdf(basename+"."+"hdf","LogData")
+                
             print "write: " + basename+"."+format
 def writeFileLists(conf ,filelists,directory=".",serverdir=""):
     basename=os.path.normpath(os.sep.join([directory,conf["OutputFileBaseName"]]))
     for kind in filelists:
         texfilename= basename+kind+".txt"
         listfile=open(texfilename,"w")
-        for file in filelists[kind]:
+        for filename in filelists[kind]:
             
-            listfile.write(os.path.normpath(file[len(serverdir):])+"\n")
+            listfile.write(os.path.normpath(filename[len(serverdir):])+"\n")
         listfile.close()
         print "write: " +texfilename
 
@@ -279,24 +347,31 @@ def cleanuplog(logframe,logTable):
 def chilisttodict(chi):
     chidict={}
     for chifile in chi:
-        parts=chifile.split("_c")
-        if len(parts)==1:
-            basename=chifile[:-4]
-            typelabel="R"
+        if chifile.endswith(".chi"):
+            parts=chifile.split("_c")
+            if len(parts)==1:
+                basename=chifile[:-4]
+                typelabel="R"
+            else:
+                basename="_c".join(parts[:-1]).split(os.sep)[-1]
+                saxdogpart=parts[-1]
+                typelabel=saxdogpart[0]
+                nummatch=re.match(r"(\w\d+)",saxdogpart)
+                if nummatch:
+                    typelabel=nummatch.group(1)
+                    
+               
+            if basename not in chidict:
+                chidict[basename]=[{typelabel:chifile}]
+            else:
+                chidict[basename].append({typelabel:chifile})
         else:
-            basename="_c".join(parts[:-1]).split(os.sep)[-1]
-            saxdogpart=parts[-1]
-            typelabel=saxdogpart[0]
-            nummatch=re.match(r"(\w\d+)",saxdogpart)
-            if nummatch:
-                typelabel=nummatch.group(1)
-                
-           
-        if basename not in chidict:
-            chidict[basename]=[{typelabel:chifile}]
-        else:
-            chidict[basename].append({typelabel:chifile})
-     
+             basename=chifile[:-5]
+             if basename not in chidict:
+                chidict[basename]=[{"JSON":chifile}]
+             else:
+                chidict[basename].append({"JSON":chifile})
+            
     filelists={}
     for basename in sorted(chidict.keys()):
             fileset= chidict[basename]

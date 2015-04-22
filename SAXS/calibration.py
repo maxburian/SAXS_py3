@@ -129,7 +129,7 @@ class calibration:
         :returns: Returns Angle and intensity vector as a tuple (angle,intensity)
         """
         return  (self.thetagrid,self.I.dot(image.flatten() ))
-    def integratechi(self,image,path):
+    def integratechi(self,image,path,picture):
         """
         Integrate and save to file in "chi" format.
         
@@ -145,7 +145,7 @@ class calibration:
                       ).transpose()
       
         
-        headerstr=path+"\n"
+        headerstr=picture+", Radial\n"
         headerstr+="q [nm^-1]\n"
         headerstr+="Intensity\n"
         headerstr+="   "+str(data.shape[0])+""
