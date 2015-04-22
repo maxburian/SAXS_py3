@@ -9,12 +9,7 @@
       "Files": [
         {
           "Path": [
-            "140721_peakInteg_01.log"
-          ]
-        }, 
-        {
-          "Path": [
-            "140722_peakInteg_01.log"
+            "peak.log"
           ]
         }
       ]

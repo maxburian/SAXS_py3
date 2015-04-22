@@ -159,6 +159,7 @@ class imagequeue:
             with self.allp.get_lock():
                 self.allp.value+=1
             self.histqueue.put({"Time":time.time(),"FileList":filelist,"BaseName":basename})
+            json.dump(data,open(basename+".json","w"))
             return basename ,data
     def start(self):  
         """

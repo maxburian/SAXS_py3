@@ -257,6 +257,8 @@ def writeTable(conf,mergedTable,directory="."):
             elif  format=="exel":
                 mergedTable.to_excel(basename+"."+"xls")
                 format="xls"
+            elif format=="hdf":
+                  mergedTable.to_hdf(basename+"."+"hdf","LogData")
             print "write: " + basename+"."+format
 def writeFileLists(conf ,filelists,directory=".",serverdir=""):
     basename=os.path.normpath(os.sep.join([directory,conf["OutputFileBaseName"]]))
@@ -327,7 +329,7 @@ def mergedata(conf,dir):
             if filenum==0:
                 logframe=tmplog
             else:
-                logframe.append(tmplog)
+                logframe=logframe.append(tmplog).sort_index()
         cleanuplog(logframe,logTable)
         if logTable["FirstImageCorrelation"]:
             firstImage=logframe.index.min()
