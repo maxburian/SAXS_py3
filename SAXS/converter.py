@@ -91,9 +91,11 @@ def convert():
     Fit2d info file to the JSON data used by the SAXS.callibration class.
     """
     parser = OptionParser()
-    usage = ("usage: %prog [options] calibration.txt ouput.saxsconf\n"
-    +"or\n"
-    +"%prog [options] cal.saxsconf ouput.saxsconf\n")
+    usage = ("\n"
+             +"To extract data from Fit2d output:\n"
+             + "  %prog [options] calibration.txt ouput.saxsconf\n"
+    +"Or to convert fom older saxsconf:\n"
+    +"  %prog [options] cal.saxsconf ouput.saxsconf\n")
     parser = OptionParser(usage)
     parser.add_option("-t", "--template", dest="templatepath",
                       help="Path to calibration file which serves as template.", metavar="FILE",default="")

@@ -286,7 +286,8 @@ class Server():
                             "relpath":self.options.relpath,
                     		 "writesvg":False,
                              "writepng":False,"resume":False,
-                             "serverport":self.serverport
+                             "serverport":self.serverport,
+                             "nowalk":True
                              })
             cals=[]
             

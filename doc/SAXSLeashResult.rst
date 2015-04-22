@@ -52,7 +52,7 @@ data
 :Type:
   object
 :Contains:
-  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`directory <directory>`, :ref:`attachments <attachments>`, :ref:`threads <threads>`, :ref:`dircontent <dircontent>`, :ref:`history <history>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`graphs <graphs>`
+  :ref:`cal <cal>`, :ref:`Error <Error>`, :ref:`syncplot <syncplot>`, :ref:`directory <directory>`, :ref:`attachments <attachments>`, :ref:`threads <threads>`, :ref:`dircontent <dircontent>`, :ref:`history <history>`, :ref:`fileslist <fileslist>`, :ref:`stat <stat>`, :ref:`filename <filename>`, :ref:`graphs <graphs>`
 :Required:
   True
 :JSON Path:
@@ -101,6 +101,26 @@ Example JSON:
 .. code:: json
 
     {"Error": {}}
+
+.. _syncplot:
+
+syncplot
+--------------------
+
+:type:
+  object
+
+
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`syncplot <syncplot>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"syncplot": {}}
 
 .. _directory:
 
@@ -202,6 +222,26 @@ Example JSON:
 .. code:: json
 
     {"history": {}}
+
+.. _fileslist:
+
+fileslist
+--------------------
+
+:type:
+  object
+
+
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`fileslist <fileslist>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"fileslist": {}}
 
 .. _stat:
 

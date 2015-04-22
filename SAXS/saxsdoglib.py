@@ -4,6 +4,8 @@ import json
 from optparse import OptionParser
 import os,sys
 import time
+import calibration
+import imagequeuelib
 def saxsdogparseopt():
     """
     handles commandline options for "saxsdog"
@@ -56,36 +58,36 @@ def saxsdogparseopt():
     else: options.watch=False
     return (options, args)
 
-def saxsdogcal(options, args):   
-    """
-    Calculate computation matrices from calibration data
-    """
-    from calibration import calibration
-    return calibration(options.calfilename) 
-   
-def saxsdogintqueue(Cal,options, args):  
-    """
-    Initialize image queue object.
-    """
-    from imagequeuelib import imagequeue  
-    imqueue=imagequeue(Cal,options,args)
-    if not options.nowalk: imqueue.fillqueuewithexistingfiles()
-    return imqueue
-
+ 
 def saxsdog():
     """
     This implements the functionality of :ref:`saxsdog`
     """
     (options, args)=saxsdogparseopt()
    
-    if options.profile:
+    if options.profile: 
         import cProfile, pstats, StringIO
         pr = cProfile.Profile()
-        
-        Cal=saxsdogcal(options, args)
-        imgq=saxsdogintqueue(Cal,options, args)
+    conf=json.load(open(options.calfilename,"r"))
+    cals=[]
+    directory=args[0]
+    if "Masks" in conf:
+        for mnumber,mask in enumerate(conf["Masks"]):
+            cals.append(calibration.calibration(
+                                           conf,
+                                            mask,
+                                             None))
+    if "Slices" in   conf:
+        for slice in conf["Slices"]:
+            cals.append(GISAXSSlices.slice( conf,slice,None))
+    imgq=imagequeuelib.imagequeue(cals,
+                options,directory,None)
+    if options.profile: 
         pr.enable()
-        imgq.start()
+    
+    imgq.start()
+    
+    if options.profile:       
         pr.disable()
         s = StringIO.StringIO()
         sortby = 'cumulative'
@@ -95,10 +97,6 @@ def saxsdog():
         print '# Wrote profile to the file "prof". #'
         print '#####################################'
         open("prof","w").write(s.getvalue())
-    else:
-        Cal=saxsdogcal(options, args)
-        imgq=saxsdogintqueue(Cal,options, args)
-        imgq.start()
 if __name__ == '__main__':
     saxsdog()
     

@@ -34,7 +34,8 @@ def funcworker(self,threadid):
         except KeyboardInterrupt:
             pass 
         except Exception as e:
-            print e
+            print 
+   self.histqueue.close()
 def filler(queue,dir):
             filequeue=[] 
             print "filler" + dir
@@ -62,7 +63,8 @@ class imagequeue:
          self.directory=directory
          self.allp=Value('i',0)
          self.stopflag=Value('i',0)
-         self.dirwalker=False
+         self.dirwalker=None
+         self.observer=None
          if not options.plotwindow: 
               plt.switch_backend("Agg")
          self.fig=plt.figure()
@@ -83,8 +85,7 @@ class imagequeue:
             self.dirwalker=Process(target=filler,args=(self.picturequeue,self.directory))
             self.dirwalker.start()
         else:
-            self.dirwalker=Process()
-            self.dirwalker.start()
+           
             filler(self.picturequeue,self.directory)
         
     def procimage(self,picture,threadid):
@@ -164,6 +165,7 @@ class imagequeue:
         Start threads and directory observer.
         """
         #start threads
+        
         for threadid in range(1,self.options.threads):
             print "start proc [",threadid,"]"
            
@@ -175,13 +177,12 @@ class imagequeue:
         self.starttime=time.time() 
         if self.options.watch:
             eventhandler=addtoqueue(self.picturequeue)
-            observer = Observer()
-            observer.schedule(eventhandler, self.args[0], recursive=True)
-            observer.start()
+            self.observer = Observer()
+            self.observer.schedule(eventhandler, self.args[0], recursive=True)
+            self.observer.start()
         #We let the master process do some work because its useful for matplotlib.
-        if not self.dirwalker:
-            self.dirwalker=Process()
-            self.dirwalker.start()
+        if not self.options.nowalk:
+            self.fillqueuewithexistingfiles()
         if self.options.servermode:
              
              context = zmq.Context()
@@ -195,12 +196,10 @@ class imagequeue:
         try:
             while ( self.options.servermode or 
                     (not self.picturequeue.empty()) 
-                    or self.dirwalker.is_alive() 
+                    or (self.dirwalker and self.dirwalker.is_alive() )
                     or self.options.watch): 
                     try:
                         picture = self.picturequeue.get(timeout=1)
-                    except KeyboardInterrupt :
-                        break
                     except Empty:
                         continue
                     lastfile, data =self.procimage(picture,0)
@@ -214,26 +213,48 @@ class imagequeue:
                         socket.recv()
                     if np.mod(self.allp.value,500)==0:
                         self.timreport()
-        except  KeyboardInterrupt:            
-            if self.options.watch:
-                        observer.stop()
-                        observer.join()   
-            if self.options.servermode:
-                 context.destroy()
+        except KeyboardInterrupt:
+            pass
+        if self.options.servermode:
+            context.destroy()
         self.stop()
         self.timreport()
         return self.allp.value, time.time()-self.starttime
     def stop(self):
         print "\n\nWaiting for the processes to terminate."
+        if self.observer:
+            self.observer.stop()
+            self.observer.observer.join(1)   
+        
+        
         self.stopflag.value=1
         for worker in self.pool:
-            worker.join(3)
+            worker.join(1)
+        if self.dirwalker:
+           
+            self.dirwalker.join(1)
+        while True:
+            try:
+                self.picturequeue.get(False)
+            except Empty:
+                break
+        while True:
+            try:
+                self.histqueue.get(False)
+            except Empty:
+                break
+        
+        
     def timreport(self):
         tottime=time.time()-self.starttime
-        if self.allp.value==0:
+        count=self.allp.value
+        print count
+        if count==0:
             print "We didn't do any pictures "
         else:
             print "\n\nelapsed time: ",tottime
-            print "\nProcessed: ",self.allp.value," pic"
-            print " time per pic: ", tottime/self.allp.value,"[s]"
-            print " pic per second: ",self.allp.value/tottime,"[/s]"
+            print "\nProcessed: ",count," pic"
+            print " time per pic: ", tottime/count,"[s]"
+            print " pic per second: ",count/tottime,"[/s]"
+        time.sleep(1)
+        

@@ -34,7 +34,7 @@ command
 :Type:
   string
 :values:
-  ``[u'close', u'abort', u'new', u'get', u'plot', u'plotdata', u'readdir', u'stat', u'listdir', u'putplotdata']``
+  ``[u'close', u'abort', u'new', u'get', u'plot', u'plotdata', u'readdir', u'stat', u'listdir', u'putplotdata', u'fileslist', u'mergedata']``
 
 :Required:
   True
@@ -55,7 +55,7 @@ argument
 :Type:
   object
 :Contains:
-  :ref:`directory <directory>`, :ref:`threads <threads>`, :ref:`calibration <calibration>`, :ref:`data <data>`
+  :ref:`calibration <calibration>`, :ref:`mergeconf <mergeconf>`, :ref:`data <data>`, :ref:`directory <directory>`
 :Required:
   False
 :JSON Path:
@@ -66,47 +66,6 @@ Example JSON:
 .. code:: json
 
     {"argument": {}}
-
-.. _directory:
-
-directory
---------------------
-
-Directory this queue is going to use. New files in other directories are going to be ignored.
-
-
-:Type:
-  array() items: 
-:Required:
-  False
-:Default:
-  [u'.', u'', u'']
-:JSON Path:
-  * :ref:`# <reqroot>` [':ref:`argument <argument>`'][':ref:`directory <directory>`']
-
-Example JSON: 
-
-.. code:: json
-
-    {"directory": [".","",""]}
-
-.. _threads:
-
-threads
---------------------
-
-:Type:
-  integer
-:Required:
-  False
-:JSON Path:
-  * :ref:`# <reqroot>` [':ref:`argument <argument>`'][':ref:`threads <threads>`']
-
-Example JSON: 
-
-.. code:: json
-
-    {"threads": 0}
 
 .. _calibration:
 
@@ -131,6 +90,29 @@ Example JSON:
 
     {"calibration": {}}
 
+.. _mergeconf:
+
+mergeconf
+--------------------
+
+Datamerger Configuratioin
+
+
+:Type:
+  object
+:Contains:
+  :ref:`/<DataConsolidationConf.json#>`
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <reqroot>` [':ref:`argument <argument>`'][':ref:`mergeconf <mergeconf>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"mergeconf": {}}
+
 .. _data:
 
 data
@@ -150,6 +132,26 @@ Example JSON:
 .. code:: json
 
     {"data": {}}
+
+.. _directory:
+
+directory
+--------------------
+
+:type:
+  object
+
+
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <reqroot>` [':ref:`argument <argument>`'][':ref:`directory <directory>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"directory": {}}
 
 .. _sign:
 
