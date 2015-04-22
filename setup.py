@@ -7,7 +7,15 @@ setup(
     name="SAXS",
     version=versionstring,
     packages=["SAXS"],
-    package_data={"SAXS": ["icons/*","schema.json","LeashRequestSchema.json","LeashResultSchema.json","NetworkSchema.json","LeashMW.ui","importdialog.ui"]},
+    package_data={"SAXS": ["icons/*","schema.json",
+                           "LeashRequestSchema.json",
+                           "LeashResultSchema.json",
+                           "NetworkSchema.json",
+                           "LeashMW.ui",
+                           "importdialog.ui",
+                           "DataConsolidationConf.json",
+                           "consolconftemplate.json"
+                           ]},
     author="Christian Meisenbichler",
     author_email="chmberg@gmail.com",
     description="Tools for analysing SAXS Data",
@@ -53,7 +61,7 @@ if sys.argv[1] == 'install':
         import _winreg as  wr
       
         pyw_executable =   os.path.join(sys.prefix,'pythonw.exe')
-        script_file =  os.path.join(sys.prefix,"Scripts","Leash-script.pyw")
+        script_file =  os.path.join(sys.prefix,"Scripts","leash-script.pyw")
         iconpath= os.path.expanduser(
             os.path.join(
             sys.prefix,
@@ -69,19 +77,16 @@ if sys.argv[1] == 'install':
         print "added registry values for extensions"
          
         import winshell
-        import win32com
-         
-        pyw_executable =   os.path.join(sys.prefix,'pythonw.exe')
-        script_file =  os.path.join(sys.prefix,"Scripts","Leash-script.pyw")
+        import win32com 
         w_dir = os.path.expanduser('~')
         desktop_path = winshell.desktop()
         startmenu_path =win32com.shell.shell.SHGetSpecialFolderPath(0, win32com.shell.shellcon.CSIDL_STARTMENU)
-        with winshell.shortcut( os.path.join(startmenu_path,'SAXSdog.lnk')) as link:
+        with winshell.shortcut( os.path.join(startmenu_path,'SAXSLeash.lnk')) as link:
             link.path= pyw_executable
             link.description =  "Control panel for SAXSdog Server"
             link.arguments =  script_file
             link.icon_location=(iconpath,0)
-        with winshell.shortcut( os.path.join(desktop_path,'SAXSdog.lnk')) as link:
+        with winshell.shortcut( os.path.join(desktop_path,'SAXSLeash.lnk')) as link:
             link.path= pyw_executable
             link.description = "Control panel for SAXSdog Server"
             link.arguments =  script_file

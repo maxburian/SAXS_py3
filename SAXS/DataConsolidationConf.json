@@ -122,9 +122,9 @@
 		"OutputFileBaseName": 
 		{
 			"type": "string",
-			"default": "merged"
+			"default": "../results/merged"
 		},
-
+	
 		"HDFOptions": 
 		{
 			"description": "Options only relevant to hdf export.",

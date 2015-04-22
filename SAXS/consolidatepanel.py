@@ -66,7 +66,6 @@ class consolidatepanel(QtGui.QWidget):
             navbar=NavigationToolbar(canvas,dialog)
             vlayout.addWidget(canvas)
             vlayout.addWidget(navbar)
-            print json.dumps(result["data"]["syncplot"]['Images'])
             img=pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Images'])).transpose()
             peak= pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Shutter'])).transpose()
             img.plot(style="ro",ax=ax)  

@@ -391,13 +391,14 @@ class Server():
     def mergedatacommand(self,conf):
         directory=os.path.normpath(
                     os.path.join(self.serverdir, os.sep.join(self.calibration["Directory"])))
-        conf["OutputFileBaseName"]= directory.split(os.sep)[-1]+conf["OutputFileBaseName"]
+        relativedirname=os.path.dirname(conf["OutputFileBaseName"])
+        conf["OutputFileBaseName"]= directory.split(os.sep)[-1]+os.path.basename(conf["OutputFileBaseName"])
         print "Dir: "+ directory
         for table in conf["LogDataTables"]:
             for file in table["Files"]:
                 file["Path"].insert(0,self.serverdir)
         mergedTable,filelists,plotdata=datamerge.mergedata(conf,directory)
-        resultdir=os.path.join(directory,"../result")
+        resultdir=os.path.join(directory,relativedirname)
         if not  os.path.isdir(resultdir):
             os.mkdir(resultdir)
         datamerge.writeTable(conf,mergedTable,directory=resultdir)

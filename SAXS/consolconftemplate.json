@@ -4,7 +4,7 @@
     {
       "TimeEpoc": "Mac", 
       "TimeOffset": 0.0, 
-      "FirstImageCorrelation": false, 
+      "FirstImageCorrelation": true, 
       "Name": "Peak", 
       "Files": [
         {
@@ -44,7 +44,7 @@
     "exel": true, 
     "json": true
   }, 
-  "OutputFileBaseName": "merged", 
+  "OutputFileBaseName": "../result/merged", 
   "HDFOptions": {
     "IncludeCHI": true, 
     "IncludetTIF": true

@@ -246,7 +246,7 @@ def merge():
 def writeTable(conf,mergedTable,directory="."):
     print "################"
     print os.path.normpath(directory)
-    basename=os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]])
+    basename=os.path.normpath(os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]]))
     for format in conf["OutputFormats"]:
         if conf["OutputFormats"][format]:
            
@@ -259,7 +259,7 @@ def writeTable(conf,mergedTable,directory="."):
                 format="xls"
             print "write: " + basename+"."+format
 def writeFileLists(conf ,filelists,directory=".",serverdir=""):
-    basename=os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]])
+    basename=os.path.normpath(os.sep.join([directory,conf["OutputFileBaseName"]]))
     for kind in filelists:
         texfilename= basename+kind+".txt"
         listfile=open(texfilename,"w")

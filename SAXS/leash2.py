@@ -31,6 +31,7 @@ class LeashUI(QtGui.QMainWindow):
         self.netconf=self.confs[selected]
         self.parscecommandline()
         self.loadui(reconnectresult)
+        self.setLocale(QtCore.QLocale("C"))
         if not "Name" in self.netconf:
             self.netconf["Name"]="Unnamed"
     def loadui(self,reconnectresult):

@@ -47,7 +47,7 @@ class plotpanel(QtGui.QWidget):
                 ax.set_ylabel(set["columnLabels"][1],fontsize=16)
                 ax.set_title( set["kind"]+" "+data["data"]['filename'])
                 ax.patch.set_alpha(0)
-                nonzero=np.array(set["array"][1])>0
+               
                 x=np.array(set["array"][0])[:]
                 y=np.array(set["array"][1])[:]
                 e=np.array(set["array"][2])[:]
