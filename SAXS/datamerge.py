@@ -430,7 +430,7 @@ def mergedata(conf,dir):
     return mergedt,chi,syncplotdata
 def syncplot(shiftedreduced,imd):
         imd['Exposure_time [s]'][:].plot(style="ro")  
-        shiftedreduced['Duration (Peak)'][:].plot(style="x")
+        shiftedreduced['Duration (Peak)'][shiftedreduced['Duration (Peak)']>0].plot(style="x")
         plt.legend( ('Exposure from Images', 'Exposure from Shutter'))
         plt.xlabel("Time")
         plt.ylabel("Exosure Time [s]")
