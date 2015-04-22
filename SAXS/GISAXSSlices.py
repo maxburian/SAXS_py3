@@ -85,7 +85,8 @@ class slice():
                     "Intensity (Count/Pixel)",
                     "Error Margin"],
                     "kind":"Slice",
-                    "conf":self.sliceconf}
+                    "conf":self.conf,
+                    "slice":self.sliceconf}
     def plot(self,image,outputfile="",startplotat=0 ,fig=None):
         """
         dummy function in order to not trip up image queue

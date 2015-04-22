@@ -124,7 +124,7 @@ def graphstohdf(conf,fileslist,outputdirecory):
                 try:
                     imagefilename=jsondata[0]["Image"]
                 except Exception as e:
-                    print e
+                   
                     continue
                  
             else:
@@ -254,7 +254,9 @@ def compileconffromoptions(options, args):
     suffix=options.outfile.split(".")[-1]
     knownoutput=False
     for format in conf["OutputFormats"]:
-        
+        if suffix=="xls":
+            conf["OutputFormats"]["exel"]=True
+            knownoutput=True
         if suffix==format:
             conf["OutputFormats"][format]=True
             knownoutput=True
@@ -298,7 +300,7 @@ def merge():
     mergedTable,filelists,plotdata=mergedata(conf,directory)
     if not options.batch:
         plt.show()
-    print conf
+    
     writeTable(conf,mergedTable)
     writeFileLists(conf ,filelists)
     if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
@@ -307,8 +309,8 @@ def merge():
         graphstohdf(conf,filelists,".")
     
 def writeTable(conf,mergedTable,directory="."):
-    print "################"
-    print os.path.normpath(directory)
+   
+   
     basename=os.path.normpath(os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]]))
     for format in conf["OutputFormats"]:
         if conf["OutputFormats"][format]:

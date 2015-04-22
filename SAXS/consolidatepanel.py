@@ -31,8 +31,16 @@ class consolidatepanel(QtGui.QWidget):
         self.treeview.setItemDelegateForColumn(1,calibeditdelegate.calibEditDelegate( app ))
         self.reset()
         default= schematools.schematodefault( self.model.schema)
-        self.filename=os.path.dirname(__file__)   +os.sep+'consolconftemplate.json'
-       
+        
+        
+        self.filename=os.path.expanduser("~"
+                                               +os.sep
+                                               +self.app.netconf["Name"]
+                                               +"consolconf.json"
+                                               )
+        if not os.path.isfile(self.filename):
+            import shutil
+            shutil.copy(os.path.dirname(__file__)   +os.sep+'consolconftemplate.json',self.filename)
         self.model.loadfile(self.filename)
         self.app.calibeditor.reset()
         self.connect(self.model, QtCore.SIGNAL('dataChanged(QModelIndex,QModelIndex)'),self.model.save)

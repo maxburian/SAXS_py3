@@ -159,7 +159,8 @@ class calibration:
                     "Intensity (Count/Pixel)",
                     "Error Margin"],
                     "kind":"Radial",
-                    "conf":self.config
+                    "conf":self.config,
+                    "mask":self.maskconfig
         }
          
    
