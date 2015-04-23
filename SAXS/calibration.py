@@ -323,7 +323,7 @@ def openmask(mfile,attachment=None):
     :param object config: Calibration config object.
     :returns: Mask as logical numpy array.
     """
-    print attachment
+     
     if attachment:
         mfilestream=  base64.b64decode(attachment['data'])
         fin=StringIO.StringIO(mfilestream)
