@@ -26,8 +26,9 @@ class calibration:
     This class represents a calibration for SAXS diffraction. 
     After initialization, the :py:meth:`integrate` method can compute the radial intensity very fast.
     
-    :param string config: is the path to the :ref:`root`:
- 
+    :param dict config: the calibration json object as dictionary :ref:`root`:
+    :param dict mask: The mask of the list to use for this instance
+    :param dict attachment: If mask is not to be read from filesystem it must be provided as attachment
     """
     
     def __init__(self,config,mask=None,attachment=None):

@@ -20,6 +20,11 @@ class menueitems(QtGui.QWidget):
         self.queuemenue= self.app.menuBar().addMenu('&Queue')
         self.queueRedoAllImmagesAction =self.queuemenue.addAction("&Redo All Images")
         self.queueAbortAction=self.queuemenue.addAction("A&bort Queue")
+        self.helpmenue=self.app.menuBar().addMenu('&Help')
+        self.openhelpbrowser=self.helpmenue.addAction("&Online Help")
+        self.connect(self.openhelpbrowser, 
+                     QtCore.SIGNAL("triggered()"),
+                     self.help)
         self.connect(self.queueAbortAction, 
                      QtCore.SIGNAL("triggered()"),
                      self.abortqueue)
@@ -147,7 +152,9 @@ class menueitems(QtGui.QWidget):
         msgBox=QtGui.QMessageBox(self)
         msgBox.setText( result);
         msgBox.exec_();
-        
+    def help(self):
+        import webbrowser
+        webbrowser.open('http://ac-software.tugraz.at/SAXS')
         
         
         

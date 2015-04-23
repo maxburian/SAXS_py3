@@ -2,9 +2,9 @@
 
 The Saxsdog Server
 ~~~~~~~~~~~~~~~~~~
-The saxdog server can watch for filesystem events for himself 
+The saxdog server can watch for files ystem events for himself 
 or subscribe to a zmq service,
-the Saxsdog Feeder, that publishes new file names. The server can process the new images acording to one 
+the Saxsdog Feeder, that publishes new file names. The server can process the new images according to one 
 calibration. The server may only have one calibration at a time, it is not designed to be used 
 by multiple users at the same time.
 
@@ -14,10 +14,10 @@ The Saxsdog Feeder
 ~~~~~~~~~~~~~~~~~~
 
 The "Saxsdog Feeder" service offers file events for subscription.
-It sould not do anny buffering or preselection, just send a new 
+It should not do any buffering or pre-selection, just send a new 
 message when any new file was copied and is ready for processing. 
 Also when a file is overwritten: Send a message. It should however, 
-only send this event, when the file is completly written to the file system.
+only send this event, when the file is completely written to the file system.
 
 
 New file events are composed of the following message:
@@ -36,7 +36,7 @@ The service must be a ZeroMQ ``zmq.PUP`` socket. This code is a simulation of th
 The Saxsdog Leash
 ~~~~~~~~~~~~~~~~~
 
-The Saxsdog Leash is a user-facing controll interface. 
+The Saxsdog Leash is a user-facing control interface. 
 There, the user should enter new calibrations and specify the data directories connected to it. 
 During the processing, it shows a graph of one of the current images.
 
@@ -166,7 +166,7 @@ Answer:
 Readdir
 -------
 
-This puts all existing files in the queue directory into the queue again
+This puts all existing files in the queue directory into the queue again.
 
 Request:
 
@@ -241,14 +241,17 @@ In case of error in the Saxsdog Server it will return an error message:
 
 Request Schema
 ~~~~~~~~~~~~~~
-   
+
+This describes how the requests to the Server must be composed.
+
 .. include:: SAXSLeashRequest.rst
    
 .. _resroot:
 
 Response Schema
 ~~~~~~~~~~~~~~~
- 
+
+This is the Schema of the data the  server my send back as a response.
 
 .. include:: SAXSLeashResult.rst
 
@@ -257,6 +260,9 @@ Response Schema
 
 Datamerge Schema
 ~~~~~~~~~~~~~~~~
+
+The data merge tool can merge (join) log files with data from the images and create consolidated
+data files for archiving an further processing. 
 
 
 .. include:: DataConsolidationSchema.rst

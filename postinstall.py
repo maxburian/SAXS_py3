@@ -27,7 +27,7 @@ if sys.argv[1] == '-install':
     create_shortcut(
         pyw_executable,
         'SAXSDogLeash',
-       os.path.join(startmenu_path,'Leash.lnk'),
+       os.path.join(startmenu_path,'SAXSLeash.lnk'),
         script_file,
         w_dir,
        iconpath,0)
@@ -36,7 +36,7 @@ if sys.argv[1] == '-install':
     create_shortcut(
         pyw_executable,
         'SAXSDogLeash',
-        os.path.join(desktop_path,'Leash.lnk'),
+        os.path.join(desktop_path,'SAXSLeash.lnk'),
         script_file,
         w_dir,
        iconpath,0)
