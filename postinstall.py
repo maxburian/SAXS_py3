@@ -8,7 +8,7 @@ startmenu = get_special_folder_path("CSIDL_COMMON_STARTMENU")
  
 
 pyw_executable =   os.path.join(sys.prefix,'pythonw.exe')
-script_file =  os.path.join(sys.prefix,"Scripts","Leash-script.pyw")
+script_file =  '"'+os.path.join(sys.prefix,"Scripts","leash-script.pyw")+'"'
 w_dir = os.path.expanduser('~')
 desktop_path = get_special_folder_path("CSIDL_DESKTOPDIRECTORY")
 startmenu_path = get_special_folder_path("CSIDL_STARTMENU")
@@ -26,7 +26,7 @@ if sys.argv[1] == '-install':
     print('Creating Shortcut')
     create_shortcut(
         pyw_executable,
-        'ORT for Light scattering',
+        'SAXSDogLeash',
        os.path.join(startmenu_path,'Leash.lnk'),
         script_file,
         w_dir,
@@ -35,7 +35,7 @@ if sys.argv[1] == '-install':
     print('Creating Shortcut')
     create_shortcut(
         pyw_executable,
-        'ORT for Light scattering',
+        'SAXSDogLeash',
         os.path.join(desktop_path,'Leash.lnk'),
         script_file,
         w_dir,

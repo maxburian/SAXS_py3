@@ -61,7 +61,7 @@ if sys.argv[1] == 'install':
         import _winreg as  wr
       
         pyw_executable =   os.path.join(sys.prefix,'pythonw.exe')
-        script_file =  os.path.join(sys.prefix,"Scripts","leash-script.pyw")
+        script_file =  '"'+os.path.join(sys.prefix,"Scripts","leash-script.pyw")+'"'
         iconpath= os.path.expanduser(
             os.path.join(
             sys.prefix,
