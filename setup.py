@@ -7,7 +7,7 @@ setup(
     name="SAXS",
     version=versionstring,
     packages=["SAXS"],
-    package_data={"SAXS": ["icons/*","schema.json","schema_1.json"
+    package_data={"SAXS": ["icons/*","schema.json","schema_1.json",
                            "LeashRequestSchema.json",
                            "LeashResultSchema.json",
                            "NetworkSchema.json",
