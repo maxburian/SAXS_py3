@@ -48,7 +48,7 @@ help:
 
 clean:
 	rm -rf $(BUILDDIR)/*
-
+	rm SAXSSchema.rst SAXSLeashRequest.rst SAXSLeashResult.rst DataConsolidationSchema.rst
 html:SAXSSchema.rst ../SAXS/*
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo

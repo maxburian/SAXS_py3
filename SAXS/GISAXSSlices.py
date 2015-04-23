@@ -17,11 +17,16 @@ def xDirSliceProjector(y,x,y1,y2,mask):
     return labelstosparse(a, masky,1)
  
 class slice():
+    """ 
+    Initializes slice integration
+    
+    :param dictionary conf:  Detector calibration
+    :param dictionary sliceconf: The part of detector calibration which deals with this slice.
+    :param dictionary attachments: Mask data.
+    
+    """
     def __init__(self,conf,sliceconf,attachments=[]):
-        """ 
-        sliceconf dictionary:
-        Direction "x"|"y", Plane "InPlane'|'Vertical", CutPosition, CutMargin, IncidentAngle}
-        """
+         
         x=conf["Geometry"]["Imagesize"][1]
         y=conf["Geometry"]["Imagesize"][0]
         self.x=x
@@ -67,7 +72,7 @@ class slice():
         
         :param np.array() image: Image to integrate as numpy array
         :param string path: Path to save the file to
-        :returns: Scattering curve data as numpy array 
+        :returns: Scattering curve data as json structure
         """
         r= self.Projector.dot(image.flatten() ) 
         data=np.array([self.grid,

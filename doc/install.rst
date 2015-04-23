@@ -13,6 +13,7 @@ they are all available through "pip" so the command::
 
    >>pip numpy scipy matplotlib jsonschema bitarray watchdog sphinxcontrib-programoutput\
     sphinxcontrib-programscreenshot pyzmq
+    
 Should get all the modules.
 For Windows, use the Anaconda Python distribution which includes pip.
 
@@ -24,7 +25,7 @@ Go there, and type into the command line:
 .. code::
 
    python setup.py install
-
+   
 This installs the Python module where it is found by Python, creates the command line tools and
 installs them on the system. Where that is, depends on the Python installation. 
 The setup script will also try to satisfy all the dependencies by downloading and installing them. 

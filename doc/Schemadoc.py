@@ -8,7 +8,7 @@ import collections
  
 transform=jsonschematorst( '../SAXS/schema.json') 
 
-RST= transform.toRsT()
+RST= transform.toRsT(rootref="root")
 #print RST 
 #print RST
 rstfile=open("SAXSSchema.rst",'w')
@@ -30,5 +30,14 @@ RST= transform.toRsT(rootref="resroot")
 #print RST 
 #print RST
 rstfile=open("SAXSLeashResult.rst",'w')
+rstfile.write(RST)
+rstfile.close
+
+transform=jsonschematorst( '../SAXS/DataConsolidationConf.json') 
+
+RST= transform.toRsT(rootref="consroot")
+#print RST 
+#print RST
+rstfile=open("DataConsolidationSchema.rst",'w')
 rstfile.write(RST)
 rstfile.close

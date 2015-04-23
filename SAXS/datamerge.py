@@ -12,6 +12,8 @@ import tables as tb
 import hashlib,pickle
 import re
 from jsonschema import validate,ValidationError
+import os
+import StringIO
 __file__="/home/chm/Dropbox/git/SAXS/SAXS/datamerge.py"
 def readtiff(imagepath):
     '''
@@ -61,7 +63,9 @@ def readtiff(imagepath):
     return data
 
 def readlog(logfile):
-    '''read CSV into pandas data frame'''
+    '''
+    read CSV into pandas data frame
+    '''
     file=open(logfile)
     dframe=pd.read_csv(logfile,sep="\t" )
     dframe[dframe.columns[0]]= (pd.to_datetime(dframe[dframe.columns[0]],unit="s"))
@@ -142,12 +146,12 @@ def graphstohdf(conf,fileslist,outputdirecory):
                 h5file.createArray(node, "CHI", "".join(chifile), "chifile" )
     h5file.close()
     
-import os,hashlib
 
-
-import StringIO
 
 def readimglog(filename):
+    """
+    Read the log files the detector writes along with the images
+    """
     logf=open(filename) 
     logfstr=""
     for i,line in enumerate(logf):
@@ -170,7 +174,9 @@ def readimglog(filename):
     return df
  
 def readallimages(dir):
-    "read header from all images and collect chi files if required"
+    """
+    read header from all images and collect files list
+    """
     frameinit=False
     imgframe=pd.DataFrame()
     imglogframe=pd.DataFrame()
@@ -207,7 +213,11 @@ def readallimages(dir):
     return merged,chilisttodict(chilist)
   
 def compileconffromoptions(options, args):
-     
+    """
+    If data merge is used as command line tool this compiles a json config according to 
+    :ref:`consroot`
+    
+    """
     conf= {
      "TimeOffset": float(options.timeoffset), 
      "LogDataTables": [
@@ -287,7 +297,7 @@ def merge():
                        action="store_true",default=False)
                      
     parser.add_option("-C", "--conf", dest="conffile",
-                      help="use this json conf file to merge the data (ignore other options) ", metavar="FILE",default="")
+                      help="Use config in  FILE to merge the data (ignore other options) ", metavar="FILE",default="")
   
     (options, args) = parser.parse_args(args=None, values=None)
     if options.conffile!="":

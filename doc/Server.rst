@@ -138,6 +138,37 @@ This command will put all the images in the configured directory into the queue.
 This is useful to reprocess pictures.
 
 
+List Directory
+~~~~~~~~~~~~~~
+.. code::
+   
+   $ saxsleash listdir Serverdirectory
+ 
+ Returns a list of Files and Directories on the Server. Mostly used for the Leash GUI dialoges.
+
+Files List
+~~~~~~~~~~
+
+.. code::
+
+   $ saxsleash fileslist
+   
+Returns a list of processed files.
+
+Merge Data
+~~~~~~~~~~
+
+.. code::
+
+   $  saxsleash mergedata mergeconf.json
+   
+Sends command to merge data. Takes a merge configuration file as Argument.
+
+Put Plot Data
+~~~~~~~~~~~~~
+
+The ``putplotdata`` comand is used internaly by the worker thread to
+update the current plot the server delivers when asked the ``plotdata`` command.
 
 The Saxsdog Network Protocol
 ----------------------------

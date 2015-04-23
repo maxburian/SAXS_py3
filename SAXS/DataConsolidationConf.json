@@ -8,6 +8,7 @@
 			"type": "number",
 			"default": "0",
 			"units": "Seconds",
+			"required": true,
 			"description": "If offset is not found otherwise, use this as offset  for all log data"
 		},
 
@@ -34,7 +35,7 @@
 					},
 
 					"TimeOffset": 
-					{
+					{ "required": true,
 						"type": "number",
 						"default": "0",
 						"units": "Seconds",
@@ -42,7 +43,7 @@
 					},
 
 					"FirstImageCorrelation": 
-					{
+					{"required": true,
 						"description": "Find offset for all log data by correlating first image with first entry of this table. ",
 						"type": "boolean",
 						"default": false
@@ -91,28 +92,29 @@
 		{
 			"description": "List of outputformats to write the consolidated log or the consolidated 'hdf' file.",
 			"type": "object",
+			"required": true,
 			"properties": 
 			{
 				"csv": 
-				{
+				{"required": true,
 					"type": "boolean",
 					"default": false
 				},
 
 				"hdf": 
-				{
+				{"required": true,
 					"type": "boolean",
 					"default": false
 				},
 
 				"exel": 
-				{
+				{"required": true,
 					"type": "boolean",
 					"default": false
 				},
 
 				"json": 
-				{
+				{"required": true,
 					"type": "boolean",
 					"default": false
 				}
@@ -120,29 +122,29 @@
 		},
 
 		"OutputFileBaseName": 
-		{
+		{"required": true,
 			"type": "string",
 			"default": "../results/merged"
 		},
 	
 		"HDFOptions": 
-		{
+		{"required": true,
 			"description": "Options only relevant to hdf export.",
 			"type": "object",
 			"properties": 
 			{
 				"IncludeCHI": 
-				{
+				{"required": true,
 					"description": "Whether to include the .chi files as strings.",
 					"type": "boolean",
-					"default": true
+					"default": false
 				},
 
 				"IncludeTIF": 
-				{
+				{"required": true,
 					"description": "Whether to include the images as integer array.",
 					"type": "boolean",
-					"default": true
+					"default": false
 				}
 			}
 		}

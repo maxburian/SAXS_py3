@@ -1,0 +1,205 @@
+{
+	"type": "object",
+	"$schema": "http://json-schema.org/draft-03/schema",
+	"required": true,
+	"description": "The SAXS configuration file specifies the parameters of a SAXS sensor calibration. It is written in the JSON format which governs the general syntax.",
+	"additionalProperties": false,
+	"properties": 
+	{
+		"Title": 
+		{
+			"type": "string"
+		},
+
+		"Tilt": 
+		{
+			"description": "The sensor, usually is not perfectly perpenticular to the ray direction. The tilt angle can be specified by giving the following paramters.",
+			"type": "object",
+			"required": true,
+			"additionalProperties": false,
+			"properties": 
+			{
+				"TiltRotDeg": 
+				{
+					"description": "This gives the angel of the tilt direction.",
+					"type": "number",
+					"units": "degree",
+					"default": 0,
+					"required": true
+				},
+
+				"TiltAngleDeg": 
+				{
+					"description": "This gives the angle between the ray direction and the normal to the sensor plane.",
+					"units": "degree",
+					"type": "number",
+					"default": 0,
+					"required": true
+				}
+			}
+		},
+
+		"BeamCenter": 
+		{
+			"description": "Gives the beam center in pixel coorinates.",
+			"type": "array",
+			"minItems": 2,
+			"maxItems": 2,
+			"required": true,
+			"units": "pixel",
+			"default": 
+			[
+				800.00,
+				400.00
+			],
+
+			"items": 
+			[
+				{
+					"type": "number",
+					"default": 0,
+					"required": true
+				},
+
+				{
+					"type": "number",
+					"default": 0,
+					"required": true
+				}
+			]
+		},
+
+		"DedectorDistanceMM": 
+		{
+			"description": "Distance between diffraction center and sensor.",
+			"type": "number",
+			"units": "Millimeters",
+			"default": 1000.00,
+			"required": true
+		},
+
+		"Imagesize": 
+		{
+			"description": "Size of sensor image in pixel.",
+			"type": "array",
+			"minItems": 2,
+			"maxItems": 2,
+			"units": "Pixel",
+			"required": true,
+			"default": 
+			[
+				1043,
+				981
+			],
+
+			"items": 
+			[
+				{
+					"type": "number",
+					"units": "Pixels",
+					"default": 1043,
+					"required": true
+				},
+
+				{
+					"type": "number",
+					"units": "Pixels",
+					"default": 981,
+					"required": true
+				}
+			]
+		},
+
+		"MaskFile": 
+		{
+			"description": "Path of Maskfile",
+			"type": "string",
+			"default": "AAA_integ.msk",
+			"required": true
+		},
+
+		"Oversampling": 
+		{
+			"description": "Oversampling factor for radial integration. The higher, the longer the setup but the higher the accuracy. More then 3 is probably overkill. ",
+			"type": "number",
+			"default": 3,
+			"required": true
+		},
+
+		"PixelSizeMicroM": 
+		{
+			"description": "The pixel size on the sensor.",
+			"units": "Microns",
+			"type": "array",
+			"minItems": 1,
+			"maxItems": 2,
+			"required": true,
+			"default": 
+			[
+				172.0
+			],
+
+			"items": 
+			[
+				{
+					"type": "number",
+					"units": "Microns",
+					"default": 172,
+					"required": true
+				}
+			]
+		},
+
+		"PixelPerRadialElement": 
+		{
+			"description": "Expresses the width of a radial step in terms of pixels. '1' means :math:`\\delta R\\approx 1` :ref:`PixelSizeMicroM`.",
+			"required": true,
+			"type": "number",
+			"default": 1
+		},
+
+		"Wavelength": 
+		{
+			"description": "Refined wavelength.",
+			"units": "Angstrom",
+			
+			"type": "number",
+			"required": true,
+			"default": 1.54000
+		},
+
+		"PolarizationCorrection": 
+		{
+			"description": "The scattering direction id dependend on the light polarization. This may be acconted for with the polarization correction.",
+			"required": false,
+			"type": "object",
+			"default": 
+			{
+				"Fraction": 0.95,
+				"Angle": 0
+			},
+
+			"minItems": 1,
+			"additionalProperties": false,
+			"properties": 
+			{
+				"Fraction": 
+				{
+					"description": "Fraction of light polarized in the given (:ref:`Angle`) direction.",
+					"required": true,
+					"type": "number",
+					"default": 0.95
+				},
+
+				"Angle": 
+				{
+					"description": "Angle of the polarization plane.",
+					"required": true,
+					"type": "number",
+					"default": 0.0,
+					"units": "degree"
+				}
+			}
+		}
+	}
+}

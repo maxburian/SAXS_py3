@@ -176,8 +176,8 @@ class calibration:
         dev=np.square(image.flatten()-means)
         stddev=np.sqrt(self.I.dot(dev))
         poissonerr=np.sqrt(radial*self.Areas)*self.oneoverA
-        rsq=(2*np.sin(self.thetagrid)*self.config['DedectorDistanceMM']
-             *np.pi*self.config['PixelSizeMicroM'][0]*1e-3**2)
+        rsq=(2*np.sin(self.thetagrid)*self.config["Geometry"]['DedectorDistanceMM']
+             *np.pi*self.config["Geometry"]['PixelSizeMicroM'][0]*1e-3**2)
         return  np.array([radial,stddev ,poissonerr])
     
     def plot(self,image,outputfile="",startplotat=0 ,fig=None):
@@ -351,6 +351,9 @@ def openmask(mfile,attachment=None):
         #misc.imsave("mask.png",cropedmask)
         return  np.logical_not(cropedmask)
     else:
-        mask= np.where(misc.imread(mfilestream)!=0,False,True)
+        if attachment:
+            mask= np.where(misc.imread(mfilestream)!=0,False,True)
+        else:
+            mask= np.where(misc.imread(mfile)!=0,False,True)
        
         return mask

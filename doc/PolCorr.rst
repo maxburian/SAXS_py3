@@ -43,9 +43,9 @@ the integration of an image containing :math:`1/I_{corr}` should give constant 1
    
    import SAXS, json
    import matplotlib.pyplot as plt
-   import numpy as np
+   import numpy as np 
    calfile=json.load(open('calpol.json'))
-   calfile['Oversampling']=2
+   calfile["Masks"][0]['Oversampling']=2
    Calpol=SAXS.calibration(calfile)  
    r=Calpol.integrate(1/Calpol.corr)
    nonzero=r[1]>0
@@ -62,7 +62,7 @@ Just for checking: integrating a picture with only ones gives something differen
    import matplotlib.pyplot as plt
    import numpy as np
    calfile=json.load(open('calpol.json'))
-   calfile['Oversampling']=2
+   calfile["Masks"][0]['Oversampling']=2
    Calpol=SAXS.calibration(calfile)  
    r=Calpol.integrate(np.ones(Calpol.corr.shape))
    nonzero=r[1]>0

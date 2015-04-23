@@ -1,23 +1,32 @@
 {
-    "PixelPerRadialElement": 1,
-    "Imagesize": [
-        1043,
-        981
-    ],
-    "Tilt": {
-        "TiltAngleDeg": -10,
-        "TiltRotDeg": 73.569
+    "Geometry": {
+        "Tilt": {
+            "TiltAngleDeg": -10,
+            "TiltRotDeg": 73.569
+        },
+        "DedectorDistanceMM": 1031.657,
+        "BeamCenter": [
+            808.37,
+            387.772
+        ],
+        "Imagesize": [
+            1043,
+            981
+        ],
+        "PixelSizeMicroM": [
+            172.0,
+            172.0
+        ]
     },
-    "MaskFile": "emptymask.tif",
-    "PixelSizeMicroM": [
-        172.0,
-        172.0
+    "Directory": [
+        "."
     ],
-    "Wavelength": 1.54,
-    "DedectorDistanceMM": 1031.657,
-    "BeamCenter": [
-        808.37,
-        387.772
+    "Masks": [
+        {
+            "PixelPerRadialElement": 1,
+            "MaskFile": "emptymask.tif",
+            "Oversampling": 2
+        }
     ],
-    "Oversampling": 2
+    "Wavelength": 1.54
 }

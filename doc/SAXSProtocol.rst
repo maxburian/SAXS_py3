@@ -248,4 +248,16 @@ Request Schema
 
 Response Schema
 ~~~~~~~~~~~~~~~
+ 
+
 .. include:: SAXSLeashResult.rst
+
+
+.. _consroot:
+
+Datamerge Schema
+~~~~~~~~~~~~~~~~
+
+
+.. include:: DataConsolidationSchema.rst
+

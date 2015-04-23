@@ -13,6 +13,6 @@ from NetConf import createsaxdogconf as gennetconf
 #from LeashGui import LeashGUI
 from leash2 import  LeashGUI
 from atrdict import AttrDict
-
+from  GISAXSSlices import slice
 from datamerge import merge
 

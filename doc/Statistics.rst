@@ -49,9 +49,9 @@ In an ordinary case the standard deviation gives you a measure of how spread the
    import numpy as np
    from scipy import misc
    calfile=json.load(open('calpol.json'))
-   calfile['Oversampling']=2
+   calfile["Masks"][0]['Oversampling']=2
    Calpol=SAXS.calibration(calfile) 
-   
+    
    s=Calpol.plot(misc.imread('data/buf1_00000.tif'),outputfile="good.svg")
    plt.title(r"Standard Deviation")
   
@@ -65,8 +65,8 @@ The standard deviation is bright yellow and the Poison error is blueisch
    import numpy as np
    from scipy import misc
    calfile=json.load(open('calpol.json'))
-   calfile['Oversampling']=2
-   calfile['BeamCenter']=[293,600]
+   calfile["Masks"][0]['Oversampling']=2
+   calfile["Geometry"]['BeamCenter']=[293,600]
    Cal=SAXS.calibration(calfile) 
    
    s=Cal.plot(misc.imread('data/buf1_00000.tif'),outputfile="bad.svg")
