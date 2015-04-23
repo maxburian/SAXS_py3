@@ -390,25 +390,29 @@ class Server():
                     filelists[kind]=  [fileset[kind]]
         return {"result":"resultfileslists","data":{"fileslist":filelists}}
     def mergedatacommand(self,conf):
-        directory=os.path.normpath(
-                    os.path.join(self.serverdir, os.sep.join(self.calibration["Directory"])))
-        relativedirname=os.path.dirname(conf["OutputFileBaseName"])
-        conf["OutputFileBaseName"]= directory.split(os.sep)[-1]+os.path.basename(conf["OutputFileBaseName"])
-        print "Dir: "+ directory
-        for table in conf["LogDataTables"]:
-            for file in table["Files"]:
-                file["Path"].insert(0,self.serverdir)
-        mergedTable,filelists,plotdata=datamerge.mergedata(conf,directory)
-        resultdir=os.path.join(directory,relativedirname)
-        if not  os.path.isdir(resultdir):
-            os.mkdir(resultdir)
-        datamerge.writeTable(conf,mergedTable,directory=resultdir)
-        datamerge.writeFileLists(conf ,filelists,directory=resultdir,serverdir=self.serverdir)
-        if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
-            datamerge.imgtohdf(conf,directory,resultdir)
-        if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeCHI"]:
-            datamerge.graphstohdf(conf,filelists,resultdir)
-        return {"result":"mergedata","data":{"syncplot":plotdata,"fileslist":filelists}}
+        try:
+            directory=os.path.normpath(
+                        os.path.join(self.serverdir, os.sep.join(self.calibration["Directory"])))
+            relativedirname=os.path.dirname(conf["OutputFileBaseName"])
+            conf["OutputFileBaseName"]= directory.split(os.sep)[-1]+os.path.basename(conf["OutputFileBaseName"])
+            print "Dir: "+ directory
+            for table in conf["LogDataTables"]:
+                for file in table["Files"]:
+                    file["Path"].insert(0,self.serverdir)
+            mergedTable,filelists,plotdata=datamerge.mergedata(conf,directory)
+            resultdir=os.path.join(directory,relativedirname)
+            if not  os.path.isdir(resultdir):
+                os.mkdir(resultdir)
+            datamerge.writeTable(conf,mergedTable,directory=resultdir)
+            datamerge.writeFileLists(conf ,filelists,directory=resultdir,serverdir=self.serverdir)
+            if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
+                datamerge.imgtohdf(conf,directory,resultdir)
+            if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeCHI"]:
+                datamerge.graphstohdf(conf,filelists,resultdir)
+            return {"result":"mergedata","data":{"syncplot":plotdata,"fileslist":filelists}}
+        except Exception as e:
+        
+            return {"result":"Error","data":{"Error": str(e)}}
     def _checkdirectorycollision(self,pathlist):
          serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
          mydir=os.path.normpath(os.sep.join(pathlist))
