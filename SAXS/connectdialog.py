@@ -18,11 +18,13 @@ class serverstatus(QtGui.QWidget):
       
     def updatestatus(self,message):
         result=json.loads(unicode(message))
+        
         self.status.setText("Online, " +result['result'])
         self.result=result
-        self.accept=QtGui.QPushButton("Take This")
-        self.layout.addWidget(self.accept)
-        self.connect(self.accept,QtCore.SIGNAL("clicked()"),self.emitservernumber)
+        if result["result"]!="AuthenticationError":
+            self.accept=QtGui.QPushButton("Take This")
+            self.layout.addWidget(self.accept)
+            self.connect(self.accept,QtCore.SIGNAL("clicked()"),self.emitservernumber)
     def emitservernumber(self):
         self.emit(QtCore.SIGNAL('selected(int )'),self.index)
        

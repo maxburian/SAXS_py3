@@ -158,7 +158,7 @@ class Server():
             except ValueError as e:
                 result={"result":"ValueError in request","data":{"Error":e.message}}
             except  AuthenticationError as e:
-                 result={"result":"AuthenticationError in request","data":{"Error":e.message}}
+                 result={"result":"AuthenticationError","data":{"Error":e.message}}
             except KeyboardInterrupt:
                 context.destroy()
                 self.queue_abort()
