@@ -59,9 +59,10 @@ class consolidatepanel(QtGui.QWidget):
         argu=["mergedata",self.filename]
         result=json.loads(Leash.initcommand(self.app.options,argu,self.app.netconf))
         if result['result']=="Error" or result['result']=="ServerError":
-            self.app.errormessage.setWindowTitle("Server Error")
-            self.app.errormessage.setMinimumSize(400, 300)
-            self.app.errormessage.showMessage(result['data']["Error"])
+            errormessage=QtGui.QErrorMessage(parent=self.app)
+            errormessage.setWindowTitle("Server Error")
+            errormessage.setMinimumSize(400, 300)
+            errormessage.showMessage(result['data']["Error"])
         else:
             import pandas as pd
             dialog=QtGui.QDialog()
