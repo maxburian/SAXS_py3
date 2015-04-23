@@ -1,6 +1,6 @@
 from setuptools import setup
 
-versionstring="1.0.5alpha"
+versionstring="2.0b1"
  
 
 setup(
