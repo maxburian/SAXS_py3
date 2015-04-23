@@ -42,7 +42,7 @@ class consolidatepanel(QtGui.QWidget):
             import shutil
             shutil.copy(os.path.dirname(__file__)   +os.sep+'consolconftemplate.json',self.filename)
         self.model.loadfile(self.filename)
-        self.app.calibeditor.reset()
+        self.reset()
         self.connect(self.model, QtCore.SIGNAL('dataChanged(QModelIndex,QModelIndex)'),self.model.save)
         self.submitbutton=QtGui.QPushButton("Collect All Data")
         self.submitlayout=QtGui.QVBoxLayout()
