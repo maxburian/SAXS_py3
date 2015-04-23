@@ -14,7 +14,7 @@ import re
 from jsonschema import validate,ValidationError
 import os
 import StringIO
-__file__="/home/chm/Dropbox/git/SAXS/SAXS/datamerge.py"
+
 def readtiff(imagepath):
     '''
     Read the tif header (#strings)
