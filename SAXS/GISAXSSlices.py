@@ -43,8 +43,7 @@ class slice():
                 attachment=attachments[sliceconf['MaskRef']]
             else:
                 atachment=None
-            self.mask=openmask(conf["Masks"][sliceconf['MaskRef']]["MaskFile"],
-                              )
+            self.mask=openmask(conf["Masks"][sliceconf['MaskRef']]["MaskFile"], attachment=attachment   )
         else:
             self.mask=np.zeros((x,y))
         if len(conf["Geometry"]['PixelSizeMicroM'])==1:
