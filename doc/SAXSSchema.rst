@@ -406,7 +406,7 @@ Direction
 :Type:
   string
 :values:
-  [x,y]
+  [x, y]
 
 :Required:
   True
@@ -432,7 +432,7 @@ Whether the direction is in plane with scattering surface or vertical to it.
 :Type:
   string
 :values:
-  [InPlane,Vertical]
+  [InPlane, Vertical]
 
 :Required:
   True

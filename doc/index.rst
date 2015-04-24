@@ -45,9 +45,9 @@ and :ref:`converter`
    
    install
    TheTools
+   Server
    SAXSSchemaDoc
    TheTechnology
-   Server
    LeashDeveloperDoc
    SAXSapi
  

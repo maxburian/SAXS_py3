@@ -91,7 +91,7 @@ Time epoch
 :Type:
   string
 :values:
-  [Mac,Unix]
+  [Mac, Unix]
 
 :Required:
   True

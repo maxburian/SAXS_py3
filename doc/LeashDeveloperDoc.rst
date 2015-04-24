@@ -1,5 +1,5 @@
 ========================================
-SAXSDOG Network  Developer Documentation
+SAXSDOG Developer Documentation
 ========================================
 
 The Leash

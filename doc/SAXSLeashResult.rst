@@ -399,7 +399,7 @@ kind
 :Type:
   string
 :values:
-  [Radial,Slice]
+  [Radial, Slice]
 
 :Required:
   False
