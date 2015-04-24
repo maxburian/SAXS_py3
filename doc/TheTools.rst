@@ -39,6 +39,8 @@ The tool "plotchi"  plots a list of ".chi"-files:
 
 .. command-output:: plotchi  --help 
 
+.. _saxsdmerge:
+
 Saxsdmerge
 ~~~~~~~~~~
 

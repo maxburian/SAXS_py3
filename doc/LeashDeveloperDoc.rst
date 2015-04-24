@@ -6,29 +6,30 @@ The Leash
 =========
 
 The Leash GUI is part of the SAXSdog Network and the most user facing software.
-It is also the most complex one. There is however the possibility to extend it with functionality
-by touching only small well defined parts. One is the Schemas of the configuration files and the other
-is the  QItemDelegate class that controls how configuration data is shown and edited.
+Its design allows to extend it with functionality by touching only small well defined parts. 
+One is the Schemas of the configuration files and the other
+is the  ``QItemDelegate``. The following sections give an overview of the important parts.
 
 Using the JSON Schema to Extend Leash
 -------------------------------------
 
-This SAXS package relies in many locations on structured configuration files or protocol data that has 
-constantly be checked for validity. This is done by defining the grammar in JSON Schema. This is a language in
-its self expressed in JSON to specify what values may occur where in the file. This does not only allow for
-automatically generating documentation as it is used in this document many times, but you can also use it 
+This software relies a lot on structured configuration files that have to
+constantly be checked for validity. This is done by defining the grammar in JSON Schema. 
+This is a language, in
+its self expressed in JSON, to specify what values may occur where in the file. This does not only allow for
+automatically generating documentation, as it is used in this document many times, but you can also use it 
 to generate an GUI that can edit this structured data files. 
 
-The tree view in the "Calib" tab is build by recursively, going to the schema and the data, and so, 
-building the model that can be displayed in the QtreeViev widget of the QT tool kit.
+The tree view in the "Calib" tab of ``Leash`` is build by recursively, going to the schema and the data,
+building the model that can be displayed in the QtreeView widget.
 
 So, in order to add new parameters to the view, the only thing you must do is to add the description to the 
-schema. If you use similar constructs as in the rest of the data it will work just so. 
+schema. If you use similar constructs as in the rest of the data, it will work just so. 
 
 The leash uses the scheme in ``SAXS/schema.json`` to build the "Calib" tab and 
 ``SAXS/DataConsolidationConf.json`` to build the Consolidate tab.
 
-Consider this excerpt of the ``schema.json``:
+Consider this excerpt of the ``SAXS/schema.json``:
 
 .. code:: json
 
@@ -42,6 +43,7 @@ Consider this excerpt of the ``schema.json``:
       {
          "Directory": 
          {
+            "description":"Directory to take into acount for processing images. Given as a list of subdirectories.",
             "type": "array",
             "required": true,
             "minItems": 1,
@@ -60,27 +62,28 @@ Consider this excerpt of the ``schema.json``:
 
 
 The ``type`` in the root says object which means it is a dictionary like data structure. 
-The possible keys are declared in the ``properties`` doctionary/object. Inside the ``properties``
+The possible keys are declared in the ``properties`` dictionary. Inside the ``properties``
 other nested types are declared in this case an ``array`` called ``Directory``.
 
 The ``appinfo`` section is not part of the Schema specification it is rather a custom field to tell the 
-applications that process the schema about possible special treatments. In this case we want the Leash use 
+application  about possible special treatments. In this case we want the Leash use 
 Editor widgets
-to pick a remote directory. This editor widget will be provided by the QItemDelegate.
+to pick a remote directory. This editor widget will be provided by the ``QItemDelegate``.
+Which shall be explained in the following section.
 
 The QItemDelegate
 -----------------
 
-The QtGui.QTreeView() class allows to set an item delegate this happens for example in ``calibeditor.py``
+The ``QtGui.QTreeView()`` class allows to set an item delegate. This happens for example in ``calibeditor.py``
 
 .. code::
 
    self.treeview.setItemDelegateForColumn(1,calibeditdelegate.calibEditDelegate( app ))
 
-The calibeditdelegate.calibEditDelegate class in turn is a custom class derived from QtGui.QItemDelegate.
+The ``calibeditdelegate.calibEditDelegate`` class in turn is a custom class derived from QtGui.QItemDelegate.
 this is implemented in ``calibeditdelegate.py``.
 
-The constructor is only initializing the base class:
+The constructor is initializing the base class:
 
 .. code::
 
@@ -94,7 +97,7 @@ The part that is interesting is the reimplementations of the ``createEditor``,
 
 
 The ``createEditor`` method is called when the user double clicks an item content cell in the tree view.
-The default behavior is just to make the text content editable but you can return any widget you like depending 
+The default behavior is to make the text content editable but you can return any widget you like, depending 
 on the context. 
 
 .. code::
@@ -158,12 +161,12 @@ on the context.
             return QtGui.QItemDelegate.createEditor(self, parent, option,
                                               index)
 The ``createEditor`` is called with an index object. Which is a class that is used by the 
-QtGui.QStandardItemModel class to represent the data in a form the tree view can display it. 
+``QtGui.QStandardItemModel`` class to represent the data in a form the tree view can display it. 
 
 In the implementation in ``jsonschematreemodel.py`` the items have the subschema describing 
-themselves and their children stored in special data attributes. So we can use this to chose which 
-editor to present the user depending of the type and role of the item on hand. 
-Integers get a QtGui.QSpinBox, Enumerations get  QtGui.QComboBox to select one of the options.
+themselves and their children stored in special data attributes. We can use this to chose which 
+editor to present to the user, depending of the type and role of the item on hand. 
+Integers get a ``QtGui.QSpinBox``, Enumerations get  ``QtGui.QComboBox`` to select one of the options.
 
 In case the item has ``File`` in the appinfo/editor field,
 
@@ -232,6 +235,3 @@ If the ``readdir`` command is issued to the server, it will call the
 :py:meth:`imagequeue.fillqueuewithexistingfiles` method which will fill the queue with all ".tif" files it finds in the 
 configured directory.
 
-
-The Data Merger
-===============

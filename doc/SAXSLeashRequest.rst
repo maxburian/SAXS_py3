@@ -34,7 +34,7 @@ command
 :Type:
   string
 :values:
-  [close,abort,new,get,plot,plotdata,readdir,stat,listdir,putplotdata,fileslist,mergedata]
+  [close,abort,new,get,plot,plotdata,readdir,stat,listdir,putplotdata,fileslist,mergedata,getmergedata]
 
 :Required:
   True

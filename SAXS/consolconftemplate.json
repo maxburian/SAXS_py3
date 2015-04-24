@@ -2,7 +2,7 @@
   "TimeOffset": 0.0, 
   "LogDataTables": [
     {
-      "TimeEpoc": "Mac", 
+      "TimeEpoch": "Mac", 
       "TimeOffset": 0.0, 
       "FirstImageCorrelation": true, 
       "Name": "Peak", 

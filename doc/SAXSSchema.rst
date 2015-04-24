@@ -44,12 +44,8 @@ Example JSON:
         "DedectorDistanceMM": 1000.0
       },
       "Wavelength": 1.54,
-      "Directory": [
-        0
-      ],
-      "Masks": [
-        0
-      ]
+      "Directory": [],
+      "Masks": []
     }
 
 .. _Title:
@@ -286,7 +282,7 @@ Example JSON:
 
 .. code:: json
 
-    {"Masks": [0]}
+    {"Masks": []}
 
 .. _MaskFile:
 
@@ -642,6 +638,9 @@ Example JSON:
 Directory
 -------------------------
 
+Directory to take into acount for processing images. Given as a list of subdirectories.
+
+
 :Type:
   array() items: string 
 :Required:
@@ -653,7 +652,7 @@ Example JSON:
 
 .. code:: json
 
-    {"Directory": [0]}
+    {"Directory": []}
 
 .. _Threads:
 

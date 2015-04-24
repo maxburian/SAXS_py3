@@ -11,6 +11,7 @@ This input file is written as a JSON file. This is a common syntax to express st
 You might want to read a bit about it before moving on.
 
 .. _root:
+
 Calibration file Reference
 ==========================
 

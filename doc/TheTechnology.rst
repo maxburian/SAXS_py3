@@ -12,6 +12,7 @@ The Technology
    Fit2d
    ConstantImage
    Statistics
+   Slices
    
 
  

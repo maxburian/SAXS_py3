@@ -221,7 +221,7 @@ def compileconffromoptions(options, args):
      "LogDataTables": [
        {
          "TimeOffset": 0.0, 
-         "TimeEpoc":"Mac",
+         "TimeEpoch":"Mac",
          "FirstImageCorrelation": options.syncfirst, 
          "Name": "Peak", 
          "Files": [
@@ -234,7 +234,7 @@ def compileconffromoptions(options, args):
        }, 
        {
          "TimeOffset": 0.0, 
-    "TimeEpoc":"Mac",
+    "TimeEpoch":"Mac",
          "FirstImageCorrelation": False, 
          "Name": "Dlog", 
          "Files": [
@@ -350,7 +350,7 @@ def writeFileLists(conf ,filelists,directory=".",serverdir=""):
 def cleanuplog(logframe,logTable):
     logframe.columns+=" ("+logTable["Name"]+")"
     logframe.index=logframe.index-timedelta(seconds=logTable["TimeOffset"])
-    if logTable["TimeEpoc"]=="Mac":
+    if logTable["TimeEpoch"]=="Mac":
        logframe.index=logframe.index- ( datetime.fromtimestamp(0)-datetime(1904, 1, 1, 0,0,0))
 def chilisttodict(chi):
     chidict={}

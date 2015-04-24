@@ -291,6 +291,8 @@
 			"type": "array",
 			"required": true,
 			"minItems": 1,
+			"description":"Directory to take into acount for processing images. Given as a list of subdirectories.",
+			
 			"items": 
 			{
 				"type": "string",

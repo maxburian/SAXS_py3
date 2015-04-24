@@ -49,6 +49,7 @@ and :ref:`converter`
    TheTechnology
    Server
    LeashDeveloperDoc
+   DataMerge.rst
    SAXSapi
  
 

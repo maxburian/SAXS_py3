@@ -68,7 +68,7 @@ Define log files to consolidate with image data. If more then one defined, they 
 
 
 :Type:
-  array() items: {:ref:`TimeEpoc`, :ref:`TimeOffset`, :ref:`FirstImageCorrelation`, :ref:`Name`, :ref:`Files`}
+  array() items: {:ref:`TimeEpoch`, :ref:`TimeOffset`, :ref:`FirstImageCorrelation`, :ref:`Name`, :ref:`Files`}
 :Required:
   False
 :JSON Path:
@@ -80,10 +80,13 @@ Example JSON:
 
     {"LogDataTables": []}
 
-.. _TimeEpoc:
+.. _TimeEpoch:
 
-TimeEpoc
+TimeEpoch
 -------------------------
+
+Time epoch
+
 
 :Type:
   string
@@ -92,14 +95,16 @@ TimeEpoc
 
 :Required:
   True
+:Default:
+  Mac
 :JSON Path:
-  * :ref:`# <consroot>` [':ref:`LogDataTables <LogDataTables>`'][0][':ref:`TimeEpoc <TimeEpoc>`']
+  * :ref:`# <consroot>` [':ref:`LogDataTables <LogDataTables>`'][0][':ref:`TimeEpoch <TimeEpoch>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"TimeEpoc": "Mac"}
+    {"TimeEpoch": "Mac"}
 
 .. _TimeOffset:
 
@@ -196,6 +201,9 @@ Example JSON:
 RemotePath
 -------------------------
 
+Path of logfile on server if used in server mode.
+
+
 :Type:
   array() items: string 
 :Required:
@@ -213,6 +221,9 @@ Example JSON:
 
 LocalPath
 -------------------------
+
+Path of logfile on client. Overrides 'RemotePath'.
+
 
 :Type:
   string

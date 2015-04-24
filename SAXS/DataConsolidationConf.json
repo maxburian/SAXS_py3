@@ -23,8 +23,9 @@
 				"type": "object",
 				"properties": 
 				{
-					"TimeEpoc": 
-					{
+					"TimeEpoch": 
+					{	"description":"Time epoch",
+						"default":"Mac", 
 						"required": true,
 						"type": "string",
 						"enum": 
@@ -71,7 +72,7 @@
 							"properties": 
 							{
 								"RemotePath": 
-								{
+								{   "description":"Path of logfile on server if used in server mode.",
 									"type": "array",
 									"items": 
 									{
@@ -83,9 +84,9 @@
 										}
 									}
 								},
-
 								"LocalPath": 
-								{
+								{   
+									"description":"Path of logfile on client. Overrides 'RemotePath'.",
 									"type": "string",
 									"appinfo": 
 									{

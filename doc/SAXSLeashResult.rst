@@ -253,7 +253,7 @@ stat
 
 
 :Contains:
-  :ref:`queue length <queue length>`, :ref:`images processed <images processed>`, :ref:`time <time>`, :ref:`start time <start time>`
+  :ref:`queue length <queue length>`, :ref:`images processed <images processed>`, :ref:`time <time>`, :ref:`start time <start time>`, :ref:`mergecount <mergecount>`
 :Required:
   False
 :JSON Path:
@@ -336,6 +336,24 @@ Example JSON:
 .. code:: json
 
     {"start time": 0}
+
+.. _mergecount:
+
+mergecount
+-------------------------
+
+:Type:
+  number
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <resroot>` [':ref:`data <data>`'][':ref:`stat <stat>`'][':ref:`mergecount <mergecount>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"mergecount": 0}
 
 .. _filename:
 
