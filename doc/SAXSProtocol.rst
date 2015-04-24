@@ -1,5 +1,8 @@
 
 
+The Saxsdog Network Protocol
+----------------------------
+
 The Saxsdog Server
 ~~~~~~~~~~~~~~~~~~
 The saxdog server can watch for files ystem events for himself 
@@ -43,7 +46,7 @@ During the processing, it shows a graph of one of the current images.
 It may send the following commands:
 
 Close
------
+_____
 
 Request:
 
@@ -72,7 +75,7 @@ Answer:
    }
 
 Abort
------
+_____
 
 Request:
 
@@ -102,7 +105,7 @@ Answer:
    }
 
 New
----
+___
 
 Request:
 
@@ -133,7 +136,7 @@ Answer:
    
    
 Plot
-----
+____
 
 Request:
 
@@ -164,7 +167,7 @@ Answer:
    }
 
 Readdir
--------
+_______
 
 This puts all existing files in the queue directory into the queue again.
 
@@ -195,7 +198,7 @@ Answer:
    }
 
 Stat
-----
+____
 Get basic processing statistics.
 
 Request:
@@ -224,7 +227,7 @@ Answer:
    }
    
 Error
------
+_____
 
 In case of error in the Saxsdog Server it will return an error message:
 
@@ -237,33 +240,13 @@ In case of error in the Saxsdog Server it will return an error message:
    }
    
    
-.. _reqroot:
 
-Request Schema
-~~~~~~~~~~~~~~
+The Protocol Schemas
+---------------------
 
-This describes how the requests to the Server must be composed.
-
-.. include:: SAXSLeashRequest.rst
-   
-.. _resroot:
-
-Response Schema
-~~~~~~~~~~~~~~~
-
-This is the Schema of the data the  server my send back as a response.
-
-.. include:: SAXSLeashResult.rst
-
-
-.. _consroot:
-
-Datamerge Schema
-~~~~~~~~~~~~~~~~
-
-The data merge tool can merge (join) log files with data from the images and create consolidated
-data files for archiving an further processing. 
-
-
-.. include:: DataConsolidationSchema.rst
+.. toctree::
+ 
+   SAXSLeashRequestSchema 
+   SAXSLeashResultSchema
+   DmergeSchema
 

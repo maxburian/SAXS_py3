@@ -235,3 +235,4 @@ If the ``readdir`` command is issued to the server, it will call the
 :py:meth:`imagequeue.fillqueuewithexistingfiles` method which will fill the queue with all ".tif" files it finds in the 
 configured directory.
 
+.. include:: DataMerge.rst

@@ -170,11 +170,9 @@ Put Plot Data
 The ``putplotdata`` comand is used internaly by the worker thread to
 update the current plot the server delivers when asked the ``plotdata`` command.
 
-The Saxsdog Network Protocol
-----------------------------
 
-.. toctree::
-   SAXSProtocol
+ 
+.. include::  SAXSProtocol.rst
    
    
    
