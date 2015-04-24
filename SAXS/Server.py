@@ -127,6 +127,7 @@ class Server():
         self.mergedataqueue=Queue()
         self.mergecount=0
         self.mergeresult={}
+        self.mergeprocess=None
         self.threads=self.options.threads
         self.plotresult={"result":"Empty","data":{  "stat":{"images processed": 0,
                      "queue length":0,
@@ -429,8 +430,12 @@ class Server():
                     datamerge.graphstohdf(conf,filelists,resultdir)
                 mergedataqueue.put({"result":
                                     "mergedata","data":{"syncplot":plotdata,"fileslist":filelists}})
-            self.mergeprocess=Process(target=mergeimages,args=(logsTable,firstImage,peakframe,self.mergedataqueue))
-            self.mergeprocess.start()
+            if  not self.mergeprocess or not  self.mergeprocess.is_alive():
+                self.mergeprocess=Process(target=mergeimages,args=(logsTable,firstImage,peakframe,self.mergedataqueue))
+                self.mergeprocess.start()
+            else:
+                return {"result":"Error","data":{"Error": "Merge already started please wait"}}
+                
         except Exception as e:
             return {"result":"Error","data":{"Error": str(e)}}
         return {"result":"merge started"  "mergedata","data":{}}
