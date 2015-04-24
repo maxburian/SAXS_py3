@@ -20,7 +20,7 @@
       ]
     }, 
     {
-      "TimeEpoc": "Mac", 
+      "TimeEpoch": "Mac", 
       "TimeOffset": 0.0, 
       "FirstImageCorrelation": false, 
       "Name": "Dlogger", 
