@@ -28,7 +28,12 @@
 				{
 					
 				},
-				"syncplot":{},
+
+				"syncplot": 
+				{
+					
+				},
+
 				"directory": 
 				{
 					"description": "Directory this queue is going to use. New files in other directories are going to be ignored.",
@@ -96,6 +101,11 @@
 						"start time": 
 						{
 							"type": "number"
+						},
+
+						"mergecount": 
+						{
+							"type": "number"
 						}
 					}
 				},
@@ -104,7 +114,7 @@
 				{
 					"type": "string"
 				},
-
+				 
 				"graphs": 
 				{
 					"type": "array",

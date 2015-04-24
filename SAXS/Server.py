@@ -11,7 +11,8 @@ import datamerge
 from optparse import OptionParser
 import hashlib
 import imagequeuelib
-
+from multiprocessing import Queue ,Value
+from Queue import Empty
 internalplotsocked=345834
 import Leash
 class DirectoryCollisionException(Exception):
@@ -123,6 +124,9 @@ class Server():
         self.commandschema=json.load(open(os.path.abspath(os.path.dirname(__file__))+'/LeashRequestSchema.json'))
         self.imagequeue=None
         self.feederproc=None
+        self.mergedataqueue=Queue()
+        self.mergecount=0
+        self.mergeresult={}
         self.threads=self.options.threads
         self.plotresult={"result":"Empty","data":{  "stat":{"images processed": 0,
                      "queue length":0,
@@ -245,6 +249,8 @@ class Server():
             result=self.getresultfileslists()
         elif command=="mergedata":
             result=self.mergedatacommand( object['argument']["mergeconf"],attachment)
+        elif command=="getmergedata":
+            result=self.mergeresult
         else:
             result={"result":"ErrorNotimplemented","data":{"Error":command+" not implemented"}}
        
@@ -366,17 +372,23 @@ class Server():
         self.plotresult=object['argument']["data"]
         return {"result":"done","data":{}}
     def stat(self):
+        
         if self.imagequeue:
             self.lasttime=time.time()
-          
+           
             self.lastcount=self.imagequeue.allp.value
             self.history.update(self.imagequeue.histqueue)
-            return {"images processed":self.imagequeue.allp.value,
+            result= {"images processed":self.imagequeue.allp.value,
              "queue length":self.imagequeue.picturequeue.qsize(),
              "time":time.time(),
-             "start time":self.queuestatrtime
-             
-             }
+             "start time":self.queuestatrtime}
+            try:
+                self.mergeresult=self.mergedataqueue.get(False)
+                self.mergecount+=1
+                result["mergecount"]= self.mergecount
+            except Empty:
+                pass 
+            return result
         else:
             return{}
     def getresultfileslists(self):
@@ -400,20 +412,28 @@ class Server():
                 for file in table["Files"]:
                     if "RemotePath" in file:
                         file["RemotePath"].insert(0,self.serverdir)
-            mergedTable,filelists,plotdata=datamerge.mergedata(conf,directory,attachment=attachment)
-            resultdir=os.path.join(directory,relativedirname)
-            if not  os.path.isdir(resultdir):
-                os.mkdir(resultdir)
-            datamerge.writeTable(conf,mergedTable,directory=resultdir)
-            datamerge.writeFileLists(conf ,filelists,directory=resultdir,serverdir=self.serverdir)
-            if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
-                datamerge.imgtohdf(conf,directory,resultdir)
-            if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeCHI"]:
-                datamerge.graphstohdf(conf,filelists,resultdir)
-            return {"result":"mergedata","data":{"syncplot":plotdata,"fileslist":filelists}}
+           
+            logsTable,firstImage,peakframe=datamerge.mergelogs(conf,attachment=attachment)
+            def mergeimages(logsTable,firstImage,peakframe,mergedataqueue):
+                imd,filelists=datamerge.readallimages(directory)
+                mergedTable= datamerge.mergeimgdata(directory,logsTable,imd,peakframe,firstImage=firstImage)
+                plotdata=datamerge.syncplot(peakframe,imd)
+                resultdir=os.path.join(directory,relativedirname)
+                if not  os.path.isdir(resultdir):
+                    os.mkdir(resultdir)
+                datamerge.writeTable(conf,mergedTable,directory=resultdir)
+                datamerge.writeFileLists(conf ,filelists,directory=resultdir,serverdir=self.serverdir)
+                if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
+                    datamerge.imgtohdf(conf,directory,resultdir)
+                if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeCHI"]:
+                    datamerge.graphstohdf(conf,filelists,resultdir)
+                mergedataqueue.put({"result":
+                                    "mergedata","data":{"syncplot":plotdata,"fileslist":filelists}})
+            self.mergeprocess=Process(target=mergeimages,args=(logsTable,firstImage,peakframe,self.mergedataqueue))
+            self.mergeprocess.start()
         except Exception as e:
-        
             return {"result":"Error","data":{"Error": str(e)}}
+        return {"result":"merge started"  "mergedata","data":{}}
     def _checkdirectorycollision(self,pathlist):
          serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
          mydir=os.path.normpath(os.sep.join(pathlist))

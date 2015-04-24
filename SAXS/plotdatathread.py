@@ -10,6 +10,7 @@ class plotthread(QtCore.QThread):
          super(plotthread, self).__init__()
          self.app=app
          self.lastcount=0
+         self.lastmergecount=0
          self.queuestarttime=None
     def run(self):
         self.queuestarttime=None
@@ -26,16 +27,20 @@ class plotthread(QtCore.QThread):
                 self.queuestarttime=starttime
                 
             if ( 'images processed' in  result['data']["stat"]):
-                
+                fresh=False
                 if(result['data']["stat"]['images processed']!=self.lastcount):
                     self.lastcount=result['data']["stat"]['images processed']
-                   
-                   
-
-                    plotdata=result=initcommand(self.app.options,["plotdata"],self.app.netconf)
+                    plotdata=initcommand(self.app.options,["plotdata"],self.app.netconf)
                     self.emit(QtCore.SIGNAL('plotdata(QString)'), plotdata)
                 else:
                     self.emit(QtCore.SIGNAL('histupdate(QString)'),resultstr)
+            if ( 'mergecount' in  result['data']["stat"]): 
+                if(result['data']["stat"]['mergecount']!=self.lastmergecount):
+                    self.lastmergecount=result['data']["stat"]['mergecount']
+                    mergedata=initcommand(self.app.options,["getmergedata"],self.app.netconf)
+                    self.emit(QtCore.SIGNAL('mergeresultdata(QString)'), mergedata)
+                    print "getmergedata"
+    
             elif result["result"]=="Error":
                 self.emit(QtCore.SIGNAL('ProtocolError(QString)'), plotdata)
             

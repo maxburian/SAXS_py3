@@ -50,6 +50,7 @@ class consolidatepanel(QtGui.QWidget):
         self.submitlayout.addWidget(   self.submitbutton)
         self.submitlayout.addStretch()
         self.connect(self.submitbutton, QtCore.SIGNAL("clicked()"),self.startmerge)
+        self.connect(self.app.plotthread,QtCore.SIGNAL("mergeresultdata(QString)"),self.showmergeresults)
     def reset(self):
         self.model.invisibleRootItem().setColumnCount(3)
         self.treeview.setColumnWidth(0,320)
@@ -63,24 +64,30 @@ class consolidatepanel(QtGui.QWidget):
             errormessage.setWindowTitle("Server Error")
             errormessage.setMinimumSize(400, 300)
             errormessage.showMessage(result['data']["Error"])
+            
         else:
-            import pandas as pd
-            dialog=QtGui.QDialog()
-            dialog.setWindowTitle("Merge Sucessfull")
-            vlayout=QtGui.QVBoxLayout()
-            dialog.setLayout(vlayout)
-            figure=plt.figure( )
-            ax=figure.add_subplot(111)
-            canvas= FigureCanvas(figure)
-            navbar=NavigationToolbar(canvas,dialog)
-            vlayout.addWidget(canvas)
-            vlayout.addWidget(navbar)
-            img=pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Images'])).transpose()
-           
-            peak= pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Shutter'])).transpose()
-            peak=peak[peak>0]
-            img.plot(style="ro",ax=ax)  
-            peak.plot(style="x",ax=ax)
-            canvas.draw()
-            dialog.exec_()
+            message=QtGui.QMessageBox(parent=self.app)
+            message.setWindowTitle("Merge Started")
+            message.setText("Data merge has been initiated.");
+            message.exec_();
+    def showmergeresults(self,qstringdata):
+        result=json.loads(unicode(qstringdata))
+        import pandas as pd
+        dialog=QtGui.QDialog()
+        dialog.setWindowTitle("Merge Sucessfull")
+        vlayout=QtGui.QVBoxLayout()
+        dialog.setLayout(vlayout)
+        figure=plt.figure( )
+        ax=figure.add_subplot(111)
+        canvas= FigureCanvas(figure)
+        navbar=NavigationToolbar(canvas,dialog)
+        vlayout.addWidget(canvas)
+        vlayout.addWidget(navbar)
+        img=pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Images'])).transpose()
+        peak= pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Shutter'])).transpose()
+        peak=peak[peak>0]
+        img.plot(style="ro",ax=ax)  
+        peak.plot(style="x",ax=ax)
+        canvas.draw()
+        dialog.exec_()
             

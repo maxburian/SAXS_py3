@@ -31,8 +31,6 @@ def readtiff(imagepath):
                  data['date']=datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 
                                        int(m.group(4)), int(m.group(5)),int( m.group(6))
                                        ).isoformat()
-            
-             
             else:
                     m=re.match(".+?(\w+)\s*[:=]\s*(.+)",token)
                     if m:
@@ -319,8 +317,6 @@ def merge():
         graphstohdf(conf,filelists,".")
     
 def writeTable(conf,mergedTable,directory="."):
-   
-   
     basename=os.path.normpath(os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]]))
     for format in conf["OutputFormats"]:
         if conf["OutputFormats"][format]:
@@ -394,12 +390,12 @@ def chilisttodict(chi):
                 else:
                     filelists[kind]=  [file[kind]]
     return filelists
-def mergedata(conf,dir,attachment=None):
+def mergelogs(conf,attachment=None):
     schema=json.load(open(os.path.dirname(__file__)
                         +os.sep+'DataConsolidationConf.json'))
     validate(conf,schema)
   
-    index=[]
+    
     
     if not "LogDataTables" in conf:
          conf["LogDataTables"]=[]
@@ -434,7 +430,17 @@ def mergedata(conf,dir,attachment=None):
             tablea=tablea.join(tableb, how='outer') 
         else:
             tablea=logframe
+    return tablea,firstImage,peakframe
+def mergedata(conf,dir,attachment=None):
+    logsTable,firstImage,peakframe=mergelogs(conf,attachment=attachment)
     imd,chi=readallimages(dir)
+    mergedt= mergeimgdata(dir,logsTable,imd,peakframe,firstImage=firstImage)
+    syncplotdata=syncplot(peakframe,imd)
+    return mergedt,chi,syncplotdata
+def mergeimgdata(dir,tablea ,imd,peakframe,firstImage=None):
+   
+    
+    index=[]
     for pos in range(imd.index.shape[0]):    
             index.append(imd.index[pos]-timedelta(seconds=imd['Exposure_time [s]'][pos]))
     imd.index=index  
@@ -443,11 +449,11 @@ def mergedata(conf,dir,attachment=None):
         tablea.index=tablea.index+delta
         peakframe.index=peakframe.index+delta
         print "Time shift:" +str(delta)
-    syncplotdata=syncplot(peakframe,imd)
+    
     mergedt=imd.join(tablea,how="outer").interpolate(method="zero")
     mergedt=mergedt[mergedt.index.isin(imd.index)]
     
-    return mergedt,chi,syncplotdata
+    return mergedt
 def syncplot(shiftedreduced,imd):
         imd['Exposure_time [s]'][:].plot(style="ro")  
         shiftedreduced['Duration (Peak)'][shiftedreduced['Duration (Peak)']>0].plot(style="x")

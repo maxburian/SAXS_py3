@@ -23,7 +23,8 @@
 				"listdir",
 				"putplotdata",
 				"fileslist",
-				"mergedata"
+				"mergedata",
+				"getmergedata"
 			]
 		},
 

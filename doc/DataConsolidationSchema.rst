@@ -179,7 +179,7 @@ One log table may be one file, or a list of files to be concatenated.
 
 
 :Type:
-  array() items: {:ref:`Path`}
+  array() items: {:ref:`RemotePath`, :ref:`LocalPath`}
 :Required:
   False
 :JSON Path:
@@ -191,9 +191,9 @@ Example JSON:
 
     {"Files": []}
 
-.. _Path:
+.. _RemotePath:
 
-Path
+RemotePath
 -------------------------
 
 :Type:
@@ -201,13 +201,31 @@ Path
 :Required:
   False
 :JSON Path:
-  * :ref:`# <consroot>` [':ref:`LogDataTables <LogDataTables>`'][0][':ref:`Files <Files>`'][0][':ref:`Path <Path>`']
+  * :ref:`# <consroot>` [':ref:`LogDataTables <LogDataTables>`'][0][':ref:`Files <Files>`'][0][':ref:`RemotePath <RemotePath>`']
 
 Example JSON: 
 
 .. code:: json
 
-    {"Path": []}
+    {"RemotePath": []}
+
+.. _LocalPath:
+
+LocalPath
+-------------------------
+
+:Type:
+  string
+:Required:
+  False
+:JSON Path:
+  * :ref:`# <consroot>` [':ref:`LogDataTables <LogDataTables>`'][0][':ref:`Files <Files>`'][0][':ref:`LocalPath <LocalPath>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"LocalPath": ""}
 
 .. _OutputFormats:
 
