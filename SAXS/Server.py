@@ -244,7 +244,7 @@ class Server():
         elif command=="fileslist":
             result=self.getresultfileslists()
         elif command=="mergedata":
-            result=self.mergedatacommand( object['argument']["mergeconf"])
+            result=self.mergedatacommand( object['argument']["mergeconf"],attachment)
         else:
             result={"result":"ErrorNotimplemented","data":{"Error":command+" not implemented"}}
        
@@ -389,7 +389,7 @@ class Server():
                 else:
                     filelists[kind]=  [fileset[kind]]
         return {"result":"resultfileslists","data":{"fileslist":filelists}}
-    def mergedatacommand(self,conf):
+    def mergedatacommand(self,conf,attachment):
         try:
             directory=os.path.normpath(
                         os.path.join(self.serverdir, os.sep.join(self.calibration["Directory"])))
@@ -398,8 +398,9 @@ class Server():
             print "Dir: "+ directory
             for table in conf["LogDataTables"]:
                 for file in table["Files"]:
-                    file["Path"].insert(0,self.serverdir)
-            mergedTable,filelists,plotdata=datamerge.mergedata(conf,directory)
+                    if "RemotePath" in file:
+                        file["RemotePath"].insert(0,self.serverdir)
+            mergedTable,filelists,plotdata=datamerge.mergedata(conf,directory,attachment=attachment)
             resultdir=os.path.join(directory,relativedirname)
             if not  os.path.isdir(resultdir):
                 os.mkdir(resultdir)

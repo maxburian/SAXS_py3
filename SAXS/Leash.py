@@ -125,13 +125,23 @@ def sendlistdir(arg,socket,conf):
     socket.send_multipart([json.dumps(addauthentication(request,conf))])
    
 def senddatamerge(options,arg,socket,conf):
+    cal=json.load(open(arg[1],"r"))
     request={ 
              "command":"mergedata",
              "argument":{ 
-                         "mergeconf":json.load(open(arg[1],"r")), 
+                         "mergeconf":cal, 
                           }
              }
-    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    messageparts=(json.dumps(addauthentication(request,conf)),)
+    for table in cal["LogDataTables"]:
+        for filedesc in table["Files"]:
+            if 'LocalPath' in filedesc and filedesc["LocalPath"]!="":
+                messageparts+=(json.dumps(
+                                      {"filename":filedesc["LocalPath"],
+                                       "data":open(filedesc["LocalPath"],"r").read()
+                                       }),)
+  
+    socket.send_multipart(messageparts)
 def sendnew(options,arg,socket,conf):
     """
     upload new calibration for image processing

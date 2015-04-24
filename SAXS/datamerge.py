@@ -66,7 +66,7 @@ def readlog(logfile):
     '''
     read CSV into pandas data frame
     '''
-    file=open(logfile)
+     
     dframe=pd.read_csv(logfile,sep="\t" )
     dframe[dframe.columns[0]]= (pd.to_datetime(dframe[dframe.columns[0]],unit="s"))
     dframe.reset_index()
@@ -228,7 +228,7 @@ def compileconffromoptions(options, args):
          "Name": "Peak", 
          "Files": [
            {
-             "Path": [
+             "RemotePath": [
                 args[1]
              ]
            } 
@@ -241,7 +241,7 @@ def compileconffromoptions(options, args):
          "Name": "Dlog", 
          "Files": [
            {
-             "Path": [
+             "RemotePath": [
                args[2]
              ]
            } 
@@ -394,15 +394,13 @@ def chilisttodict(chi):
                 else:
                     filelists[kind]=  [file[kind]]
     return filelists
-def mergedata(conf,dir):
+def mergedata(conf,dir,attachment=None):
     schema=json.load(open(os.path.dirname(__file__)
                         +os.sep+'DataConsolidationConf.json'))
     validate(conf,schema)
-    imd,chi=readallimages(dir)
+  
     index=[]
-    for pos in range(imd.index.shape[0]):    
-            index.append(imd.index[pos]-timedelta(seconds=imd['Exposure_time [s]'][pos]))
-    imd.index=index  
+    
     if not "LogDataTables" in conf:
          conf["LogDataTables"]=[]
     tablea=None
@@ -411,8 +409,14 @@ def mergedata(conf,dir):
     for tnumber,logTable in enumerate(conf["LogDataTables"]):
         
         for filenum ,logfile in enumerate(logTable["Files"]):
-            
-            tmplog=readlog(os.sep.join(logfile["Path"]))
+            if logfile["LocalPath"]=="":
+                buffer=open(os.sep.join(logfile["RemotePath"]))
+            elif attachment and json.loads(attachment[0])["filename"]==logfile["LocalPath"]:
+                buffer=StringIO.StringIO(json.loads(attachment.pop(0))["data"])
+            else:
+                pass
+                buffer=open( logfile["LocalPath"])
+            tmplog=readlog(buffer)
             if filenum==0:
                 logframe=tmplog
             else:
@@ -430,6 +434,10 @@ def mergedata(conf,dir):
             tablea=tablea.join(tableb, how='outer') 
         else:
             tablea=logframe
+    imd,chi=readallimages(dir)
+    for pos in range(imd.index.shape[0]):    
+            index.append(imd.index[pos]-timedelta(seconds=imd['Exposure_time [s]'][pos]))
+    imd.index=index  
     if firstImage:
         delta=(  imd.index.min()- firstImage)
         tablea.index=tablea.index+delta

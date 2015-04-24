@@ -35,7 +35,8 @@
 					},
 
 					"TimeOffset": 
-					{ "required": true,
+					{
+						"required": true,
 						"type": "number",
 						"default": "0",
 						"units": "Seconds",
@@ -43,7 +44,8 @@
 					},
 
 					"FirstImageCorrelation": 
-					{"required": true,
+					{
+						"required": true,
 						"description": "Find offset for all log data by correlating first image with first entry of this table. ",
 						"type": "boolean",
 						"default": false
@@ -68,7 +70,7 @@
 							"type": "object",
 							"properties": 
 							{
-								"Path": 
+								"RemotePath": 
 								{
 									"type": "array",
 									"items": 
@@ -79,6 +81,15 @@
 										{
 											"editor": "RemoteFile"
 										}
+									}
+								},
+
+								"LocalPath": 
+								{
+									"type": "string",
+									"appinfo": 
+									{
+										"editor": "File"
 									}
 								}
 							}
@@ -96,25 +107,29 @@
 			"properties": 
 			{
 				"csv": 
-				{"required": true,
+				{
+					"required": true,
 					"type": "boolean",
 					"default": false
 				},
 
 				"hdf": 
-				{"required": true,
+				{
+					"required": true,
 					"type": "boolean",
 					"default": false
 				},
 
 				"exel": 
-				{"required": true,
+				{
+					"required": true,
 					"type": "boolean",
 					"default": false
 				},
 
 				"json": 
-				{"required": true,
+				{
+					"required": true,
 					"type": "boolean",
 					"default": false
 				}
@@ -122,26 +137,30 @@
 		},
 
 		"OutputFileBaseName": 
-		{"required": true,
+		{
+			"required": true,
 			"type": "string",
 			"default": "../results/merged"
 		},
-	
+
 		"HDFOptions": 
-		{"required": true,
+		{
+			"required": true,
 			"description": "Options only relevant to hdf export.",
 			"type": "object",
 			"properties": 
 			{
 				"IncludeCHI": 
-				{"required": true,
+				{
+					"required": true,
 					"description": "Whether to include the .chi files as strings.",
 					"type": "boolean",
 					"default": false
 				},
 
 				"IncludeTIF": 
-				{"required": true,
+				{
+					"required": true,
 					"description": "Whether to include the images as integer array.",
 					"type": "boolean",
 					"default": false
