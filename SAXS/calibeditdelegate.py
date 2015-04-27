@@ -3,7 +3,7 @@ from PyQt4 import  uic
 from PyQt4 import  QtCore
  
 import json,os
-import calibtreemodel as im
+import jsonschematreemodel as im
 from Leash import  initcommand
 import maskfileui
 class calibEditDelegate(QtGui.QItemDelegate):
