@@ -46,4 +46,4 @@ class histpanel(QtGui.QWidget):
             ax.set_title(tstr +", "+ str(data["data"]["stat"]['images processed'])+" Images Processed")
 
             self.canvas.draw()
-          
+         

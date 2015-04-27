@@ -206,6 +206,7 @@ def initcommand(options, arg,conf):
         server=options.server
     if __name__=="__main__":print "conecting:",server
     socket.connect (server)
+    print arg
     if arg[0]=="close":
          result= sendclose(options,arg,socket,conf)
     elif arg[0]=="new":

@@ -8,9 +8,9 @@ from AddToQueue import addtoqueue
 from scipy import misc
 import os,sys
 from PIL import Image,TiffImagePlugin
-from multiprocessing import Process
+ 
 import numpy as np
-from multiprocessing import Queue ,Value
+from multiprocessing import Queue ,Value,Process
 from Queue import Empty
 import matplotlib.pyplot as plt
 import zmq
@@ -39,6 +39,7 @@ def funcworker(self,threadid):
 def filler(queue,dir):
             filequeue=[] 
             print "filler" + dir
+            
             for path, subdirs, files in os.walk(dir):
                 for name in files:
                     if name.endswith('tif'):

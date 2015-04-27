@@ -3,6 +3,8 @@ from PyQt4 import  uic
 from PyQt4 import  QtCore
 import reconnectqthread
 import json
+
+
 class serverstatus(QtGui.QWidget):
     def __init__(self,layout,config,index):
         super(serverstatus,self).__init__( )
@@ -11,7 +13,7 @@ class serverstatus(QtGui.QWidget):
         self.layout.addWidget(QtGui.QLabel( config['Name']+":\n"+config['Server']))
         self.status=QtGui.QLabel("Offline")
         self.layout.addWidget(self.status) 
-       
+        self.result=None
         self.connectthread=reconnectqthread.reconnecthread( config)
         self.connect(self.connectthread,QtCore.SIGNAL('connected(QString)'),self.updatestatus)
         self.connectthread.start()
@@ -39,14 +41,31 @@ class connectdialog(QtGui.QDialog):
          self.confindex=0
          self.ok=False
          self.setModal(True)
+         self.confs=confs
          for index,conf in enumerate(confs):
              hlayout1=QtGui.QHBoxLayout()
              self.vlayout.addLayout(hlayout1)
              self.serverstatus.append(serverstatus(hlayout1,conf,index))
              self.connect(self.serverstatus[index],QtCore.SIGNAL("selected(int )"),self.selected)
+         self.startlocalbutton=QtGui.QPushButton("Start Local Server")
+         self.vlayout.addWidget(self.startlocalbutton)
+         self.connect( self.startlocalbutton, QtCore.SIGNAL("clicked()"), self.startlocalserver)
     def selected(self,index):
         self.confindex=index
         self.accept()
         self.ok=True
     def getval(self):
         return self.confindex
+    def startlocalserver(self):
+        self.confindex=-1
+        self.accept()
+        self.ok=True
+        print "OK"
+        self.confs.append( {
+                            "Secret": "bd79955f7f17dc390a97df6d747a97",
+                            "Server": "tcp://localhost:9945",
+                            "Name": "Local",
+                            "Feeder": "tcp://localhost:9823"
+                           })
+       
+         

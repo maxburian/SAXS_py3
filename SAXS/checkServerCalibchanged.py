@@ -14,6 +14,7 @@ class checkServerCalibChangedThread(QtCore.QThread):
        
         
     def run(self):
+          print "############Check Server Calib"+ str(self.app.netconf)
           ServerCalib=json.loads(initcommand(self.app.options,["get"],self.app.netconf))
           LocalCalib=json.loads(json.dumps(self.app.calibeditor.model.getjson()))
           json.dump(ServerCalib["data"]["cal"],open("server","w"),indent=2,sort_keys=True)#

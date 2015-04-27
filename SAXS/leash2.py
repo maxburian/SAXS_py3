@@ -15,6 +15,8 @@ import histpanel
 import checkServerCalibchanged
 import collections
 import consolidatepanel
+from multiprocessing import Process,Value
+from Server import saxsdogserver
 class LeashUI(QtGui.QMainWindow):
     def __init__(self,app,parent=None):
         super(LeashUI,self).__init__(parent)
@@ -29,6 +31,14 @@ class LeashUI(QtGui.QMainWindow):
         else:
             sys.exit()
         self.netconf=self.confs[selected]
+       
+        self.localserver=None
+        if selected==-1:
+            self.localserverstop=Value('i',0)
+            self.localserver=Process(target=saxsdogserver,args=(self.confs[-1],"Local",self.localserverstop))
+            self.localserver.start()
+            
+            print "Local Server"
         self.parscecommandline()
         self.loadui(reconnectresult)
         self.setLocale(QtCore.QLocale("C"))
@@ -73,10 +83,12 @@ class LeashUI(QtGui.QMainWindow):
         self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.histpanel.plot)
         self.connect(self.plotthread,QtCore.SIGNAL("histupdate(QString)"),self.histpanel.timestep)
       
-        self.checkServerCalibchanged=checkServerCalibchanged.checkServerCalibChangedThread(self)
-        self.connect(self.plotthread,QtCore.SIGNAL("ServerQueueTimeChanged()"),  self.checkServerCalibchanged.start)
-        self.connect(self.checkServerCalibchanged,QtCore.SIGNAL("ServerQueueChanged(QString)"),self.notifyServerChange)
-        if   reconnectresult["result"]=="cal":
+        
+        if not  self.localserver:
+            self.checkServerCalibchanged=checkServerCalibchanged.checkServerCalibChangedThread(self)
+            self.connect(self.plotthread,QtCore.SIGNAL("ServerQueueTimeChanged()"),  self.checkServerCalibchanged.start)
+            self.connect(self.checkServerCalibchanged,QtCore.SIGNAL("ServerQueueChanged(QString)"),self.notifyServerChange)
+        if  reconnectresult and reconnectresult["result"]=="cal":
             self.calibeditor.model.loadservercalib(reconnectresult)
             self.calibeditor.reset()
             self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash: Server Calibration")
@@ -142,7 +154,12 @@ class LeashUI(QtGui.QMainWindow):
               self.calibeditor.model.loadservercalib(ServerData)
               self.calibeditor.reset()
     def cleanup(self):
-        pass
+        
+        if  self.localserver:
+            self.localserverstop.value=1
+            argu=["abort"]
+            result=json.loads(Leash.initcommand(self.options,argu,self.netconf))
+            self.localserver.join(-1)
 def LeashGUI():
     
     app=QtGui.QApplication(sys.argv)

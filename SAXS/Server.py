@@ -1,6 +1,6 @@
 import sys
 import zmq
-from multiprocessing import Process
+
 import time,json,datetime
 import os
 import atrdict
@@ -11,7 +11,7 @@ import datamerge
 from optparse import OptionParser
 import hashlib
 import imagequeuelib
-from multiprocessing import Queue ,Value
+from multiprocessing import Queue, Value,Process
 from Queue import Empty
 internalplotsocked=345834
 import Leash
@@ -107,8 +107,10 @@ class Server():
     """
     class to manage a saxsdog server
     """
-    def __init__(self,conf,serverid):
+    def __init__(self,conf,serverid,stopflag=None):
         self.files=None
+        print stopflag
+        self.stopflag=stopflag
         self.serverid=serverid
         self.options, self.args=parsecommandline()
         if len(self.args)==0:
@@ -176,6 +178,9 @@ class Server():
                 result={"result":"ServerError","data":{"Error":e.message}}
                 self.comandosocket.send(json.dumps(result))
            
+            if self.stopflag and self.stopflag.value==1:
+                print "#######STOP##########"
+                break
             
     def authenticate(self,data):
         """
@@ -277,7 +282,7 @@ class Server():
                 self.threads=object['argument']['calibration'].get("Threads")
             else:
                 self.threads=self.options.threads
-            
+           
             print "abort old queue"
             if self.imagequeue:
                  self.queue_abort()
@@ -364,6 +369,8 @@ class Server():
         except AttributeError  :
             result={"result":"ValueError","data":{"Error":"Start Queue first"}}
             return result
+        except Exception as e:
+            result={"result":"Error","data":{"Error":str(e)}}
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
         self.plotresult['data']["stat"]=self.stat()
@@ -444,7 +451,7 @@ class Server():
          mydir=os.path.normpath(os.sep.join(pathlist))
          
          for i,conf in enumerate(serverconfs):
-            if i!=self.serverid:
+            if i!=self.serverid and self.serverid!="Local":
                 argu=["get"]
                 opt=atrdict.AttrDict({"serverno":i,"server":conf["Server"]})
                 result=json.loads(Leash.initcommand(opt,argu,conf))
@@ -456,9 +463,9 @@ class Server():
                         or (otherpath=="." or mydir==".")):
                         raise DirectoryCollisionException("Directory collides with: "+otherpath)
             
-def saxsdogserver(serverconf,serverid):
+def saxsdogserver(serverconf,serverid,stopflag):
      
-     S=Server(serverconf,serverid)
+     S=Server(serverconf,serverid,stopflag=stopflag)
      
      S.start()
      
@@ -466,7 +473,7 @@ def saxsdogserver(serverconf,serverid):
 def startservers(serverconfs):
     Servers=[]
     for serverid,serverconf in enumerate(serverconfs):
-        Servers.append(Process(target=saxsdogserver,args=(serverconf,serverid)))
+        Servers.append(Process(target=saxsdogserver,args=(serverconf,serverid,None)))
         Servers[-1].start()
 
 def launcher():
@@ -485,5 +492,6 @@ def launcher():
         with daemon.DaemonContext(stderr=logfile,stdout=logfile,working_directory="./"):
             startservers(serverconfs)
 if __name__ == '__main__':
+    print __file__
     launcher()
     
