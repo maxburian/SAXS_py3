@@ -83,7 +83,7 @@ class imagequeue:
        
                 
         if self.options.walkdirinthreads:
-            self.dirwalker=Process(target=filler,args=(self.picturequeue,self.directory))
+            self.dirwalker=Thread(target=filler,args=(self.picturequeue,self.directory))
             self.dirwalker.start()
         else:
            

@@ -109,7 +109,6 @@ class Server():
     """
     def __init__(self,conf,serverid,stopflag=None):
         self.files=None
-        print stopflag
         self.stopflag=stopflag
         self.serverid=serverid
         self.options, self.args=parsecommandline()
