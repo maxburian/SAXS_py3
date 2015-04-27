@@ -34,8 +34,12 @@ class LeashUI(QtGui.QMainWindow):
        
         self.localserver=None
         if selected==-1:
+            dirdialog=QtGui.QFileDialog()
+            serverdir=dirdialog.getExistingDirectory(parent=self, caption="Choose the Image Data Directory")
+            print serverdir
             self.localserverstop=Value('i',0)
-            self.localserver=Process(target=saxsdogserver,args=(self.confs[-1],"Local",self.localserverstop))
+            self.localserver=Process(target=saxsdogserver,
+                                     args=(self.confs[-1],"Local",self.localserverstop,unicode(serverdir)))
             self.localserver.start()
             
             print "Local Server"

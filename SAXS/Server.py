@@ -107,7 +107,7 @@ class Server():
     """
     class to manage a saxsdog server
     """
-    def __init__(self,conf,serverid,stopflag=None):
+    def __init__(self,conf,serverid,stopflag=None,serverdir=None):
         self.files=None
         self.stopflag=stopflag
         self.serverid=serverid
@@ -121,7 +121,10 @@ class Server():
             self.feederurl=conf["Feeder"]
         self.serverconf=conf
         self.comandosocket=None
-        self.serverdir=self.args[0]
+        if serverdir:
+            self.serverdir=serverdir
+        else:
+            self.serverdir=self.args[0]
         self.commandschema=json.load(open(os.path.abspath(os.path.dirname(__file__))+'/LeashRequestSchema.json'))
         self.imagequeue=None
         self.feederproc=None
@@ -200,8 +203,8 @@ class Server():
                 
             
     def listdir(self,request):
-        print self.args[0]
-        dir=  os.path.join(self.args[0], os.sep.join(request["argument"]['directory']))
+        print  self.serverdir
+        dir=  os.path.join( self.serverdir, os.sep.join(request["argument"]['directory']))
         try:
             files=os.listdir(os.path.join( dir))
         except OSError as e:
@@ -304,7 +307,7 @@ class Server():
             
             dir=os.path.normpath(
                 os.path.join(
-                             self.args[0],
+                              self.serverdir,
                              os.sep.join(object['argument']['calibration'].get('Directory')
                             )))
             if "Masks" in object['argument']['calibration']:
@@ -322,7 +325,7 @@ class Server():
             self.imagequeueprocess=Process(target=self.imagequeue.start)
             self.imagequeueprocess.start()
             print "listening to feeder"
-            serverdir=self.args[0]
+            serverdir= self.serverdir
             self.feederproc=Process(target=subscribeToFileChanges,args=
                                     (self.imagequeue,
                                      self.feederurl,
@@ -462,9 +465,9 @@ class Server():
                         or (otherpath=="." or mydir==".")):
                         raise DirectoryCollisionException("Directory collides with: "+otherpath)
             
-def saxsdogserver(serverconf,serverid,stopflag):
+def saxsdogserver(serverconf,serverid,stopflag,serverdir):
      
-     S=Server(serverconf,serverid,stopflag=stopflag)
+     S=Server(serverconf,serverid,stopflag=stopflag,serverdir=serverdir)
      
      S.start()
      
@@ -472,7 +475,7 @@ def saxsdogserver(serverconf,serverid,stopflag):
 def startservers(serverconfs):
     Servers=[]
     for serverid,serverconf in enumerate(serverconfs):
-        Servers.append(Process(target=saxsdogserver,args=(serverconf,serverid,None)))
+        Servers.append(Process(target=saxsdogserver,args=(serverconf,serverid,None,None)))
         Servers[-1].start()
 
 def launcher():
