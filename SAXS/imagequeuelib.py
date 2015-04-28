@@ -10,7 +10,8 @@ import os,sys
 from PIL import Image,TiffImagePlugin
  
 import numpy as np
-from multiprocessing import Queue ,Value,Process
+from multiprocessing import Queue ,Value
+from Subproccompatibility import Process
 from Queue import Empty
 import matplotlib.pyplot as plt
 import zmq
