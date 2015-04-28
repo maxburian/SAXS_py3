@@ -21,13 +21,28 @@ class LeashUI(QtGui.QMainWindow):
     def __init__(self,app,parent=None):
         super(LeashUI,self).__init__(parent)
         self.clipboard=app.clipboard()
-        self.confs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
-        validate( self.confs,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
+        try:
+            self.confs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
+        except IOError:
+            self.confs=[]
+        try:
+            validate( self.confs,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
+        except ValidationError as e:
+            errormsg=QtGui.QErrorMessage(parent=self)
+            errormsg.setWindowTitle("Your SAXSDog Network is not configured correctly)")
+            errormsg.showMessage(str(e))
+            errormsg.exec_()
+            sys.exit()
+        
+            
         self.connectdialog=connectdialog.connectdialog( self.confs,self)
         self.connectdialog.exec_()
         selected=self.connectdialog.confindex
         if  self.connectdialog.ok:
-            reconnectresult=self.connectdialog.serverstatus[selected].result
+            if selected>0:
+                reconnectresult=self.connectdialog.serverstatus[selected].result
+            else:
+                reconnectresult={}
         else:
             sys.exit()
         self.netconf=self.confs[selected]

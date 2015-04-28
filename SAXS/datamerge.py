@@ -184,7 +184,7 @@ def readallimages(dir):
         for name in files:
             if name.endswith('tif'):
                 imgpath=os.path.join(path, name)
-              
+                print imgpath
                 row=readtiff(imgpath)
                 row['filepath']=imgpath
                 row['id']="h"+hashlib.sha224(imgpath).hexdigest()
@@ -204,10 +204,19 @@ def readallimages(dir):
                 imglogframe=imglogframe.append(readimglog(logpath))
             elif name.endswith("chi") or name.endswith("json") :
                 chilist.append(os.path.join(path, name))
-
-    imgframe["File Name"]=(imgframe["Image_path"]+imgframe['filename'])
-    merged=pd.merge(imglogframe,imgframe, on="File Name")
-    merged=merged.set_index("End Date Time")
+    
+    imgframe.columns+=" (Img)"
+    imglogframe.columns+=" (ImgLog)"
+    print imgframe.columns.values
+    print imglogframe.columns.values
+    if True:
+        imgframe["File Name (Img)"]=(imgframe["Image_path (Img)"]+imgframe['filename (Img)'])
+        merged=pd.merge(imglogframe,imgframe, 
+                        left_on="File Name (ImgLog)",
+                        right_on= "File Name (Img)")
+        merged=merged.set_index("End Date Time (ImgLog)")
+    if False:
+        merged=imgframe
     return merged,chilisttodict(chilist)
   
 def compileconffromoptions(options, args):
@@ -442,7 +451,7 @@ def mergeimgdata(dir,tablea ,imd,peakframe,firstImage=None):
     
     index=[]
     for pos in range(imd.index.shape[0]):    
-            index.append(imd.index[pos]-timedelta(seconds=imd['Exposure_time [s]'][pos]))
+            index.append(imd.index[pos]-timedelta(seconds=imd['Exposure_time [s] (Img)'][pos]))
     imd.index=index  
     if firstImage:
         delta=(  imd.index.min()- firstImage)
@@ -455,14 +464,14 @@ def mergeimgdata(dir,tablea ,imd,peakframe,firstImage=None):
     
     return mergedt
 def syncplot(shiftedreduced,imd):
-        imd['Exposure_time [s]'][:].plot(style="ro")  
+        imd['Exposure_time [s] (Img)'][:].plot(style="ro")  
         shiftedreduced['Duration (Peak)'][shiftedreduced['Duration (Peak)']>0].plot(style="x")
         plt.legend( ('Exposure from Images', 'Exposure from Shutter'))
         plt.xlabel("Time")
         plt.ylabel("Exosure Time [s]")
         plt.title("Corellation")
        
-        data= {"Images":json.loads(pd.DataFrame(imd['Exposure_time [s]']).to_json(orient="index")),
+        data= {"Images":json.loads(pd.DataFrame(imd['Exposure_time [s] (Img)']).to_json(orient="index")),
                 "Shutter":json.loads(pd.DataFrame(shiftedreduced['Duration (Peak)']).to_json(orient="index"))}
         
         

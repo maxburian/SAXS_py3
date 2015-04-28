@@ -1,6 +1,7 @@
 import sys
 import zmq
 from Subproccompatibility import Process
+import threading 
 import time,json,datetime
 import os
 import atrdict
@@ -322,11 +323,11 @@ class Server():
             self.imagequeue=imagequeuelib.imagequeue(cals,
                     o,dir,self.serverconf)
             print "startimgq"
-            self.imagequeueprocess=Process(target=self.imagequeue.start)
+            self.imagequeueprocess=threading.Thread(target=self.imagequeue.start)
             self.imagequeueprocess.start()
             print "listening to feeder"
             serverdir= self.serverdir
-            self.feederproc=Process(target=subscribeToFileChanges,args=
+            self.feederproc=threading.Thread(target=subscribeToFileChanges,args=
                                     (self.imagequeue,
                                      self.feederurl,
                                     dir,
@@ -440,7 +441,7 @@ class Server():
                 mergedataqueue.put({"result":
                                     "mergedata","data":{"syncplot":plotdata,"fileslist":filelists}})
             if  not self.mergeprocess or not  self.mergeprocess.is_alive():
-                self.mergeprocess=Process(target=mergeimages,args=(logsTable,firstImage,peakframe,self.mergedataqueue))
+                self.mergeprocess=threading.Thread(target=mergeimages,args=(logsTable,firstImage,peakframe,self.mergedataqueue))
                 self.mergeprocess.start()
             else:
                 return {"result":"Error","data":{"Error": "Merge already started please wait"}}
@@ -449,21 +450,22 @@ class Server():
             return {"result":"Error","data":{"Error": str(e)}}
         return {"result":"merge started"  "mergedata","data":{}}
     def _checkdirectorycollision(self,pathlist):
-         serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
-         mydir=os.path.normpath(os.sep.join(pathlist))
-         
-         for i,conf in enumerate(serverconfs):
-            if i!=self.serverid and self.serverid!="Local":
-                argu=["get"]
-                opt=atrdict.AttrDict({"serverno":i,"server":conf["Server"]})
-                result=json.loads(Leash.initcommand(opt,argu,conf))
-                if result['result']=="cal":
-                    otherpath=os.path.normpath(os.sep.join(result["data"]["cal"]['Directory']))
+         if not self.serverid=="Local":
+             serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
+             mydir=os.path.normpath(os.sep.join(pathlist))
+             
+             for i,conf in enumerate(serverconfs):
+                if i!=self.serverid and self.serverid!="Local":
+                    argu=["get"]
+                    opt=atrdict.AttrDict({"serverno":i,"server":conf["Server"]})
+                    result=json.loads(Leash.initcommand(opt,argu,conf))
+                    if result['result']=="cal":
+                        otherpath=os.path.normpath(os.sep.join(result["data"]["cal"]['Directory']))
+                        
                     
-                
-                    if ((otherpath.startswith(mydir) or mydir.startswith(otherpath))
-                        or (otherpath=="." or mydir==".")):
-                        raise DirectoryCollisionException("Directory collides with: "+otherpath)
+                        if ((otherpath.startswith(mydir) or mydir.startswith(otherpath))
+                            or (otherpath=="." or mydir==".")):
+                            raise DirectoryCollisionException("Directory collides with: "+otherpath)
             
 def saxsdogserver(serverconf,serverid,stopflag,serverdir):
      
@@ -475,7 +477,7 @@ def saxsdogserver(serverconf,serverid,stopflag,serverdir):
 def startservers(serverconfs):
     Servers=[]
     for serverid,serverconf in enumerate(serverconfs):
-        Servers.append(Process(target=saxsdogserver,args=(serverconf,serverid,None,None)))
+        Servers.append(threading.Thread(target=saxsdogserver,args=(serverconf,serverid,None,None)))
         Servers[-1].start()
 
 def launcher():
