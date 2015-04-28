@@ -323,11 +323,11 @@ class Server():
             self.imagequeue=imagequeuelib.imagequeue(cals,
                     o,dir,self.serverconf)
             print "startimgq"
-            self.imagequeueprocess=threading.Thread(target=self.imagequeue.start)
+            self.imagequeueprocess=Process(target=self.imagequeue.start)
             self.imagequeueprocess.start()
             print "listening to feeder"
             serverdir= self.serverdir
-            self.feederproc=threading.Thread(target=subscribeToFileChanges,args=
+            self.feederproc=Process(target=subscribeToFileChanges,args=
                                     (self.imagequeue,
                                      self.feederurl,
                                     dir,
@@ -477,7 +477,7 @@ def saxsdogserver(serverconf,serverid,stopflag,serverdir):
 def startservers(serverconfs):
     Servers=[]
     for serverid,serverconf in enumerate(serverconfs):
-        Servers.append(threading.Thread(target=saxsdogserver,args=(serverconf,serverid,None,None)))
+        Servers.append(Process(target=saxsdogserver,args=(serverconf,serverid,None,None)))
         Servers[-1].start()
 
 def launcher():
