@@ -163,7 +163,7 @@ class LeashUI(QtGui.QMainWindow):
             self.localserverstop.value=1
             argu=["abort"]
             result=json.loads(Leash.initcommand(self.options,argu,self.netconf))
-        sys.exit("finished")
+        
 def LeashGUI():
     
     app=QtGui.QApplication(sys.argv)
