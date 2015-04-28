@@ -14,6 +14,8 @@ import hashlib
 import matplotlib.pyplot as plt
 
 from jsonschema import validate,ValidationError
+def leashsend(socket,mparts):
+    socket.send_multipart(mparts)
 def addauthentication(request,conf):
     """
     sign request for authentication
@@ -43,15 +45,15 @@ def validateResponse(message):
     
 def sendclose(options,arg,socket,conf):
     request={"command":"close","argument":{}}
-    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    leashsend(socket,[json.dumps(addauthentication(request,conf))])
    
 def sendabort(options,arg,socket,conf):
     request={"command":"abort","argument":{}}
-    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    leashsend(socket,[json.dumps(addauthentication(request,conf))])
     
 def sendplotdata(options,arg,socket,conf):
     request={"command":"plot","argument":{}}
-    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    leashsend(socket,[json.dumps(addauthentication(request,conf))])
    
 def sendplot(options,arg,socket,conf):
     """
@@ -93,27 +95,27 @@ def sendreaddir(options,arg,socket,conf):
     """
     request={"command":"readdir","argument":{}}
      
-    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    leashsend(socket,[json.dumps(addauthentication(request,conf))])
    
    
 def sendstat(socket,conf):
     request={"command":"stat","argument":{}}
-    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    leashsend(socket,[json.dumps(addauthentication(request,conf))])
 def sendgetmergedata(options,arg,socket,conf):
     request={"command":"getmergedata","argument":{}}
-    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    leashsend(socket,[json.dumps(addauthentication(request,conf))])
 def sendget(socket,conf):
     """
     get current calibration data
     """
     request={"command":"get","argument":{}}
-    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    leashsend(socket,[json.dumps(addauthentication(request,conf))] )
 def sendgetfileslist(socket,conf):
     """
     get list of chi files
     """
     request={"command":"fileslist","argument":{}}
-    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    leashsend(socket,[json.dumps(addauthentication(request,conf))])
    
 def sendlistdir(arg,socket,conf):
     """
@@ -124,7 +126,7 @@ def sendlistdir(arg,socket,conf):
     if arg[1]=="":
         arg[1]="."
     request={"command":"listdir","argument":{"directory":arg[1].split(os.sep)}}
-    socket.send_multipart([json.dumps(addauthentication(request,conf))])
+    leashsend(socket,[json.dumps(addauthentication(request,conf))])
    
 def senddatamerge(options,arg,socket,conf):
     cal=json.load(open(arg[1],"r"))
@@ -143,7 +145,7 @@ def senddatamerge(options,arg,socket,conf):
                                        "data":open(filedesc["LocalPath"],"r").read()
                                        }),)
   
-    socket.send_multipart(messageparts)
+    leashsend(socket,messageparts)
 def sendnew(options,arg,socket,conf):
     """
     upload new calibration for image processing
@@ -189,7 +191,7 @@ def sendnew(options,arg,socket,conf):
                                   {"filename":maskfile,
                                    "data":base64.b64encode(open(maskfile,"rb").read())
                                    }),)
-    socket.send_multipart(messageparts)
+    leashsend(socket,messageparts)
  
    
 def initcommand(options, arg,conf):
@@ -199,7 +201,7 @@ def initcommand(options, arg,conf):
    
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
-    
+    socket.setsockopt(zmq.LINGER, 1)
     if options.server=="":
         server=conf['Server']
     else:
@@ -235,11 +237,23 @@ def initcommand(options, arg,conf):
         raise ValueError(arg[0])
 
 
-    return receive(socket)
+    answer=receive(socket)
+    
+    socket.close()
+    
+    context.term()
+    return answer
 
 
 def receive(socket):   
-    return validateResponse(socket.recv())
+    poller = zmq.Poller()
+    poller.register(socket, zmq.POLLIN)
+    plist= poller.poll(60000)
+    if  len(plist)==1:
+        data=socket.recv()
+        return validateResponse(data)
+    else:
+        return json.dumps({"result":"Error","data":{"Error":"Timeout"}})
      
   
     

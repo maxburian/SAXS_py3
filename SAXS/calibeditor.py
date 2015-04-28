@@ -12,8 +12,8 @@ class calibeditor(QtGui.QWidget):
          self.layout().addWidget(self.treeview)
          self.model=jsonschematreemodel.jsonschematreemodel(app )
          self.treeview.setModel(self.model)
-         self.treeview.setMinimumWidth(800)
-         self.treeview.setMinimumHeight(800)
+         self.treeview.setMinimumWidth(620)
+         self.treeview.setMinimumHeight(400)
       
          self.treeview.setAlternatingRowColors(True)
          self.treeview.setItemDelegateForColumn(1,calibeditdelegate.calibEditDelegate( app ))

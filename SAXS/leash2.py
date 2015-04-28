@@ -23,7 +23,7 @@ class LeashUI(QtGui.QMainWindow):
         self.clipboard=app.clipboard()
         self.confs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
         validate( self.confs,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
-        self.connectdialog=connectdialog.connectdialog( self.confs)
+        self.connectdialog=connectdialog.connectdialog( self.confs,self)
         self.connectdialog.exec_()
         selected=self.connectdialog.confindex
         if  self.connectdialog.ok:
@@ -163,7 +163,7 @@ class LeashUI(QtGui.QMainWindow):
             self.localserverstop.value=1
             argu=["abort"]
             result=json.loads(Leash.initcommand(self.options,argu,self.netconf))
-            self.localserver.join(-1)
+        sys.exit("finished")
 def LeashGUI():
     
     app=QtGui.QApplication(sys.argv)

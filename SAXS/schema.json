@@ -62,7 +62,12 @@
 					"items": 
 					{
 						"type": "number",
-						"required": true
+						"required": true,
+						"labels": 
+						[
+							"y",
+							"x"
+						]
 					}
 				},
 
@@ -93,7 +98,12 @@
 						"type": "number",
 						"units": "Microns",
 						"required": true,
-						"default": 100.0
+						"default": 100.0,
+						"labels": 
+						[
+							"y and x",
+							"x"
+						]
 					}
 				},
 
@@ -115,7 +125,12 @@
 					{
 						"type": "integer",
 						"units": "Pixels",
-						"required": true
+						"required": true,
+						"labels": 
+						[
+							"y",
+							"x"
+						]
 					}
 				}
 			}
@@ -233,11 +248,13 @@
 						"default": 0,
 						"description": "Angle of incidence in GISAXS setup."
 					},
-					"MaskRef":{
-					"required": true,
-					"type":"integer",
-					"default":0,
-					"description":"Chose which mask to use for the sclice. '-1' means don't use mask"
+
+					"MaskRef": 
+					{
+						"required": true,
+						"type": "integer",
+						"default": 0,
+						"description": "Chose which mask to use for the sclice. '-1' means don't use mask"
 					}
 				}
 			}
@@ -291,8 +308,7 @@
 			"type": "array",
 			"required": true,
 			"minItems": 1,
-			"description":"Directory to take into acount for processing images. Given as a list of subdirectories.",
-			
+			"description": "Directory to take into acount for processing images. Given as a list of subdirectories.",
 			"items": 
 			{
 				"type": "string",

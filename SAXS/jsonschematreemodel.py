@@ -146,8 +146,11 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
                         value.setCheckState(0 )
                 elif   schema['properties'][key]['type']=="array" and key in input :
                     for arrayindex,arrayitem in enumerate(input[key]):
-                       
-                        modelarrayitem=QtGui.QStandardItem(str(arrayindex))
+                        if "labels" in schema['properties'][key]['items']:
+                            itemlabel=schema['properties'][key]['items']["labels"][arrayindex]
+                        else:
+                            itemlabel=str(arrayindex)
+                        modelarrayitem=QtGui.QStandardItem(itemlabel)
                         modelarrayitem.setColumnCount(3)
                         modelarrayvalue=QtGui.QStandardItem()
                         modelarrayvalue.setData(json.dumps(schema['properties'][key]["items"]),role=SUBSCHEMA)

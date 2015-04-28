@@ -16,6 +16,7 @@ class serverstatus(QtGui.QWidget):
         self.result=None
         self.connectthread=reconnectqthread.reconnecthread( config)
         self.connect(self.connectthread,QtCore.SIGNAL('connected(QString)'),self.updatestatus)
+       
         self.connectthread.start()
       
     def updatestatus(self,message):
@@ -31,8 +32,8 @@ class serverstatus(QtGui.QWidget):
         self.emit(QtCore.SIGNAL('selected(int )'),self.index)
        
 class connectdialog(QtGui.QDialog):
-    def __init__(self,confs):
-         super(connectdialog,self).__init__( )
+    def __init__(self,confs,app):
+         super(connectdialog,self).__init__(  )
          self.setWindowTitle("Connect Leash")
          self.vlayout=QtGui.QVBoxLayout()
          self.setLayout(self.vlayout)
@@ -40,6 +41,7 @@ class connectdialog(QtGui.QDialog):
          self.serverstatus=[]
          self.confindex=0
          self.ok=False
+         self.app=app
          self.setModal(True)
          self.confs=confs
          for index,conf in enumerate(confs):
@@ -47,6 +49,7 @@ class connectdialog(QtGui.QDialog):
              self.vlayout.addLayout(hlayout1)
              self.serverstatus.append(serverstatus(hlayout1,conf,index))
              self.connect(self.serverstatus[index],QtCore.SIGNAL("selected(int )"),self.selected)
+             self.connect(self.serverstatus[index],QtCore.SIGNAL("serverselected(int )"),lambda x:x)
          self.startlocalbutton=QtGui.QPushButton("Start Local Server")
          self.vlayout.addWidget(self.startlocalbutton)
          self.connect( self.startlocalbutton, QtCore.SIGNAL("clicked()"), self.startlocalserver)
