@@ -248,7 +248,7 @@ def initcommand(options, arg,conf):
 def receive(socket):   
     poller = zmq.Poller()
     poller.register(socket, zmq.POLLIN)
-    plist= poller.poll(60000)
+    plist= poller.poll(100000)
     if  len(plist)==1:
         data=socket.recv()
         return validateResponse(data)
