@@ -86,7 +86,7 @@
 								},
 								"LocalPath": 
 								{   
-									"description":"Path of logfile on client. Overrides 'RemotePath'.",
+									"description":"Path of logfile on client. Overrides :ref:`RemotePath`.",
 									"type": "string",
 									"appinfo": 
 									{

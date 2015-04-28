@@ -222,7 +222,7 @@ Example JSON:
 LocalPath
 -------------------------
 
-Path of logfile on client. Overrides 'RemotePath'.
+Path of logfile on client. Overrides :ref:`RemotePath`.
 
 
 :Type:

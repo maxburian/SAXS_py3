@@ -1,7 +1,4 @@
-.. SAXS documentation master file, created by
-   sphinx-quickstart on Wed Jun  4 10:53:22 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+ 
 
 =====================
 SAXS's documentation!
@@ -12,9 +9,7 @@ SAXS's documentation!
    :width: 200 px
  
 The SAXS Python package implements analysis tools for Small Angle X-Ray Scattering 
-(SAXS) data.
-The first and most important one is to efficiently integrate 2d sensor data to an angle dependent
-diffraction curve.
+(SAXS) data. The first and most important one is to efficiently integrate 2d sensor data to an angle dependent diffraction curve.
 
 
 
@@ -35,9 +30,8 @@ diffraction curve.
    o.clip=40
    SAXS.makeplot(o,arg)
    
-The SAXS module consists of a Python library and 3 command line tools: :ref:`saxsdog`, :ref:`plotchi` 
-and :ref:`converter`
-
+The SAXS module consists of a Python library and 3 command line tools: :ref:`saxsdog`, :ref:`plotchi` and :ref:`converter` and the :ref:`saxsdognetwork` that interates all of it and provides a GUI, :ref:`saxsleash`
+ 
 
 
 .. toctree::
