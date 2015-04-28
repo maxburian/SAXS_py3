@@ -11,7 +11,7 @@ import datamerge
 from optparse import OptionParser
 import hashlib
 import imagequeuelib
-from multiprocessing import Queue, Value,Process
+from multiprocessing import Queue, Value
 from Queue import Empty
 internalplotsocked=345834
 import Leash
