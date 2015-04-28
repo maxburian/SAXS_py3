@@ -19,20 +19,20 @@ def readtiff(imagepath):
     '''
     Read the tif header (#strings)
     '''
-    f = open(imagepath, "r")
+    f = open(imagepath, "rb")
     i=0
     data={"filename":os.path.basename(imagepath)}
   
     p = re.compile('[ -~]{4,100}')
     for line in f:
         for token in p.findall(line):
-            m=re.match("(\d+):(\d+):(\d+)\s+(\d+):(\d+):(\d+)", token)
+            m=re.match(r"(\d+):(\d+):(\d+)\s+(\d+):(\d+):(\d+)", token)
             if m:
                  data['date']=datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 
                                        int(m.group(4)), int(m.group(5)),int( m.group(6))
                                        ).isoformat()
             else:
-                    m=re.match(".+?(\w+)\s*[:=]\s*(.+)",token)
+                    m=re.match(r".+?(\w+)\s*[:=]\s*(.+)",token)
                     if m:
                         number=re.search("(\d+\.*\d*)\s+(\w+)",m.group(2))
                         if number:
@@ -41,13 +41,13 @@ def readtiff(imagepath):
                            
                         else:
                             data[m.group(1)]={}
-                            if re.match("^\s*\d+\s*$",m.group(2)):
+                            if re.match(r"^\s*\d+\s*$",m.group(2)):
                                 data[m.group(1)]=int(m.group(2))
                             else:
                                 data[m.group(1)]=m.group(2)
                     else:
                          
-                        m=re.match("#\s*(.+?)([e\-\d\.]+)\s+([a-zA-Z]+)",token)
+                        m=re.match(r"#\s*(.+?)([e\-\d\.]+)\s+([a-zA-Z]+)",token)
                         if m:
                             
                             data[m.group(1)+"["+m.group(3)+"]"]=float(m.group(2))
