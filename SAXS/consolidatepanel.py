@@ -89,5 +89,9 @@ class consolidatepanel(QtGui.QWidget):
         img.plot(style="ro",ax=ax)  
         peak.plot(style="x",ax=ax)
         canvas.draw()
+        if "CalculatedTimeshift" in result["data"]["syncplot"]:
+            timelabel=QtGui.QLabel("Calculated time Shift: "
+                                   +result["data"]["syncplot"]['CalculatedTimeshift'])
+            vlayout.addWidget(timelabel)
         dialog.exec_()
             

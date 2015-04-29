@@ -237,7 +237,8 @@ def compileconffromoptions(options, args):
            {
              "RemotePath": [
                 args[1]
-             ]
+             ],
+            "LocalPath":""
            } 
          ]
        }, 
@@ -250,7 +251,8 @@ def compileconffromoptions(options, args):
            {
              "RemotePath": [
                args[2]
-             ]
+             ],
+            "LocalPath":""
            } 
            
          ]
@@ -307,12 +309,14 @@ def merge():
                       help="Use config in  FILE to merge the data (ignore other options) ", metavar="FILE",default="")
   
     (options, args) = parser.parse_args(args=None, values=None)
+    if len(args)<1:
+         parser.error("Incorrect number of arguments. --help for more")
+        
     if options.conffile!="":
         conf=json.load(open(options.conffile,"r"))
     else:
         conf=compileconffromoptions(options, args)
-    if len(args)<1:
-         parser.error("incorrect number of arguments")
+  
     directory=args[0]
     mergedTable,filelists,plotdata=mergedata(conf,directory)
     if not options.batch:
@@ -427,6 +431,9 @@ def mergelogs(conf,attachment=None):
             else:
                 logframe=logframe.append(tmplog).sort_index()
         cleanuplog(logframe,logTable)
+        print conf["TimeOffset"]
+        print timedelta(seconds=conf["TimeOffset"])
+        logframe.index=logframe.index-timedelta(seconds=conf["TimeOffset"])
         if logTable["FirstImageCorrelation"]:
             firstImage=logframe.index.min()
             peakframe=logframe
@@ -439,6 +446,8 @@ def mergelogs(conf,attachment=None):
             tablea=tablea.join(tableb, how='outer') 
         else:
             tablea=logframe
+    
+   
     return tablea,firstImage,peakframe
 def mergedata(conf,dir,attachment=None):
     logsTable,firstImage,peakframe=mergelogs(conf,attachment=attachment)
@@ -458,11 +467,12 @@ def mergeimgdata(dir,tablea ,imd,peakframe,firstImage=None):
         tablea.index=tablea.index+delta
         peakframe.index=peakframe.index+delta
         print "Time shift:" +str(delta)
-    
+    else:
+        delta=timedelta(seconds=0)
     mergedt=imd.join(tablea,how="outer").interpolate(method="zero")
     mergedt=mergedt[mergedt.index.isin(imd.index)]
     
-    return mergedt
+    return mergedt,delta
 def syncplot(shiftedreduced,imd):
         imd['Exposure_time [s] (Img)'][:].plot(style="ro")  
         shiftedreduced['Duration (Peak)'][shiftedreduced['Duration (Peak)']>0].plot(style="x")

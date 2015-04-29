@@ -427,8 +427,10 @@ class Server():
             logsTable,firstImage,peakframe=datamerge.mergelogs(conf,attachment=attachment)
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue):
                 imd,filelists=datamerge.readallimages(directory)
-                mergedTable= datamerge.mergeimgdata(directory,logsTable,imd,peakframe,firstImage=firstImage)
+                mergedTable,delta= datamerge.mergeimgdata(directory,logsTable,imd,peakframe,firstImage=firstImage)
                 plotdata=datamerge.syncplot(peakframe,imd)
+                plotdata["CalculatedTimeshift"]=str(delta)
+               
                 resultdir=os.path.join(directory,relativedirname)
                 if not  os.path.isdir(resultdir):
                     os.mkdir(resultdir)

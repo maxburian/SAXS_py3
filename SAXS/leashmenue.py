@@ -55,6 +55,7 @@ class menueitems(QtGui.QWidget):
         self.recentfileactions=[]
         for i in range(maxrecentfiles):
             self.recentfileactions.append(self.filemenue.addAction(""))
+            self.connect(self.recentfileactions[i], QtCore.SIGNAL("triggered()"),self.openrecent)
         self.updaterecenfileslist()
     def importFit2d(self):
         self.importFrom("Open Fit2d Output Text File",converter.txt2json)
@@ -116,7 +117,8 @@ class menueitems(QtGui.QWidget):
         self.appendrecentfile(filename)
     def openrecent(self):
        action=self.sender()
-       filename=unicode(action.data().toString ())
+       filename=unicode(action.data().toString())
+       print filename+"*"
        self.app.calibeditor.model.loadfile(filename)
        self.app.calibeditor.reset()
        self.appendrecentfile(filename)
@@ -127,13 +129,14 @@ class menueitems(QtGui.QWidget):
             self.recentfileactions[i].setText(text)
             self.recentfileactions[i].setData(file)
             self.recentfileactions[i].setToolTip ( file )
-            self.connect(self.recentfileactions[i], QtCore.SIGNAL("triggered()"),self.openrecent)
+            
     def appendrecentfile(self,filename):
         if filename in  self.recentfiles:
             self.recentfiles.remove(filename)
         self.recentfiles.appendleft(filename)
         self.updaterecenfileslist()
         self.saverecentfiles()
+        
     def saverecentfiles(self):
         user=json.load(open(self.userconffilename))
         user["recentFiles"]=list(self.recentfiles)

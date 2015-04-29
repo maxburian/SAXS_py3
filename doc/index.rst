@@ -1,8 +1,8 @@
  
 
-=====================
-SAXS's documentation!
-=====================
+======================
+SAXSDog Documentation!
+======================
 
 
 .. image::  tugwhite.png
