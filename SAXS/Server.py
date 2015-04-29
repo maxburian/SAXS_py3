@@ -417,6 +417,9 @@ class Server():
             directory=os.path.normpath(
                         os.path.join(self.serverdir, os.sep.join(self.calibration["Directory"])))
             relativedirname=os.path.dirname(conf["OutputFileBaseName"])
+            resultdir=os.path.join(directory,relativedirname)
+            if not  os.path.isdir(resultdir):
+                os.mkdir(resultdir)
             conf["OutputFileBaseName"]= directory.split(os.sep)[-1]+os.path.basename(conf["OutputFileBaseName"])
             print "Dir: "+ directory
             for table in conf["LogDataTables"]:
@@ -424,16 +427,15 @@ class Server():
                     if "RemotePath" in file:
                         file["RemotePath"].insert(0,self.serverdir)
            
-            logsTable,firstImage,peakframe=datamerge.mergelogs(conf,attachment=attachment)
-            def mergeimages(logsTable,firstImage,peakframe,mergedataqueue):
+            logsTable,firstImage,peakframe=datamerge.mergelogs(conf,attachment=attachment,directory=resultdir)
+            def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
                 imd,filelists=datamerge.readallimages(directory)
                 mergedTable,delta= datamerge.mergeimgdata(directory,logsTable,imd,peakframe,firstImage=firstImage)
                 plotdata=datamerge.syncplot(peakframe,imd)
                 plotdata["CalculatedTimeshift"]=str(delta)
                
-                resultdir=os.path.join(directory,relativedirname)
-                if not  os.path.isdir(resultdir):
-                    os.mkdir(resultdir)
+                
+               
                 datamerge.writeTable(conf,mergedTable,directory=resultdir)
                 datamerge.writeFileLists(conf ,filelists,directory=resultdir,serverdir=self.serverdir)
                 if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
@@ -443,7 +445,8 @@ class Server():
                 mergedataqueue.put({"result":
                                     "mergedata","data":{"syncplot":plotdata,"fileslist":filelists}})
             if  not self.mergeprocess or not  self.mergeprocess.is_alive():
-                self.mergeprocess=threading.Thread(target=mergeimages,args=(logsTable,firstImage,peakframe,self.mergedataqueue))
+                self.mergeprocess=threading.Thread(target=mergeimages,
+                                                   args=(logsTable,firstImage,peakframe,self.mergedataqueue,resultdir))
                 self.mergeprocess.start()
             else:
                 return {"result":"Error","data":{"Error": "Merge already started please wait"}}

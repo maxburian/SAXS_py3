@@ -403,7 +403,8 @@ def chilisttodict(chi):
                 else:
                     filelists[kind]=  [file[kind]]
     return filelists
-def mergelogs(conf,attachment=None):
+def mergelogs(conf,attachment=None,directory="."):
+    basename=os.path.normpath(os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]]))
     schema=json.load(open(os.path.dirname(__file__)
                         +os.sep+'DataConsolidationConf.json'))
     validate(conf,schema)
@@ -432,6 +433,9 @@ def mergelogs(conf,attachment=None):
                 logframe=logframe.append(tmplog).sort_index()
         cleanuplog(logframe,logTable)
         print conf["TimeOffset"]
+        print (basename+  logTable["Name"]+".csv")
+        logframe.to_csv(basename+  logTable["Name"]+".csv")
+   
         print timedelta(seconds=conf["TimeOffset"])
         logframe.index=logframe.index-timedelta(seconds=conf["TimeOffset"])
         if logTable["FirstImageCorrelation"]:
