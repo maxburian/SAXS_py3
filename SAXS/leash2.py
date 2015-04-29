@@ -39,7 +39,7 @@ class LeashUI(QtGui.QMainWindow):
         self.connectdialog.exec_()
         selected=self.connectdialog.confindex
         if  self.connectdialog.ok:
-            if selected>0:
+            if selected>=0:
                 reconnectresult=self.connectdialog.serverstatus[selected].result
             else:
                 reconnectresult={}

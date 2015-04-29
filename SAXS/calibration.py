@@ -236,11 +236,11 @@ class calibration:
         qStopIndex = np.where(self.qgrid > qStop)[0][0]
         qStartIndex = np.where(self.qgrid > qStart)[0][0]
         qDelta = self.qgrid[1]-self.qgrid[0]
-        I0 = Intensity[qStartIndex:qStopIndex].sum() * qDelta
-        I1 = (Intensity[qStartIndex:qStopIndex] * self.qgrid[qStartIndex:qStopIndex]).sum() * qDelta
-        I2 = (Intensity[qStartIndex:qStopIndex] 
+        I0 = np.nansum(Intensity[qStartIndex:qStopIndex]) * qDelta
+        I1 = np.nansum((Intensity[qStartIndex:qStopIndex] * self.qgrid[qStartIndex:qStopIndex])) * qDelta
+        I2 = np.nansum((Intensity[qStartIndex:qStopIndex] 
               * self.qgrid[qStartIndex:qStopIndex] 
-              * self.qgrid[qStartIndex:qStopIndex]).sum() * qDelta
+              * self.qgrid[qStartIndex:qStopIndex])) * qDelta
         return I0, I1, I2
     
     def __complexCoordinatesOfPicture(self,oversampling):

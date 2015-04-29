@@ -16,6 +16,8 @@ from multiprocessing import Queue, Value
 from Queue import Empty
 internalplotsocked=345834
 import Leash
+
+            
 class DirectoryCollisionException(Exception):
     pass
 
@@ -33,9 +35,12 @@ class history():
         self.hist=[]
         self.filelist={}
         self.IntegralParameters={}
+        self.plotdata=None
     def update(self,queue):
         hist=[]
         now=time.time()
+        IntPBuffer={}
+        
         for timest in self.hist:
             if now-timest<100:
                 hist.append(timest)
@@ -46,12 +51,34 @@ class history():
               
                 break
             if item:
-                hist.append(item["Time"])
-                self.filelist[item["BaseName"]]=item["FileList"]
-            if "IntegralParameters" in item:
-                 self.IntegralParameters[item["BaseName"]]=item
-                
+                if "Time" in item:
+                    hist.append(item["Time"])
+                    self.filelist[item["BaseName"]]=item["FileList"]
+                    if "IntegralParameters" in item:
+                         IntPBuffer[item["BaseName"]]=item
+                elif "command" in item:
+                  
+                    if item["command"]=="putplotdata":
+                        self.plotdata=item['argument']["data"]
+                 
+        self.IntegralParameters=integparmlists(IntPBuffer,lists=self.IntegralParameters)
         self.hist=hist
+
+def integparmlists(data,lists={}):
+    for key in data.keys():
+        ip=data[key]["IntegralParameters"]
+        for mask in ip.keys():
+            if  not mask in lists:
+                lists[mask]={"time":[],"file":[]}
+            df=lists[mask]
+            for ikey in ip[mask]:
+                if not ikey in df:
+                  df[ikey]=[ip[mask][ikey]]
+                else:
+                    df[ikey].append(ip[mask][ikey])
+            df["time"].append(data[key]['ImgTime'])
+            df["file"].append(key)
+    return lists
 def subscribeToFileChanges(imqueue,url,dir,serverdir):
     """
     Function to connect to file feeder service. Runs in Thread.
@@ -354,6 +381,7 @@ class Server():
             print e
         return result
     def queue_abort(self):
+       
         if self.imagequeue:
             self.imagequeue.stop()
             self.imagequeueprocess.terminate()
@@ -379,13 +407,13 @@ class Server():
             result={"result":"Error","data":{"Error":str(e)}}
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
-        self.plotresult['data']["stat"]=self.stat()
-        self.plotresult['data']["history"]=self.history.hist
-        self.plotresult['data']["IntegralParameters"]=self.history.IntegralParameters
-        return  self.plotresult
-    def updateplot(self,object):
-        self.plotresult=object['argument']["data"]
-        return {"result":"done","data":{}}
+        plotresult=self.history.plotdata
+        plotresult['data']["stat"]=self.stat()
+        plotresult['data']["history"]=self.history.hist
+        plotresult['data']["IntegralParameters"]=self.history.IntegralParameters
+        
+        return  plotresult
+   
     def stat(self):
         
         if self.imagequeue:

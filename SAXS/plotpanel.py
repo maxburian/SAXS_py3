@@ -22,6 +22,7 @@ class plotpanel(QtGui.QWidget):
         self.figures=[]
     def plot(self,datastr):
         data=json.loads(unicode(datastr))
+      
         if  "data" in data and "graphs" in data["data"]:
             graphdata= data["data"]["graphs"]
             if len(graphdata)<len(self.canvases):

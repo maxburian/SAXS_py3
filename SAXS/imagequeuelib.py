@@ -200,14 +200,7 @@ class imagequeue:
         if not self.options.nowalk:
             self.fillqueuewithexistingfiles()
         if self.options.servermode:
-             
-             context = zmq.Context()
-             socket = context.socket(zmq.REQ)
-             tokenlist=  self.conf['Server'].split(":")
-             
-             server=":".join([tokenlist[0],tokenlist[1],self.options.serverport])
-             print server
-             socket.connect (server)
+              
              from Leash import addauthentication
         try:
             while ( self.options.servermode or 
@@ -225,14 +218,13 @@ class imagequeue:
                                 "result":"plot","data":{"filename":lastfile,"graphs":data,
                                                         "stat":{}}
                                   }}}
-                        socket.send_multipart([json.dumps(addauthentication( request,self.conf))])
-                        socket.recv()
+                       
+                        self.histqueue.put(request)
                     if np.mod(self.allp.value,500)==0:
                         self.timreport()
         except KeyboardInterrupt:
             pass
-        if self.options.servermode:
-            context.destroy()
+        
         self.stop()
         self.timreport()
         return self.allp.value, time.time()-self.starttime

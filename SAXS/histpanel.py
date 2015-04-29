@@ -11,6 +11,7 @@ import time
 import datetime
 import prettyplotlib as ppl
 from prettyplotlib import brewer2mpl
+import pandas as pd
 class histpanel(QtGui.QWidget):
     def __init__(self,app):
         super(histpanel,self).__init__()
@@ -20,17 +21,27 @@ class histpanel(QtGui.QWidget):
         self.canvas=FigureCanvas(self.figure)
    
         self.layout.addWidget(self.canvas)
+        self.IPfigure=plt.figure()
+        self.IPcanvas=FigureCanvas(self.figure)
+        self.layout.addWidget(self.IPcanvas)
         self.histdata=[]
         self.app=app
        
     def plot(self,datastr):
-        data=json.loads(unicode(datastr))
-        if "history" in data["data"]:
-            self.histdata=np.array(data["data"]["history"])
-            self.timestep(datastr)
+        if (   self.app.tab.currentIndex()==2 ):
+            data=json.loads(unicode(datastr))
+            if "history" in data["data"]:
+                self.histdata=np.array(data["data"]["history"])
+                try:
+                    self.timestep(data)
+                except:
+                    pass
+            if "IntegralParameters" in  data["data"]:
+                self.drawIntegParam(data)
          
-    def timestep(self,resultstr):
-        data=json.loads(unicode(resultstr))
+    def timestep(self,data):
+        if type(data)==QtCore.QString:
+            data=json.loads(unicode(data))
         timestamp=data["data"]["stat"]["time"]
      
         if (   self.app.tab.currentIndex()==2 ):
@@ -46,4 +57,14 @@ class histpanel(QtGui.QWidget):
             ax.set_title(tstr +", "+ str(data["data"]["stat"]['images processed'])+" Images Processed")
 
             self.canvas.draw()
-         
+    def drawIntegParam(self,data):
+        self.IPfigure.clf()
+        ax=self.figure.add_subplot(111)
+        ax.patch.set_alpha(0)
+        lists=data["data"]['IntegralParameters']
+       
+        df=pd.DataFrame(lists[lists.keys()[0]]).set_index("time")
+        df.index=pd.to_datetime(df.index)
+        df.plot(ax=ax)
+        self.IPcanvas.draw()
+        
