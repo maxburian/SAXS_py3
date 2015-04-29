@@ -26,7 +26,15 @@ class histpanel(QtGui.QWidget):
         self.layout.addWidget(self.IPcanvas)
         self.histdata=[]
         self.app=app
+        self.integmaxframewdgt=QtGui.QSpinBox()
        
+        self.framelimitlayout=QtGui.QHBoxLayout()
+        self.framelimitlabel=QtGui.QLabel("Number of Frames to Show: ")
+        self.framelimitlayout.addWidget( self.framelimitlabel)
+        self.framelimitlayout.addWidget(self.integmaxframewdgt)
+        self.integmaxframewdgt.setRange(0, 200000)
+        self.integmaxframewdgt.setValue(100)
+        self.layout.addLayout(self.framelimitlayout)
     def plot(self,datastr):
         if (   self.app.tab.currentIndex()==2 ):
             data=json.loads(unicode(datastr))
@@ -62,9 +70,10 @@ class histpanel(QtGui.QWidget):
         ax=self.figure.add_subplot(111)
         ax.patch.set_alpha(0)
         lists=data["data"]['IntegralParameters']
-       
+        framelimit=self.integmaxframewdgt.value()
         df=pd.DataFrame(lists[lists.keys()[0]]).set_index("time")
         df.index=pd.to_datetime(df.index)
-        df.plot(ax=ax)
+        length=len(df)
+        df[np.min(length-int(framelimit),0):length].plot(ax=ax)
         self.IPcanvas.draw()
         

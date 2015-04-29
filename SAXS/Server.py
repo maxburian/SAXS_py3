@@ -407,7 +407,10 @@ class Server():
             result={"result":"Error","data":{"Error":str(e)}}
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
-        plotresult=self.history.plotdata
+        if self.history.plotdata:
+            plotresult=self.history.plotdata
+        else:
+            plotresult={"result":"plotdata"}
         plotresult['data']["stat"]=self.stat()
         plotresult['data']["history"]=self.history.hist
         plotresult['data']["IntegralParameters"]=self.history.IntegralParameters
