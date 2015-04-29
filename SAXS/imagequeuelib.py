@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import zmq
 import json
 import time
+import datamerge
 #from SAXS.tifffile import   TiffFile 
 def funcworker(self,threadid):
    """
@@ -132,6 +133,12 @@ class imagequeue:
                 basename=os.path.join( reldir,
                                       os.path.basename(picture)[:-4])
             data=[]
+            integparams={}
+            imgMetaData=datamerge.readtiff(picture)
+            if "date" in imgMetaData:
+                imgTime=imgMetaData["date"]
+            else:
+                imgTime=""            
             for calnum,cal in enumerate(self.cals):   
                 filename=basename+"_c"+cal.kind[0]+str(calnum)
                 chifilename=filename+".chi"
@@ -139,6 +146,8 @@ class imagequeue:
                 if not self.options.resume or not os.path.isfile(chifilename):
                     result=cal.integratechi(image,chifilename,picture)
                     result["Image"]=picture
+                    if "Integparam" in result:
+                        integparams[cal.kind[0]+str(calnum)]=result["Integparam"]                                        
                     data.append(result)
                     if threadid==0 and self.options.plotwindow:
                         # this is a hack it really schould be a proper GUI
@@ -164,7 +173,7 @@ class imagequeue:
             
             json.dump(data,open(basename+".json","w"))
             filelist["JSON"]=basename+".json"
-            self.histqueue.put({"Time":time.time(),"FileList":filelist,"BaseName":basename})
+            self.histqueue.put({"Time":time.time(),"ImgTime":imgTime, "FileList":filelist,"BaseName":basename,"IntegralParameters":integparams})
             
             return basename ,data
     def start(self):  
