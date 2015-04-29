@@ -102,24 +102,25 @@ class calibration:
              #Nanometer
             self.corr=np.divide(self.corr,self.polcorr(frac['Fraction'], frac['Angle']/180.0*np.pi-np.pi/2))
         # rescale the theta that the radial regions connected to a label are about 1 pixel wide
+        Angstrom=1.00001495e-1
+        qpix =4*np.pi*np.sin(theta/2)/self.config['Wavelength']/Angstrom
         if 'PixelPerRadialElement' in mask:
-            self.scale=1/np.max(theta)*np.max(r)/pixelsize/mask['PixelPerRadialElement']
+            self.scale=1/np.max(qpix)*np.max(r)/pixelsize/mask['PixelPerRadialElement']
             pixelper=mask['PixelPerRadialElement']
         else:
             pixelper=1.0
-            self.scale=1/np.max(theta)*np.max(r)/pixelsize
+            self.scale=1/np.max(qpix)*np.max(r)/pixelsize
         
-        labels=np.array(theta*self.scale,dtype=int)
+        
+        labels=np.array(qpix*self.scale,dtype=int)
         self.maxlabel=np.max(labels)
         mask=openmask(mask["MaskFile"],attachment)
         self.A=labelstosparse(labels,mask,oversampling)
         self.ITransposed =self.A
         self.I,self.Areas,self.oneoverA=rescaleI(self.A,self.corr)
         
-        self.thetagrid=(np.arange(self.maxlabel+1)+0)/self.scale   
-        if "Wavelength" in self.config:
-            Angstrom=1.00001495e-1
-            self.qgrid=4*np.pi*np.sin(self.thetagrid/2)/self.config['Wavelength']/Angstrom
+        self.qgrid=(np.arange(self.maxlabel+1)+0)/self.scale   
+       
         
       
     def integrate(self,image):
