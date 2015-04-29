@@ -180,7 +180,25 @@
 					{
 						"description": "Name for mask configuration.",
 						"type": "string"
-					}
+					},
+					
+					"qStart":
+					{
+					   "description": "Starting q-value for Integral Parameters.",
+					   "type": "number",
+					   "default": 0,
+					   "required": true,
+					   "units" : "nm^-1"
+					},
+					
+					"qStop":
+                    {
+                       "description": "Ending q-value for Integral Parameters.",
+                       "type": "number",
+                       "default": 0,
+                       "required": true,
+                       "units" : "nm^-1"
+                    }
 				}
 			}
 		},
