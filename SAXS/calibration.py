@@ -154,7 +154,7 @@ class calibration:
         
         np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')
         
-        
+        I0, I1, I2 = self.integParameters(r)
         return {"array":data.transpose().tolist(),
                     "columnLabels":[
                     "Scattering Vector  q [$nm^{-1}$]",
@@ -162,7 +162,8 @@ class calibration:
                     "Error Margin"],
                     "kind":"Radial",
                     "conf":self.config,
-                    "mask":self.maskconfig
+                    "mask":self.maskconfig,
+                    "Integparam":{"I0":I0, "I1":I1, "I2":I2}
         }
          
    
@@ -223,11 +224,25 @@ class calibration:
          
         return fig
          
-            
+    def integParameters(self, Intensity):
+        """
+        function to calculate the integral parameters between qStart and qStop
+        returns I0, I1, I2
+        
+        """        
+        self.qgrid #numpy array
+        qStop = self.maskconfig["qStop"]
+        qStart = self.maskconfig["qStart"]
+        qStopIndex = np.where(self.qgrid > qStop)[0][0]
+        qStartIndex = np.where(self.qgrid > qStart)[0][0]
+        qDelta = self.qgrid[1]-self.qgrid[0]
+        I0 = Intensity[qStartIndex:qStopIndex].sum() * qDelta
+        I1 = (Intensity[qStartIndex:qStopIndex] * self.qgrid[qStartIndex:qStopIndex]).sum() * qDelta
+        I2 = (Intensity[qStartIndex:qStopIndex] 
+              * self.qgrid[qStartIndex:qStopIndex] 
+              * self.qgrid[qStartIndex:qStopIndex]).sum() * qDelta
+        return I0, I1, I2
     
-    
-       
-   
     def __complexCoordinatesOfPicture(self,oversampling):
         """
         Generates array containing coordinates relative to beam center as complex numbers. 
