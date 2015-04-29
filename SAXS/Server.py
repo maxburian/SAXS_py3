@@ -32,6 +32,7 @@ class history():
     def __init__(self):
         self.hist=[]
         self.filelist={}
+        self.IntegralParameters={}
     def update(self,queue):
         hist=[]
         now=time.time()
@@ -47,7 +48,9 @@ class history():
             if item:
                 hist.append(item["Time"])
                 self.filelist[item["BaseName"]]=item["FileList"]
-            
+            if "IntegralParameters" in item:
+                 self.IntegralParameters[item["BaseName"]]=item
+                
         self.hist=hist
 def subscribeToFileChanges(imqueue,url,dir,serverdir):
     """
@@ -378,6 +381,7 @@ class Server():
     def plot(self):
         self.plotresult['data']["stat"]=self.stat()
         self.plotresult['data']["history"]=self.history.hist
+        self.plotresult['data']["IntegralParameters"]=self.history.IntegralParameters
         return  self.plotresult
     def updateplot(self,object):
         self.plotresult=object['argument']["data"]
