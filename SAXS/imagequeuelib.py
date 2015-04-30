@@ -63,6 +63,7 @@ class imagequeue:
          self.options=options
          self.picturequeue=Queue()
          self.histqueue=Queue()
+         self.plotdataqueue=Queue()
          self.directory=directory
          self.allp=Value('i',0)
          self.stopflag=Value('i',0)
@@ -222,7 +223,7 @@ class imagequeue:
                                                         "stat":{}}
                                   }}}
                        
-                        self.histqueue.put(request)
+                        self.plotdataqueue.put(request)
                     if np.mod(self.allp.value,500)==0:
                         self.timreport()
         except KeyboardInterrupt:

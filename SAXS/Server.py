@@ -35,7 +35,7 @@ class history():
         self.hist=[]
         self.filelist={}
         self.IntegralParameters={}
-        self.plotdata=None
+        
     def update(self,queue):
         hist=[]
         now=time.time()
@@ -56,11 +56,6 @@ class history():
                     self.filelist[item["BaseName"]]=item["FileList"]
                     if "IntegralParameters" in item:
                          IntPBuffer[item["BaseName"]]=item
-                elif "command" in item:
-                  
-                    if item["command"]=="putplotdata":
-                        self.plotdata=item['argument']["data"]
-                 
         self.IntegralParameters=integparmlists(IntPBuffer,lists=self.IntegralParameters)
         self.hist=hist
 
@@ -164,11 +159,7 @@ class Server():
         self.mergeresult={}
         self.mergeprocess=None
         self.threads=self.options.threads
-        self.plotresult={"result":"Empty","data":{  "stat":{"images processed": 0,
-                     "queue length":0,
-                     "time":time.time(),
-                     
-                     }}}
+        self.plotdata=None
            
     def start(self):
         """
@@ -407,8 +398,8 @@ class Server():
             result={"result":"Error","data":{"Error":str(e)}}
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     def plot(self):
-        if self.history.plotdata:
-            plotresult=self.history.plotdata
+        if self.plotdata:
+            plotresult=self.plotdata
         else:
             plotresult={"result":"plotdata"}
         plotresult['data']["stat"]=self.stat()
@@ -421,9 +412,13 @@ class Server():
         
         if self.imagequeue:
             self.lasttime=time.time()
-           
             self.lastcount=self.imagequeue.allp.value
             self.history.update(self.imagequeue.histqueue)
+            while True:
+                try:
+                    self.plotdata=self.imagequeue.plotdataqueue.get(False)['argument']["data"]
+                except Empty:
+                    break
             result= {"images processed":self.imagequeue.allp.value,
              "queue length":self.imagequeue.picturequeue.qsize(),
              "time":time.time(),
