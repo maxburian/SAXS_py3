@@ -267,7 +267,12 @@ class imagequeue:
                 self.plotdataqueue.get(False)
             except Empty:
                 break
-        
+        if os.sys.platform!="win32":
+            try:
+                self.histqueue.close()
+                self.plotdataqueue.close()
+            except Exception as e:
+                print e
     def timreport(self):
         tottime=time.time()-self.starttime
         count=self.allp.value

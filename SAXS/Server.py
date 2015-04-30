@@ -83,15 +83,22 @@ def subscribeToFileChanges(imqueue,url,dir,serverdir):
     # Socket to talk to server
     context = zmq.Context()
     socket = context.socket(zmq.SUB)
+    socket.setsockopt(zmq.LINGER, 1)
     print "Feeder at: ",url
     print "serverdir " + serverdir
     print "selectdir " + dir
     socket.connect ( url)
     socket.setsockopt(zmq.SUBSCRIBE,"")
+    poller = zmq.Poller()
+    poller.register(socket, zmq.POLLIN)
+    
     try:
         while imqueue.stopflag.value==0: 
-           
-            string = socket.recv()
+            plist= poller.poll(500)
+            if  len(plist)>=1:
+                string = socket.recv()
+            else:
+                continue
             obj=json.loads(string)
             file=os.path.abspath(os.path.normpath(os.path.join(serverdir, obj['argument'])))
           
@@ -100,7 +107,8 @@ def subscribeToFileChanges(imqueue,url,dir,serverdir):
                 if file.endswith('.tif'):
                     queue.put( file)
     except KeyboardInterrupt:
-        context.destroy()
+        pass
+    context.destroy()
 def parsecommandline():
     
         parser = OptionParser()
@@ -383,15 +391,17 @@ class Server():
             else:
                 self.imagequeueprocess.join(1)
            
-        self.queue_close()
+       
         self.imagequeue=None
         return {"result":"queue aborted","data":{"stat":self.stat()}}
     def queue_close(self):
         if self.feederproc:
             if  os.sys.platform!="win32":
+                print "feeder terminate"
                 self.feederproc.terminate()
-            else:
-                self.feederproc.join(0)
+            print "feeder join"
+            self.feederproc.join(1)
+            self.feederproc=None
         return {"result":"queue closed","data":{"stat":self.stat()}}
     def readdir(self,object):
         
