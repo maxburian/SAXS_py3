@@ -4,7 +4,7 @@
 
 .. role:: red
 
-:.. _required:
+.. _required:
 
  The ':red:`*`' signifies a required Field.
 
@@ -44,18 +44,14 @@ Example JSON:
         "DedectorDistanceMM": 1000.0
       },
       "Wavelength": 1.54,
-      "Directory": [
-        0
-      ],
-      "Masks": [
-        0
-      ]
+      "Directory": [],
+      "Masks": []
     }
 
 .. _Title:
 
 Title
---------------------
+-------------------------
 
 :Type:
   string
@@ -73,7 +69,7 @@ Example JSON:
 .. _Geometry:
 
 Geometry
---------------------
+-------------------------
 
 :Type:
   object
@@ -112,7 +108,7 @@ Example JSON:
 .. _Tilt:
 
 Tilt
---------------------
+-------------------------
 
 The sensor, usually is not perfectly perpenticular to the ray direction. The tilt angle can be specified by giving the following paramters.
 
@@ -135,7 +131,7 @@ Example JSON:
 .. _TiltRotDeg:
 
 TiltRotDeg
---------------------
+-------------------------
 
 This gives the angel of the tilt direction.
 
@@ -158,7 +154,7 @@ Example JSON:
 .. _TiltAngleDeg:
 
 TiltAngleDeg
---------------------
+-------------------------
 
 This gives the angle between the ray direction and the normal to the sensor plane.
 
@@ -181,7 +177,7 @@ Example JSON:
 .. _BeamCenter:
 
 BeamCenter
---------------------
+-------------------------
 
 Gives the beam center in pixel coorinates.
 
@@ -204,7 +200,7 @@ Example JSON:
 .. _DedectorDistanceMM:
 
 DedectorDistanceMM
---------------------
+-------------------------
 
 Distance between diffraction center and sensor.
 
@@ -227,7 +223,7 @@ Example JSON:
 .. _PixelSizeMicroM:
 
 PixelSizeMicroM
---------------------
+-------------------------
 
 The pixel size on the sensor.
 
@@ -250,7 +246,7 @@ Example JSON:
 .. _Imagesize:
 
 Imagesize
---------------------
+-------------------------
 
 Size of sensor image in pixel.
 
@@ -273,7 +269,7 @@ Example JSON:
 .. _Masks:
 
 Masks
---------------------
+-------------------------
 
 :Type:
   array() items: {:ref:`MaskFile`, :ref:`Oversampling`, :ref:`PixelPerRadialElement`, :ref:`Name`, :ref:`qStart`, :ref:`qStop`}
@@ -286,12 +282,12 @@ Example JSON:
 
 .. code:: json
 
-    {"Masks": [0]}
+    {"Masks": []}
 
 .. _MaskFile:
 
 MaskFile
---------------------
+-------------------------
 
 Path of Maskfile
 
@@ -314,7 +310,7 @@ Example JSON:
 .. _Oversampling:
 
 Oversampling
---------------------
+-------------------------
 
 Oversampling factor for radial integration. The higher, the longer the setup but the higher the accuracy. More then 3 is probably overkill. 
 
@@ -337,7 +333,7 @@ Example JSON:
 .. _PixelPerRadialElement:
 
 PixelPerRadialElement
---------------------
+-------------------------
 
 Expresses the width of a radial step in terms of pixels. '1' means :math:`\delta R\approx 1` :ref:`PixelSizeMicroM`.
 
@@ -360,7 +356,7 @@ Example JSON:
 .. _Name:
 
 Name
---------------------
+-------------------------
 
 Name for mask configuration.
 
@@ -381,7 +377,7 @@ Example JSON:
 .. _qStart:
 
 qStart
---------------------
+-------------------------
 
 Starting q-value for Integral Parameters.
 
@@ -404,7 +400,7 @@ Example JSON:
 .. _qStop:
 
 qStop
---------------------
+-------------------------
 
 Ending q-value for Integral Parameters.
 
@@ -427,7 +423,7 @@ Example JSON:
 .. _Slices:
 
 Slices
---------------------
+-------------------------
 
 Slices are designed to analyse GISAXS data.It allows you to specify slices along the sensor axis and get intensity along :math:`q_x`,:math:`q_z` directions.
 
@@ -448,7 +444,7 @@ Example JSON:
 .. _Direction:
 
 Direction
---------------------
+-------------------------
 
 'x' or 'y' direction in sensor pixel coordinates.
 
@@ -456,7 +452,7 @@ Direction
 :Type:
   string
 :values:
-  ``[u'x', u'y']``
+  [x, y]
 
 :Required:
   True
@@ -474,7 +470,7 @@ Example JSON:
 .. _Plane:
 
 Plane
---------------------
+-------------------------
 
 Whether the direction is in plane with scattering surface or vertical to it.
 
@@ -482,7 +478,7 @@ Whether the direction is in plane with scattering surface or vertical to it.
 :Type:
   string
 :values:
-  ``[u'InPlane', u'Vertical']``
+  [InPlane, Vertical]
 
 :Required:
   True
@@ -500,7 +496,7 @@ Example JSON:
 .. _CutPosition:
 
 CutPosition
---------------------
+-------------------------
 
 Cut position in pixel coordinates in the other coodinate then specified in 'Direction'. Origin is top left Corner.
 
@@ -523,7 +519,7 @@ Example JSON:
 .. _CutMargin:
 
 CutMargin
---------------------
+-------------------------
 
 Number of pixels left and right from  cut to include into the average .
 
@@ -546,7 +542,7 @@ Example JSON:
 .. _IncidentAngle:
 
 IncidentAngle
---------------------
+-------------------------
 
 Angle of incidence in GISAXS setup.
 
@@ -569,7 +565,7 @@ Example JSON:
 .. _MaskRef:
 
 MaskRef
---------------------
+-------------------------
 
 Chose which mask to use for the sclice. '-1' means don't use mask
 
@@ -592,7 +588,7 @@ Example JSON:
 .. _Wavelength:
 
 Wavelength
---------------------
+-------------------------
 
 Refined wavelength.
 
@@ -615,7 +611,7 @@ Example JSON:
 .. _PolarizationCorrection:
 
 PolarizationCorrection
---------------------
+-------------------------
 
 The scattering direction id dependend on the light polarization. This may be acconted for with the polarization correction.
 
@@ -640,7 +636,7 @@ Example JSON:
 .. _Fraction:
 
 Fraction
---------------------
+-------------------------
 
 Fraction of light polarized in the given (:ref:`Angle`) direction.
 
@@ -663,7 +659,7 @@ Example JSON:
 .. _Angle:
 
 Angle
---------------------
+-------------------------
 
 Angle of the polarization plane.
 
@@ -686,7 +682,7 @@ Example JSON:
 .. _Directory:
 
 Directory
---------------------
+-------------------------
 
 Directory to take into acount for processing images. Given as a list of subdirectories.
 
@@ -702,12 +698,12 @@ Example JSON:
 
 .. code:: json
 
-    {"Directory": [0]}
+    {"Directory": []}
 
 .. _Threads:
 
 Threads
---------------------
+-------------------------
 
 :Type:
   integer

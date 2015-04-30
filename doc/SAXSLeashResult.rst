@@ -4,7 +4,7 @@
 
 .. role:: red
 
-:.. _required:
+.. _required:
 
  The ':red:`*`' signifies a required Field.
 
@@ -29,7 +29,7 @@ Example JSON:
 .. _result:
 
 result
---------------------
+-------------------------
 
 :Type:
   string
@@ -47,7 +47,7 @@ Example JSON:
 .. _data:
 
 data
---------------------
+-------------------------
 
 :Type:
   object
@@ -67,7 +67,7 @@ Example JSON:
 .. _cal:
 
 cal
---------------------
+-------------------------
 
 :Type:
   object
@@ -85,7 +85,7 @@ Example JSON:
 .. _Error:
 
 Error
---------------------
+-------------------------
 
 :type:
   object
@@ -105,7 +105,7 @@ Example JSON:
 .. _syncplot:
 
 syncplot
---------------------
+-------------------------
 
 :type:
   object
@@ -125,7 +125,7 @@ Example JSON:
 .. _directory:
 
 directory
---------------------
+-------------------------
 
 Directory this queue is going to use. New files in other directories are going to be ignored.
 
@@ -148,7 +148,7 @@ Example JSON:
 .. _attachments:
 
 attachments
---------------------
+-------------------------
 
 :type:
   object
@@ -168,7 +168,7 @@ Example JSON:
 .. _threads:
 
 threads
---------------------
+-------------------------
 
 :Type:
   integer
@@ -186,7 +186,7 @@ Example JSON:
 .. _dircontent:
 
 dircontent
---------------------
+-------------------------
 
 :type:
   object
@@ -206,7 +206,7 @@ Example JSON:
 .. _history:
 
 history
---------------------
+-------------------------
 
 :type:
   object
@@ -226,7 +226,7 @@ Example JSON:
 .. _fileslist:
 
 fileslist
---------------------
+-------------------------
 
 :type:
   object
@@ -246,7 +246,7 @@ Example JSON:
 .. _stat:
 
 stat
---------------------
+-------------------------
 
 :type:
   object
@@ -268,7 +268,7 @@ Example JSON:
 .. _queue length:
 
 queue length
---------------------
+-------------------------
 
 :Type:
   integer
@@ -286,7 +286,7 @@ Example JSON:
 .. _images processed:
 
 images processed
---------------------
+-------------------------
 
 :Type:
   integer
@@ -304,7 +304,7 @@ Example JSON:
 .. _time:
 
 time
---------------------
+-------------------------
 
 :Type:
   number
@@ -322,7 +322,7 @@ Example JSON:
 .. _start time:
 
 start time
---------------------
+-------------------------
 
 :Type:
   number
@@ -340,7 +340,7 @@ Example JSON:
 .. _mergecount:
 
 mergecount
---------------------
+-------------------------
 
 :Type:
   number
@@ -358,7 +358,7 @@ Example JSON:
 .. _filename:
 
 filename
---------------------
+-------------------------
 
 :Type:
   string
@@ -376,7 +376,7 @@ Example JSON:
 .. _IntegralParameters:
 
 IntegralParameters
---------------------
+-------------------------
 
 :type:
   object
@@ -396,7 +396,7 @@ Example JSON:
 .. _graphs:
 
 graphs
---------------------
+-------------------------
 
 :Type:
   array() items: {:ref:`kind`, :ref:`conf`, :ref:`columnLabels`, :ref:`array`}
@@ -414,12 +414,12 @@ Example JSON:
 .. _kind:
 
 kind
---------------------
+-------------------------
 
 :Type:
   string
 :values:
-  ``[u'Radial', u'Slice']``
+  [Radial, Slice]
 
 :Required:
   False
@@ -435,7 +435,7 @@ Example JSON:
 .. _conf:
 
 conf
---------------------
+-------------------------
 
 :Type:
   object
@@ -453,7 +453,7 @@ Example JSON:
 .. _columnLabels:
 
 columnLabels
---------------------
+-------------------------
 
 :Type:
   array() items: string 
@@ -471,7 +471,7 @@ Example JSON:
 .. _array:
 
 array
---------------------
+-------------------------
 
 :Type:
   array() items: 

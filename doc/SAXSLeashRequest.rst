@@ -4,7 +4,7 @@
 
 .. role:: red
 
-:.. _required:
+.. _required:
 
  The ':red:`*`' signifies a required Field.
 
@@ -29,12 +29,12 @@ Example JSON:
 .. _command:
 
 command
---------------------
+-------------------------
 
 :Type:
   string
 :values:
-  ``[u'close', u'abort', u'new', u'get', u'plot', u'plotdata', u'readdir', u'stat', u'listdir', u'putplotdata', u'fileslist', u'mergedata', u'getmergedata']``
+  [close, abort, new, get, plot, plotdata, readdir, stat, listdir, putplotdata, fileslist, mergedata, getmergedata]
 
 :Required:
   True
@@ -50,7 +50,7 @@ Example JSON:
 .. _argument:
 
 argument
---------------------
+-------------------------
 
 :Type:
   object
@@ -70,7 +70,7 @@ Example JSON:
 .. _calibration:
 
 calibration
---------------------
+-------------------------
 
 Calibrarion data according to :ref:`calib`
 
@@ -93,7 +93,7 @@ Example JSON:
 .. _mergeconf:
 
 mergeconf
---------------------
+-------------------------
 
 Datamerger Configuratioin
 
@@ -116,7 +116,7 @@ Example JSON:
 .. _data:
 
 data
---------------------
+-------------------------
 
 :type:
   object
@@ -136,7 +136,7 @@ Example JSON:
 .. _directory:
 
 directory
---------------------
+-------------------------
 
 :type:
   object
@@ -156,7 +156,7 @@ Example JSON:
 .. _sign:
 
 sign
---------------------
+-------------------------
 
 Signature of request
 
@@ -177,7 +177,7 @@ Example JSON:
 .. _time:
 
 time
---------------------
+-------------------------
 
 time in seconds (pythons time.time())
 

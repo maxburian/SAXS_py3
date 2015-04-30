@@ -8,8 +8,7 @@ SAXSDog Documentation!
 .. image::  tugwhite.png
    :width: 200 px
  
-The SAXS Python package implements analysis tools for Small Angle X-Ray Scattering 
-(SAXS) data. The first and most important one is to efficiently integrate 2d sensor data to an angle dependent diffraction curve.
+The SAXS Python package implements analysis tools for Small Angle X-Ray Scattering (SAXS) data. The first and most important one is to efficiently integrate 2d sensor data to an angle dependent diffraction curve.
 
 
 
