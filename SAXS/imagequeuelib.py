@@ -258,7 +258,11 @@ class imagequeue:
                 self.histqueue.get(False)
             except Empty:
                 break
-        
+        while True:
+            try:
+                self.plotdataqueue.get(False)
+            except Empty:
+                break
         
     def timreport(self):
         tottime=time.time()-self.starttime

@@ -374,9 +374,12 @@ class Server():
     def queue_abort(self):
        
         if self.imagequeue:
-            self.imagequeue.stop()
-            self.imagequeueprocess.terminate()
-            self.imagequeueprocess.join(1)
+            try:
+                self.imagequeue.stop()
+                self.imagequeueprocess.terminate()
+                self.imagequeueprocess.join(1)
+            except Exception as e:
+                print e
         self.queue_close()
         self.imagequeue=None
         return {"result":"queue aborted","data":{"stat":self.stat()}}
