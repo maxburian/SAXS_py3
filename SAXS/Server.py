@@ -374,20 +374,24 @@ class Server():
     def queue_abort(self):
        
         if self.imagequeue:
-            try:
-                print "trystop"
-                self.imagequeue.stop()
-                print "join"
+            print "trystop"
+            self.imagequeue.stop()
+          
+            if  os.sys.platform!="win32":
+                print "terminate"
+                self.imagequeueprocess.terminate()
+            else:
                 self.imagequeueprocess.join(1)
-            except Exception as e:
-                print e
+           
         self.queue_close()
         self.imagequeue=None
         return {"result":"queue aborted","data":{"stat":self.stat()}}
     def queue_close(self):
         if self.feederproc:
-             
-            self.feederproc.join(0)
+            if  os.sys.platform!="win32":
+                self.feederproc.terminate()
+            else:
+                self.feederproc.join(0)
         return {"result":"queue closed","data":{"stat":self.stat()}}
     def readdir(self,object):
         
