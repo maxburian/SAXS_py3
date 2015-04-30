@@ -306,7 +306,7 @@ class Server():
                 self.threads=object['argument']['calibration'].get("Threads")
             else:
                 self.threads=self.options.threads
-           
+            self.threads=max(self.threads,2)
             print "abort old queue"
             if self.imagequeue:
                  self.queue_abort()

@@ -12,7 +12,7 @@ from PIL import Image,TiffImagePlugin
 import numpy as np
 from multiprocessing import Queue ,Value
 from Subproccompatibility import Process
-from Queue import Empty
+from Queue import Empty, Full
 import matplotlib.pyplot as plt
 import zmq
 import json
@@ -62,8 +62,8 @@ class imagequeue:
          self.conf=conf
          self.options=options
          self.picturequeue=Queue()
-         self.histqueue=Queue()
-         self.plotdataqueue=Queue()
+         self.histqueue=Queue(maxsize=10000)
+         self.plotdataqueue=Queue(maxsize=1)
          self.directory=directory
          self.allp=Value('i',0)
          self.stopflag=Value('i',0)
@@ -173,12 +173,15 @@ class imagequeue:
                 self.allp.value+=1
                 
             filelist["JSON"]=basename+".json"
-            self.histqueue.put({"Time":float(time.time()),
+            
+            try:
+                self.histqueue.put({"Time":float(time.time()),
                                 "ImgTime":imgTime, 
                                 "FileList":filelist,
                                 "BaseName":basename,
-                                "IntegralParameters":integparams})
-            
+                                "IntegralParameters":integparams},block=False)
+            except Full:
+                print "Full"
             return basename ,data
     def start(self):  
         """
@@ -222,7 +225,7 @@ class imagequeue:
                                 "result":"plot","data":{"filename":lastfile,"graphs":data,
                                                         "stat":{}}
                                   }}}
-                       
+                     
                         self.plotdataqueue.put(request)
                     if np.mod(self.allp.value,500)==0:
                         self.timreport()

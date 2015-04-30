@@ -71,7 +71,7 @@ class histpanel(QtGui.QWidget):
         df=pd.DataFrame(lists[lists.keys()[0]]).set_index("time")
         df.index=pd.to_datetime(df.index)
         length=len(df)
-        print max(length-int(framelimit),0)
+       
         df[max(length-int(framelimit),0):length].plot(ax=ax)
         ax.set_xlabel("")
         ax.set_ylabel("")
