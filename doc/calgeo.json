@@ -25,7 +25,9 @@
         {
             "PixelPerRadialElement": 1,
             "MaskFile": "emptymask.tif",
-            "Oversampling": 2
+            "Oversampling": 2,
+            "qStart": 0.0, 
+            "qStop": 5.0
         }
     ],
     "Wavelength": 1.54
