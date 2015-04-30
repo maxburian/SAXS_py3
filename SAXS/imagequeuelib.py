@@ -172,7 +172,7 @@ class imagequeue:
                 self.allp.value+=1
                 
             filelist["JSON"]=basename+".json"
-            self.histqueue.put({"Time":time.time(),
+            self.histqueue.put({"Time":float(time.time()),
                                 "ImgTime":imgTime, 
                                 "FileList":filelist,
                                 "BaseName":basename,

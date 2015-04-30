@@ -39,18 +39,15 @@ class histpanel(QtGui.QWidget):
         if (   self.app.tab.currentIndex()==2 ):
             data=json.loads(unicode(datastr))
             if "history" in data["data"]:
-                self.histdata=np.array(data["data"]["history"])
-                try:
-                    self.timestep(data)
-                except:
-                    pass
+                self.histdata=np.array(data["data"]["history"],dtype=np.float)
+                self.timestep(data)
             if "IntegralParameters" in  data["data"]:
                 self.drawIntegParam(data)
          
     def timestep(self,data):
         if type(data)==QtCore.QString:
             data=json.loads(unicode(data))
-        timestamp=data["data"]["stat"]["time"]
+        timestamp=float(data["data"]["stat"]["time"])
      
         if (   self.app.tab.currentIndex()==2 ):
             self.figure.clf()
