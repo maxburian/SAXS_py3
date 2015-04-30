@@ -249,21 +249,21 @@ class imagequeue:
         if self.dirwalker:
            
             self.dirwalker.join(1)
+        print "empty pic queue"
         while True:
             try:
-                print "empty pic queue"
                 self.picturequeue.get(False)
             except Empty:
                 break
+        print "empty hist queue"
         while True:
             try:
-                print "empty hist queue"
                 self.histqueue.get(False)
             except Empty:
                 break
+        print "empty plot queue"
         while True:
             try:
-                print "empty plot queue"
                 self.plotdataqueue.get(False)
             except Empty:
                 break
