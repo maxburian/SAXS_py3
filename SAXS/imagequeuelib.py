@@ -170,10 +170,13 @@ class imagequeue:
                     print "[",threadid,"] write: ",filename+".chi" 
             with self.allp.get_lock():
                 self.allp.value+=1
-            
-            json.dump(data,open(basename+".json","w"))
+                
             filelist["JSON"]=basename+".json"
-            self.histqueue.put({"Time":time.time(),"ImgTime":imgTime, "FileList":filelist,"BaseName":basename,"IntegralParameters":integparams})
+            self.histqueue.put({"Time":time.time(),
+                                "ImgTime":imgTime, 
+                                "FileList":filelist,
+                                "BaseName":basename,
+                                "IntegralParameters":integparams})
             
             return basename ,data
     def start(self):  

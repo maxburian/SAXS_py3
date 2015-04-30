@@ -1,6 +1,6 @@
 import numpy as np
 from  calibration import openmask,labelstosparse
- 
+import json
 def yDirSliceProjector(y,x,x1,x2,mask):
     a=np.repeat(np.arange(x),y).reshape((x,y))
     maskx=np.ones((x,y),dtype=bool)
@@ -78,16 +78,16 @@ class slice():
                         r *self.oneoverA, 
                         np.sqrt(r ) *self.oneoverA # Poisson Error scaled
                       ]).transpose()
-        headerstr=picture+", GISAXS Slice\n"
-        headerstr+=self.qname+"\n"
+        collabels=[ self.qname,
+                    "Intensity (Count/Pixel)",
+                    "Error Margin"]
+        headerstr=  json.dumps(self.conf)+"\n"
+        headerstr+=json.dumps(collabels)+"\n"
         headerstr+="Intensity\n"
         headerstr+="   "+str(data.shape[0])+""
         np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')
         return {"array":data.transpose().tolist(),
-                    "columnLabels":[
-                    self.qname,
-                    "Intensity (Count/Pixel)",
-                    "Error Margin"],
+                    "columnLabels":collabels,
                     "kind":"Slice",
                     "conf":self.conf,
                     "slice":self.sliceconf}

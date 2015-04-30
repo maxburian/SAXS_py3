@@ -146,24 +146,26 @@ class calibration:
                         np.sqrt(r*self.Areas) *self.oneoverA] # Poisson Error sclaed
                       ).transpose()
       
-        
-        headerstr=picture+", Radial\n"
-        headerstr+="q [nm^-1]\n"
-        headerstr+="Intensity\n"
+        I0, I1, I2 = self.integParameters(r)
+        collabels=[
+                    "Scattering Vector  q [$nm^{-1}$]",
+                    "Intensity (Count/Pixel)",
+                    "Error Margin"]
+        integparam={"I0":I0, "I1":I1, "I2":I2}
+        headerstr= json.dumps(self.config)+"\n"
+        headerstr+=json.dumps(collabels)+"\n"
+        headerstr+=json.dumps(integparam)+"\n"
         headerstr+="   "+str(data.shape[0])+""
         
         np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')
         
-        I0, I1, I2 = self.integParameters(r)
+       
         return {"array":data.transpose().tolist(),
-                    "columnLabels":[
-                    "Scattering Vector  q [$nm^{-1}$]",
-                    "Intensity (Count/Pixel)",
-                    "Error Margin"],
+                    "columnLabels":collabels,
                     "kind":"Radial",
                     "conf":self.config,
                     "mask":self.maskconfig,
-                    "Integparam":{"I0":I0, "I1":I1, "I2":I2}
+                    "Integparam":integparam
         }
          
    
