@@ -1,4 +1,4 @@
 
-The SAXS module consists of a Python library and 3 command line tools: :ref:`saxsdog`, :ref:`plotchi` and :ref:`converter` and the :ref:`saxsdognetwork` that interates all of it and provides a GUI, :ref:`saxsleash`
+The SAXS module consists of a Python library and 3 command line tools:  ``saxsdog``, ``plotchi`` and  `converter` and the Saxs Network that integrates all of it and provides a GUI, ``saxsleash``.
 
 More Documentation is there http://ac-software.tugraz.at/SAXS/

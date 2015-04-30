@@ -29,7 +29,7 @@ The SAXS Python package implements analysis tools for Small Angle X-Ray Scatteri
    o.clip=40
    SAXS.makeplot(o,arg)
    
-The SAXS module consists of a Python library and 3 command line tools: :ref:`saxsdog`, :ref:`plotchi` and :ref:`converter` and the :ref:`saxsdognetwork` that interates all of it and provides a GUI, :ref:`saxsleash`
+The SAXS module consists of a Python library and 3 command line tools: :ref:`saxsdog`, :ref:`plotchi` and :ref:`converter` and the :ref:`saxsdognetwork` that integrates all of it and provides a GUI, :ref:`saxsleash`.
  
 
 
