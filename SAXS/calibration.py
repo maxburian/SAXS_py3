@@ -130,7 +130,7 @@ class calibration:
         :param numpy.array(dim=2) image: Sensor image to integrate as 2d `NumPy` array 
         :returns: Returns Angle and intensity vector as a tuple (angle,intensity)
         """
-        return  (self.thetagrid,self.I.dot(image.flatten() ))
+        return  (self.qgrid,self.I.dot(image.flatten() ))
     def integratechi(self,image,path,picture):
         """
         Integrate and save to file in "chi" format.
@@ -181,7 +181,7 @@ class calibration:
         dev=np.square(image.flatten()-means)
         stddev=np.sqrt(self.I.dot(dev))
         poissonerr=np.sqrt(radial*self.Areas)*self.oneoverA
-        rsq=(2*np.sin(self.thetagrid)*self.config["Geometry"]['DedectorDistanceMM']
+        rsq=(2*np.sin(self.qgrid)*self.config["Geometry"]['DedectorDistanceMM']
              *np.pi*self.config["Geometry"]['PixelSizeMicroM'][0]*1e-3**2)
         return  np.array([radial,stddev ,poissonerr])
     

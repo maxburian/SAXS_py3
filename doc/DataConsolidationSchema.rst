@@ -4,7 +4,7 @@
 
 .. role:: red
 
-.. _required:
+:.. _required:
 
  The ':red:`*`' signifies a required Field.
 
@@ -39,7 +39,7 @@ Example JSON:
 .. _TimeOffset:
 
 TimeOffset
--------------------------
+--------------------
 
 If offset is not found otherwise, use this as offset  for all log data
 
@@ -62,7 +62,7 @@ Example JSON:
 .. _LogDataTables:
 
 LogDataTables
--------------------------
+--------------------
 
 Define log files to consolidate with image data. If more then one defined, they will be joined and missing values will be interpolated.
 
@@ -83,7 +83,7 @@ Example JSON:
 .. _TimeEpoch:
 
 TimeEpoch
--------------------------
+--------------------
 
 Time epoch
 
@@ -91,7 +91,7 @@ Time epoch
 :Type:
   string
 :values:
-  [Mac, Unix]
+  ``[u'Mac', u'Unix']``
 
 :Required:
   True
@@ -109,7 +109,7 @@ Example JSON:
 .. _TimeOffset:
 
 TimeOffset
--------------------------
+--------------------
 
 If offset is not found otherwise, use this as offset.
 
@@ -132,7 +132,7 @@ Example JSON:
 .. _FirstImageCorrelation:
 
 FirstImageCorrelation
--------------------------
+--------------------
 
 Find offset for all log data by correlating first image with first entry of this table. 
 
@@ -155,7 +155,7 @@ Example JSON:
 .. _Name:
 
 Name
--------------------------
+--------------------
 
 Name field to be used as prefix in the joined collumn names.
 
@@ -178,7 +178,7 @@ Example JSON:
 .. _Files:
 
 Files
--------------------------
+--------------------
 
 One log table may be one file, or a list of files to be concatenated.
 
@@ -199,7 +199,7 @@ Example JSON:
 .. _RemotePath:
 
 RemotePath
--------------------------
+--------------------
 
 Path of logfile on server if used in server mode.
 
@@ -220,7 +220,7 @@ Example JSON:
 .. _LocalPath:
 
 LocalPath
--------------------------
+--------------------
 
 Path of logfile on client. Overrides :ref:`RemotePath`.
 
@@ -241,7 +241,7 @@ Example JSON:
 .. _OutputFormats:
 
 OutputFormats
--------------------------
+--------------------
 
 List of outputformats to write the consolidated log or the consolidated 'hdf' file.
 
@@ -271,7 +271,7 @@ Example JSON:
 .. _csv:
 
 csv
--------------------------
+--------------------
 
 :Type:
   boolean
@@ -291,7 +291,7 @@ Example JSON:
 .. _hdf:
 
 hdf
--------------------------
+--------------------
 
 :Type:
   boolean
@@ -311,7 +311,7 @@ Example JSON:
 .. _exel:
 
 exel
--------------------------
+--------------------
 
 :Type:
   boolean
@@ -331,7 +331,7 @@ Example JSON:
 .. _json:
 
 json
--------------------------
+--------------------
 
 :Type:
   boolean
@@ -351,7 +351,7 @@ Example JSON:
 .. _OutputFileBaseName:
 
 OutputFileBaseName
--------------------------
+--------------------
 
 :Type:
   string
@@ -371,7 +371,7 @@ Example JSON:
 .. _HDFOptions:
 
 HDFOptions
--------------------------
+--------------------
 
 Options only relevant to hdf export.
 
@@ -394,7 +394,7 @@ Example JSON:
 .. _IncludeCHI:
 
 IncludeCHI
--------------------------
+--------------------
 
 Whether to include the .chi files as strings.
 
@@ -417,7 +417,7 @@ Example JSON:
 .. _IncludeTIF:
 
 IncludeTIF
--------------------------
+--------------------
 
 Whether to include the images as integer array.
 
