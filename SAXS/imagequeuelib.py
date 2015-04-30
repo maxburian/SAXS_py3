@@ -37,7 +37,7 @@ def funcworker(self,threadid):
             pass 
         except Exception as e:
             print 
-   self.histqueue.close()
+   
 def filler(queue,dir):
             filequeue=[] 
             print "filler" + dir
@@ -244,22 +244,26 @@ class imagequeue:
         
         self.stopflag.value=1
         for worker in self.pool:
+            print "join worker"
             worker.join(1)
         if self.dirwalker:
            
             self.dirwalker.join(1)
         while True:
             try:
+                print "empty pic queue"
                 self.picturequeue.get(False)
             except Empty:
                 break
         while True:
             try:
+                print "empty hist queue"
                 self.histqueue.get(False)
             except Empty:
                 break
         while True:
             try:
+                print "empty plot queue"
                 self.plotdataqueue.get(False)
             except Empty:
                 break
