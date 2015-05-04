@@ -425,7 +425,7 @@ Example JSON:
 Slices
 -------------------------
 
-Slices are designed to analyse GISAXS data.It allows you to specify slices along the sensor axis and get intensity along :math:`q_x`,:math:`q_z` directions.
+Slices are designed to analyse GISAXS data.It allows you to specify slices along the sensor axis and get intensity along :math:`q_x`, :math:`q_z` directions.
 
 
 :Type:

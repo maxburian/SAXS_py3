@@ -184,7 +184,7 @@
 					
 					"qStart":
 					{
-					   "description": "Starting q-value for Integral Parameters.",
+					   "description": "Starting q-value for integral parameters.",
 					   "type": "number",
 					   "default": 0,
 					   "required": true,
@@ -193,7 +193,7 @@
 					
 					"qStop":
                     {
-                       "description": "Ending q-value for Integral Parameters.",
+                       "description": "Ending q-value for integral parameters.",
                        "type": "number",
                        "default": 0,
                        "required": true,
@@ -206,7 +206,7 @@
 		"Slices": 
 		{
 			"type": "array",
-			"description": "Slices are designed to analyse GISAXS data.It allows you to specify slices along the sensor axis and get intensity along :math:`q_x`,:math:`q_z` directions.",
+			"description": "Slices are designed to analyse GISAXS data.It allows you to specify slices along the sensor axis and get intensity along :math:`q_x`, :math:`q_z` directions.",
 			"items": 
 			{
 				"type": "object",

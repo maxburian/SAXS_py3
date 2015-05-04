@@ -3,7 +3,7 @@
 The Saxsdog Network
 ===================
 
-The network  may consist  of 3 different services. The "Saxsdog Server" does the image processing.  The "Saxs Feeder" publishes new file events and the "Saxs Leash" controls an configures the server. 
+The network  may consist  of 3 different services. The "Saxsdog Server" does the image processing.  The "Saxs Feeder" publishes new file events and the "Saxs Leash" controls an configures the server. The feeder is optional.
  
 .. figure:: Network.*
 
@@ -29,8 +29,7 @@ It will ask for the Feeder URL and for the Saxsdog Server URL. Then it will gene
          "Name":"Pilatus1M"
       }]
 
-The authentication is done by hashing the request and the secret including a time stamp. 
-The time stamp is checked if it lies within 900 seconds of the servers time.
+The authentication is done by hashing the request and the secret including a time stamp. The time stamp is checked if it lies within 900 seconds of the servers time.
 
 The Saxsdog Server
 ------------------
@@ -60,7 +59,7 @@ Saxs Leash Commandline
 ----------------------
 
 
-The "Saxs Leash" client can issue the commands for the Saxsdog Server. 
+The "Saxs Leash" command line client can issue the commands for the Saxsdog Server. 
 
 .. command-output::  saxsleash --help
 
@@ -152,12 +151,7 @@ Merge Data
    
 Sends command to merge data. Takes a merge configuration file as argument.
 
-Put Plot Data
-~~~~~~~~~~~~~
-
-The ``putplotdata`` comand is used internaly by the worker thread to update the current plot the server delivers when asked the ``plotdata`` command.
-
-
+ 
  
 .. include::  SAXSProtocol.rst
    

@@ -1,4 +1,4 @@
-
+ 
 Install
 =======
 
@@ -21,4 +21,4 @@ The code can be obtained on github: https://github.com/ChristianMeisenbichler/SA
 
    python setup.py install
    
-This installs the Python module where it is found by Python, creates the command line tools and installs them on the system. Where that is, depends on the Python installation.  The setup script will also try to satisfy all the dependencies by downloading and installing them. 
+This installs the Python module to the environment, creates the command line tools and installs them on the system. Where that is, depends on the Python installation.  The setup script will also try to satisfy all the dependencies by downloading and installing the missing packages. 
