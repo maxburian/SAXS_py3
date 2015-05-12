@@ -379,7 +379,7 @@ Example JSON:
 qStart
 -------------------------
 
-Starting q-value for Integral Parameters.
+Starting q-value for integral parameters.
 
 
 :Type:
@@ -402,7 +402,7 @@ Example JSON:
 qStop
 -------------------------
 
-Ending q-value for Integral Parameters.
+Ending q-value for integral parameters.
 
 
 :Type:
