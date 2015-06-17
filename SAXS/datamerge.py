@@ -14,6 +14,7 @@ import re
 from jsonschema import validate,ValidationError
 import os
 import StringIO
+from msilib import Directory
 
 def readtiff(imagepath):
     '''
@@ -285,6 +286,7 @@ def compileconffromoptions(options, args):
     return conf
 def merge():
     '''saxs data merger'''
+    
     parser = OptionParser()
     usage = "usage: %prog [options] iMPicture/dir peakinteg.log datalogger.log"
     parser = OptionParser(usage)
@@ -316,7 +318,7 @@ def merge():
         conf=json.load(open(options.conffile,"r"))
     else:
         conf=compileconffromoptions(options, args)
-  
+
     directory=args[0]
     mergedTable,filelists,plotdata=mergedata(conf,directory)
     if not options.batch:
@@ -365,6 +367,7 @@ def cleanuplog(logframe,logTable):
     logframe.index=logframe.index-timedelta(seconds=logTable["TimeOffset"])
     if logTable["TimeEpoch"]=="Mac":
        logframe.index=logframe.index- ( datetime.fromtimestamp(0)-datetime(1904, 1, 1, 0,0,0))
+       
 def chilisttodict(chi):
     chidict={}
     for chifile in chi:
@@ -403,6 +406,7 @@ def chilisttodict(chi):
                 else:
                     filelists[kind]=  [file[kind]]
     return filelists
+
 def mergelogs(conf,attachment=None,directory="."):
    
     schema=json.load(open(os.path.dirname(__file__)
@@ -425,7 +429,7 @@ def mergelogs(conf,attachment=None,directory="."):
                 buffer=StringIO.StringIO(json.loads(attachment.pop(0))["data"])
             else:
                 pass
-                buffer=open( logfile["LocalPath"])
+                buffer=open(logfile["LocalPath"])
             tmplog=readlog(buffer)
             if filenum==0:
                 logframe=tmplog
@@ -452,23 +456,22 @@ def mergelogs(conf,attachment=None,directory="."):
         else:
             tablea=logframe
     
-   
     return tablea,firstImage,peakframe
+
 def mergedata(conf,dir,attachment=None):
     logsTable,firstImage,peakframe=mergelogs(conf,attachment=attachment)
     imd,chi=readallimages(dir)
     mergedt= mergeimgdata(dir,logsTable,imd,peakframe,firstImage=firstImage)
     syncplotdata=syncplot(peakframe,imd)
     return mergedt,chi,syncplotdata
-def mergeimgdata(dir,tablea ,imd,peakframe,firstImage=None):
-   
-    
+
+def mergeimgdata(dir,tablea,imd,peakframe,firstImage=None):
     index=[]
     for pos in range(imd.index.shape[0]):    
             index.append(imd.index[pos]-timedelta(seconds=imd['Exposure_time [s] (Img)'][pos]))
     imd.index=index  
     if firstImage:
-        delta=(  imd.index.min()- firstImage)
+        delta=(imd.index.min()- firstImage)
         tablea.index=tablea.index+delta
         peakframe.index=peakframe.index+delta
         print "Time shift:" +str(delta)
