@@ -208,8 +208,7 @@ def readallimages(dir):
     
     imgframe.columns+=" (Img)"
     imglogframe.columns+=" (ImgLog)"
-    print imgframe.columns.values
-    print imglogframe.columns.values
+
     if True:
         imgframe["File Name (Img)"]=(imgframe["Image_path (Img)"]+imgframe['filename (Img)'])
         merged=pd.merge(imglogframe,imgframe, 
@@ -218,6 +217,8 @@ def readallimages(dir):
         merged=merged.set_index("End Date Time (ImgLog)")
     if False:
         merged=imgframe
+        
+    print merged.columns.values
     return merged,chilisttodict(chilist)
   
 def compileconffromoptions(options, args):
@@ -455,7 +456,7 @@ def mergelogs(conf,attachment=None,directory="."):
             tablea=tablea.join(tableb, how='outer') 
         else:
             tablea=logframe
-    
+            
     return tablea,firstImage,peakframe
 
 def mergedata(conf,dir,attachment=None):
@@ -469,17 +470,61 @@ def mergedata(conf,dir,attachment=None):
 def mergeimgdata(dir,tablea,imd,peakframe,firstImage=None):
     index=[]
     for pos in range(imd.index.shape[0]):    
-            index.append(imd.index[pos]-timedelta(seconds=imd['Exposure_time [s] (Img)'][pos]))
+            index.append(imd.index[pos]-timedelta(seconds=(imd['Exposure_time [s] (Img)'][pos])))
     imd.index=index  
     if firstImage:
-        delta=(imd.index.min()- firstImage)
+        delta=(imd.index.min()-firstImage)
         tablea.index=tablea.index+delta
         peakframe.index=peakframe.index+delta
         print "Time shift:" +str(delta)
     else:
         delta=timedelta(seconds=0)
-    mergedt=imd.join(tablea,how="outer").interpolate(method="zero")
+    
+    basename= "D:/Data/150610_Burian/results/test_merge_final/bn_"
+    #imd.to_csv(basename+"imd.csv") 
+    mergedt=imd.join(tablea,how="outer")
+    #mergedt.to_csv(basename+"mergedt_join.csv")
+    
+    
+    
+    
+    mergedt=imd.join(tablea,how="outer").interpolate(method="time")
+    #mergedt.to_csv(basename+"mergedt_join_int.csv")
+    
+    for pos in range(0, imd.index.shape[0]):
+        mergedt_pos = mergedt.index.get_loc(imd.index[pos])
+        exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos]
+        if exp_time>=2:
+            mergedt.index = pd.to_datetime(mergedt.index)
+            mergedt_pos_t_start = mergedt.index.searchsorted(mergedt.index[mergedt_pos+1])
+            mergedt_pos_t_stop = mergedt.index.searchsorted(mergedt.index[mergedt_pos] + timedelta(seconds=exp_time))
+            time_sum = np.array(mergedt.index[mergedt_pos_t_stop], dtype='datetime64[ns]') -\
+                       np.array(mergedt.index[mergedt_pos_t_start], dtype='datetime64[ns]')
+            int = np.trapz(mergedt['Ioni         (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
+                  x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
+            mergedt['Ioni         (Dlogger)'][mergedt_pos]=int/time_sum
+            int = np.trapz(mergedt['Shutter      (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
+                  x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
+            mergedt['Shutter      (Dlogger)'][mergedt_pos]=int/time_sum
+            int = np.trapz(mergedt['Sam Temp     (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
+                  x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
+            mergedt['Sam Temp     (Dlogger)'][mergedt_pos]=int/time_sum
+            int = np.trapz(mergedt['Temp Thermo  (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
+                  x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
+            mergedt['Temp Thermo  (Dlogger)'][mergedt_pos]=int/time_sum
+            int = np.trapz(mergedt['Diode        (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
+                  x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
+            mergedt['Diode        (Dlogger)'][mergedt_pos]=int/time_sum
+            int = np.trapz(mergedt['Cur_Pot1     (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
+                  x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
+            mergedt['Cur_Pot1     (Dlogger)'][mergedt_pos]=int/time_sum
+
+    mergedt.to_csv(basename+"mergedt_join_manint.csv")
     mergedt=mergedt[mergedt.index.isin(imd.index)]
+    #smergedt.to_csv(basename+"mergedt_join_int_isin.csv")
+    
+    #mergedt=imd.join(tablea,how="outer").interpolate(method="zero")
+    #mergedt=mergedt[mergedt.index.isin(imd.index)]
     
     return mergedt,delta
 def syncplot(shiftedreduced,imd):
