@@ -48,14 +48,13 @@ class history():
             try:
                 item=queue.get(False)
             except Exception as e : 
-              
                 break
             if item:
                 if "Time" in item:
                     hist.append(item["Time"])
                     self.filelist[item["BaseName"]]=item["FileList"]
                     if "IntegralParameters" in item:
-                         IntPBuffer[item["BaseName"]]=item
+                        IntPBuffer[item["BaseName"]]=item
         self.IntegralParameters=integparmlists(IntPBuffer,lists=self.IntegralParameters)
         self.hist=hist
 
@@ -63,7 +62,7 @@ def integparmlists(data,lists={}):
     for key in data.keys():
         ip=data[key]["IntegralParameters"]
         for mask in ip.keys():
-            if  not mask in lists:
+            if not mask in lists:
                 lists[mask]={"time":[],"file":[]}
             df=lists[mask]
             for ikey in ip[mask]:
@@ -474,8 +473,10 @@ class Server():
                 for file in table["Files"]:
                     if "RemotePath" in file:
                         file["RemotePath"].insert(0,self.serverdir)
-           
+            
+            print directory
             logsTable,firstImage,peakframe=datamerge.mergelogs(conf,attachment=attachment,directory=resultdir)
+            #print peakframe
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
                 imd,filelists=datamerge.readallimages(directory)
                 mergedTable,delta= datamerge.mergeimgdata(directory,logsTable,imd,peakframe,firstImage=firstImage)

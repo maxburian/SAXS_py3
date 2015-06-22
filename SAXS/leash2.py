@@ -81,7 +81,7 @@ class LeashUI(QtGui.QMainWindow):
         self.filestatuslabel=QtGui.QLabel("")
         self.submitbutton=QtGui.QPushButton("Start Server Queue")
         self.submitlayout.addWidget(self.queuestatuslabel)
-        self.submitlayout.addWidget( self.filestatuslabel)
+        self.submitlayout.addWidget(self.filestatuslabel)
         self.submitlayout.addWidget(self.submitbutton)
         self.submitlayout.addStretch()
         self.tab.addTab( self.calib , "Calib")
