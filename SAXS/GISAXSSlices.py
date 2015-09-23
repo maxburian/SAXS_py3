@@ -12,8 +12,8 @@ def xDirSliceProjector(y,x,y1,y2,mask):
     a=np.tile(np.arange(y),x).reshape(x,y)
     masky=np.ones((x,y),dtype=bool)
     masky[np.logical_not(mask)]=0
-    masky[:y1]=0
-    masky[y2:]=0
+    masky[:(x-y2)]=0
+    masky[(x-y1):]=0
     return labelstosparse(a, masky,1)
  
 class slice():
@@ -76,7 +76,7 @@ class slice():
         r= self.Projector.dot(image.flatten() ) 
         data=np.array([self.grid,
                         r *self.oneoverA, 
-                        np.sqrt(r ) *self.oneoverA # Poisson Error scaled
+                        np.sqrt(r) *self.oneoverA # Poisson Error scaled
                       ]).transpose()
         collabels=[ self.qname,
                     "Intensity (Count/Pixel)",
@@ -86,6 +86,11 @@ class slice():
         headerstr+="Intensity\n"
         headerstr+="   "+str(data.shape[0])+""
         np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')
+        print "conf"
+        print self.conf
+        print "sliceconf"
+        print self.sliceconf       
+        
         return {"array":data.transpose().tolist(),
                     "columnLabels":collabels,
                     "kind":"Slice",
@@ -125,11 +130,11 @@ class slice():
                                  /self.conf["Geometry"]['DedectorDistanceMM']
                                  )
         if self.sliceconf["Plane"]=="Vertical":
-            self.qname="GISAXS Scattering Vector $q_{z} [$nm^{-1}$]$"
+            self.qname="GISAXS Scattering Vector $q_{z} [nm^{-1}]$"
             self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(alphaF)
                                                   +np.sin(self.sliceconf["IncidentAngle"]/180.0*np.pi))
         elif self.sliceconf["Plane"]=="InPlane":
-            self.qname="GISAXS Scattering Vector  $ q_{y} [$nm^{-1}$]$"
+            self.qname="GISAXS Scattering Vector  $ q_{y} [nm^{-1}]$"
             self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(twothetaF)
                                                     *np.cos( alphaF[self.sliceconf["CutPosition"]]))
        
