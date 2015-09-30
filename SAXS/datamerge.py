@@ -14,7 +14,9 @@ import re
 from jsonschema import validate,ValidationError
 import os
 import StringIO
-from msilib import Directory
+#msilib import seems to cause an error on the cc01-cluster
+#commented out by MB on Sept. 30th 15
+#from msilib import Directory
 
 def readtiff(imagepath):
     '''
