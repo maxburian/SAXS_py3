@@ -484,7 +484,7 @@ def mergeimgdata(dir,tablea,imd,peakframe,firstImage=None):
     else:
         delta=timedelta(seconds=0)
     
-    basename= "D:/Data/150610_Burian/results/test_merge_final/bn_"
+    #basename= os.path.normpath(os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]]))
     #imd.to_csv(basename+"imd.csv") 
     mergedt=imd.join(tablea,how="outer")
     #mergedt.to_csv(basename+"mergedt_join.csv")
@@ -523,7 +523,7 @@ def mergeimgdata(dir,tablea,imd,peakframe,firstImage=None):
             #      x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
             #mergedt['Cur_Pot1     (Dlogger)'][mergedt_pos]=int/time_sum
 
-    mergedt.to_csv(basename+"mergedt_join_manint.csv")
+    #mergedt.to_csv(basename+"mergedt_join_manint.csv")
     mergedt=mergedt[mergedt.index.isin(imd.index)]
     #smergedt.to_csv(basename+"mergedt_join_int_isin.csv")
     
