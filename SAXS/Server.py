@@ -423,6 +423,7 @@ class Server():
         plotresult['data']["stat"]=self.stat()
         plotresult['data']["history"]=self.history.hist
         plotresult['data']["IntegralParameters"]=self.history.IntegralParameters
+        print self.history.IntegralParameters
         
         return  plotresult
    
