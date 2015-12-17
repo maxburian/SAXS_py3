@@ -272,13 +272,15 @@ def cplwcener(imagesize,beamcenter,oversampling):
                          )
 
 def labelstosparse(labels,mask,oversampling):
-        ind=np.argsort(labels.flatten()).astype(int)
-        sortedl=labels.flatten()[ind]
-        newcol=sortedl-np.roll(sortedl,1)
+        '''labels: numerates pixels of same radial distance'''
+        ind=np.argsort(labels.flatten()).astype(int) #sorted indices to labeled pixels as array
+        sortedl=labels.flatten()[ind] #labels as array sorted by indices
+        '''at this point ind gives pixel number, sortedl the label for which integration ring the pixel is counted'''
+        newcol=sortedl-np.roll(sortedl,1)#0,1 matrix that is always zero and only one when the integration label is increased
         length=sortedl.shape[0]
-        coli=np.array(np.where(newcol>0)[0])
-        coliptr= np.concatenate(([0],coli,[length]))
-        m= sp.csc_matrix((np.ones(length),ind,coliptr))
+        coli=np.array(np.where(newcol>0)[0])#gives the position in sortedl where the ring is changed
+        coliptr= np.concatenate(([0],coli,[length]))#adds first and last point (0) and (length)
+        m= sp.csc_matrix((np.ones(length),ind,coliptr))#sparse matrix representation of labels
         sc=scalemat(mask.shape[0],mask.shape[1],oversampling)
         A=sp.csc_matrix((sc.dot(m)))
         return sp.csc_matrix((A.data*mask.flatten()[A.indices],A.indices,A.indptr))

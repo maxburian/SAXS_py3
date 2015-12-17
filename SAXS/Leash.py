@@ -68,7 +68,7 @@ def sendplot(options,arg,socket,conf):
         #print json.dumps(object,indent=4, separators=(',', ': ')) 
         if object["result"]=="Empty":
           
-            time.sleep(2)
+            time.sleep(1)
             continue
         
         data=np.array(object['data']['array'][0]).transpose()

@@ -9,6 +9,7 @@ import matplotlib as mpl
 import numpy as np
 import time
 import datetime
+import plotdatathread
 import prettyplotlib as ppl
 from prettyplotlib import brewer2mpl
 import pandas as pd
@@ -34,9 +35,12 @@ class histpanel(QtGui.QWidget):
         self.framelimitlayout.addWidget(self.integmaxframewdgt)
         self.integmaxframewdgt.setRange(0, 200000)
         self.integmaxframewdgt.setValue(100)
+        # self.repltintegbutton=QtGui.QPushButton("Replot!")
+        # self.framelimitlayout.addWidget(self.repltintegbutton)
+        # self.connect(self.repltintegbutton,QtCore.SIGNAL('clicked()'),self.replotIntegParam)
         self.layout.addLayout(self.framelimitlayout)
     def plot(self,datastr):
-        if (   self.app.tab.currentIndex()==2 ):
+        if (self.app.tab.currentIndex()==2 ):
             data=json.loads(unicode(datastr))
             if "history" in data["data"]:
                 self.histdata=np.array(data["data"]["history"],dtype=np.float)
@@ -48,8 +52,8 @@ class histpanel(QtGui.QWidget):
         if type(data)==QtCore.QString:
             data=json.loads(unicode(data))
         timestamp=float(data["data"]["stat"]["time"])
-     
-        if (   self.app.tab.currentIndex()==2 ):
+        print timestamp
+        if (self.app.tab.currentIndex()==2 ):
             self.figure.clf()
             ax=self.figure.add_subplot(111)
             self.figure.set_frameon(False)
@@ -78,4 +82,10 @@ class histpanel(QtGui.QWidget):
         ax.set_title("Integral Parameters")
 
         self.IPcanvas.draw()
+        
+    # def replotIntegParam(self):
+    #    x=3
+    #   self.plotthread=plotdatathread.plotthread(self)
+    #  self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.drawIntegParam)
+        
         
