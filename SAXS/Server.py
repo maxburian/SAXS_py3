@@ -235,7 +235,8 @@ class Server():
         print  self.serverdir
         dir=  os.path.join( self.serverdir, os.sep.join(request["argument"]['directory']))
         try:
-            files=os.listdir(os.path.join( dir))
+            files=os.listdir(os.path.join(dir))
+            print files
         except OSError as e:
             return {"result":"OSError","data":{"Error":str(e)}}
         content=[]
@@ -473,8 +474,10 @@ class Server():
                 for file in table["Files"]:
                     if "RemotePath" in file:
                         file["RemotePath"].insert(0,self.serverdir)
-           
+            
+            print directory
             logsTable,firstImage,peakframe=datamerge.mergelogs(conf,attachment=attachment,directory=resultdir)
+            #print peakframe
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
                 imd,filelists=datamerge.readallimages(directory)
                 mergedTable,delta= datamerge.mergeimgdata(directory,logsTable,imd,peakframe,firstImage=firstImage)
