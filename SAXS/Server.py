@@ -57,7 +57,7 @@ class history():
                         IntPBuffer[item["BaseName"]]=item
         self.IntegralParameters=integparmlists(IntPBuffer,lists=self.IntegralParameters)
         self.hist=hist
-
+        
 def integparmlists(data,lists={}):
     for key in data.keys():
         ip=data[key]["IntegralParameters"]
@@ -380,18 +380,14 @@ class Server():
             print e
         return result
     def queue_abort(self):
-       
         if self.imagequeue:
             print "trystop"
             self.imagequeue.stop()
-          
             if  os.sys.platform!="win32":
                 print "terminate"
                 self.imagequeueprocess.terminate()
             else:
                 self.imagequeueprocess.join(1)
-           
-       
         self.imagequeue=None
         return {"result":"queue aborted","data":{"stat":self.stat()}}
     def queue_close(self):
@@ -404,8 +400,12 @@ class Server():
             self.feederproc=None
         return {"result":"queue closed","data":{"stat":self.stat()}}
     def readdir(self,object):
-        
-        
+        print "readdir"
+        if self.imagequeue:
+            self.imagequeue.clearqueue()
+        self.history.hist=[]
+        self.history.IntegralParameters.clear()
+        self.history.filelist.clear()
         try:
             self.imagequeue.fillqueuewithexistingfiles()
             pass
@@ -415,7 +415,10 @@ class Server():
         except Exception as e:
             result={"result":"Error","data":{"Error":str(e)}}
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
+    
     def plot(self):
+        #print "self.plotdata"
+        #print self.plotdata
         if self.plotdata:
             plotresult=self.plotdata
         else:

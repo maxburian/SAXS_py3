@@ -2,7 +2,7 @@ from PyQt4 import  QtGui
 from PyQt4 import  QtCore
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 import json
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -35,20 +35,39 @@ class histpanel(QtGui.QWidget):
         self.layout.addWidget(self.IP2canvas,1,1)
         
         self.histdata=[]
+        self.mindate=datetime.datetime(1900, 1, 1, 1, 1, 1)
+        self.maxdate=datetime.datetime(2222, 1, 1, 1, 1, 1)
         self.app=app
         
-        self.integmaxframewdgt=QtGui.QSpinBox()
         self.framelimitlayout=QtGui.QHBoxLayout()
+        self.integmaxframewdgt=QtGui.QSpinBox()
         self.framelimitlabel=QtGui.QLabel("Number of Frames to Show: ")
         self.framelimitlayout.addWidget(self.framelimitlabel)
         self.framelimitlayout.addWidget(self.integmaxframewdgt)
         self.integmaxframewdgt.setRange(0, 200000)
         self.integmaxframewdgt.setValue(100)
+        self.layout.addLayout(self.framelimitlayout,2,0)
+        
+        self.setminframelayout=QtGui.QHBoxLayout()
+        self.setminframelabel=QtGui.QLabel("Select first frame to show: ")
+        self.setminframecb=QtGui.QComboBox()
+        self.setminframecb.addItem("none")
+        self.setminframelayout.addWidget(self.setminframelabel)
+        self.setminframelayout.addWidget(self.setminframecb)
+        self.layout.addLayout(self.setminframelayout,3,0)
+        
+        self.setmaxframelayout=QtGui.QHBoxLayout()
+        self.setmaxframelabel=QtGui.QLabel("Select last frame to show: ")
+        self.setmaxframecb=QtGui.QComboBox()
+        self.setmaxframecb.addItem("none")
+        self.setmaxframelayout.addWidget(self.setmaxframelabel)
+        self.setmaxframelayout.addWidget(self.setmaxframecb)
+        self.layout.addLayout(self.setmaxframelayout,4,0)
         
         self.repltintegbutton=QtGui.QPushButton("Replot!")
         self.framelimitlayout.addWidget(self.repltintegbutton)
         self.connect(self.repltintegbutton,QtCore.SIGNAL('clicked()'),self.plotIntegParam)
-        self.layout.addLayout(self.framelimitlayout,2,0)
+        self.layout.addWidget(self.repltintegbutton,3,1)
         
     def plot(self,datastr):
         if (self.app.tab.currentIndex()==2 ):
@@ -59,6 +78,7 @@ class histpanel(QtGui.QWidget):
             if "IntegralParameters" in  data["data"]:
                 self.tempdata=None
                 self.drawIntegParam(data)
+                self.builtFrameListMin()
          
     def timestep(self,data):
         if type(data)==QtCore.QString:
@@ -71,7 +91,10 @@ class histpanel(QtGui.QWidget):
             ax.patch.set_alpha(0)
             ax.set_xlabel("Time [s]")
             ax.set_ylabel("Image Count")
-            ppl.hist(ax,self.histdata-np.ceil(timestamp),bins=100,range=(-100,0))
+            try:   
+                ppl.hist(ax,self.histdata-np.ceil(timestamp),bins=100,range=(-100,0))
+            except AttributeError:
+                pass
             ax.set_xlim((-100,0))
             tstr= datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
             ax.set_title(tstr +", "+ str(data["data"]["stat"]['images processed'])+" Images Processed")
@@ -84,13 +107,15 @@ class histpanel(QtGui.QWidget):
         length=len(df)
         df=df[max(length-int(1000000),0):length]
         df['corrlength']=df['I1']/df['I2']        
-        self.tempdata=df
+        self.tempdata=df.sort_index()
+        self.filelist = self.tempdata['file'].str.rsplit('\\',n=1, expand=True)[1]
         self.plotIntegParam()
         
         
     def plotIntegParam(self):
         framelimit=self.integmaxframewdgt.value()
-        df=self.tempdata
+        self.get_timeboundaries()
+        df=self.tempdata[self.mindate:self.maxdate]
         length=len(df)
         
         self.IP0figure.clf()
@@ -117,8 +142,30 @@ class histpanel(QtGui.QWidget):
         ax.set_xlabel("time")
         ax.set_ylabel("corr.length")
         self.IP2canvas.draw()
-    #    x=3
-    #   self.plotthread=plotdatathread.plotthread(self)
-    #  self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.drawIntegParam)
+
+    def builtFrameListMin(self):
+        npfilelist = self.filelist.tolist()
+        self.setminframecb.clear()
+        self.setminframecb.addItems(npfilelist)
+        self.setminframecb.currentIndexChanged.connect(self.builtFrameListMax)
+
+    def builtFrameListMax(self):
+        minframe=str(self.setminframecb.currentText())
+        npfilelist = self.filelist[self.filelist.index > self.filelist[self.filelist.str.contains(str(minframe))].index[0]].tolist()
+        self.setmaxframecb.clear()
+        self.setmaxframecb.addItems(npfilelist)
+        self.setmaxframecb.addItem("all until now")
         
+    def get_timeboundaries(self):
+        minframe=str(self.setminframecb.currentText())
+        maxframe=str(self.setmaxframecb.currentText())
+        if minframe != "none":
+            self.mindate=self.filelist[self.filelist.str.contains(str(minframe))].index[0]
+        if maxframe != "none":
+            if maxframe == "all until now":
+                self.maxdate=datetime.datetime(2222, 1, 1, 1, 1, 1)
+            else:
+                self.maxdate=self.filelist[self.filelist.str.contains(str(maxframe))].index[0]
+
+                    
         

@@ -186,6 +186,13 @@ class imagequeue:
             except Full:
                 print "Full"
             return basename ,data
+        
+    def clearqueue(self):
+        while self.histqueue.empty()==False:
+                self.histqueue.get()
+        print "History Queue cleared"
+
+        
     def start(self):  
         """
         Start threads and directory observer.
