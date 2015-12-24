@@ -55,8 +55,8 @@
 					"units": "Pixel",
 					"default": 
 					[
-						800.00,
-						400.00
+						1043.00,
+						981.00
 					],
 
 					"items": 
@@ -90,7 +90,7 @@
 					"required": true,
 					"default": 
 					[
-						100.0
+						172.0
 					],
 
 					"items": 
@@ -98,7 +98,7 @@
 						"type": "number",
 						"units": "Microns",
 						"required": true,
-						"default": 100.0,
+						"default": 172.0,
 						"labels": 
 						[
 							"y and x",
