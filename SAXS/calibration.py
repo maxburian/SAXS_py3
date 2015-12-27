@@ -157,7 +157,8 @@ class calibration:
         headerstr+=json.dumps(collabels)+"\n"
         headerstr+="   "+str(data.shape[0])+""
         
-        np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')
+        if path != "xxx":#if working in GISAXSmode, the data is not saved
+            np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')
         
        
         return {"array":data.transpose().tolist(),

@@ -141,13 +141,13 @@ class imagequeue:
             else:
                 imgTime="" 
             for calnum,cal in enumerate(self.cals):
-                if self.options.GISAXSmode == True and calnum==0:
-                    continue
                 if len(list(enumerate(self.cals)))==1:
                     filename=basename
                 else:
                     filename=basename+"_c"+cal.kind[0]+str(calnum)
                 chifilename=filename+".chi"
+                if self.options.GISAXSmode == True and calnum==0: #pass on GISAXSmode information to calibration.integratechi
+                    chifilename="xxx"
                 filelist[cal.kind+str(calnum)]=chifilename
                 if not self.options.resume or not os.path.isfile(chifilename):
                     result=cal.integratechi(image,chifilename,picture)
