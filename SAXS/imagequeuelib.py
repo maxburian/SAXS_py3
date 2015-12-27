@@ -139,8 +139,10 @@ class imagequeue:
             if "date" in imgMetaData:
                 imgTime=imgMetaData["date"]
             else:
-                imgTime=""            
-            for calnum,cal in enumerate(self.cals):   
+                imgTime="" 
+            for calnum,cal in enumerate(self.cals):
+                if self.options.GISAXSmode == True and calnum==0:
+                    continue
                 if len(list(enumerate(self.cals)))==1:
                     filename=basename
                 else:
@@ -160,8 +162,7 @@ class imagequeue:
                         plt.draw()
                        
                              
-                if self.options.writesvg: 
-                    
+                if self.options.writesvg:     
                     if not self.options.resume or not os.path.isfile(filename+'.svg'):
                          cal.plot(image,filename+".svg",fig=self.fig)
                 if self.options.writepng:

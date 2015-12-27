@@ -153,8 +153,8 @@ class calibration:
                     "Error Margin"]
         integparam={"I0":I0, "I1":I1, "I2":I2}
         headerstr= json.dumps(self.config)+"\n"
-        headerstr+=json.dumps(collabels)+"\n"
         headerstr+=json.dumps(integparam)+"\n"
+        headerstr+=json.dumps(collabels)+"\n"
         headerstr+="   "+str(data.shape[0])+""
         
         np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')

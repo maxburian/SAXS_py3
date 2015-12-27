@@ -331,7 +331,8 @@ class Server():
                     		 "writesvg":False,
                              "writepng":False,"resume":False,
                              "serverport":self.serverport,
-                             "nowalk":True
+                             "nowalk":True,
+                             "GISAXSmode":self.calibration["GISAXSmode"]
                              })
             cals=[]
             
@@ -348,7 +349,7 @@ class Server():
                                                 self.attachments[mnumber]))
             if "Slices" in   object['argument']['calibration']:
                 for slice in object['argument']['calibration']["Slices"]:
-                    cals.append(GISAXSSlices.slice( object['argument']['calibration'],slice,self.attachments))
+                    cals.append(GISAXSSlices.slice(object['argument']['calibration'],slice,self.attachments))
             self.imagequeue=imagequeuelib.imagequeue(cals,
                     o,dir,self.serverconf)
             print "startimgq"
