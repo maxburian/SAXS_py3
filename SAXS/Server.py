@@ -57,7 +57,7 @@ class history():
                         IntPBuffer[item["BaseName"]]=item
         self.IntegralParameters=integparmlists(IntPBuffer,lists=self.IntegralParameters)
         self.hist=hist
-
+        
 def integparmlists(data,lists={}):
     for key in data.keys():
         ip=data[key]["IntegralParameters"]
@@ -331,7 +331,8 @@ class Server():
                     		 "writesvg":False,
                              "writepng":False,"resume":False,
                              "serverport":self.serverport,
-                             "nowalk":True
+                             "nowalk":True,
+                             "GISAXSmode":self.calibration["GISAXSmode"]
                              })
             cals=[]
             
@@ -348,7 +349,7 @@ class Server():
                                                 self.attachments[mnumber]))
             if "Slices" in   object['argument']['calibration']:
                 for slice in object['argument']['calibration']["Slices"]:
-                    cals.append(GISAXSSlices.slice( object['argument']['calibration'],slice,self.attachments))
+                    cals.append(GISAXSSlices.slice(object['argument']['calibration'],slice,self.attachments))
             self.imagequeue=imagequeuelib.imagequeue(cals,
                     o,dir,self.serverconf)
             print "startimgq"
@@ -380,18 +381,14 @@ class Server():
             print e
         return result
     def queue_abort(self):
-       
         if self.imagequeue:
             print "trystop"
             self.imagequeue.stop()
-          
             if  os.sys.platform!="win32":
                 print "terminate"
                 self.imagequeueprocess.terminate()
             else:
                 self.imagequeueprocess.join(1)
-           
-       
         self.imagequeue=None
         return {"result":"queue aborted","data":{"stat":self.stat()}}
     def queue_close(self):
@@ -404,8 +401,12 @@ class Server():
             self.feederproc=None
         return {"result":"queue closed","data":{"stat":self.stat()}}
     def readdir(self,object):
-        
-        
+        print "readdir"
+        if self.imagequeue:
+            self.imagequeue.clearqueue()
+        self.history.hist=[]
+        self.history.IntegralParameters.clear()
+        self.history.filelist.clear()
         try:
             self.imagequeue.fillqueuewithexistingfiles()
             pass
@@ -415,7 +416,10 @@ class Server():
         except Exception as e:
             result={"result":"Error","data":{"Error":str(e)}}
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
+    
     def plot(self):
+        #print "self.plotdata"
+        #print self.plotdata
         if self.plotdata:
             plotresult=self.plotdata
         else:
@@ -423,7 +427,7 @@ class Server():
         plotresult['data']["stat"]=self.stat()
         plotresult['data']["history"]=self.history.hist
         plotresult['data']["IntegralParameters"]=self.history.IntegralParameters
-        
+
         return  plotresult
    
     def stat(self):
