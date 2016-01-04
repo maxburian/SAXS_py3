@@ -108,7 +108,11 @@ class histpanel(QtGui.QWidget):
         df=df[max(length-int(1000000),0):length]
         df['corrlength']=df['I1']/df['I2']        
         self.tempdata=df.sort_index()
-        self.filelist = self.tempdata['file'].str.rsplit('\\',n=1, expand=True)[1]
+        if self.tempdata['file'].str.contains('/')[0] == True :
+            self.filelist = self.tempdata['file'].str.rsplit('/',n=1, expand=True)[1]
+        else :
+            self.filelist = self.tempdata['file'].str.rsplit('\\',n=1, expand=True)[1]
+        print self.filelist
         self.plotIntegParam()
         
         
