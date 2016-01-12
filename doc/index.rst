@@ -45,6 +45,7 @@ The SAXS module consists of a Python library and 3 command line tools: :ref:`sax
    SAXSapi
  
 
+`Get this guide as PDF <SAXS.pdf>`_.
 
 .. image::  tugwhite.png
    :width: 200 px

@@ -21,7 +21,6 @@
 				"readdir",
 				"stat",
 				"listdir",
-				"putplotdata",
 				"fileslist",
 				"mergedata",
 				"getmergedata"
