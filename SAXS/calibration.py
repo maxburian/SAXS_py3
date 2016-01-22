@@ -238,8 +238,8 @@ class calibration:
         qStart = self.maskconfig["qStart"]
         if np.max(self.qgrid)<qStop:
             qStop=np.max(self.qgrid)
-        qStopIndex = np.where(self.qgrid > qStop)[0][0]
-        qStartIndex = np.where(self.qgrid > qStart)[0][0]
+        qStopIndex = np.where(self.qgrid >= qStop)[0][0]
+        qStartIndex = np.where(self.qgrid >= qStart)[0][0]
         qDelta = self.qgrid[1]-self.qgrid[0]
         I0 = np.nansum(Intensity[qStartIndex:qStopIndex]) * qDelta
         I1 = np.nansum((Intensity[qStartIndex:qStopIndex] * self.qgrid[qStartIndex:qStopIndex])) * qDelta

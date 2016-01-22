@@ -108,11 +108,29 @@ class histpanel(QtGui.QWidget):
         df=df[max(length-int(1000000),0):length]
         df['corrlength']=df['I1']/df['I2']        
         self.tempdata=df.sort_index()
+        self.tempdata.to_csv('self_tempdata.csv',sep=";")
+        
         if self.tempdata['file'].str.contains('/')[0] == True :
+            fslfound=True
+        else:
+            fslfound=False
+        if self.tempdata['file'].str.contains(r'\\')[0] == True :
+            bslfound=True
+        else:
+            bslfound=False
+            
+        if fslfound==True and bslfound==True :
             self.filelist = self.tempdata['file'].str.rsplit('/',n=1, expand=True)[1]
-        else :
-            self.filelist = self.tempdata['file'].str.rsplit('\\',n=1, expand=True)[1]
-        print self.filelist
+            if self.filelist.str.contains(r'\\')[0] == True :
+                print self.filelist.str.rsplit("\\",n=1, expand=True)
+                self.filelist = self.filelist.str.rsplit("\\",n=1, expand=True)[1]
+        if fslfound==True and bslfound==False :
+            self.filelist = self.tempdata['file'].str.rsplit('/',n=1, expand=True)[1]
+        if fslfound==False and bslfound==True :
+            self.filelist = self.tempdata['file'].str.rsplit("\\",n=1, expand=True)[1]  
+        if fslfound==False and bslfound==False :
+            print "SOMETHING WENT WRONG!!!"
+        #print self.filelist
         self.plotIntegParam()
         
         

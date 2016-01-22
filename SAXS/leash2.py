@@ -137,7 +137,9 @@ class LeashUI(QtGui.QMainWindow):
         titlestr='The title and the selected user folder do NOT match. Are you sure you are user: ' + str(usrfolder) +' ?' 
         if title.find(usrfolder)==-1:
             res=QMessageBox.warning(self, self.tr("User folder"),self.tr(titlestr), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if res==QMessageBox.Yes :
+        else:
+            res = QMessageBox.Yes
+        if res==QMessageBox.Yes:
             try:
                 result=json.loads(Leash.initcommand(self.options,argu,self.netconf))
             except Exception as e:
