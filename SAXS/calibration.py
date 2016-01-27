@@ -239,6 +239,8 @@ class calibration:
         if np.max(self.qgrid)<qStop:
             qStop=np.max(self.qgrid)
         qStopIndex = np.where(self.qgrid >= qStop)[0][0]
+        if qStopIndex>np.size(Intensity):
+            qStopIndex=np.size(Intensity)
         qStartIndex = np.where(self.qgrid >= qStart)[0][0]
         qDelta = self.qgrid[1]-self.qgrid[0]
         I0 = np.nansum(Intensity[qStartIndex:qStopIndex]) * qDelta
@@ -357,7 +359,6 @@ def openmask(mfile,attachment=None):
     if mfile.endswith('.msk'):
         import bitarray
         maskb=bitarray.bitarray( endian='little')
-        
         maskb.frombytes(mfilestream) 
         maskl=np.array(maskb.tolist())
        
@@ -369,12 +370,15 @@ def openmask(mfile,attachment=None):
         word=32
         padding= word - y % word
         yb=y+padding
+        off=np.size(maskl)-yb*x
         off=8192
+
         mask=maskl[off:x*yb+off].reshape(x, yb)
         cropedmask=np.flipud(mask[0:x,0:y])
         # save the mask in order to controll if it worked
         #misc.imsave("mask.png",cropedmask)
-        return  np.logical_not(cropedmask)
+        return np.logical_not(cropedmask)
+
     else:
         if attachment:
             mask= np.where(misc.imread(mfilestream)!=0,False,True)

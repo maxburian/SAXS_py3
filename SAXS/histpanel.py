@@ -17,6 +17,11 @@ class histpanel(QtGui.QWidget):
     def __init__(self,app):
         super(histpanel,self).__init__()
         self.layout = QtGui.QGridLayout()
+        self.nimagesproc=0
+        self.activatetools=True
+        self.updateplot=True
+        self.minframe="none"
+        self.maxframe="all until now"
         self.setLayout(self.layout)
         self.figure=plt.figure()
         self.canvas=FigureCanvas(self.figure)
@@ -45,40 +50,67 @@ class histpanel(QtGui.QWidget):
         self.framelimitlayout.addWidget(self.framelimitlabel)
         self.framelimitlayout.addWidget(self.integmaxframewdgt)
         self.integmaxframewdgt.setRange(0, 200000)
-        self.integmaxframewdgt.setValue(100)
+        self.integmaxframewdgt.setValue(1000)
         self.layout.addLayout(self.framelimitlayout,2,0)
         
         self.setminframelayout=QtGui.QHBoxLayout()
         self.setminframelabel=QtGui.QLabel("Select first frame to show: ")
         self.setminframecb=QtGui.QComboBox()
         self.setminframecb.addItem("none")
-        self.setminframelayout.addWidget(self.setminframelabel)
-        self.setminframelayout.addWidget(self.setminframecb)
+        self.setminframecb.setEnabled(False) 
+        #self.holdminframe=QtGui.QCheckBox()
+        #self.holdminframe.setEnabled(False)
+        #self.holdminframe.setTristate(False)
+        #self.holdminframe.setChecked(True)
+        #self.holdminframelabel=QtGui.QLabel("hold?")
+        self.setminframelayout.addWidget(self.setminframelabel,stretch=2)
+        self.setminframelayout.addWidget(self.setminframecb,stretch=4)
+        #self.setminframelayout.addWidget(self.holdminframe)
+        #self.setminframelayout.addWidget(self.holdminframelabel)
+        self.keepind=False
+        self.setminframecb.currentIndexChanged.connect(self.builtFrameListMax)
         self.layout.addLayout(self.setminframelayout,3,0)
         
         self.setmaxframelayout=QtGui.QHBoxLayout()
         self.setmaxframelabel=QtGui.QLabel("Select last frame to show: ")
         self.setmaxframecb=QtGui.QComboBox()
-        self.setmaxframecb.addItem("none")
-        self.setmaxframelayout.addWidget(self.setmaxframelabel)
-        self.setmaxframelayout.addWidget(self.setmaxframecb)
+        self.setmaxframecb.addItem("all until now")
+        self.setmaxframecb.setEnabled(False)
+        #self.holdmaxframe=QtGui.QCheckBox()
+        #self.holdmaxframe.setTristate(False)            
+        #self.holdmaxframe.setEnabled(False)
+        #self.holdmaxframe.setChecked(True)
+        #self.holdmaxframelabel=QtGui.QLabel("hold?")
+        self.setmaxframelayout.addWidget(self.setmaxframelabel,stretch=2)
+        self.setmaxframelayout.addWidget(self.setmaxframecb,stretch=4)
+        #self.setmaxframelayout.addWidget(self.holdmaxframe)
+        #self.setmaxframelayout.addWidget(self.holdmaxframelabel)
         self.layout.addLayout(self.setmaxframelayout,4,0)
         
+        self.toggleupdatebutton=QtGui.QPushButton("Stop auto update!")
+        #self.toggleupdatelayout.addWidget(self.toggleupdatebutton)
+        self.connect(self.toggleupdatebutton, QtCore.SIGNAL('clicked()'),self.toggleupdate)
+        self.layout.addWidget(self.toggleupdatebutton,2,1)
+        
         self.repltintegbutton=QtGui.QPushButton("Replot!")
-        self.framelimitlayout.addWidget(self.repltintegbutton)
+        #self.repltinglayout.addWidget(self.repltintegbutton)
         self.connect(self.repltintegbutton,QtCore.SIGNAL('clicked()'),self.plotIntegParam)
-        self.layout.addWidget(self.repltintegbutton,3,1)
+        self.layout.addWidget(self.repltintegbutton,4,1)
         
     def plot(self,datastr):
+        data=json.loads(unicode(datastr))
         if (self.app.tab.currentIndex()==2 ):
-            data=json.loads(unicode(datastr))
             if "history" in data["data"]:
                 self.histdata=np.array(data["data"]["history"],dtype=np.float)
                 self.timestep(data)
-            if "IntegralParameters" in  data["data"]:
-                self.tempdata=None
-                self.drawIntegParam(data)
-                self.builtFrameListMin()
+                if data["data"]["stat"]["images processed"]==self.nimagesproc:
+                    self.activatetools=True
+                else:
+                    self.activatetools=False
+                self.nimagesproc = data["data"]["stat"]["images processed"]
+        if "IntegralParameters" in  data["data"]:
+            self.tempdata=None
+            self.drawIntegParam(data)
          
     def timestep(self,data):
         if type(data)==QtCore.QString:
@@ -98,6 +130,7 @@ class histpanel(QtGui.QWidget):
             ax.set_xlim((-100,0))
             tstr= datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
             ax.set_title(tstr +", "+ str(data["data"]["stat"]['images processed'])+" Images Processed")
+            self.figure.tight_layout()
             self.canvas.draw()
             
     def drawIntegParam(self,data):
@@ -108,7 +141,6 @@ class histpanel(QtGui.QWidget):
         df=df[max(length-int(1000000),0):length]
         df['corrlength']=df['I1']/df['I2']        
         self.tempdata=df.sort_index()
-        self.tempdata.to_csv('self_tempdata.csv',sep=";")
         
         if self.tempdata['file'].str.contains('/')[0] == True :
             fslfound=True
@@ -122,7 +154,6 @@ class histpanel(QtGui.QWidget):
         if fslfound==True and bslfound==True :
             self.filelist = self.tempdata['file'].str.rsplit('/',n=1, expand=True)[1]
             if self.filelist.str.contains(r'\\')[0] == True :
-                print self.filelist.str.rsplit("\\",n=1, expand=True)
                 self.filelist = self.filelist.str.rsplit("\\",n=1, expand=True)[1]
         if fslfound==True and bslfound==False :
             self.filelist = self.tempdata['file'].str.rsplit('/',n=1, expand=True)[1]
@@ -130,8 +161,8 @@ class histpanel(QtGui.QWidget):
             self.filelist = self.tempdata['file'].str.rsplit("\\",n=1, expand=True)[1]  
         if fslfound==False and bslfound==False :
             print "SOMETHING WENT WRONG!!!"
-        #print self.filelist
-        self.plotIntegParam()
+        if (self.app.tab.currentIndex()==2 and self.updateplot==True):
+            self.plotIntegParam()
         
         
     def plotIntegParam(self):
@@ -147,6 +178,7 @@ class histpanel(QtGui.QWidget):
         ax.set_xlabel('time')
         ax.set_ylabel('integ.I(q)')
         ax.right_ax.set_ylabel('integ.I(q)*q')
+        self.IP0figure.tight_layout()
         self.IP0canvas.draw()
 
         self.IP1figure.clf()
@@ -155,6 +187,7 @@ class histpanel(QtGui.QWidget):
         df['I2'][max(length-int(framelimit),0):length].plot(ax=ax)
         ax.set_xlabel("time")
         ax.set_ylabel("Invariant")
+        self.IP1figure.tight_layout()
         self.IP1canvas.draw()
         
         self.IP2figure.clf()
@@ -163,31 +196,60 @@ class histpanel(QtGui.QWidget):
         df['corrlength'][max(length-int(framelimit),0):length].plot(ax=ax,color='green')
         ax.set_xlabel("time")
         ax.set_ylabel("corr.length")
+        self.IP2figure.tight_layout()
         self.IP2canvas.draw()
 
     def builtFrameListMin(self):
         npfilelist = self.filelist.tolist()
+        self.minframe=str(self.setminframecb.currentText())
+        self.keepind=False
         self.setminframecb.clear()
+        self.setminframecb.addItem("none")
         self.setminframecb.addItems(npfilelist)
-        self.setminframecb.currentIndexChanged.connect(self.builtFrameListMax)
+        self.setminframecb.setCurrentIndex(self.setminframecb.findText(self.minframe))
+        self.keepind=True
 
     def builtFrameListMax(self):
-        minframe=str(self.setminframecb.currentText())
-        npfilelist = self.filelist[self.filelist.index > self.filelist[self.filelist.str.contains(str(minframe))].index[0]].tolist()
-        self.setmaxframecb.clear()
-        self.setmaxframecb.addItems(npfilelist)
-        self.setmaxframecb.addItem("all until now")
+        if self.keepind==True:
+            self.maxframe=str(self.setmaxframecb.currentText())
+            self.minframe=str(self.setminframecb.currentText())
+            if self.minframe !="none":
+                npfilelist = self.filelist[self.filelist.index > self.filelist[self.filelist.str.contains(str(self.minframe))].index[0]].tolist()
+            else: 
+                npfilelist = self.filelist
+            self.setmaxframecb.clear()
+            self.setmaxframecb.addItems(npfilelist)
+            self.setmaxframecb.addItem("all until now")
+            self.setmaxframecb.setCurrentIndex(self.setmaxframecb.findText(self.maxframe))
         
     def get_timeboundaries(self):
         minframe=str(self.setminframecb.currentText())
         maxframe=str(self.setmaxframecb.currentText())
         if minframe != "none":
             self.mindate=self.filelist[self.filelist.str.contains(str(minframe))].index[0]
-        if maxframe != "none":
+        if maxframe != "all until now":
             if maxframe == "all until now":
                 self.maxdate=datetime.datetime(2222, 1, 1, 1, 1, 1)
             else:
                 self.maxdate=self.filelist[self.filelist.str.contains(str(maxframe))].index[0]
-
+    
+    def toggleupdate(self):
+        if "Stop" in str(self.toggleupdatebutton.text()):
+            self.updateplot=False
+            self.setmaxframecb.setEnabled(True)
+            self.setminframecb.setEnabled(True)
+            #self.holdminframe.setEnabled(True)
+            #self.holdmaxframe.setEnabled(True)
+            self.builtFrameListMin()
+            self.toggleupdatebutton.setText("Start auto update!")
+        elif "Start" in str(self.toggleupdatebutton.text()):
+            self.updateplot=True
+            self.setmaxframecb.setEnabled(False)
+            self.setminframecb.setEnabled(False)
+            #self.holdminframe.setEnabled(False)
+            #self.holdmaxframe.setEnabled(False)
+            self.toggleupdatebutton.setText("Stop auto update!")   
+        
+                
                     
         
