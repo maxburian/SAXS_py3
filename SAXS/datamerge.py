@@ -461,17 +461,17 @@ def mergelogs(conf,attachment=None,directory="."):
         else:
             tablea=logframe
             
-    return tablea,firstImage,peakframe
+    return tablea,firstImage,peakframe,basename
 
 def mergedata(conf,dir,attachment=None):
     print "mergedata"
-    logsTable,firstImage,peakframe=mergelogs(conf,attachment=attachment)
+    logsTable,firstImage,peakframe,logbasename=mergelogs(conf,attachment=attachment)
     imd,chi=readallimages(dir)
-    mergedt= mergeimgdata(dir,logsTable,imd,peakframe,firstImage=firstImage)
+    mergedt= mergeimgdata(logbasename,dir,logsTable,imd,peakframe,firstImage=firstImage)
     syncplotdata=syncplot(peakframe,imd)
     return mergedt,chi,syncplotdata
 
-def mergeimgdata(dir,tablea,imd,peakframe,firstImage=None):
+def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None):
     index=[]
     for pos in range(imd.index.shape[0]):    
             index.append(imd.index[pos]-timedelta(seconds=(imd['Exposure_time [s] (Img)'][pos])))
@@ -484,8 +484,8 @@ def mergeimgdata(dir,tablea,imd,peakframe,firstImage=None):
     else:
         delta=timedelta(seconds=0)
     
-    #basename= os.path.normpath(os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]]))
-    #imd.to_csv(basename+"imd.csv") 
+    basename=logbasename
+    imd.to_csv(basename+"_imd.csv") 
     mergedt=imd.join(tablea,how="outer")
     #mergedt.to_csv(basename+"mergedt_join.csv")
     
@@ -493,7 +493,7 @@ def mergeimgdata(dir,tablea,imd,peakframe,firstImage=None):
     
     
     mergedt=imd.join(tablea,how="outer").interpolate(method="time")
-    #mergedt.to_csv(basename+"mergedt_join_int.csv")
+    #mergedt.to_csv(basename+"_mergedt_join_int.csv")
     
     for pos in range(0, imd.index.shape[0]):
         mergedt_pos = mergedt.index.get_loc(imd.index[pos])
@@ -510,12 +510,12 @@ def mergeimgdata(dir,tablea,imd,peakframe,firstImage=None):
             int = np.trapz(mergedt['Shutter      (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
                   x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
             mergedt['Shutter      (Dlogger)'][mergedt_pos]=int/time_sum
-            int = np.trapz(mergedt['Current      (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
-                  x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
-            mergedt['Current      (Dlogger)'][mergedt_pos]=int/time_sum
-            int = np.trapz(mergedt['Pot          (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
-                  x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
-            mergedt['Pot          (Dlogger)'][mergedt_pos]=int/time_sum
+            #int = np.trapz(mergedt['Current      (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
+            #      x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
+            #mergedt['Current      (Dlogger)'][mergedt_pos]=int/time_sum
+            #int = np.trapz(mergedt['Pot          (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
+            #      x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
+            #mergedt['Pot          (Dlogger)'][mergedt_pos]=int/time_sum
             int = np.trapz(mergedt['Diode        (Dlogger)'][mergedt_pos_t_start:mergedt_pos_t_stop].values,\
                   x=mergedt.index[mergedt_pos_t_start:mergedt_pos_t_stop].values)           
             mergedt['Diode        (Dlogger)'][mergedt_pos]=int/time_sum
