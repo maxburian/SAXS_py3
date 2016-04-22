@@ -63,7 +63,7 @@ class calibration:
         """
         complexp=self.__complexCoordinatesOfPicture(1)
         pixelsize=self.config["Geometry"]['PixelSizeMicroM'][0]*1e-3 #
-        r=np.absolute(complexp)*pixelsize
+        r=(np.absolute(complexp))*pixelsize
         phi=np.angle(complexp)
         
         d=self.config["Geometry"]['DedectorDistanceMM']
@@ -119,7 +119,7 @@ class calibration:
         self.ITransposed =self.A
         self.I,self.Areas,self.oneoverA=rescaleI(self.A,self.corr)
         
-        self.qgrid=(np.arange(self.maxlabel+1)+0)/self.scale   
+        self.qgrid=(np.arange(self.maxlabel+1)+0.5)/self.scale   
        
         
       
@@ -262,18 +262,20 @@ class calibration:
         beamcenter=self.config["Geometry"]['BeamCenter']
         return cplwcener(imagesize,beamcenter,oversampling)
 def cplwcener(imagesize,beamcenter,oversampling):
+        print "complex: ", np.arange(0,imagesize[0],1./oversampling,dtype=np.float_)-imagesize[0]+beamcenter[0]+0.5/oversampling
+        print "real: ", np.arange(0,imagesize[1],1./oversampling,dtype=np.float_)- beamcenter[1]+0.5/oversampling
         return np.add.outer(
                          1j*(np.arange(0,
                                              imagesize[0],
                                              1./oversampling,
                                              dtype=np.float_)
                                    -imagesize[0]
-                                   +beamcenter[0]),
+                                   +beamcenter[0]+0.5/oversampling),
                         (np.arange(0,
                                              imagesize[1],
                                              1./oversampling,
                                              dtype=np.float_)
-                                   - beamcenter[1])
+                                   - beamcenter[1]+0.5/oversampling)
                          )
 
 def labelstosparse(labels,mask,oversampling):
