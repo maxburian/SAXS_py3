@@ -262,8 +262,6 @@ class calibration:
         beamcenter=self.config["Geometry"]['BeamCenter']
         return cplwcener(imagesize,beamcenter,oversampling)
 def cplwcener(imagesize,beamcenter,oversampling):
-        print "complex: ", np.arange(0,imagesize[0],1./oversampling,dtype=np.float_)-imagesize[0]+beamcenter[0]+0.5/oversampling
-        print "real: ", np.arange(0,imagesize[1],1./oversampling,dtype=np.float_)- beamcenter[1]+0.5/oversampling
         return np.add.outer(
                          1j*(np.arange(0,
                                              imagesize[0],

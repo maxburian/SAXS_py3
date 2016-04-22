@@ -227,11 +227,12 @@ class histpanel(QtGui.QWidget):
         maxframe=str(self.setmaxframecb.currentText())
         if minframe != "none":
             self.mindate=self.filelist[self.filelist.str.contains(str(minframe))].index[0]
+        else : 
+            self.mindate=datetime.datetime(1900, 1, 1, 1, 1, 1)
         if maxframe != "all until now":
-            if maxframe == "all until now":
-                self.maxdate=datetime.datetime(2222, 1, 1, 1, 1, 1)
-            else:
-                self.maxdate=self.filelist[self.filelist.str.contains(str(maxframe))].index[0]
+            self.maxdate=self.filelist[self.filelist.str.contains(str(maxframe))].index[0]
+        else:
+            self.maxdate=datetime.datetime(2222, 1, 1, 1, 1, 1)
     
     def toggleupdate(self):
         if "Stop" in str(self.toggleupdatebutton.text()):
@@ -241,6 +242,7 @@ class histpanel(QtGui.QWidget):
             #self.holdminframe.setEnabled(True)
             #self.holdmaxframe.setEnabled(True)
             self.builtFrameListMin()
+            self.builtFrameListMax()
             self.toggleupdatebutton.setText("Start auto update!")
         elif "Start" in str(self.toggleupdatebutton.text()):
             self.updateplot=True
