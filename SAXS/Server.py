@@ -477,11 +477,11 @@ class Server():
                     if "RemotePath" in file:
                         file["RemotePath"].insert(0,self.serverdir)
             
-            logsTable,firstImage,peakframe,logbasename=datamerge.mergelogs(conf,attachment=attachment,directory=resultdir)
+            logsTable,firstImage,zeroCorr,peakframe,logbasename=datamerge.mergelogs(conf,attachment=attachment,directory=resultdir)
             #print peakframe
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
                 imd,filelists=datamerge.readallimages(directory)
-                mergedTable,delta= datamerge.mergeimgdata(logbasename,directory,logsTable,imd,peakframe,firstImage=firstImage)
+                mergedTable,delta= datamerge.mergeimgdata(logbasename,directory,logsTable,imd,peakframe,firstImage=firstImage,zeroCorr=zeroCorr)
                 plotdata=datamerge.syncplot(peakframe,imd)
                 plotdata["CalculatedTimeshift"]=str(delta)
                

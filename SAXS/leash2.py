@@ -52,13 +52,10 @@ class LeashUI(QtGui.QMainWindow):
         if selected==-1:
             dirdialog=QtGui.QFileDialog()
             serverdir=dirdialog.getExistingDirectory(parent=self, caption="Choose the Image Data Directory")
-            print serverdir
             self.localserverstop=Value('i',0)
             self.localserver=Process(target=saxsdogserver,
                                      args=(self.confs[-1],"Local",self.localserverstop,unicode(serverdir)))
             self.localserver.start()
-            
-            print "Local Server"
         self.parscecommandline()
         self.loadui(reconnectresult)
         self.setLocale(QtCore.QLocale("C"))
@@ -147,7 +144,6 @@ class LeashUI(QtGui.QMainWindow):
                 self.errormessage.setMinimumSize(400, 300)
                 self.errormessage.showMessage( str(e))
             if 'result' in result and result['result']=="new queue":
-                print result
                 self.setqueuesynced()
                 self.plotthread.start()
             else:
