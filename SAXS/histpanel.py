@@ -128,8 +128,10 @@ class histpanel(QtGui.QWidget):
             except AttributeError:
                 pass
             ax.set_xlim((-100,0))
+            hist_histdata = np.histogram(self.histdata-np.ceil(timestamp),20)
+            speed = np.mean(hist_histdata[0][1:8])/(hist_histdata[1][1]-hist_histdata[1][0])
             tstr= datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-            ax.set_title(tstr +", "+ str(data["data"]["stat"]['images processed'])+" Images Processed")
+            ax.set_title(tstr +", "+ str(data["data"]["stat"]['images processed'])+" Images Processed @"+ str(speed) + "fps")
             self.figure.tight_layout()
             self.canvas.draw()
             
