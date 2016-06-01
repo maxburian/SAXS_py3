@@ -88,7 +88,7 @@ class menueitems(QtGui.QWidget):
       
         def importText():
             text=unicode( textarea.toPlainText())
-            if not  self.app.calibeditor.model.filename:
+            if not self.app.calibeditor.model.filename:
                  filedialog=QtGui.QFileDialog()
                  self.app.calibeditor.model.filename= unicode(filedialog.getSaveFileName(  caption= "Create New File AS" ))
             
@@ -98,6 +98,7 @@ class menueitems(QtGui.QWidget):
             self.app.calibeditor.reset()
         self.connect(dialog, QtCore.SIGNAL("accepted()"),importText)
         dialog.exec_()
+        
     def openfile(self):
        dialog=QtGui.QFileDialog()
        filename= unicode(dialog.getOpenFileName( ))
@@ -115,6 +116,7 @@ class menueitems(QtGui.QWidget):
         self.app.calibeditor.model.loadfile(filename)
         self.app.calibeditor.reset()
         self.appendrecentfile(filename)
+        print "self.app.calibeditor.model.filename", self.app.calibeditor.model.filename
     def openrecent(self):
        action=self.sender()
        filename=unicode(action.data().toString())
