@@ -10,7 +10,7 @@ def txt2json(text,s):
             print text
             for line in text.split('\n'):
                 word=re.split('\s+', line)
-                
+                print "re :" ,re
                 if re.search('Refined Beam centre.+pixels',line):
                     s["Geometry"]['BeamCenter']=[float(word[6]),float(word[5])]
                 elif re.search('Refined sample to detector distance',line):
@@ -27,34 +27,30 @@ def txt2json(text,s):
             return s
 def jsontojson(fromjsontext,s):
     fromjson=json.loads(fromjsontext)
-    schemalist=[{"path":os.path.dirname(__file__)+'/schema_1.json',
+    schemalist=[{"path":os.path.dirname(__file__)+'/schema.json',
                   "pathtable":[
-                       {"old":['Tilt'],                 "new":["Geometry","Tilt"]},
-                       {"old":['Imagesize'],            "new":["Geometry","Imagesize"]},
-                       {"old":['DedectorDistanceMM'],   "new":["Geometry","DedectorDistanceMM"]},
-                       {"old":['BeamCenter'],           "new":["Geometry","BeamCenter"]},
-                       {"old":['PolarizationCorrection'],"new":["PolarizationCorrection" ]},
-                       {"old":['Wavelength'],           "new":["Wavelength"]},
-                       {"old":['Title'],                "new":["Geometry","Title"]},
-                       {"old":['PixelSizeMicroM'],      "new":["Geometry","PixelSizeMicroM"]},
-                       {"old":['MaskFile'],             "new":["Masks",0,"MaskFile"]},
-                       {"old":['PixelPerRadialElement'],"new":["Masks",0,"PixelPerRadialElement"]},
-                       {"old":['Oversampling'],         "new":["Masks",0,"Oversampling"]}
+                       {"old":["Geometry","Tilt"],                 "new":["Geometry","Tilt"]},
+                       {"old":["Geometry","Imagesize"],            "new":["Geometry","Imagesize"]},
+                       {"old":["Geometry","DedectorDistanceMM"],   "new":["Geometry","DedectorDistanceMM"]},
+                       {"old":["Geometry","BeamCenter"],           "new":["Geometry","BeamCenter"]},
+                       {"old":['PolarizationCorrection'],          "new":["PolarizationCorrection" ]},
+                       {"old":['Wavelength'],                     "new":["Wavelength"]},
+                       {"old":['Title'],                          "new":["Title"]},
+                       {"old":["Geometry","PixelSizeMicroM"],     "new":["Geometry","PixelSizeMicroM"]},
+                       {"old":["Masks",0,"MaskFile"],             "new":["Masks",0,"MaskFile"]},
+                       {"old":["Masks",0,"PixelPerRadialElement"],"new":["Masks",0,"PixelPerRadialElement"]},
+                       {"old":["Masks",0,"qStart"],"new":["Masks",0,"qStart"]},
+                       {"old":["Masks",0,"qStop"],"new":["Masks",0,"qStop"]},
+                       {"old":["Masks",0,"Oversampling"],         "new":["Masks",0,"Oversampling"]}
                     ]
                   
             }]
     for schemadesc in schemalist:
           schema=(json.load(open(schemadesc["path"])))
-         
           validate(fromjson,schema)
           for pathpair in schemadesc["pathtable"]:
               value=valuebypath(fromjson,pathpair["old"])
               setvaluebypath(s,pathpair["new"],value)
-             
-              
-          
-       
-         
     print "unknown file format"
 def valuebypath(jsonobj,path):
     subtree=jsonobj
