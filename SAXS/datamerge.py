@@ -467,7 +467,9 @@ def mergelogs(conf,attachment=None,directory="."):
             tablea=tablea.join(tableb, how='outer') 
         else:
             tablea=logframe
-            
+        print peakframe    
+     
+    print peakframe 
     return tablea,firstImage,zeroCorr,peakframe,basename
 
 def mergedata(conf,dir,attachment=None):
