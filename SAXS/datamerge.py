@@ -14,6 +14,7 @@ import re
 from jsonschema import validate,ValidationError
 import os
 import StringIO
+from __builtin__ import int
 #msilib import seems to cause an error on the cc01-cluster
 #commented out by MB on Sept. 30th 15
 #from msilib import Directory
@@ -534,7 +535,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     for pos in range(0, imd.index.shape[0]):
         mergedt_pos = mergedt.index.get_loc(imd.index[pos])
         #Check for Duplicate entries
-        if mergedt_pos.is_integer():
+        if isinstance(mergedt_pos, int):
             exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos]
         else:
             exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos][0]
