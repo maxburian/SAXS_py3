@@ -517,9 +517,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     #mergedt=imd.join(tablea,how="outer")
     #mergedt.to_csv(basename+"mergedt_join.csv")
     
-    
-    
-    
+ 
     mergedt=imd.join(tablea,how="outer").interpolate(method="time")
     mergedt.to_csv(basename+"_mergedt_join_int.csv")
     
@@ -532,37 +530,34 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     '''Turning off warnings for chained assignments'''
     pd.options.mode.chained_assignment = None  # default='warn'
     
-    '''Remove duplicate entries'''
-    grouped = mergedt.groupby(level=0)
-    mergedt_nodupl = grouped.last()
-    mergedt_nodupl.to_csv(basename+"_mergedt_nodupl_join_int.csv")
-   
     for pos in range(0, imd.index.shape[0]): 
-        mergedt_pos = mergedt_nodupl.index.get_loc(imd.index[pos])
-        exp_time = mergedt_nodupl['Exposure_time [s] (Img)'][mergedt_pos]
+        mergedt_pos = mergedt.index.get_loc(imd.index[pos])
+        exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos]
         print "mergedt_pos: ", mergedt_pos
         print "exp_time :", exp_time
         if exp_time>=2.:
-            mergedt_nodupl.index = pd.to_datetime(mergedt_nodupl.index)
-            mergedt_pos_t_start = mergedt_nodupl.index.searchsorted(mergedt_nodupl.index[mergedt_pos+1])
-            mergedt_pos_t_stop = mergedt_nodupl.index.searchsorted(mergedt_nodupl.index[mergedt_pos] + timedelta(seconds=exp_time))
-            time_sum = np.array(mergedt_nodupl.index[mergedt_pos_t_stop], dtype='datetime64[ns]') -\
-                       np.array(mergedt_nodupl.index[mergedt_pos_t_start], dtype='datetime64[ns]')
+            mergedt.index = pd.to_datetime(mergedt.index)
+            mergedt_pos_t_start = mergedt.index.searchsorted(mergedt.index[mergedt_pos+1])
+            mergedt_pos_t_stop = mergedt.index.searchsorted(mergedt.index[mergedt_pos] + timedelta(seconds=exp_time))
+            time_sum = np.array(mergedt.index[mergedt_pos_t_stop], dtype='datetime64[ns]') -\
+                       np.array(mergedt.index[mergedt_pos_t_start], dtype='datetime64[ns]')
             time_sum_s = time_sum/ np.timedelta64(1, 's')
-            mergedt_nodupl['time_ave'][mergedt_pos]=time_sum_s
+            mergedt['time_ave'][mergedt_pos]=time_sum_s
             for i in range (column_startave,column_stopave):#
-                mergedt_nodupl[[i]][mergedt_pos]=np.sum(mergedt_nodupl[[i]][mergedt_pos_t_start:mergedt_pos_t_stop].values)/time_sum_s
+                mergedt[[i]][mergedt_pos]=np.sum(mergedt[[i]][mergedt_pos_t_start:mergedt_pos_t_stop].values)/time_sum_s
 
-        mergedt_nodupl['transm (Peak)'][mergedt_pos]=np.abs(mergedt_nodupl['Diode_avg (Peak)'][mergedt_pos]/mergedt_nodupl['Ioni_avg (Peak)'][mergedt_pos])
-        mergedt_nodupl['transm (DLogger)'][mergedt_pos]=np.abs(mergedt_nodupl['Diode        (Dlogger)'][mergedt_pos]/mergedt_nodupl['Ioni         (Dlogger)'][mergedt_pos])
+        mergedt['transm (Peak)'][mergedt_pos]=np.abs(mergedt['Diode_avg (Peak)'][mergedt_pos]/mergedt['Ioni_avg (Peak)'][mergedt_pos])
+        mergedt['transm (DLogger)'][mergedt_pos]=np.abs(mergedt['Diode        (Dlogger)'][mergedt_pos]/mergedt['Ioni         (Dlogger)'][mergedt_pos])
     #mergedt.to_csv(basename+"mergedt_join_manint.csv")
-    mergedt_nodupl=mergedt_nodupl[mergedt_nodupl.index.isin(imd.index)]
+    mergedt=mergedt[mergedt_nodupl.index.isin(imd.index)]
     #smergedt.to_csv(basename+"mergedt_join_int_isin.csv")
     
     #mergedt=imd.join(tablea,how="outer").interpolate(method="zero")
     #mergedt=mergedt[mergedt.index.isin(imd.index)]
     
-    return mergedt_nodupl,delta
+    return mergedt,delta
+    
+  
 def syncplot(shiftedreduced,imd):
         imd['Exposure_time [s] (Img)'][:].plot(style="ro")  
         shiftedreduced['Duration (Peak)'][shiftedreduced['Duration (Peak)']>0].plot(style="x")
