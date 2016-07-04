@@ -534,7 +534,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     for pos in range(0, imd.index.shape[0]):
         mergedt_pos = mergedt.index.get_loc(imd.index[pos])
         #Check for Duplicate entries
-        if mergedt_pos.size()<2:
+        if mergedt_pos.is_integer():
             exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos]
         else:
             exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos][0]
