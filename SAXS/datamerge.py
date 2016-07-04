@@ -532,14 +532,12 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     '''Turning off warnings for chained assignments'''
     pd.options.mode.chained_assignment = None  # default='warn'
     
+    '''Remove duplicate entries'''
+    grouped = mergedt.groupby(level=0)
+    mergedt = grouped.last()
    
-    for pos in range(0, imd.index.shape[0]):
-        '''Check duplicate entries'''
-        if isinstance(mergedt.index.get_loc(imd.index[pos]), int):
-            mergedt_pos = mergedt.index.get_loc(imd.index[pos])
-        else:
-            sl=mergedt.index.get_loc(imd.index[pos])
-            mergedt_pos = sl.last
+    for pos in range(0, imd.index.shape[0]): 
+        mergedt_pos = mergedt.index.get_loc(imd.index[pos])
         exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos]
         print "mergedt_pos: ", mergedt_pos
         print "exp_time :", exp_time
