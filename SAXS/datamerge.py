@@ -549,7 +549,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
         mergedt['transm (Peak)'][mergedt_pos]=np.abs(mergedt['Diode_avg (Peak)'][mergedt_pos]/mergedt['Ioni_avg (Peak)'][mergedt_pos])
         mergedt['transm (DLogger)'][mergedt_pos]=np.abs(mergedt['Diode        (Dlogger)'][mergedt_pos]/mergedt['Ioni         (Dlogger)'][mergedt_pos])
     #mergedt.to_csv(basename+"mergedt_join_manint.csv")
-    mergedt=mergedt[mergedt_nodupl.index.isin(imd.index)]
+    mergedt=mergedt[mergedt.index.isin(imd.index)]
     #smergedt.to_csv(basename+"mergedt_join_int_isin.csv")
     
     #mergedt=imd.join(tablea,how="outer").interpolate(method="zero")
