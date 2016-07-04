@@ -453,8 +453,10 @@ def mergelogs(conf,attachment=None,directory="."):
    
         print "timedelta: ", timedelta(seconds=conf["TimeOffset"])
         logframe.index=logframe.index-timedelta(seconds=conf["TimeOffset"])
+        
         if logTable["ZeroImageCorrelation"]:
             zeroCorr=True
+            
         if logTable["FirstImageCorrelation"]:
             firstImage=logframe.index.min()
             peakframe=logframe
@@ -462,14 +464,15 @@ def mergelogs(conf,attachment=None,directory="."):
             peakframe=logframe
         elif type(peakframe)==type(None):
             peakframe=logframe
+            
         if tnumber >=1:
             tableb=logframe
             tablea=tablea.join(tableb, how='outer') 
         else:
             tablea=logframe
-        print peakframe    
+          
      
-    print peakframe 
+    
     return tablea,firstImage,zeroCorr,peakframe,basename
 
 def mergedata(conf,dir,attachment=None):
@@ -525,6 +528,9 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     mergedt['transm (Peak)']=np.NaN
     mergedt['transm (DLogger)']=np.NaN
     
+    '''Turning off warnings for chained assignments'''
+    pd.options.mode.chained_assignment = None  # default='warn'
+    
     for pos in range(0, imd.index.shape[0]):
         mergedt_pos = mergedt.index.get_loc(imd.index[pos])
         exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos]
@@ -536,7 +542,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
                        np.array(mergedt.index[mergedt_pos_t_start], dtype='datetime64[ns]')
             time_sum_s = time_sum/ np.timedelta64(1, 's')
             mergedt['time_ave'][mergedt_pos]=time_sum_s
-            for i in range (column_startave,column_stopave):
+            for i in range (column_startave,column_stopave):#
                 mergedt[[i]][mergedt_pos]=np.sum(mergedt[[i]][mergedt_pos_t_start:mergedt_pos_t_stop].values)/time_sum_s
 
         mergedt['transm (Peak)'][mergedt_pos]=np.abs(mergedt['Diode_avg (Peak)'][mergedt_pos]/mergedt['Ioni_avg (Peak)'][mergedt_pos])
