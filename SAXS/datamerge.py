@@ -539,7 +539,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
             mergedt_pos = mergedt.index.get_loc(imd.index[pos])
         else:
             sl=mergedt.index.get_loc(imd.index[pos])
-            mergedt_pos = sl[len(sl)-1]
+            mergedt_pos = sl[0]
         exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos]
         print "mergedt_pos: ", mergedt_pos
         print "exp_time :", exp_time
