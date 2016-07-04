@@ -541,8 +541,6 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
             exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos][0]
         print "mergedt_pos: ", mergedt_pos
         print "exp_time :", exp_time
-        if exp_time.size()>1:
-            exp_time = exp_time[0]
         if exp_time>=2.:
             mergedt.index = pd.to_datetime(mergedt.index)
             mergedt_pos_t_start = mergedt.index.searchsorted(mergedt.index[mergedt_pos+1])
