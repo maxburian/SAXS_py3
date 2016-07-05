@@ -481,6 +481,9 @@ class Server():
             #print peakframe
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
                 imd,filelists=datamerge.readallimages(directory)
+                '''Removing duplicates'''
+                grouped = imd.groupby(level=0)
+    		imd = grouped.last()
                 mergedTable,delta= datamerge.mergeimgdata(logbasename,directory,logsTable,imd,peakframe,firstImage=firstImage,zeroCorr=zeroCorr)
                 plotdata=datamerge.syncplot(peakframe,imd)
                 plotdata["CalculatedTimeshift"]=str(delta)
