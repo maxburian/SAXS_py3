@@ -219,7 +219,6 @@ def readallimages(dir):
     merged=merged.set_index("End Date Time (ImgLog)")
     #if False:
     #    merged=imgframe
-        
     #print merged.columns.values
     return merged,chilisttodict(chilist)
   
@@ -513,7 +512,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
 
     
     basename=logbasename
-    imd.to_csv(basename+"_imd.csv") 
+    imd.to_csv(basename+"_imd_nodupl.csv") 
     #mergedt=imd.join(tablea,how="outer")
     #mergedt.to_csv(basename+"mergedt_join.csv")
     
@@ -548,7 +547,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
         mergedt['transm (DLogger)'][mergedt_pos]=np.abs(mergedt['Diode        (Dlogger)'][mergedt_pos]/mergedt['Ioni         (Dlogger)'][mergedt_pos])
     #mergedt.to_csv(basename+"mergedt_join_manint.csv")
     mergedt=mergedt[mergedt.index.isin(imd.index)]
-    mergedt.to_csv(basename+"mergedt_join_int_isin.csv")
+    #mergedt.to_csv(basename+"mergedt_join_int_isin.csv")
     
     #mergedt=imd.join(tablea,how="outer").interpolate(method="zero")
     #mergedt=mergedt[mergedt.index.isin(imd.index)]
