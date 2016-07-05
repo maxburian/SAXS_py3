@@ -482,8 +482,9 @@ class Server():
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
                 imd,filelists=datamerge.readallimages(directory)
                 '''Removing duplicates'''
-                imd = imd.reset_index().drop_duplicates(subset='index', keep='last').set_index('index')
-                imd = imd.sort()
+                print "now removing duplicates...:"
+                imdnew = imd.reset_index().drop_duplicates(subset='index', keep='last').set_index('index')
+                imd = imdnew.sort()
                 #grouped = imd.groupby(level=0)
     		    #imd = grouped.last()
                 mergedTable,delta= datamerge.mergeimgdata(logbasename,directory,logsTable,imd,peakframe,firstImage=firstImage,zeroCorr=zeroCorr)

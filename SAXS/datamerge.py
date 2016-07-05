@@ -189,7 +189,7 @@ def readallimages(dir):
         for name in files:
             if name.endswith('tif'):
                 imgpath=os.path.join(path, name)
-                print imgpath
+                #print imgpath
                 row=readtiff(imgpath)
                 row['filepath']=imgpath
                 row['id']="h"+hashlib.sha224(imgpath).hexdigest()
