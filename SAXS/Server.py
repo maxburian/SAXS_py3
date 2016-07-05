@@ -483,7 +483,7 @@ class Server():
                 imd,filelists=datamerge.readallimages(directory)
                 '''Removing duplicates'''
                 print "now removing duplicates...:"
-                imdnew = imd.reset_index().drop_duplicates(subset='index', keep='last').set_index('index')
+                imdnew = imd.drop_duplicates(subset="File Name (ImgLog)", keep='last')
                 imd = imdnew.sort()
                 #grouped = imd.groupby(level=0)
     		    #imd = grouped.last()
