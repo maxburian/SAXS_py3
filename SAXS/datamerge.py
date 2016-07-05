@@ -185,6 +185,9 @@ def readallimages(dir):
     chilist=[]
     imagecount=0
     for path, subdirs, files in os.walk(dir):
+        print "path :", path
+        print "subdirs ", subdirs
+        print "files", files
         for name in files:
             if name.endswith('tif'):
                 imgpath=os.path.join(path, name)
@@ -367,7 +370,6 @@ def writeFileLists(conf ,filelists,directory=".",serverdir=""):
         texfilename= basename+kind+".txt"
         listfile=open(texfilename,"w")
         for filename in filelists[kind]:
-            
             listfile.write(os.path.normpath(filename[len(serverdir):])+"\n")
         listfile.close()
         print "write: " +texfilename
