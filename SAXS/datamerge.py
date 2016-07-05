@@ -186,12 +186,10 @@ def readallimages(dir):
     imagecount=0
     for path, subdirs, files in os.walk(dir):
         print "path :", path
-        print "subdirs ", subdirs
-        print "files", files
         for name in files:
             if name.endswith('tif'):
                 imgpath=os.path.join(path, name)
-                #print imgpath
+                print imgpath
                 row=readtiff(imgpath)
                 row['filepath']=imgpath
                 row['id']="h"+hashlib.sha224(imgpath).hexdigest()
