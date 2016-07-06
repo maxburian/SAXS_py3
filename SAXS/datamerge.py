@@ -207,7 +207,8 @@ def readallimages(dir):
     
     imgframe.columns+=" (Img)"
     imglogframe.columns+=" (ImgLog)"
-    
+    print "Index of imgframe before removing duplicates",len(imgframe.index)
+    print "Index of imglogframe before removing duplicates",len(imglogframe.index)
     #print imgframe.columns
     #print imglogframe
 
