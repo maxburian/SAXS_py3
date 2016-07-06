@@ -216,11 +216,13 @@ def readallimages(dir):
     #print imglogframe
 
     #if True:
+    imgframe["date (Img)"]=imgframe.index
     imgframe["File Name (Img)"]=(imgframe["Image_path (Img)"]+imgframe['filename (Img)'])
     merged=pd.merge(imglogframe,imgframe, 
                     left_on="File Name (ImgLog)",
                     right_on= "File Name (Img)",
                     how='right')
+    merged["End Date Time (ImgLog)"] = merged["End Date Time (ImgLog)"].fillna(merged["date (Img)"])
     merged=merged.set_index("End Date Time (ImgLog)")
     merged.to_csv("/store/160519_Rodler/results/merged/merged.csv")
     #if False:
