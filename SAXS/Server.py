@@ -485,6 +485,7 @@ class Server():
                 print "now removing duplicates...:"
                 imd = imd.groupby(imd.index).last()
                 print "Duplicates are removed"
+                print "Index of imd after removing duplicates",len(imd.index)
                 #grouped = imd.groupby(level=0)
     		    #imd = grouped.last()
                 mergedTable,delta= datamerge.mergeimgdata(logbasename,directory,logsTable,imd,peakframe,firstImage=firstImage,zeroCorr=zeroCorr)

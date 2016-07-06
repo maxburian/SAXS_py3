@@ -219,7 +219,7 @@ def readallimages(dir):
     merged=merged.set_index("End Date Time (ImgLog)")
     #if False:
     #    merged=imgframe
-    #print merged.columns.values
+    print "Index of imd before removing duplicates",len(merged.index)
     return merged,chilisttodict(chilist)
   
 def compileconffromoptions(options, args):
