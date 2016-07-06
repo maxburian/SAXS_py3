@@ -204,27 +204,29 @@ def readallimages(dir):
                 imglogframe=imglogframe.append(readimglog(logpath))
             elif name.endswith("chi") or name.endswith("json") :
                 chilist.append(os.path.join(path, name))
-    
+                
+    '''Adding identifier to column names'''
     imgframe.columns+=" (Img)"
     imglogframe.columns+=" (ImgLog)"
-    print "Index of imgframe before removing duplicates",len(imgframe.index)
-    print "Index of imglogframe before removing duplicates",len(imglogframe.index)
     
-    imgframe.to_csv("/store/160519_Rodler/results/merged/imgframe.csv")
-    imglogframe.to_csv("/store/160519_Rodler/results/merged/imglogframe.csv")
-    #print imgframe.columns
-    #print imglogframe
-
-    #if True:
+    '''Move date index into normal column'''
     imgframe["date (Img)"]=imgframe.index
+    '''Make comparison column using'''
     imgframe["File Name (Img)"]=(imgframe["Image_path (Img)"]+imgframe['filename (Img)'])
+    '''Merge by filepath+name'''
     merged=pd.merge(imglogframe,imgframe, 
                     left_on="File Name (ImgLog)",
                     right_on= "File Name (Img)",
                     how='right')
+    '''Fill image time when no log information is present'''
     merged["End Date Time (ImgLog)"] = merged["End Date Time (ImgLog)"].fillna(merged["date (Img)"])
+    
     merged=merged.set_index("End Date Time (ImgLog)")
-    merged.to_csv("/store/160519_Rodler/results/merged/merged.csv")
+
+    '''Removing redundant columns'''
+    merged = merged.drop('Time Requested (ImgLog)', 1)
+    merged = merged.drop('Time Measured (ImgLog)', 1)
+    merged = merged.drop('File Name (ImgLog)', 1)
     #if False:
     #    merged=imgframe
     print "Index of imd before removing duplicates",len(merged.index)
@@ -520,13 +522,17 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
 
     
     basename=logbasename
-    imd.to_csv(basename+"_imd_nodupl.csv") 
+    #imd.to_csv(basename+"_imd_nodupl.csv") 
     #mergedt=imd.join(tablea,how="outer")
     #mergedt.to_csv(basename+"mergedt_join.csv")
     
- 
+    
+    #'''Now removing duplicate filenames'''
+    #imd = imd.groupby(imd["File Name (ImgLog)"]).last()
     mergedt=imd.join(tablea,how="outer").interpolate(method="time")
-    mergedt.to_csv(basename+"_mergedt_join_int.csv")
+    #'''Now removing duplicate entries'''
+    #mergedt = mergedt.groupby(mergedt.index).last()
+    #mergedt.to_csv(basename+"_mergedt_join_int.csv")
     
     column_startave = mergedt.columns.get_loc('Ioni         (Dlogger)')
     column_stopave = len(mergedt.columns)
@@ -539,7 +545,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     
     for pos in range(0, imd.index.shape[0]): 
         mergedt_pos = mergedt.index.get_loc(imd.index[pos])
-        exp_time = mergedt['Exposure_time [s] (Img)'][mergedt_pos]
+        exp_time = np.mean(mergedt['Exposure_time [s] (Img)'][mergedt_pos])
         if exp_time>=2.:
             mergedt.index = pd.to_datetime(mergedt.index)
             mergedt_pos_t_start = mergedt.index.searchsorted(mergedt.index[mergedt_pos+1])
