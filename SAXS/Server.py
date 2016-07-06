@@ -481,19 +481,10 @@ class Server():
             #print peakframe
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
                 imd,filelists=datamerge.readallimages(directory)
-                '''Removing duplicates'''
-                print "now removing duplicates...:"
-                imd = imd.groupby(imd.index).last()
-                print "Duplicates are removed"
-                print "Index of imd after removing duplicates",len(imd.index)
-                #grouped = imd.groupby(level=0)
-    		    #imd = grouped.last()
                 mergedTable,delta= datamerge.mergeimgdata(logbasename,directory,logsTable,imd,peakframe,firstImage=firstImage,zeroCorr=zeroCorr)
                 plotdata=datamerge.syncplot(peakframe,imd)
                 plotdata["CalculatedTimeshift"]=str(delta)
-               
                 
-               
                 datamerge.writeTable(conf,mergedTable,directory=resultdir)
                 datamerge.writeFileLists(conf ,filelists,directory=resultdir,serverdir=self.serverdir)
                 if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
