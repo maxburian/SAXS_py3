@@ -209,6 +209,9 @@ def readallimages(dir):
     imglogframe.columns+=" (ImgLog)"
     print "Index of imgframe before removing duplicates",len(imgframe.index)
     print "Index of imglogframe before removing duplicates",len(imglogframe.index)
+    
+    imgframe.to_csv("/store/160519_Rodler/results/merged/imgframe.csv")
+    imglogframe.to_csv("/store/160519_Rodler/results/merged/imgframe.csv")
     #print imgframe.columns
     #print imglogframe
 
@@ -218,6 +221,7 @@ def readallimages(dir):
                     left_on="File Name (ImgLog)",
                     right_on= "File Name (Img)")
     merged=merged.set_index("End Date Time (ImgLog)")
+    merged.to_csv("/store/160519_Rodler/results/merged/merged.csv")
     #if False:
     #    merged=imgframe
     print "Index of imd before removing duplicates",len(merged.index)
