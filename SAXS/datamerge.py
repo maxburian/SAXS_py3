@@ -165,7 +165,7 @@ def readimglog(filename):
              logfstr+="NaN NaN " +line
         else:
             logfstr+=line
-    df=pd.read_csv( StringIO.StringIO(logfstr), 
+    df=pd.read_csv(StringIO.StringIO(logfstr), 
             sep=" ", 
             skipinitialspace=True,
             header=None , 
@@ -199,7 +199,7 @@ def readallimages(dir):
                 rowframe=rowframe.set_index(["date"])
                 imgframe=imgframe.append(rowframe)
               
-            elif  name.endswith('log'):
+            elif  name.endswith("log"):
                 logpath=os.path.join(path, name)
                 imglogframe=imglogframe.append(readimglog(logpath))
             elif name.endswith("chi") or name.endswith("json") :
@@ -211,7 +211,7 @@ def readallimages(dir):
     print "Index of imglogframe before removing duplicates",len(imglogframe.index)
     
     imgframe.to_csv("/store/160519_Rodler/results/merged/imgframe.csv")
-    imglogframe.to_csv("/store/160519_Rodler/results/merged/imgframe.csv")
+    imglogframe.to_csv("/store/160519_Rodler/results/merged/imglogframe.csv")
     #print imgframe.columns
     #print imglogframe
 
@@ -219,7 +219,8 @@ def readallimages(dir):
     imgframe["File Name (Img)"]=(imgframe["Image_path (Img)"]+imgframe['filename (Img)'])
     merged=pd.merge(imglogframe,imgframe, 
                     left_on="File Name (ImgLog)",
-                    right_on= "File Name (Img)")
+                    right_on= "File Name (Img)",
+                    how='right')
     merged=merged.set_index("End Date Time (ImgLog)")
     merged.to_csv("/store/160519_Rodler/results/merged/merged.csv")
     #if False:
