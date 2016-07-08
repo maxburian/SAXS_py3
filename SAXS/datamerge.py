@@ -225,17 +225,17 @@ def readallimages(dir):
     merged=merged.set_index("End Date Time (ImgLog)")
     merged["Time Measured (ImgLog)"] = merged["Time Measured (ImgLog)"].fillna(merged["Exposure_time [s] (Img)"])
     
-    '''Adding 1ns offset for all 100K images, so no duplicate identifiers exist'''
-    merged.loc[merged["Detector type"]=="Pil100K","End Date Time (ImgLog)"] = merged[merged["Detector type"]=="Pil100K"]["End Date Time (ImgLog)"]+ timedelta(seconds=0.000001)
-
-    merged = merged.set_index("End Date Time (ImgLog)")
-    merged.sort_index(inplace=True)
-    
     '''Adding a detector selector'''
     merged["Detector type"]=np.NaN
     merged.loc[merged['File Name (Img)'].str.contains("Pil1M"),"Detector type"] = "Pil1M"
     merged.loc[merged['File Name (Img)'].str.contains("Pil100k"),"Detector type"] = "Pil100K"
     
+    '''Adding 1ns offset for all 100K images, so no duplicate identifiers exist'''
+    merged.loc[merged["Detector type"]=="Pil100K","End Date Time (ImgLog)"] = merged[merged["Detector type"]=="Pil100K"]["End Date Time (ImgLog)"]+ timedelta(seconds=0.000001)
+
+    merged = merged.set_index("End Date Time (ImgLog)")
+    merged.sort_index(inplace=True)
+       
     '''If some duplicate entries are left over, they are distinguished now'''
     for pos in range(0, merged.index.shape[0]): 
         try : 
