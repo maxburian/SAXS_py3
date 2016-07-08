@@ -226,11 +226,11 @@ def readallimages(dir):
     
     '''Adding a detector selector'''
     merged['Detector type']=""
-    merged.loc[merged['File Name (Img)'].str.contains("Pil1M"),"Detector type"] = "Pil1M"
-    merged.loc[merged['File Name (Img)'].str.contains("Pil100k"),"Detector type"] = "Pil100K"
+    merged.loc[merged['File Name (Img)'].str.contains("Pil1M"),'Detector type'] = "Pil1M"
+    merged.loc[merged['File Name (Img)'].str.contains("Pil100k"),'Detector type'] = "Pil100K"
         
     '''Adding 1ns offset for all 100K images, so no duplicate identifiers exist'''
-    merged.loc[merged["Detector type"]=="Pil100K","End Date Time (ImgLog)"] = merged[merged["Detector type"]=="Pil100K"]["End Date Time (ImgLog)"]+ timedelta(seconds=0.000001)
+    merged.loc[merged['Detector type']=="Pil100K","End Date Time (ImgLog)"] = merged[merged['Detector type']=="Pil100K"]["End Date Time (ImgLog)"]+ timedelta(seconds=0.000001)
 
     merged = merged.set_index("End Date Time (ImgLog)")
     merged.sort_index(inplace=True)
@@ -572,7 +572,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
         if exp_time>=2.:
             try : 
                 if imd.index[pos+1] - imd.index[pos] < timedelta(seconds=exp_time):
-                    if imd["Detector type"][pos+1]!=imd["Detector type"][pos+1]:
+                    if imd['Detector type'][pos+1]!=imd['Detector type'][pos+1]:
                         offset = 2
                 else:
                     offset = 1
