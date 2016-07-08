@@ -221,15 +221,14 @@ def readallimages(dir):
     
     '''Fill image time when no log information is present'''
     merged["End Date Time (ImgLog)"] = merged["End Date Time (ImgLog)"].fillna(merged["date (Img)"])
-    merged["End Date Time (ImgLog)"] = pd.to_datetime(merged["End Date Time (ImgLog)"])
-    merged=merged.set_index("End Date Time (ImgLog)")
     merged["Time Measured (ImgLog)"] = merged["Time Measured (ImgLog)"].fillna(merged["Exposure_time [s] (Img)"])
+    merged["End Date Time (ImgLog)"] = pd.to_datetime(merged["End Date Time (ImgLog)"])
     
     '''Adding a detector selector'''
-    merged["Detector type"]=np.NaN
+    merged['Detector type']=""
     merged.loc[merged['File Name (Img)'].str.contains("Pil1M"),"Detector type"] = "Pil1M"
     merged.loc[merged['File Name (Img)'].str.contains("Pil100k"),"Detector type"] = "Pil100K"
-    
+        
     '''Adding 1ns offset for all 100K images, so no duplicate identifiers exist'''
     merged.loc[merged["Detector type"]=="Pil100K","End Date Time (ImgLog)"] = merged[merged["Detector type"]=="Pil100K"]["End Date Time (ImgLog)"]+ timedelta(seconds=0.000001)
 
