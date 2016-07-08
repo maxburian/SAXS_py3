@@ -243,18 +243,16 @@ def readallimages(dir):
         try : 
             if merged.index[pos+1] - merged.index[pos] < timedelta(seconds=0.000001) :
                 index.append(merged.index[pos+1] +timedelta(seconds=0.000001))
-                print "now"
             else:
                 index.append(merged.index[pos+1])
         except:
-            print "not now"
             break
     merged.index=index  
 
     '''Removing redundant columns'''
-    #merged = merged.drop('Time Requested (ImgLog)', 1)
+    merged = merged.drop('Time Requested (ImgLog)', 1)
     #merged = merged.drop('Time Measured (ImgLog)', 1)
-    #merged = merged.drop('File Name (ImgLog)', 1)
+    merged = merged.drop('File Name (ImgLog)', 1)
     #if False:
     #    merged=imgframe
     return merged,chilisttodict(chilist)
@@ -376,9 +374,11 @@ def merge():
     
 def writeTable(conf,mergedTable,directory="."):
     basename=os.path.normpath(os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]]))
+    oldindex = mergedTable.index
     mergedTableTS=mergedTable
     mergedTableTS.index = (mergedTableTS.index-np.datetime64('1904-01-01T00:00:00Z')) / np.timedelta64(1, 's')
     mergedTableTS.to_csv(basename+"_igor.csv")
+    mergedTable.index = pd.to_datetime(oldindex)
     
     for format in conf["OutputFormats"]:
         if conf["OutputFormats"][format]:
