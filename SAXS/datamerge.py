@@ -218,18 +218,38 @@ def readallimages(dir):
                     left_on="File Name (ImgLog)",
                     right_on= "File Name (Img)",
                     how='right')
+    
     '''Fill image time when no log information is present'''
     merged["End Date Time (ImgLog)"] = merged["End Date Time (ImgLog)"].fillna(merged["date (Img)"])
-    
+    merged["End Date Time (ImgLog)"] = pd.to_datetime(merged["End Date Time (ImgLog)"])
     merged=merged.set_index("End Date Time (ImgLog)")
+    merged["Time Measured (ImgLog)"] = merged["Time Measured (ImgLog)"].fillna(merged["Exposure_time [s] (Img)"])
+    
+    '''Adding 1ns offset for all 100K images, so no duplicate identifiers exist'''
+    merged.loc[merged["Detector type"]=="Pil100K","End Date Time (ImgLog)"] = merged[merged["Detector type"]=="Pil100K"]["End Date Time (ImgLog)"]+ timedelta(seconds=0.000001)
+
+    merged = merged.set_index("End Date Time (ImgLog)")
+    merged.sort_index(inplace=True)
+    
+    '''Adding a detector selector'''
+    merged["Detector type"]=np.NaN
+    merged.loc[merged['File Name (Img)'].str.contains("Pil1M"),"Detector type"] = "Pil1M"
+    merged.loc[merged['File Name (Img)'].str.contains("Pil100k"),"Detector type"] = "Pil100K"
+    
+    '''If some duplicate entries are left over, they are distinguished now'''
+    for pos in range(0, merged.index.shape[0]): 
+        try : 
+            if merged.index[pos+1] - merged.index[pos] < timedelta(seconds=0.00001) :
+                merged.loc[merged.index,pos+1]  = merged.index[pos+1] +timedelta(seconds=0.000001)
+        except:
+            break
 
     '''Removing redundant columns'''
-    merged = merged.drop('Time Requested (ImgLog)', 1)
-    merged = merged.drop('Time Measured (ImgLog)', 1)
-    merged = merged.drop('File Name (ImgLog)', 1)
+    #merged = merged.drop('Time Requested (ImgLog)', 1)
+    #merged = merged.drop('Time Measured (ImgLog)', 1)
+    #merged = merged.drop('File Name (ImgLog)', 1)
     #if False:
     #    merged=imgframe
-    print "Index of imd before removing duplicates",len(merged.index)
     return merged,chilisttodict(chilist)
   
 def compileconffromoptions(options, args):
@@ -351,7 +371,7 @@ def writeTable(conf,mergedTable,directory="."):
     basename=os.path.normpath(os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]]))
     mergedTableTS=mergedTable
     mergedTableTS.index = (mergedTableTS.index-np.datetime64('1904-01-01T00:00:00Z')) / np.timedelta64(1, 's')
-    mergedTable.to_csv(basename+"_igor.csv")
+    mergedTableTS.to_csv(basename+"_igor.csv")
     
     for format in conf["OutputFormats"]:
         if conf["OutputFormats"][format]:
@@ -481,7 +501,7 @@ def mergelogs(conf,attachment=None,directory="."):
         else:
             tablea=logframe
           
-     
+    tablea.sort_index(inplace=True) 
     
     return tablea,firstImage,zeroCorr,peakframe,basename
 
@@ -505,7 +525,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     if firstImage:
         delta=(imd.index.min()-firstImage)
         tablea.index=tablea.index+delta
-        peakframe.index=peakframe.index+delta
+        #peakframe.index=peakframe.index+delta
         print "Time shift:" +str(delta)
     else:
         delta=timedelta(seconds=0)
@@ -517,11 +537,11 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
         delta = time_zeroframe - firstImage
         print "delta", delta
         tablea.index=tablea.index+delta
-        peakframe.index=peakframe.index+delta
+        #peakframe.index=peakframe.index+delta
         print "Time shift:" +str(delta)
 
     
-    basename=logbasename
+   # basename=logbasename
     #imd.to_csv(basename+"_imd_nodupl.csv") 
     #mergedt=imd.join(tablea,how="outer")
     #mergedt.to_csv(basename+"mergedt_join.csv")
@@ -529,6 +549,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     
     #'''Now removing duplicate filenames'''
     #imd = imd.groupby(imd["File Name (ImgLog)"]).last()
+    '''Joining image data and logs'''
     mergedt=imd.join(tablea,how="outer").interpolate(method="time")
     #'''Now removing duplicate entries'''
     #mergedt = mergedt.groupby(mergedt.index).last()
@@ -540,25 +561,43 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     mergedt['transm (Peak)']=np.NaN
     mergedt['transm (DLogger)']=np.NaN
     
+    offset = 0
+    
     '''Turning off warnings for chained assignments'''
     pd.options.mode.chained_assignment = None  # default='warn'
     
+    
     for pos in range(0, imd.index.shape[0]): 
         mergedt_pos = mergedt.index.get_loc(imd.index[pos])
-        exp_time = np.mean(mergedt['Exposure_time [s] (Img)'][mergedt_pos])
+        exp_time = np.mean(mergedt["Time Measured (ImgLog)"][mergedt_pos])
         if exp_time>=2.:
-            mergedt.index = pd.to_datetime(mergedt.index)
-            mergedt_pos_t_start = mergedt.index.searchsorted(mergedt.index[mergedt_pos+1])
+            try : 
+                if imd.index[pos+1] - imd.index[pos] < timedelta(seconds=exp_time):
+                    if imd["Detector type"][pos+1]!=imd["Detector type"][pos+1]:
+                        offset = 2
+                else:
+                    offset = 1
+            except:
+                offset = 1
+            mergedt_pos_t_start = mergedt_pos + offset
             mergedt_pos_t_stop = mergedt.index.searchsorted(mergedt.index[mergedt_pos] + timedelta(seconds=exp_time))
             time_sum = np.array(mergedt.index[mergedt_pos_t_stop], dtype='datetime64[ns]') -\
-                       np.array(mergedt.index[mergedt_pos_t_start], dtype='datetime64[ns]')
+                           np.array(mergedt.index[mergedt_pos_t_start], dtype='datetime64[ns]')
             time_sum_s = time_sum/ np.timedelta64(1, 's')
             mergedt['time_ave'][mergedt_pos]=time_sum_s
-            for i in range (column_startave,column_stopave):#
-                mergedt[[i]][mergedt_pos]=np.sum(mergedt[[i]][mergedt_pos_t_start:mergedt_pos_t_stop].values)/time_sum_s
-
+            for i in range (column_startave,column_stopave):
+                try :
+                    mergedt.ix[mergedt_pos,i]=np.sum(mergedt.ix[mergedt_pos_t_start:mergedt_pos_t_stop,i].values)/time_sum_s
+                except :
+                    print i
+                    print mergedt_pos
+                    print mergedt_pos_t_start
+                    print mergedt_pos_t_stop
+                    break
+    
         mergedt['transm (Peak)'][mergedt_pos]=np.abs(mergedt['Diode_avg (Peak)'][mergedt_pos]/mergedt['Ioni_avg (Peak)'][mergedt_pos])
         mergedt['transm (DLogger)'][mergedt_pos]=np.abs(mergedt['Diode        (Dlogger)'][mergedt_pos]/mergedt['Ioni         (Dlogger)'][mergedt_pos])
+
     #mergedt.to_csv(basename+"mergedt_join_manint.csv")
     mergedt=mergedt[mergedt.index.isin(imd.index)]
     #mergedt.to_csv(basename+"mergedt_join_int_isin.csv")
@@ -567,7 +606,6 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     #mergedt=mergedt[mergedt.index.isin(imd.index)]
     
     return mergedt,delta
-    
   
 def syncplot(shiftedreduced,imd):
         imd['Exposure_time [s] (Img)'][:].plot(style="ro")  
