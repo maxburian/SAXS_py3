@@ -211,6 +211,7 @@ def readallimages(dir):
     
     '''Move date index into normal column'''
     imgframe["date (Img)"]=imgframe.index
+    
     '''Make comparison column using'''
     imgframe["File Name (Img)"]=(imgframe["Image_path (Img)"]+imgframe['filename (Img)'])
     '''Merge by filepath+name'''
@@ -236,12 +237,19 @@ def readallimages(dir):
     merged.sort_index(inplace=True)
        
     '''If some duplicate entries are left over, they are distinguished now'''
+    index=[]
+    index.append(merged.index[0])
     for pos in range(0, merged.index.shape[0]): 
         try : 
-            if merged.index[pos+1] - merged.index[pos] < timedelta(seconds=0.00001) :
-                merged.loc[merged.index,pos+1]  = merged.index[pos+1] +timedelta(seconds=0.000001)
+            if merged.index[pos+1] - merged.index[pos] < timedelta(seconds=0.000001) :
+                index.append(merged.index[pos+1] +timedelta(seconds=0.000001))
+                print "now"
+            else:
+                index.append(merged.index[pos+1])
         except:
+            print "not now"
             break
+    merged.index=index  
 
     '''Removing redundant columns'''
     #merged = merged.drop('Time Requested (ImgLog)', 1)
@@ -516,10 +524,12 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     '''
     ZeroImage correlation looks for two consecutive Files with ExpT = 2.345 and ExpP 4.567    
     '''
+    '''Subtracting exposure time from image time to get moment of acquisition start'''
     index=[]
     for pos in range(imd.index.shape[0]):    
-            index.append(imd.index[pos]-timedelta(seconds=(imd['Exposure_time [s] (Img)'][pos])))
+            index.append(imd.index[pos]-timedelta(seconds=(imd["Time Measured (ImgLog)"][pos])))
     imd.index=index  
+    
     '''If firstimagecorrelation is selected:'''
     if firstImage:
         delta=(imd.index.min()-firstImage)
