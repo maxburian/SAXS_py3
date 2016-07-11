@@ -412,7 +412,7 @@ def cleanuplog(logframe,logTable):
     logframe.columns+=" ("+logTable["Name"]+")"
     logframe.index=logframe.index-timedelta(seconds=logTable["TimeOffset"])
     if logTable["TimeEpoch"]=="Mac":
-       logframe.index=logframe.index- ( datetime.fromtimestamp(0)-datetime(1904, 1, 1, 0,0,0))
+       logframe.index=logframe.index-( datetime.fromtimestamp(0)-datetime(1904, 1, 1, 0,0,0))
        
 def chilisttodict(chi):
     chidict={}
@@ -550,7 +550,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
         print "Time shift:" +str(delta)
 
     
-   # basename=logbasename
+    basename=logbasename
     #imd.to_csv(basename+"_imd_nodupl.csv") 
     #mergedt=imd.join(tablea,how="outer")
     #mergedt.to_csv(basename+"mergedt_join.csv")
@@ -562,7 +562,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     mergedt=imd.join(tablea,how="outer").interpolate(method="time")
     #'''Now removing duplicate entries'''
     #mergedt = mergedt.groupby(mergedt.index).last()
-    #mergedt.to_csv(basename+"_mergedt_join_int.csv")
+    mergedt.to_csv(basename+"_mergedt_join_int.csv")
     
     column_startave = mergedt.columns.get_loc('Ioni         (Dlogger)')
     column_stopave = len(mergedt.columns)
@@ -589,7 +589,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
             except:
                 offset = 1
             mergedt_pos_t_start = mergedt_pos + offset
-            mergedt_pos_t_stop = mergedt.index.searchsorted(mergedt.index[mergedt_pos] + timedelta(seconds=exp_time))
+            mergedt_pos_t_stop = mergedt.index.searchsorted(mergedt.index[mergedt_pos_t_start] + timedelta(seconds=exp_time))
             time_sum = np.array(mergedt.index[mergedt_pos_t_stop], dtype='datetime64[ns]') -\
                            np.array(mergedt.index[mergedt_pos_t_start], dtype='datetime64[ns]')
             time_sum_s = time_sum/ np.timedelta64(1, 's')
