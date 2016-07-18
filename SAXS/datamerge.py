@@ -186,6 +186,9 @@ def readallimages(dir):
     imagecount=0
     for path, subdirs, files in os.walk(dir):
         print "path :", path
+        if "results" in path:
+            print "skipped!"
+            continue
         for name in files:
             if name.endswith('tif'):
                 imgpath=os.path.join(path, name)
@@ -553,7 +556,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
 
     
     basename=logbasename
-    imd.to_csv(basename+"_imd_nodupl.csv") 
+    #imd.to_csv(basename+"_imd_nodupl.csv") 
     #mergedt=imd.join(tablea,how="outer")
     #mergedt.to_csv(basename+"mergedt_join.csv")
     
@@ -564,7 +567,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     mergedt=imd.join(tablea,how="outer").interpolate(method="time")
     #'''Now removing duplicate entries'''
     #mergedt = mergedt.groupby(mergedt.index).last()
-    mergedt.to_csv(basename+"_mergedt_join_int.csv")
+    #mergedt.to_csv(basename+"_mergedt_join_int.csv")
     
     column_startave = mergedt.columns.get_loc('Ioni         (Dlogger)')
     column_stopave = len(mergedt.columns)
@@ -585,11 +588,11 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
             try : 
                 if imd.index[pos+1] - imd.index[pos] < timedelta(seconds=exp_time):
                     if imd['Detector type'][pos+1]!=imd['Detector type'][pos+1]:
-                        offset = 2.
+                        offset = 2
                 else:
-                    offset = 1.
+                    offset = 1
             except:
-                offset = 1.
+                offset = 1
             mergedt_pos_t_start = mergedt_pos + offset
             mergedt_pos_t_stop = mergedt.index.searchsorted(mergedt.index[mergedt_pos_t_start] + timedelta(seconds=exp_time))
             time_sum = np.array(mergedt.index[mergedt_pos_t_stop], dtype='datetime64[ns]') -\
