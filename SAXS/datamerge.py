@@ -253,6 +253,9 @@ def readallimages(dir):
     merged = merged.drop('Time Requested (ImgLog)', 1)
     #merged = merged.drop('Time Measured (ImgLog)', 1)
     merged = merged.drop('File Name (ImgLog)', 1)
+    
+    '''Removing all 100K images'''
+    merged = merged[merged['Detector type']!="Pil100K"]
     #if False:
     #    merged=imgframe
     return merged,chilisttodict(chilist)
