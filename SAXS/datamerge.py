@@ -599,7 +599,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
                 mergedt_pos_t_stop = mergedt.index.searchsorted(mergedt.index[mergedt_pos_t_start] + timedelta(seconds=exp_time))
                 time_sum = np.array(mergedt.index[mergedt_pos_t_stop], dtype='datetime64[ns]') -\
                            np.array(mergedt.index[mergedt_pos_t_start], dtype='datetime64[ns]')
-                           time_sum_s = time_sum/ np.timedelta64(1, 's')
+                time_sum_s = time_sum/ np.timedelta64(1, 's')
                 mergedt['time_ave'][mergedt_pos]=time_sum_s
             except:
                 print "End of file reached"
