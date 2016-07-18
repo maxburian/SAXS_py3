@@ -519,7 +519,6 @@ def mergelogs(conf,attachment=None,directory="."):
 
 def mergedata(conf,dir,attachment=None):
     print "mergedata"
-    ,
     logsTable,firstImage,zeroCorr,peakframe,logbasename=mergelogs(conf,attachment=attachment)
     imd,chi=readallimages(dir)
     mergedt= mergeimgdata(logbasename,dir,logsTable,imd,peakframe,firstImage=firstImage,zeroCorr=zeroCorr)
