@@ -251,7 +251,6 @@ def readallimages(dir):
 
     '''Removing redundant columns'''
     merged = merged.drop('Time Requested (ImgLog)', 1)
-    #merged = merged.drop('Time Measured (ImgLog)', 1)
     merged = merged.drop('File Name (ImgLog)', 1)
     
     '''Removing all 100K images'''
@@ -554,7 +553,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
 
     
     basename=logbasename
-    #imd.to_csv(basename+"_imd_nodupl.csv") 
+    imd.to_csv(basename+"_imd_nodupl.csv") 
     #mergedt=imd.join(tablea,how="outer")
     #mergedt.to_csv(basename+"mergedt_join.csv")
     
@@ -586,11 +585,11 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
             try : 
                 if imd.index[pos+1] - imd.index[pos] < timedelta(seconds=exp_time):
                     if imd['Detector type'][pos+1]!=imd['Detector type'][pos+1]:
-                        offset = 2
+                        offset = 2.
                 else:
-                    offset = 1
+                    offset = 1.
             except:
-                offset = 1
+                offset = 1.
             mergedt_pos_t_start = mergedt_pos + offset
             mergedt_pos_t_stop = mergedt.index.searchsorted(mergedt.index[mergedt_pos_t_start] + timedelta(seconds=exp_time))
             time_sum = np.array(mergedt.index[mergedt_pos_t_stop], dtype='datetime64[ns]') -\
