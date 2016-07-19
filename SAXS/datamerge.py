@@ -549,7 +549,7 @@ def mergeimgdata(logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
         
     '''If ZeroImageCorrelation is selected:'''
     if zeroCorr:
-        time_zeroframe = imd[imd.apply(lambda x: "zero_1M_00000.tif" in x['File Name (ImgLog)'], axis=1)].index[0]
+        time_zeroframe = imd[imd.apply(lambda x: "zero_1M_00000.tif" in x['File Name (Img)'], axis=1)].index[0]
         delta = time_zeroframe - firstImage
         print "delta", delta
         tablea.index=tablea.index+delta
