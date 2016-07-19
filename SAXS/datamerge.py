@@ -485,6 +485,9 @@ def mergelogs(conf,attachment=None,directory="."):
             tmplog=readlog(buffer)
             if filenum==0:
                 logframe=tmplog
+                if logTable["Name"]=="Peak":
+                    firstImage=tmplog.index.min()
+                    print "Zero image corresponds to peak time: ", firstImage
             else:
                 logframe=logframe.append(tmplog).sort_index()
         cleanuplog(logframe,logTable)
@@ -521,11 +524,11 @@ def mergedata(conf,dir,attachment=None):
     print "mergedata"
     logsTable,firstImage,zeroCorr,peakframe,logbasename=mergelogs(conf,attachment=attachment)
     imd,chi=readallimages(dir)
-    mergedt= mergeimgdata(logbasename,dir,logsTable,imd,peakframe,firstImage=firstImage,zeroCorr=zeroCorr)
+    mergedt= mergeimgdata(logbasename,dir,logsTable,imd,firstImage=firstImage,zeroCorr=zeroCorr)
     syncplotdata=syncplot(peakframe,imd)
     return mergedt,chi,syncplotdata
 
-def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=None):
+def mergeimgdata(logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
     '''
     ZeroImage correlation looks for two consecutive Files with ExpT = 2.345 and ExpP 4.567    
     '''
@@ -547,7 +550,6 @@ def mergeimgdata(logbasename,dir,tablea,imd,peakframe,firstImage=None,zeroCorr=N
     '''If ZeroImageCorrelation is selected:'''
     if zeroCorr:
         time_zeroframe = imd[imd.apply(lambda x: "zero_1M_00000.tif" in x['File Name (ImgLog)'], axis=1)].index[0]
-        firstImage = peakframe.index.min()
         delta = time_zeroframe - firstImage
         print "delta", delta
         tablea.index=tablea.index+delta
