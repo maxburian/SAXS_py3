@@ -485,9 +485,10 @@ def mergelogs(conf,attachment=None,directory="."):
             tmplog=readlog(buffer)
             if filenum==0:
                 logframe=tmplog
-                if logTable["Name"]=="Peak":
-                    firstImage=tmplog.index.min()
-                    print "Zero image corresponds to peak time: ", firstImage
+                if logTable["Name"]=="Peak" and logTable["ZeroImageCorrelation"]:
+                    cleanuplog(tmplog,logTable)
+                    zeroCorr=tmplog.index.min()
+                    print "Zero image corresponds to peak time: ", zeroCorr
             else:
                 logframe=logframe.append(tmplog).sort_index()
         cleanuplog(logframe,logTable)
@@ -498,9 +499,6 @@ def mergelogs(conf,attachment=None,directory="."):
    
         print "timedelta: ", timedelta(seconds=conf["TimeOffset"])
         logframe.index=logframe.index-timedelta(seconds=conf["TimeOffset"])
-        
-        if logTable["ZeroImageCorrelation"]:
-            zeroCorr=True
             
         if logTable["FirstImageCorrelation"]:
             firstImage=logframe.index.min()
@@ -543,18 +541,18 @@ def mergeimgdata(logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
         delta=(imd.index.min()-firstImage)
         tablea.index=tablea.index+delta
         #peakframe.index=peakframe.index+delta
-        print "Time shift:" +str(delta)
+        print "Time shift (FirstImage):" +str(delta)
     else:
         delta=timedelta(seconds=0)
         
     '''If ZeroImageCorrelation is selected:'''
     if zeroCorr:
         time_zeroframe = imd[imd.apply(lambda x: "zero_1M_00000.tif" in x['File Name (Img)'], axis=1)].index[0]
-        delta = time_zeroframe - firstImage
+        delta = time_zeroframe - zeroCorr
         print "delta", delta
         tablea.index=tablea.index+delta
         #peakframe.index=peakframe.index+delta
-        print "Time shift:" +str(delta)
+        print "Time shift (ZeroImage):" +str(delta)
 
     
     basename=logbasename
