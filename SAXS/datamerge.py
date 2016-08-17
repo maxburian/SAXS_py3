@@ -15,6 +15,7 @@ from jsonschema import validate,ValidationError
 import os
 import StringIO
 from __builtin__ import int
+import path
 #msilib import seems to cause an error on the cc01-cluster
 #commented out by MB on Sept. 30th 15
 #from msilib import Directory
@@ -175,20 +176,26 @@ def readimglog(filename):
    
     return df
  
-def readallimages(dir):
+def readallimages(app,dir):
     """
     read header from all images and collect files list
     """
     frameinit=False
+    tiffonly = False
+    mergestatus=""
     imgframe=pd.DataFrame()
     imglogframe=pd.DataFrame()
     chilist=[]
     imagecount=0
     for path, subdirs, files in os.walk(dir):
-        print "path :", path
+        mergestatus= "\nSearching path :"+ path
+        app.writeToMergeStatus(mergestatus)
+        
         if "results" in path:
-            print "skipped!"
-            continue
+            tiffonly = True
+        else:
+            tiffonly = False
+            
         for name in files:
             if name.endswith('tif'):
                 imgpath=os.path.join(path, name)
@@ -202,10 +209,10 @@ def readallimages(dir):
                 rowframe=rowframe.set_index(["date"])
                 imgframe=imgframe.append(rowframe)
               
-            elif  name.endswith("log"):
+            elif  name.endswith("log") and tiffonly == False:
                 logpath=os.path.join(path, name)
                 imglogframe=imglogframe.append(readimglog(logpath))
-            elif name.endswith("chi") or name.endswith("json") :
+            elif name.endswith("chi") or name.endswith("json") and tiffonly == False :
                 chilist.append(os.path.join(path, name))
                 
     '''Adding identifier to column names'''
@@ -260,6 +267,10 @@ def readallimages(dir):
     merged = merged[merged['Detector type']!="Pil100K"]
     #if False:
     #    merged=imgframe
+    
+    mergestatus="\nDone going through all subfolders... A total of " + str(len(merged.index)) + " images were found."
+    app.writeToMergeStatus(mergestatus)
+    
     return merged,chilisttodict(chilist)
   
 def compileconffromoptions(options, args):
@@ -377,7 +388,8 @@ def merge():
     if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeCHI"]:
         graphstohdf(conf,filelists,".")
     
-def writeTable(conf,mergedTable,directory="."):
+def writeTable(app,conf,mergedTable,directory="."):
+    mergestatus=""
     basename=os.path.normpath(os.sep.join([os.path.normpath(directory),conf["OutputFileBaseName"]]))
     oldindex = mergedTable.index
     mergedTableTS=mergedTable
@@ -402,8 +414,11 @@ def writeTable(conf,mergedTable,directory="."):
                     pass
                 mergedTable.to_hdf(basename+"."+"hdf","LogData")
                 
-            print "write: " + basename+"."+format
-def writeFileLists(conf ,filelists,directory=".",serverdir=""):
+            mergestatus= "\nWrite: " + basename+"."+format
+            app.writeToMergeStatus(mergestatus)
+            
+def writeFileLists(app,conf,filelists,directory=".",serverdir=""):
+    mergestatus=""
     basename=os.path.normpath(os.sep.join([directory,conf["OutputFileBaseName"]]))
     for kind in filelists:
         texfilename= basename+kind+".txt"
@@ -411,7 +426,8 @@ def writeFileLists(conf ,filelists,directory=".",serverdir=""):
         for filename in filelists[kind]:
             listfile.write(os.path.normpath(filename[len(serverdir):])+"\n")
         listfile.close()
-        print "write: " +texfilename
+        mergestatus+= "\nWrite: " +texfilename
+        app.writeToMergeStatus(mergestatus)
 
 def cleanuplog(logframe,logTable):
     logframe.columns+=" ("+logTable["Name"]+")"
@@ -458,13 +474,11 @@ def chilisttodict(chi):
                     filelists[kind]=  [file[kind]]
     return filelists
 
-def mergelogs(conf,attachment=None,directory="."):
-   
+def mergelogs(app,conf,attachment=None,directory="."):
+    
     schema=json.load(open(os.path.dirname(__file__)
                         +os.sep+'DataConsolidationConf.json'))
     validate(conf,schema)
-  
-    
     
     if not "LogDataTables" in conf:
          conf["LogDataTables"]=[]
@@ -472,6 +486,7 @@ def mergelogs(conf,attachment=None,directory="."):
     tableb=None
     firstImage=None
     zeroCorr = None
+    mergestatus = ""
     for tnumber,logTable in enumerate(conf["LogDataTables"]):
         
         for filenum ,logfile in enumerate(logTable["Files"]):
@@ -488,16 +503,17 @@ def mergelogs(conf,attachment=None,directory="."):
                 if logTable["Name"]=="Peak" and logTable["ZeroImageCorrelation"]:
                     cleanuplog(tmplog,logTable)
                     zeroCorr=tmplog.index.min()
-                    print "Zero image corresponds to peak time: ", zeroCorr
+                    mergestatus="\nZero image corresponds to peak time: " + zeroCorr
+                    app.writeToMergestatus(mergestatus)
+                    
             else:
                 logframe=logframe.append(tmplog).sort_index()
         cleanuplog(logframe,logTable)
-        print "TimeOffset: ", conf["TimeOffset"]
         basename=os.path.normpath(os.sep.join([os.path.normpath(directory), logTable["Name"]]))
-        print "(basename+.csv): ", (basename+".csv")
+        mergestatus= "\nMerged logfile found in: " +  (basename+".csv")
+        app.writeToMergeStatus(mergestatus)
         logframe.to_csv(basename+".csv")
    
-        print "timedelta: ", timedelta(seconds=conf["TimeOffset"])
         logframe.index=logframe.index-timedelta(seconds=conf["TimeOffset"])
             
         if logTable["FirstImageCorrelation"]:
@@ -526,7 +542,8 @@ def mergedata(conf,dir,attachment=None):
     syncplotdata=syncplot(peakframe,imd)
     return mergedt,chi,syncplotdata
 
-def mergeimgdata(logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
+def mergeimgdata(app,logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
+    mergestatus=""
     '''
     ZeroImage correlation looks for two consecutive Files with ExpT = 2.345 and ExpP 4.567    
     '''
@@ -541,7 +558,8 @@ def mergeimgdata(logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
         delta=(imd.index.min()-firstImage)
         tablea.index=tablea.index+delta
         #peakframe.index=peakframe.index+delta
-        print "Time shift (FirstImage):" +str(delta)
+        mergestatus= "\nTime shift (FirstImage):" +str(delta)
+        app.writeToMergeStatus(mergestatus)
     else:
         delta=timedelta(seconds=0)
         
@@ -549,10 +567,10 @@ def mergeimgdata(logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
     if zeroCorr:
         time_zeroframe = imd[imd.apply(lambda x: "zero_1M_00000.tif" in x['File Name (Img)'], axis=1)].index[0]
         delta = time_zeroframe - zeroCorr
-        print "delta", delta
         tablea.index=tablea.index+delta
         #peakframe.index=peakframe.index+delta
-        print "Time shift (ZeroImage):" +str(delta)
+        mergestatus= "\nTime shift (ZeroImage):" +str(delta)
+        app.writeToMergeStatus(mergestatus)
 
     
     basename=logbasename
@@ -576,12 +594,21 @@ def mergeimgdata(logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
     mergedt['transm (DLogger)']=np.NaN
     
     offset = 0
+    counter = 0
+    write_thresh = 10.
     
     '''Turning off warnings for chained assignments'''
     pd.options.mode.chained_assignment = None  # default='warn'
     
+    mergestatus= "\nStart of the interpolation.. this can take a while."
+    app.writeToMergeStatus(mergestatus)
     
     for pos in range(0, imd.index.shape[0]): 
+        if (float(counter)/float(imd.index.shape[0])*100.>write_thresh):
+            mergestatus= "\n\t" + str(write_thresh) +"% done..."
+            app.writeToMergeStatus(mergestatus)
+            write_thresh+=10
+        counter+=1
         mergedt_pos = mergedt.index.get_loc(imd.index[pos])
         exp_time = np.mean(mergedt["Time Measured (ImgLog)"][mergedt_pos])
         if exp_time>=2.:
@@ -603,7 +630,6 @@ def mergeimgdata(logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
                 mergedt['time_ave'][mergedt_pos]=time_sum_s
             except:
                 print "End of file reached"
-                break
             
             for i in range (column_startave,column_stopave):
                 try :
@@ -620,6 +646,8 @@ def mergeimgdata(logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
 
     #mergedt.to_csv(basename+"mergedt_join_manint.csv")
     mergedt=mergedt[mergedt.index.isin(imd.index)]
+    mergestatus= "\nEnd of the interpolation!"
+    app.writeToMergeStatus(mergestatus)
     #mergedt.to_csv(basename+"mergedt_join_int_isin.csv")
     
     #mergedt=imd.join(tablea,how="outer").interpolate(method="zero")

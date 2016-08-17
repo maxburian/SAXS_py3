@@ -165,8 +165,10 @@ class Server():
         self.mergecount=0
         self.mergeresult={}
         self.mergeprocess=None
+        self.mergestatus = ""
         self.threads=self.options.threads
         self.plotdata=None
+        
            
     def start(self):
         """
@@ -289,6 +291,9 @@ class Server():
             result=self.mergedatacommand( object['argument']["mergeconf"],attachment)
         elif command=="getmergedata":
             result=self.mergeresult
+        elif command=="mergestat":
+            result={"result":"stat","data":{"mergeinfo":self.mergestatus}}
+            self.mergestatus = ""
         else:
             result={"result":"ErrorNotimplemented","data":{"Error":command+" not implemented"}}
        
@@ -415,6 +420,7 @@ class Server():
             return result
         except Exception as e:
             result={"result":"Error","data":{"Error":str(e)}}
+            return result
         return {"result":"queue restarted with all files","data":{"stat":self.stat()}}
     
     def plot(self):
@@ -471,28 +477,32 @@ class Server():
             if not  os.path.isdir(resultdir):
                 os.mkdir(resultdir)
             conf["OutputFileBaseName"]= directory.split(os.sep)[-1]+os.path.basename(conf["OutputFileBaseName"])
-            print "Dir: "+ directory
+            self.mergestatus+="\nBase-directory of merge is: " + directory
             for table in conf["LogDataTables"]:
                 for file in table["Files"]:
                     if "RemotePath" in file:
                         file["RemotePath"].insert(0,self.serverdir)
             
-            logsTable,firstImage,zeroCorr,peakframe,logbasename=datamerge.mergelogs(conf,attachment=attachment,directory=resultdir)
+            self.mergestatus+="\nMerging datalogger files: "
+            logsTable,firstImage,zeroCorr,peakframe,logbasename=datamerge.mergelogs(self,conf,attachment=attachment,directory=resultdir)
             #print peakframe
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
-                imd,filelists=datamerge.readallimages(directory)
-                mergedTable,delta= datamerge.mergeimgdata(logbasename,directory,logsTable,imd,firstImage=firstImage,zeroCorr=zeroCorr)
+                imd,filelists=datamerge.readallimages(self,directory)
+                self.mergestatus+="\nNow merging imagedata with logfiles.."
+                mergedTable,delta= datamerge.mergeimgdata(self,logbasename,directory,logsTable,imd,firstImage=firstImage,zeroCorr=zeroCorr)
                 plotdata=datamerge.syncplot(peakframe,imd)
                 plotdata["CalculatedTimeshift"]=str(delta)
                 
-                datamerge.writeTable(conf,mergedTable,directory=resultdir)
-                datamerge.writeFileLists(conf ,filelists,directory=resultdir,serverdir=self.serverdir)
+                self.mergestatus+="\nWriting output tables..."
+                datamerge.writeTable(self,conf,mergedTable,directory=resultdir)
+                datamerge.writeFileLists(self,conf,filelists,directory=resultdir,serverdir=self.serverdir)
                 if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
                     datamerge.imgtohdf(conf,directory,resultdir)
                 if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeCHI"]:
                     datamerge.graphstohdf(conf,filelists,resultdir)
                 mergedataqueue.put({"result":
                                     "mergedata","data":{"syncplot":plotdata,"fileslist":filelists}})
+                
             if  not self.mergeprocess or not  self.mergeprocess.is_alive():
                 self.mergeprocess=threading.Thread(target=mergeimages,
                                                    args=(logsTable,firstImage,peakframe,self.mergedataqueue,resultdir))
@@ -520,6 +530,9 @@ class Server():
                         if ((otherpath.startswith(mydir) or mydir.startswith(otherpath))
                             or (otherpath=="." or mydir==".")):
                             raise DirectoryCollisionException("Directory collides with: "+otherpath)
+    
+    def writeToMergeStatus(self,new_status):
+        self.mergestatus+=new_status
             
 def saxsdogserver(serverconf,serverid,stopflag,serverdir):
      

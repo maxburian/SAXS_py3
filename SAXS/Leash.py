@@ -101,9 +101,15 @@ def sendreaddir(options,arg,socket,conf):
 def sendstat(socket,conf):
     request={"command":"stat","argument":{}}
     leashsend(socket,[json.dumps(addauthentication(request,conf))])
+    
 def sendgetmergedata(options,arg,socket,conf):
     request={"command":"getmergedata","argument":{}}
     leashsend(socket,[json.dumps(addauthentication(request,conf))])
+
+def sendmergestat(socket,conf):
+    request={"command":"mergestat","argument":{}}
+    leashsend(socket,[json.dumps(addauthentication(request,conf))])
+    
 def sendget(socket,conf):
     """
     get current calibration data
@@ -216,6 +222,8 @@ def initcommand(options, arg,conf):
          result=senddatamerge(options,arg,socket,conf)
     elif arg[0]=="getmergedata":
          result=sendgetmergedata(options,arg,socket,conf)
+    elif arg[0]=="getmergestat":
+         result= sendmergestat(socket,conf)
     elif arg[0]=="abort":
          result= sendabort(options,arg,socket,conf)
     elif arg[0]=="plot":

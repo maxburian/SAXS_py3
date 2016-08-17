@@ -6,6 +6,8 @@ import calibeditdelegate
 import schematools
 from jsonschema import validate,ValidationError
 import Leash
+import time
+from datetime import datetime
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 
@@ -15,11 +17,31 @@ class consolidatepanel(QtGui.QWidget):
     def __init__(self,app):
         super(consolidatepanel,self).__init__( )
         self.app=app
+        
+        self.localmergetstatusthread = mergestatusthread(self)
+        self.timeformat = "%Y.%m.%d - %H:%M:%S"
+        self.connect(self.localmergetstatusthread, QtCore.SIGNAL("sig_writeToStatus(QString)"),self.writeToStatus)
+        
         self.hlayout=QtGui.QHBoxLayout()
         self.setLayout(self.hlayout)
+        
+        self.vlayout=QtGui.QVBoxLayout()
+        self.hlayout.addLayout(self.vlayout)
+        
         self.treeview=QtGui.QTreeView()
-        self.hlayout.addWidget(self.treeview)
-
+        self.vlayout.addWidget(self.treeview)
+        
+        self.statuslabel =QtGui.QLabel()
+        self.vlayout.addWidget(self.statuslabel)
+        self.statuslabel.setText("Datamerger status:")
+        
+        self.statusfield = QtGui.QTextEdit()
+        self.vlayout.addWidget(self.statusfield)
+        self.statusfield.setMaximumHeight(150)
+        self.statusfield.setMinimumHeight(150)
+        self.statusfield.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.statusfield.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        
         self.model=jsonschematreemodel.jsonschematreemodel( app,
                         schema=json.load(open(os.path.dirname(__file__)
                         +os.sep+'DataConsolidationConf.json'),
@@ -55,17 +77,30 @@ class consolidatepanel(QtGui.QWidget):
         self.reset()
         self.connect(self.model, QtCore.SIGNAL('dataChanged(QModelIndex,QModelIndex)'),self.model.save)
         self.submitbutton=QtGui.QPushButton("Collect All Data")
+        self.submitbutton.setEnabled(False)
+        self.submitbutton.setMinimumWidth(150)
+        self.submitbutton.setMaximumWidth(150)
+        
+        self.submitlabel=QtGui.QLabel("Waiting for calibration...")
+        
         self.submitlayout=QtGui.QVBoxLayout()
+        
         self.hlayout.addLayout(self.submitlayout)
-        self.submitlayout.addWidget(   self.submitbutton)
+        self.submitlayout.addWidget(self.submitlabel)
+        self.submitlayout.addWidget(self.submitbutton)
         self.submitlayout.addStretch()
+        
         self.connect(self.submitbutton, QtCore.SIGNAL("clicked()"),self.startmerge)
         self.connect(self.app.plotthread,QtCore.SIGNAL("mergeresultdata(QString)"),self.showmergeresults)
+        
+        self.writeToStatus("\nDatamerger waiting for input... Make sure you load a calibration first!")
+
     def reset(self):
         self.model.invisibleRootItem().setColumnCount(3)
         self.treeview.setColumnWidth(0,320)
         self.treeview.setColumnWidth(1,320)
         self.treeview.expandAll()
+        
     def startmerge(self):
         mergeok = self.checkinput()
         if mergeok == "OK":
@@ -77,10 +112,16 @@ class consolidatepanel(QtGui.QWidget):
                 errormessage.setMinimumSize(400, 300)
                 errormessage.showMessage(result['data']["Error"])
             else:
-                message=QtGui.QMessageBox(parent=self.app)
-                message.setWindowTitle("Merge Started")
-                message.setText("Data merge has been initiated.");
-                message.exec_();
+                self.localmergetstatusthread.start()
+                
+                self.writeToStatus("\n\n******************************************")
+                tempstr = str(datetime.now().strftime(self.timeformat)) + ": Datamerge has started!" 
+                self.writeToStatus(tempstr)
+                self.writeToStatus("******************************************")
+                
+                self.submitlabel.setText("Merging data!")
+                self.submitbutton.setEnabled(False)
+                self.app.submitbutton.setEnabled(False)
         else:
             errormessage=QtGui.QErrorMessage(parent=self.app)
             errormessage.setWindowTitle("Configuration Error")
@@ -111,6 +152,15 @@ class consolidatepanel(QtGui.QWidget):
                                    +result["data"]["syncplot"]['CalculatedTimeshift'])
             vlayout.addWidget(timelabel)
         dialog.exec_()
+        self.localmergetstatusthread.quit()
+        self.writeToStatus("******************************************")
+        tempstr = str(datetime.now().strftime(self.timeformat)) + ": Datamerge has finihsed!" 
+        self.writeToStatus(tempstr)
+        self.writeToStatus("******************************************")
+        
+        self.submitlabel.setText("Ready...")
+        self.submitbutton.setEnabled(True)
+        self.app.submitbutton.setEnabled(True)
     
     def checkinput(self):
         mergeok = "OK"
@@ -126,3 +176,25 @@ class consolidatepanel(QtGui.QWidget):
                 mergeok = "Zero.tif and First-Image correlation is not possible. Choose one of them."
                 break
         return mergeok
+    
+    def writeToStatus(self,text):
+        if text[0:1]=="\n":
+            text = text[1:]
+        self.statusfield.append(text)
+        
+class mergestatusthread(QtCore.QThread):
+    def __init__(self,app):
+        super(mergestatusthread, self).__init__()
+        self.app = app
+        self.returnstring = ""
+        
+    def run(self):
+        while True:
+            argu = ["getmergestat"]
+            returndict = json.loads(Leash.initcommand(self.app.app.options,argu,self.app.app.netconf))
+            self.returnstring = returndict['data']["mergeinfo"]
+            if self.returnstring!="":
+                self.emit(QtCore.SIGNAL('sig_writeToStatus(QString)'),self.returnstring)
+                #self.app.writeToStatus(self.returnstring)
+            time.sleep(1)
+                

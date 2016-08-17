@@ -23,7 +23,8 @@
 				"listdir",
 				"fileslist",
 				"mergedata",
-				"getmergedata"
+				"getmergedata",
+				"mergestat"
 			]
 		},
 

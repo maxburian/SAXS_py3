@@ -2,6 +2,7 @@
 from PyQt4 import  QtGui
 from PyQt4 import  uic
 from PyQt4 import  QtCore
+from PyQt4.Qt import QMessageBox
 import os,json,collections
 import schematools,converter
 import Leash
@@ -9,6 +10,7 @@ class menueitems(QtGui.QWidget):
     def __init__(self,app):
         super(menueitems, self).__init__()
         self.app=app
+        self.errormessage=QtGui.QErrorMessage()
         self.filemenue=self.app.menuBar().addMenu('&File')
         self.actionOpen=self.filemenue.addAction("&Open")
         self.actionNew=self.filemenue.addAction("&New")
@@ -145,17 +147,26 @@ class menueitems(QtGui.QWidget):
         json.dump(user, open(self.userconffilename,"w"))
     def queueRedoAllImmages(self):
         argu=["readdir"]
-        result=Leash.initcommand(self.app.options,argu,self.app.netconf)
-        #self.log("reread directory")
-        msgBox=QtGui.QMessageBox(self)
-        msgBox.setText( result);
-        msgBox.exec_();
+        result=json.loads(Leash.initcommand(self.app.options,argu,self.app.netconf))
+        print result
+        try:
+            access = result["data"]["Error"]
+            self.errormessage.setWindowTitle("Server Error")
+            self.errormessage.setMinimumSize(400, 300)
+            self.errormessage.showMessage(result["data"]["Error"])
+        except:
+            titlestr=result["result"]
+            #res=QMessageBox.information(self, self.tr("Restart..."),self.tr(titlestr), QMessageBox.Ok,QMessageBox.Ok)
+            msgBox=QtGui.QMessageBox(self)
+            msgBox.setText(str(titlestr));
+            msgBox.exec_();
+
     def abortqueue(self):
         argu=["abort"]
-        result=Leash.initcommand(self.app.options,argu,self.app.netconf)
-        #self.log("reread directory")
+        result=json.loads(Leash.initcommand(self.app.options,argu,self.app.netconf))
+        self.emit(QtCore.SIGNAL('queueaborted()'))
         msgBox=QtGui.QMessageBox(self)
-        msgBox.setText( result);
+        msgBox.setText( result["result"]);
         msgBox.exec_();
     def help(self):
         import webbrowser

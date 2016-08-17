@@ -7,6 +7,7 @@ import connectdialog
 import calibeditor
 import leashmenue
 import Leash
+import time
 import json
 from jsonschema import validate,ValidationError
 import plotdatathread
@@ -78,6 +79,8 @@ class LeashUI(QtGui.QMainWindow):
         self.queuestatuslabel=QtGui.QLabel("No queue on server.")
         self.filestatuslabel=QtGui.QLabel("")
         self.submitbutton=QtGui.QPushButton("Start Server Queue")
+        self.submitbutton.setMinimumWidth(150)
+        self.submitbutton.setMaximumWidth(150)
         self.submitlayout.addWidget(self.queuestatuslabel)
         self.submitlayout.addWidget(self.filestatuslabel)
         self.submitlayout.addWidget(self.submitbutton)
@@ -94,6 +97,7 @@ class LeashUI(QtGui.QMainWindow):
         self.connect(self.calibeditor.model,QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),self.statusmodified)
         self.errormessage=QtGui.QErrorMessage()
         self.menue=leashmenue.menueitems(self)
+        self.connect(self.menue,QtCore.SIGNAL("queueaborted()"),self.queueaborted)
         self.connect(self.calibeditor.model, QtCore.SIGNAL("fileNameChanged()"),self.updatewindowtitle)
         self.plotthread=plotdatathread.plotthread(self)
         self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.plotpanel.plot)
@@ -119,13 +123,20 @@ class LeashUI(QtGui.QMainWindow):
             self.menue.appendrecentfile(filename)
         
         self.plotthread.start()
+        
         self.consolidatepanel=consolidatepanel.consolidatepanel(self)
-        self.tab.addTab( self.consolidatepanel , "Consolidate")
+        self.tab.addTab(self.consolidatepanel , "Consolidate")
+        
+        
     def parscecommandline(self):
-      
         self.options,self.args= Leash.parsecommandline()
-    def startqueue(self):
+        
+    def startqueue(self):        
         data=self.calibeditor.model.getjson()
+        try :
+             title = str(data['Title'])
+        except Exception as e:
+            return
         self.calibeditor.model.save()
         argu=["new", data]
         result={}
@@ -142,14 +153,27 @@ class LeashUI(QtGui.QMainWindow):
             except Exception as e:
                 self.errormessage.setWindowTitle("Server Error")
                 self.errormessage.setMinimumSize(400, 300)
-                self.errormessage.showMessage( str(e))
+                self.errormessage.showMessage(str(e))
             if 'result' in result and result['result']=="new queue":
                 self.setqueuesynced()
                 self.plotthread.start()
+                self.consolidatepanel.submitbutton.setEnabled(True)
+                folderpath = "/"
+                for text in data['Directory']:
+                    folderpath+=text + "/" 
+                titlestr='Successfully loaded new calibration to Server!\n\nDo you want to re-integrate all images in '+folderpath+' ?' 
+                res=QMessageBox.information(self, self.tr("Re-integrate?"),self.tr(titlestr), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                if res==QMessageBox.Yes:
+                    self.menue.queueRedoAllImmages()
             else:
                 self.errormessage.setWindowTitle("Server Error")
                 self.errormessage.setMinimumSize(400, 300)
-                self.errormessage.showMessage( result["data"]["Error"])
+                self.errormessage.showMessage( result["data"]["Error"]) 
+    
+    def queueaborted(self):
+        self.queuestatuslabel.setText("Queue aborted.")
+        self.consolidatepanel.submitbutton.setEnabled(False)
+        self.consolidatepanel.submitlabel.setText("Waiting for calibration...")
     def setqueuesynced(self):
         self.queuestatuslabel.setText("Queue started.")
         self.filestatuslabel.setText("Local calibration synced")
