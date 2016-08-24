@@ -505,7 +505,7 @@ def mergelogs(app,conf,attachment=None,directory="."):
                     zeroCorr=tmplog.index.min()
                     print zeroCorr
                     mergestatus="\nZero image corresponds to peakInteg time: " + pd.to_datetime(zeroCorr).strftime("%a, %d %b %Y %H:%M:%S")
-                    app.writeToMergestatus(mergestatus)
+                    app.writeToMergeStatus(mergestatus)
                     
             else:
                 logframe=logframe.append(tmplog).sort_index()
