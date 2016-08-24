@@ -503,7 +503,10 @@ def mergelogs(app,conf,attachment=None,directory="."):
                 if logTable["Name"]=="Peak" and logTable["ZeroImageCorrelation"]:
                     cleanuplog(tmplog,logTable)
                     zeroCorr=tmplog.index.min()
-                    mergestatus="\nZero image corresponds to peak time: " + zeroCorr
+                    print tmplog.index
+                    print " "
+                    print zeroCorr
+                    mergestatus="\nZero image corresponds to peakInteg time: " + zeroCorr
                     app.writeToMergestatus(mergestatus)
                     
             else:
