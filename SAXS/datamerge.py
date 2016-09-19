@@ -590,8 +590,8 @@ def mergeimgdata(app,logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
     column_startave = mergedt.columns.get_loc('Ioni         (Dlogger)')
     column_stopave = len(mergedt.columns)
     mergedt['time_ave']=np.NaN
-    mergedt['transm (Peak)']=np.NaN
-    mergedt['transm (DLogger)']=np.NaN
+    #mergedt['transm (Peak)']=np.NaN
+    #mergedt['transm (DLogger)']=np.NaN
     
     offset = 0
     counter = 0
@@ -641,8 +641,8 @@ def mergeimgdata(app,logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
                     print mergedt_pos_t_stop
                     break
     
-        mergedt['transm (Peak)'][mergedt_pos]=np.abs(mergedt['Diode_avg (Peak)'][mergedt_pos]/mergedt['Ioni_avg (Peak)'][mergedt_pos])
-        mergedt['transm (DLogger)'][mergedt_pos]=np.abs(mergedt['Diode        (Dlogger)'][mergedt_pos]/mergedt['Ioni         (Dlogger)'][mergedt_pos])
+        #mergedt['transm (Peak)'][mergedt_pos]=np.abs(mergedt['Diode_avg (Peak)'][mergedt_pos]/mergedt['Ioni_avg (Peak)'][mergedt_pos])
+        #mergedt['transm (DLogger)'][mergedt_pos]=np.abs(mergedt['Diode        (Dlogger)'][mergedt_pos]/mergedt['Ioni         (Dlogger)'][mergedt_pos])
 
     #mergedt.to_csv(basename+"mergedt_join_manint.csv")
     mergedt=mergedt[mergedt.index.isin(imd.index)]
