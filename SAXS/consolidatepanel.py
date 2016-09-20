@@ -143,6 +143,8 @@ class consolidatepanel(QtGui.QWidget):
         vlayout.addWidget(navbar)
         img=pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Images'])).transpose()
         peak= pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Shutter'])).transpose()
+        print img
+        print peak
         peak=peak[peak>0]
         img.plot(style="ro",ax=ax)  
         peak.plot(style="x",ax=ax)

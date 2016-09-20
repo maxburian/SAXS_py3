@@ -490,6 +490,11 @@ class Server():
             #print peakframe
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
                 imd,filelists=datamerge.readallimages(self,directory)
+                
+                basename=os.path.normpath(os.sep.join([os.path.normpath(directory), "Imagedata"]))
+                imd.to_csv(basename+".csv")
+                mergestatus= "\nImagedata can be found in: " +  (basename+".csv")
+                
                 self.mergestatus+="\nNow merging imagedata with logfiles.."
                 mergedTable,delta= datamerge.mergeimgdata(self,logbasename,directory,logsTable,imd,firstImage=firstImage,zeroCorr=zeroCorr)
                 plotdata=datamerge.syncplot(peakframe,imd)
