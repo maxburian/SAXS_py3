@@ -478,12 +478,14 @@ class Server():
                 os.mkdir(resultdir)
             conf["OutputFileBaseName"]= directory.split(os.sep)[-1]+os.path.basename(conf["OutputFileBaseName"])
             self.mergestatus+="\nBase-directory of merge is: " + directory
+            print "\nBase-directory of merge is: " + directory
             for table in conf["LogDataTables"]:
                 for file in table["Files"]:
                     if "RemotePath" in file:
                         file["RemotePath"].insert(0,self.serverdir)
             
             self.mergestatus+="\nMerging datalogger files: "
+            print "\nMerging datalogger files: "
             logsTable,firstImage,zeroCorr,peakframe,logbasename=datamerge.mergelogs(self,conf,attachment=attachment,directory=resultdir)
             #print peakframe
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
