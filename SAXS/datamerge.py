@@ -430,6 +430,7 @@ def writeFileLists(app,conf,filelists,directory=".",serverdir=""):
         app.writeToMergeStatus(mergestatus)
 
 def cleanuplog(logframe,logTable):
+    logframe.columns+=" ("+logTable["Name"]+")"
     logframe.index=logframe.index-timedelta(seconds=logTable["TimeOffset"])
     if logTable["TimeEpoch"]=="Mac":
        logframe.index=logframe.index-( datetime.fromtimestamp(0)-datetime(1904, 1, 1, 0,0,0))
@@ -498,18 +499,10 @@ def mergelogs(app,conf,attachment=None,directory="."):
                 buffer=open(logfile["LocalPath"])
             tmplog=readlog(buffer)
             if filenum==0:
-                logframe=tmplog
-                if logTable["Name"]=="Peak" and logTable["ZeroImageCorrelation"]:
-                    cleanuplog(tmplog,logTable)
-                    zeroCorr=tmplog.index.min()
-                    print zeroCorr
-                    mergestatus="\nZero image corresponds to peakInteg time: " + pd.to_datetime(zeroCorr).strftime("%a, %d %b %Y %H:%M:%S")
-                    app.writeToMergeStatus(mergestatus)
-                    
+                logframe=tmplog                    
             else:
                 logframe=logframe.append(tmplog).sort_index()
         cleanuplog(logframe,logTable)
-        logframe.columns+=" ("+logTable["Name"]+")"
         basename=os.path.normpath(os.sep.join([os.path.normpath(directory), logTable["Name"]]))
         logframe.to_csv(basename+".csv")
         mergestatus= "\nMerged logfile can be found in: " +  (basename+".csv")
@@ -520,10 +513,19 @@ def mergelogs(app,conf,attachment=None,directory="."):
         if logTable["FirstImageCorrelation"]:
             firstImage=logframe.index.min()
             peakframe=logframe
+            print firstImage
+            mergestatus="\nFirst image corresponds to peakInteg time: " + pd.to_datetime(firstImage).strftime("%a, %d %b %Y %H:%M:%S")
+            app.writeToMergeStatus(mergestatus)
         elif logTable["Name"]=="Peak":
             peakframe=logframe
         elif type(peakframe)==type(None):
             peakframe=logframe
+            
+        if logTable["ZeroImageCorrelation"]:
+            zeroCorr=peakframe.index.min()
+            print zeroCorr
+            mergestatus="\nZero image corresponds to peakInteg time: " + pd.to_datetime(zeroCorr).strftime("%a, %d %b %Y %H:%M:%S")
+            app.writeToMergeStatus(mergestatus)
             
         if tnumber >=1:
             tableb=logframe
