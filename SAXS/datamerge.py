@@ -430,7 +430,6 @@ def writeFileLists(app,conf,filelists,directory=".",serverdir=""):
         app.writeToMergeStatus(mergestatus)
 
 def cleanuplog(logframe,logTable):
-    logframe.columns+=" ("+logTable["Name"]+")"
     logframe.index=logframe.index-timedelta(seconds=logTable["TimeOffset"])
     if logTable["TimeEpoch"]=="Mac":
        logframe.index=logframe.index-( datetime.fromtimestamp(0)-datetime(1904, 1, 1, 0,0,0))
@@ -510,11 +509,12 @@ def mergelogs(app,conf,attachment=None,directory="."):
             else:
                 logframe=logframe.append(tmplog).sort_index()
         cleanuplog(logframe,logTable)
+        logframe.columns+=" ("+logTable["Name"]+")"
         basename=os.path.normpath(os.sep.join([os.path.normpath(directory), logTable["Name"]]))
-        mergestatus= "\nMerged logfile found in: " +  (basename+".csv")
-        app.writeToMergeStatus(mergestatus)
         logframe.to_csv(basename+".csv")
-   
+        mergestatus= "\nMerged logfile can be found in: " +  (basename+".csv")
+        app.writeToMergeStatus(mergestatus)
+        
         logframe.index=logframe.index-timedelta(seconds=conf["TimeOffset"])
             
         if logTable["FirstImageCorrelation"]:
