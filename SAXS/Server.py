@@ -496,6 +496,7 @@ class Server():
                 
                 self.mergestatus+="\nNow merging imagedata with logfiles.."
                 mergedTable,delta= datamerge.mergeimgdata(self,logbasename,directory,logsTable,imd,firstImage=firstImage,zeroCorr=zeroCorr)
+                peakframe.index = peakframe.index + delta
                 plotdata=datamerge.syncplot(peakframe,imd)
                 plotdata["CalculatedTimeshift"]=str(delta)
                 

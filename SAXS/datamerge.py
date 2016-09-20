@@ -547,6 +547,7 @@ def mergedata(conf,dir,attachment=None):
 
 def mergeimgdata(app,logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
     mergestatus=""
+    delta=timedelta(seconds=0)
     '''
     ZeroImage correlation looks for two consecutive Files with ExpT = 2.345 and ExpP 4.567    
     '''
@@ -563,8 +564,6 @@ def mergeimgdata(app,logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
         #peakframe.index=peakframe.index+delta
         mergestatus= "\nTime shift (FirstImage):" +str(delta)
         app.writeToMergeStatus(mergestatus)
-    else:
-        delta=timedelta(seconds=0)
         
     '''If ZeroImageCorrelation is selected:'''
     if zeroCorr:
