@@ -39,22 +39,25 @@ def jsontojson(fromjsontext,s):
                        {"old":["Geometry","PixelSizeMicroM"],     "new":["Geometry","PixelSizeMicroM"]},
                        {"old":["Masks",0,"MaskFile"],             "new":["Masks",0,"MaskFile"]},
                        {"old":["Masks",0,"PixelPerRadialElement"],"new":["Masks",0,"PixelPerRadialElement"]},
-                       {"old":["Masks",0,"qStart"],"new":["Masks",0,"qStart"]},
-                       {"old":["Masks",0,"qStop"],"new":["Masks",0,"qStop"]},
+                       {"old":["Masks",0,"qStart"],                 "new":["Masks",0,"qStart"]},
+                       {"old":["Masks",0,"qStop"],                  "new":["Masks",0,"qStop"]},
                        {"old":["Masks",0,"Oversampling"],         "new":["Masks",0,"Oversampling"]}
                     ]
                   
             }]
     for schemadesc in schemalist:
-          schema=(json.load(open(schemadesc["path"])))
-          validate(fromjson,schema)
-          for pathpair in schemadesc["pathtable"]:
-              value=valuebypath(fromjson,pathpair["old"])
-              setvaluebypath(s,pathpair["new"],value)
+        schema=(json.load(open(schemadesc["path"])))
+        validate(fromjson,schema)
+        for pathpair in schemadesc["pathtable"]:
+            print pathpair
+            value=valuebypath(fromjson,pathpair["old"])
+            setvaluebypath(s,pathpair["new"],value)
     print "unknown file format"
 def valuebypath(jsonobj,path):
     subtree=jsonobj
     for key in path:
+        print "key ", key 
+        print "subtree ", subtree 
         if type(key) is str:
             if key in subtree:
                 subtree=subtree[key]

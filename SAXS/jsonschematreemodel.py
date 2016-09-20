@@ -18,6 +18,7 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
       super(jsonschematreemodel, self).__init__()
       self.app=app
       if not schema:
+          print os.path.dirname(__file__)+os.sep+'schema.json'
           self.schema=json.load(open(os.path.dirname(__file__)+os.sep+'schema.json'),object_pairs_hook=collections.OrderedDict) 
       else:
           self.schema=schema

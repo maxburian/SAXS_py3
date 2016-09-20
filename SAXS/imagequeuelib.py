@@ -69,6 +69,7 @@ class imagequeue:
          self.stopflag=Value('i',0)
          self.dirwalker=None
          self.observer=None
+         self.filelist_output = np.array(["filename",0,0,0])
          if not options.plotwindow: 
               plt.switch_backend("Agg")
          self.fig=plt.figure()
@@ -141,20 +142,36 @@ class imagequeue:
             else:
                 imgTime="" 
             for calnum,cal in enumerate(self.cals):
-                if len(list(enumerate(self.cals)))==1:
+                if len(list(enumerate(self.cals)))==1 or calnum==0:
                     filename=basename
                 else:
                     filename=basename+"_c"+cal.kind[0]+str(calnum)
                 chifilename=filename+".chi"
                 if self.options.GISAXSmode == True and calnum==0: #pass on GISAXSmode information to calibration.integratechi
-                    chifilename="xxx"
+                    continue
                 filelist[cal.kind+str(calnum)]=chifilename
                 if not self.options.resume or not os.path.isfile(chifilename):
+
                     result=cal.integratechi(image,chifilename,picture)
                     result["Image"]=picture
                     if "Integparam" in result:
-                        integparams[cal.kind[0]+str(calnum)]=result["Integparam"]                                        
+                        integparams[cal.kind[0]+str(calnum)]=result["Integparam"]                  
                     data.append(result)
+                    if self.options["livefilelist"] is not "xxx":
+                        #print result["Integparam"]["I0"]
+                        with open(self.options["livefilelist"],'a') as f_handle:
+                            file_path = os.path.normpath(chifilename)
+                            file_path=str.split(str(file_path),str(os.path.split(self.options["watchdir"])[0]))[1]
+                            if "Integparam" in result:
+                                output = file_path +", "+str(result["Integparam"]["I0"])+ \
+                                    ", "+str(result["Integparam"]["I1"])+", "+str(result["Integparam"]["I2"])+"\n"
+                            else:
+                                output = file_path +", "+str(0)+ \
+                                    ", "+str(0)+", "+str(0)+"\n"
+                            f_handle.write(output)
+                            f_handle.close()
+                            #np.savetxt(f_handle,self.filelist_output, delimiter=',', fmt="%s ")
+                        
                     if threadid==0 and self.options.plotwindow:
                         # this is a hack it really schould be a proper GUI
                        

@@ -333,11 +333,12 @@ class Server():
                             "walkdirinthreads":True,
                     		"outdir":self.options.outdir,
                             "relpath":self.options.relpath,
-                    		 "writesvg":False,
-                             "writepng":False,"resume":False,
-                             "serverport":self.serverport,
-                             "nowalk":True,
-                             "GISAXSmode":self.calibration["GISAXSmode"]
+                    		"writesvg":False,
+                            "writepng":False,"resume":False,
+                            "serverport":self.serverport,
+                            "nowalk":True,
+                            "GISAXSmode":self.calibration["GISAXSmode"],
+                            "livefilelist":"xxx"
                              })
             cals=[]
             
@@ -355,6 +356,19 @@ class Server():
             if "Slices" in   object['argument']['calibration']:
                 for slice in object['argument']['calibration']["Slices"]:
                     cals.append(GISAXSSlices.slice(object['argument']['calibration'],slice,self.attachments))
+            
+            '''Create empty file for filelisting'''
+            filelist_path="xxx"
+            if self.calibration["Live-Filelisting"]:
+                filelist_path = os.path.join(os.path.split(dir)[0],"results")
+                filelist_name = "filelist_" + os.path.split(dir)[1]+".log"
+                filelist_path = os.path.join(filelist_path,filelist_name)
+                try:
+                    open(filelist_path, "w+").close()
+                    o["livefilelist"]=filelist_path
+                except:
+                    print "Couldn't open " + filelist_path
+                
             self.imagequeue=imagequeuelib.imagequeue(cals,
                     o,dir,self.serverconf)
             print "startimgq"

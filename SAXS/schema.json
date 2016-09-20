@@ -345,6 +345,14 @@
 				}
 			}
 		},
+		
+		"Live-Filelisting": 
+        {
+            "description": "Automatically writes integrated filenames with path into /./results/filelist_setup.txt ",
+            "type": "boolean",
+            "required": false,
+            "default": true
+        },
 
 		"Threads": 
 		{

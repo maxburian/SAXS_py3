@@ -78,9 +78,12 @@ class slice():
                         r *self.oneoverA, 
                         np.sqrt(r) *self.oneoverA # Poisson Error scaled
                       ]).transpose()
+        
         collabels=[ self.qname,
                     "Intensity (Count/Pixel)",
                     "Error Margin"]
+        
+        
         headerstr=  json.dumps(self.conf)+"\n"
         headerstr+=json.dumps(collabels)+"\n"
         headerstr+="Intensity\n"
@@ -92,6 +95,7 @@ class slice():
                     "kind":"Slice",
                     "conf":self.conf,
                     "slice":self.sliceconf}
+            
     def plot(self,image,outputfile="",startplotat=0 ,fig=None):
         """
         dummy function in order to not trip up image queue
