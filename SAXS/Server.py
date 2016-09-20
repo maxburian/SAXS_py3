@@ -489,9 +489,8 @@ class Server():
             logsTable,firstImage,zeroCorr,peakframe,logbasename=datamerge.mergelogs(self,conf,attachment=attachment,directory=resultdir)
             #print peakframe
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
-                imd,filelists=datamerge.readallimages(self,directory)
-                
-                basename=os.path.normpath(os.sep.join([os.path.normpath(directory), "Imagedata"]))
+                imd,filelists=datamerge.readallimages(self,directory)     
+                basename=os.path.normpath(os.sep.join([os.path.normpath(resultdir), "Imagedata"]))
                 imd.to_csv(basename+".csv")
                 mergestatus= "\nImagedata can be found in: " +  (basename+".csv")
                 
