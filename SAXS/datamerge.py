@@ -319,7 +319,7 @@ def compileconffromoptions(options, args):
        "exel": False, 
        "json": False
      }, 
-     "OutputFileBaseName": "merged", 
+     "OutputFileBaseName": ".//results//logs//", 
      "HDFOptions": {
        "IncludeCHI": options.includechi, 
        "IncludeTIF": options.includetifdata

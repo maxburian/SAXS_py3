@@ -136,6 +136,10 @@ def sendlistdir(arg,socket,conf):
    
 def senddatamerge(options,arg,socket,conf):
     cal=json.load(open(arg[1],"r"))
+    
+    '''Setting Default path for merged data'''
+    cal["OutputFileBaseName"]=".//results//logs//"
+    
     request={ 
              "command":"mergedata",
              "argument":{ 
