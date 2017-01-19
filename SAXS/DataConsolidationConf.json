@@ -145,13 +145,6 @@
 			}
 		},
 
-		"OutputFileBaseName": 
-		{
-			"required": true,
-			"type": "string",
-			"default": "../results/merged"
-		},
-
 		"HDFOptions": 
 		{
 			"required": true,
