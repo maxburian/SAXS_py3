@@ -106,6 +106,7 @@ class consolidatepanel(QtGui.QWidget):
         if mergeok == "OK":
             argu=["mergedata",self.filename]
             result=json.loads(Leash.initcommand(self.app.options,argu,self.app.netconf))
+            print result
             if result['result']=="Error" or result['result']=="ServerError":
                 errormessage=QtGui.QErrorMessage(parent=self.app)
                 errormessage.setWindowTitle("Server Error")
@@ -129,29 +130,34 @@ class consolidatepanel(QtGui.QWidget):
             errormessage.showMessage(mergeok)
             
     def showmergeresults(self,qstringdata):
-        result=json.loads(unicode(qstringdata))
-        import pandas as pd
-        dialog=QtGui.QDialog()
-        dialog.setWindowTitle("Merge Sucessfull")
-        vlayout=QtGui.QVBoxLayout()
-        dialog.setLayout(vlayout)
-        figure=plt.figure( )
-        ax=figure.add_subplot(111)
-        canvas= FigureCanvas(figure)
-        navbar=NavigationToolbar(canvas,dialog)
-        vlayout.addWidget(canvas)
-        vlayout.addWidget(navbar)
-        img=pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Images'])).transpose()
-        peak= pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Shutter'])).transpose()
-        peak=peak[peak>0]
-        img.plot(style="ro",ax=ax)  
-        peak.plot(style="x",ax=ax)
-        canvas.draw()
-        if "CalculatedTimeshift" in result["data"]["syncplot"]:
-            timelabel=QtGui.QLabel("Calculated time Shift: "
-                                   +result["data"]["syncplot"]['CalculatedTimeshift'])
-            vlayout.addWidget(timelabel)
-        dialog.exec_()
+        try :
+            result=json.loads(unicode(qstringdata))
+            import pandas as pd
+            dialog=QtGui.QDialog()
+            dialog.setWindowTitle("Merge Sucessfull")
+            vlayout=QtGui.QVBoxLayout()
+            dialog.setLayout(vlayout)
+            figure=plt.figure( )
+            ax=figure.add_subplot(111)
+            canvas= FigureCanvas(figure)
+            navbar=NavigationToolbar(canvas,dialog)
+            vlayout.addWidget(canvas)
+            vlayout.addWidget(navbar)
+            img=pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Images'])).transpose()
+            peak= pd.io.json.read_json(json.dumps(result["data"]["syncplot"]['Shutter'])).transpose()
+            peak=peak[peak>0]
+            img.plot(style="ro",ax=ax)  
+            peak.plot(style="x",ax=ax)
+            canvas.draw() 
+            if "CalculatedTimeshift" in result["data"]["syncplot"]:
+                timelabel=QtGui.QLabel("Calculated time Shift: "
+                                       +result["data"]["syncplot"]['CalculatedTimeshift'])
+                vlayout.addWidget(timelabel)
+            dialog.exec_()
+        except Exception as e:
+            print e
+            self.writeToStatus("Something went wrong plotting: merge was still succesfull!")
+                               
         self.localmergetstatusthread.quit()
         self.writeToStatus("******************************************")
         tempstr = str(datetime.now().strftime(self.timeformat)) + ": Datamerge has finihsed!" 
