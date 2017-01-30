@@ -559,7 +559,7 @@ def mergeimgdata(app,logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
     index=[]
     for pos in range(imd.index.shape[0]):    
             index.append(imd.index[pos]-timedelta(seconds=(imd["Time Measured (ImgLog)"][pos]))-
-                         timedelta(seconds=(imd["Time Measured (ImgLog)"][pos]))+
+                         timedelta(seconds=(imd["Time Measured (ImgLog)"][pos]))-
                          timedelta(seconds=(3.456/2.)))
     imd.index=index  
     
