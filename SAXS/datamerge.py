@@ -552,10 +552,10 @@ def mergeimgdata(app,logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
     ZeroImage correlation looks for two consecutive Files with ExpT = 2.345 and ExpP 4.567    
     '''
     '''Subtracting exposure time from image time to get moment of acquisition start'''
-    index=[]
-    for pos in range(imd.index.shape[0]):    
-            index.append(imd.index[pos]-timedelta(seconds=(imd["Time Measured (ImgLog)"][pos])))
-    imd.index=index  
+    #index=[]
+    #for pos in range(imd.index.shape[0]):    
+    #        index.append(imd.index[pos]-timedelta(seconds=(imd["Time Measured (ImgLog)"][pos])))
+    #imd.index=index  
     
     '''If firstimagecorrelation is selected:'''
     if firstImage:
