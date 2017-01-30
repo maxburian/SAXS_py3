@@ -188,11 +188,12 @@ def readallimages(app,dir):
     chilist=[]
     imagecount=0
     for path, subdirs, files in os.walk(dir):
-        mergestatus= "\nSearching path :"+ path
-        app.writeToMergeStatus(mergestatus)
         
         if "Pil100k" in path:
             continue
+        
+        mergestatus= "\nSearching path :"+ path
+        app.writeToMergeStatus(mergestatus)
         
         if "results" in path:
             tiffonly = True
@@ -558,6 +559,7 @@ def mergeimgdata(app,logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
     index=[]
     for pos in range(imd.index.shape[0]):    
             index.append(imd.index[pos]-timedelta(seconds=(imd["Time Measured (ImgLog)"][pos]))-
+                         timedelta(seconds=(imd["Time Measured (ImgLog)"][pos]))+
                          timedelta(seconds=(3.456/2.)))
     imd.index=index  
     
