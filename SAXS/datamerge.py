@@ -538,6 +538,7 @@ def mergelogs(app,conf,attachment=None,directory="."):
             tablea=logframe
           
     tablea.sort_index(inplace=True) 
+    tablea = tablea.fillna(method='ffill')
     
     return tablea,firstImage,zeroCorr,peakframe,basename
 
@@ -558,8 +559,7 @@ def mergeimgdata(app,logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
     '''Subtracting exposure time from image time to get moment of acquisition start'''
     index=[]
     for pos in range(imd.index.shape[0]):    
-            index.append(imd.index[pos]-timedelta(seconds=(imd["Time Measured (ImgLog)"][pos]))-
-                         timedelta(seconds=(imd["Time Measured (ImgLog)"][pos]/2.)))
+            index.append(imd.index[pos]-timedelta(seconds=(imd["Time Measured (ImgLog)"][pos])))
     imd.index=index  
     
     '''If firstimagecorrelation is selected:'''
