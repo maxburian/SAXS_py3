@@ -191,9 +191,18 @@
 						"type": "string"
 					},
 					
+					        
+                    "Phi-mode": 
+                    {
+                        "description": "Perform integration over q_min to q_max and obtain I(phi) ",
+                        "type": "boolean",
+                        "required": false,
+                        "default": false
+                    },
+					
 					"qStart":
 					{
-					   "description": "Starting q-value for integral parameters.",
+					   "description": "Starting q-value for integral parameters or phi integration.",
 					   "type": "number",
 					   "default": 0,
 					   "required": true,
@@ -202,7 +211,7 @@
 					
 					"qStop":
                     {
-                       "description": "Ending q-value for integral parameters.",
+                       "description": "Ending q-value for integral parameters or phi integration.",
                        "type": "number",
                        "default": 0,
                        "required": true,

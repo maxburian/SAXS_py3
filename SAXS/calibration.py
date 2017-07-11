@@ -106,20 +106,41 @@ class calibration:
         qpix =4*np.pi*np.sin(theta/2)/self.config['Wavelength']/Angstrom
         if 'PixelPerRadialElement' in mask:
             self.scale=1/np.max(qpix)*np.max(r)/pixelsize/mask['PixelPerRadialElement']
-            pixelper=mask['PixelPerRadialElement']
         else:
             pixelper=1.0
             self.scale=1/np.max(qpix)*np.max(r)/pixelsize
         
-        
-        labels=np.array(qpix*self.scale,dtype=int)
+        # Check if Phimode is active
+        if self.maskconfig["Phi-mode"]:
+            self.scale=1/np.max(phi)*np.max(r)/mask['PixelPerRadialElement']
+            labels=np.array((phi+np.pi)*self.scale,dtype=int)
+        else:
+            labels=np.array(qpix*self.scale,dtype=int)
+            
         self.maxlabel=np.max(labels)
         mask=openmask(mask["MaskFile"],attachment)
+        
+        if self.maskconfig["Phi-mode"]:
+            complexp_q=self.__complexCoordinatesOfPicture(1)
+            r_q=np.absolute(complexp_q)*pixelsize
+            phi_q=np.angle(complexp_q)
+            theta_q=calc_theta(r_q,phi_q,d,tilt,tiltdir)
+            Angstrom=1.00001495e-1
+            nqpix =4*np.pi*np.sin(theta_q/2)/self.config['Wavelength']/Angstrom
+            masky = np.ones((self.config["Geometry"]['Imagesize'][0],self.config["Geometry"]['Imagesize'][1]),dtype=bool)
+            masky[np.logical_not(mask)]=0
+            masky[(nqpix<self.maskconfig["qStart"])]=0
+            masky[(nqpix>self.maskconfig["qStop"])]=0
+            mask = masky
+            
         self.A=labelstosparse(labels,mask,oversampling)
         self.ITransposed =self.A
         self.I,self.Areas,self.oneoverA=rescaleI(self.A,self.corr)
         
-        self.qgrid=(np.arange(self.maxlabel+1)+0.5)/self.scale   
+        if self.maskconfig["Phi-mode"]:
+            self.qgrid=(np.arange(self.maxlabel+1)+0.5)/self.scale-np.pi  
+        else:
+            self.qgrid=(np.arange(self.maxlabel+1)+0.5)/self.scale   
        
         
       
@@ -145,17 +166,32 @@ class calibration:
                         r , 
                         np.sqrt(r*self.Areas) *self.oneoverA] # Poisson Error sclaed
                       ).transpose()
-      
-        I0, I1, I2 = self.integParameters(r)
-        collabels=[
-                    "Scattering Vector  q [$nm^{-1}$]",
-                    "Intensity (Count/Pixel)",
-                    "Error Margin"]
-        integparam={"I0":I0, "I1":I1, "I2":I2}
-        headerstr= json.dumps(self.config)+"\n"
-        headerstr+=json.dumps(integparam)+"\n"
-        headerstr+=json.dumps(collabels)+"\n"
-        headerstr+="   "+str(data.shape[0])+""
+        
+        if self.maskconfig["Phi-mode"]:
+            I0=0
+            I1=0
+            I2=0
+            collabels=[
+                        "Phi Angle [rad]",
+                        "Intensity (Count/Pixel)",
+                        "Error Margin"]
+            integparam={"I0":I0, "I1":I1, "I2":I2}
+            headerstr= json.dumps(self.config)+"\n"
+            headerstr+=json.dumps(integparam)+"\n"
+            headerstr+=json.dumps(collabels)+"\n"
+            headerstr+="   "+str(data.shape[0])+""
+        else:
+            I0, I1, I2 = self.integParameters(r)
+            collabels=[
+                        "Scattering Vector  q [$nm^{-1}$]",
+                        "Intensity (Count/Pixel)",
+                        "Error Margin"]
+            integparam={"I0":I0, "I1":I1, "I2":I2}
+            headerstr= json.dumps(self.config)+"\n"
+            headerstr+=json.dumps(integparam)+"\n"
+            headerstr+=json.dumps(collabels)+"\n"
+            headerstr+="   "+str(data.shape[0])+""
+        
         
         if path != "xxx":#if working in GISAXSmode, the data is not saved
             np.savetxt(path, data, fmt='%.18e', delimiter=' ', newline='\n ', header=headerstr, footer='', comments='')
@@ -287,6 +323,7 @@ def labelstosparse(labels,mask,oversampling):
         coliptr= np.concatenate(([0],coli,[length]))#adds first and last point (0) and (length)
         m= sp.csc_matrix((np.ones(length),ind,coliptr))#sparse matrix representation of labels
         sc=scalemat(mask.shape[0],mask.shape[1],oversampling)
+        
         A=sp.csc_matrix((sc.dot(m)))
         return sp.csc_matrix((A.data*mask.flatten()[A.indices],A.indices,A.indptr))
 
