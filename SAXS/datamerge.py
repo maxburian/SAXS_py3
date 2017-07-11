@@ -188,6 +188,10 @@ def readallimages(app,dir):
     chilist=[]
     imagecount=0
     for path, subdirs, files in os.walk(dir):
+        
+        if "Pil100k" in path:
+            continue
+        
         mergestatus= "\nSearching path :"+ path
         app.writeToMergeStatus(mergestatus)
         
@@ -534,6 +538,7 @@ def mergelogs(app,conf,attachment=None,directory="."):
             tablea=logframe
           
     tablea.sort_index(inplace=True) 
+    tablea = tablea.fillna(method='ffill')
     
     return tablea,firstImage,zeroCorr,peakframe,basename
 
@@ -549,7 +554,7 @@ def mergeimgdata(app,logbasename,dir,tablea,imd,firstImage=None,zeroCorr=None):
     mergestatus=""
     delta=timedelta(seconds=0)
     '''
-    ZeroImage correlation looks for two consecutive Files with ExpT = 2.345 and ExpP 4.567    
+    ZeroImage correlation looks for two consecutive Files with ExpT = 3.456 and ExpP 4.567    
     '''
     '''Subtracting exposure time from image time to get moment of acquisition start'''
     index=[]
