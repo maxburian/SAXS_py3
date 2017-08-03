@@ -430,8 +430,14 @@ def writeFileLists(app,conf,filelists,directory=".",serverdir=""):
         for filename in filelists[kind]:
             listfile.write(os.path.normpath(filename[len(serverdir):])+"\n")
         listfile.close()
-        mergestatus+= "\nWrite: " +texfilename
-        app.writeToMergeStatus(mergestatus)
+    mergestatus+= "\nWrite: " +texfilename
+    app.writeToMergeStatus(mergestatus)
+    
+    '''Writing logfile'''
+    texfilename=basename+"consolidate_log.log"
+    f = open(texfilename,"w")
+    f.write(app.getMergeStatusProtocoll())
+    f.close()
 
 def cleanuplog(logframe,logTable):
     logframe.columns+=" ("+logTable["Name"]+")"

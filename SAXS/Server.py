@@ -166,6 +166,7 @@ class Server():
         self.mergeresult={}
         self.mergeprocess=None
         self.mergestatus = ""
+        self.mergestatusprotocoll = ""
         self.threads=self.options.threads
         self.plotdata=None
         
@@ -288,11 +289,12 @@ class Server():
         elif command=="fileslist":
             result=self.getresultfileslists()
         elif command=="mergedata":
-            result=self.mergedatacommand( object['argument']["mergeconf"],attachment)
+            result=self.mergedatacommand(object['argument']["mergeconf"],attachment)
         elif command=="getmergedata":
             result=self.mergeresult
         elif command=="mergestat":
             result={"result":"stat","data":{"mergeinfo":self.mergestatus}}
+            self.mergestatusprotocoll+=self.mergestatus
             self.mergestatus = ""
         else:
             result={"result":"ErrorNotimplemented","data":{"Error":command+" not implemented"}}
@@ -483,6 +485,7 @@ class Server():
                     filelists[kind]=  [fileset[kind]]
         return {"result":"resultfileslists","data":{"fileslist":filelists}}
     def mergedatacommand(self,conf,attachment):
+        self.mergestatusprotocoll=""
         try:
             directory=os.path.normpath(
                         os.path.join(self.serverdir, os.sep.join(self.calibration["Directory"])))
@@ -492,7 +495,7 @@ class Server():
                 os.mkdir(resultdir)
             conf["OutputFileBaseName"]= directory.split(os.sep)[-1]+os.path.basename(conf["OutputFileBaseName"])
             self.mergestatus+="\nBase-directory of merge is: " + directory
-            print "\nBase-directory of merge is: " + directory
+            #print "\nBase-directory of merge is: " + directory
             for table in conf["LogDataTables"]:
                 for file in table["Files"]:
                     if "RemotePath" in file:
@@ -501,28 +504,40 @@ class Server():
             self.mergestatus+="\nMerging datalogger files: "
             print "\nMerging datalogger files: "
             logsTable,firstImage,zeroCorr,peakframe,logbasename=datamerge.mergelogs(self,conf,attachment=attachment,directory=resultdir)
-            #print peakframe
+           
+            
             def mergeimages(logsTable,firstImage,peakframe,mergedataqueue,resultdir):
-                imd,filelists=datamerge.readallimages(self,directory)     
-                basename=os.path.normpath(os.sep.join([os.path.normpath(resultdir), "Imagedata"]))
-                imd.to_csv(basename+".csv")
-                mergestatus= "\nImagedata can be found in: " +  (basename+".csv")
+                try:
+                    imd,filelists=datamerge.readallimages(self,directory)     
+                    basename=os.path.normpath(os.sep.join([os.path.normpath(resultdir), "Imagedata"]))
+                    imd.to_csv(basename+".csv")
+                    mergestatus= "\nImagedata can be found in: " +  (basename+".csv")
                 
-                self.mergestatus+="\nNow merging imagedata with logfiles.."
-                mergedTable,delta= datamerge.mergeimgdata(self,logbasename,directory,logsTable,imd,firstImage=firstImage,zeroCorr=zeroCorr)
-                peakframe.index = peakframe.index + delta
-                plotdata=datamerge.syncplot(peakframe,imd)
-                plotdata["CalculatedTimeshift"]=str(delta)
-                
-                self.mergestatus+="\nWriting output tables..."
-                datamerge.writeTable(self,conf,mergedTable,directory=resultdir)
-                datamerge.writeFileLists(self,conf,filelists,directory=resultdir,serverdir=self.serverdir)
-                if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
-                    datamerge.imgtohdf(conf,directory,resultdir)
-                if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeCHI"]:
-                    datamerge.graphstohdf(conf,filelists,resultdir)
-                mergedataqueue.put({"result":
-                                    "mergedata","data":{"syncplot":plotdata,"fileslist":filelists}})
+                    self.mergestatus+="\nNow merging imagedata with logfiles.."
+                    mergedTable,delta= datamerge.mergeimgdata(self,logbasename,directory,logsTable,imd,firstImage=firstImage,zeroCorr=zeroCorr)
+                    peakframe.index = peakframe.index + delta
+                    plotdata=datamerge.syncplot(peakframe,imd)
+                    plotdata["CalculatedTimeshift"]=str(delta)
+                    
+                    self.mergestatus+="\nWriting output tables..."
+                    datamerge.writeTable(self,conf,mergedTable,directory=resultdir)
+                    datamerge.writeFileLists(self,conf,filelists,directory=resultdir,serverdir=self.serverdir)
+                    if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeTIF"]:
+                        datamerge.imgtohdf(conf,directory,resultdir)
+                    if conf["OutputFormats"]["hdf"] and conf['HDFOptions']["IncludeCHI"]:
+                        datamerge.graphstohdf(conf,filelists,resultdir)
+                    mergedataqueue.put({"result":
+                                        "mergedata","data":{"syncplot":plotdata,"fileslist":filelists}})
+                except Exception as e:
+                    self.mergestatus+="\n------------ERROR------------\n"
+                    self.mergestatus+=str(e)
+                    self.mergestatus+="\n-----------------------------\n"
+                    self.mergestatus+="The datamerger was stopped!"
+                except ValueError:
+                    self.mergestatus+="\n------------ERROR------------\n"
+                    self.mergestatus+="A Value Error occurred..."
+                    self.mergestatus+="\n-----------------------------\n"
+                    self.mergestatus+="The datamerger was stopped!"
                 
             if  not self.mergeprocess or not  self.mergeprocess.is_alive():
                 self.mergeprocess=threading.Thread(target=mergeimages,
@@ -534,6 +549,7 @@ class Server():
         except Exception as e:
             return {"result":"Error","data":{"Error": str(e)}}
         return {"result":"merge started"  "mergedata","data":{}}
+    
     def _checkdirectorycollision(self,pathlist):
          if not self.serverid=="Local":
              serverconfs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
@@ -554,6 +570,10 @@ class Server():
     
     def writeToMergeStatus(self,new_status):
         self.mergestatus+=new_status
+    
+    def getMergeStatusProtocoll(self):
+        time.sleep(2)
+        return self.mergestatusprotocoll
             
 def saxsdogserver(serverconf,serverid,stopflag,serverdir):
      

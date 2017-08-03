@@ -114,7 +114,7 @@ class consolidatepanel(QtGui.QWidget):
                 errormessage.showMessage(result['data']["Error"])
             else:
                 self.localmergetstatusthread.start()
-                
+                self.statusfield.clear()
                 self.writeToStatus("\n\n******************************************")
                 tempstr = str(datetime.now().strftime(self.timeformat)) + ": Datamerge has started!" 
                 self.writeToStatus(tempstr)
@@ -187,6 +187,10 @@ class consolidatepanel(QtGui.QWidget):
         if text[0:1]=="\n":
             text = text[1:]
         self.statusfield.append(text)
+        if "---ERROR---" in text:
+            self.submitbutton.setEnabled(True)
+            self.app.submitbutton.setEnabled(True) 
+        
         
 class mergestatusthread(QtCore.QThread):
     def __init__(self,app):
