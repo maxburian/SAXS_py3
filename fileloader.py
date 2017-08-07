@@ -16,7 +16,7 @@ def main(argv):
 
     (opts, args) = parser.parse_args(args=None, values=None)
     
-    print opts
+    #print opts
     
     if len(args)==0:
         args=["."]
@@ -25,7 +25,7 @@ def main(argv):
         sys.exit()
     
     srcdir = opts.srcdir
-    outputfile = opts.outfile + ".npy"
+    outputfile = opts.outfile + ".txt"
     
     print 'The source directory is  "'+ srcdir+'"'
     print 'The output filename is"'+ outputfile+'"'
@@ -41,8 +41,8 @@ def main(argv):
                 filelist=np.vstack((filelist,os.path.join(root, file)))
                 #print(os.path.join(root, file))
     
-    '''read in phi values'''
-    phi = np.genfromtxt(filelist[0][0],usecols=(0),skip_header=4 ,dtype='float32')
+    
+    print 'Filelist was generated! Loading a total of ',filelist.size, 'files.'
     
     '''Now read in the actual data'''
     imported_data = np.empty([filelist.size,phi.size])
@@ -59,7 +59,7 @@ def main(argv):
     outfile =os.path.join(srcdir,outputfile)
     #outfile = srcdir + outputfile
     print 'The data is saved in "'+ outfile+'"'
-    np.save(outfile,imported_data)
+    np.savetxt(outfile,imported_data)
     print "Done!"
     
 
