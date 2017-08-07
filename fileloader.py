@@ -41,7 +41,8 @@ def main(argv):
                 filelist=np.vstack((filelist,os.path.join(root, file)))
                 #print(os.path.join(root, file))
     
-    
+    phi = np.genfromtxt(filelist[0][0],usecols=(0),skip_header=4 ,dtype='float32')
+    phi_oldsize=phi.size
     print 'Filelist was generated! Loading a total of ',filelist.size, 'files.'
     
     '''Now read in the actual data'''
