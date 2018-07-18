@@ -201,24 +201,30 @@ def readallimages(app,dir):
             tiffonly = False
             
         for name in files:
-            if name.endswith('tif'):
-                imgpath=os.path.join(path, name)
-                #print imgpath
-                row=readtiff(imgpath)
-                row['filepath']=imgpath
-                row['id']="h"+hashlib.sha224(imgpath).hexdigest()
-                rowframe=pd.DataFrame()
-                rowframe=rowframe.append(row,ignore_index=True)
-                rowframe["date"]=pd.to_datetime(rowframe['date'])
-                rowframe=rowframe.set_index(["date"])
-                imgframe=imgframe.append(rowframe)
+            try:
+                if name.endswith('tif'):
+                    imgpath=os.path.join(path, name)
+                    print imgpath
+                    row=readtiff(imgpath)
+                    row['filepath']=imgpath
+                    row['id']="h"+hashlib.sha224(imgpath).hexdigest()
+                    rowframe=pd.DataFrame()
+                    rowframe=rowframe.append(row,ignore_index=True)
+                    rowframe["date"]=pd.to_datetime(rowframe['date'])
+                    rowframe=rowframe.set_index(["date"])
+                    imgframe=imgframe.append(rowframe)
               
-            elif  name.endswith("log") and tiffonly == False:
-                logpath=os.path.join(path, name)
-                imglogframe=imglogframe.append(readimglog(logpath))
-            elif name.endswith("chi") or name.endswith("json") and tiffonly == False :
-                chilist.append(os.path.join(path, name))
-                
+                elif  name.endswith("log") and tiffonly == False:
+                    logpath=os.path.join(path, name)
+                    imglogframe=imglogframe.append(readimglog(logpath))
+                elif name.endswith("chi") or name.endswith("json") and tiffonly == False :
+                    chilist.append(os.path.join(path, name))
+            except:
+                print "error in ", imgpath
+                mergestatus= "\nERROR in:"+ imgpath+"!!\nTry to keep going... Make sure to check the data once concluded!"
+                app.writeToMergeStatus(mergestatus)
+    
+
     '''Adding identifier to column names'''
     imgframe.columns+=" (Img)"
     imglogframe.columns+=" (ImgLog)"
