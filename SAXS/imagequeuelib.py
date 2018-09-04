@@ -131,7 +131,12 @@ class imagequeue:
                                       os.path.dirname(picture),
                                       self.options.relpath)
                 if not os.path.isdir(reldir):
-                    os.mkdir(reldir)
+		    try:
+                        os.mkdir(reldir)
+		    except:
+			print "Problem creating WORK directory!!!"
+			return
+
                 basename=os.path.join( reldir,
                                       os.path.basename(picture)[:-4])
             data=[]
@@ -246,8 +251,13 @@ class imagequeue:
                         picture = self.picturequeue.get(timeout=1)
                     except Empty:
                         continue
-                    lastfile, data =self.procimage(picture,0)
                     
+		    #in Case something goes wrong
+		    try:
+			lastfile, data =self.procimage(picture,0)
+		    except:
+			continue                   
+
                     if self.options.servermode:
                         request={"command":"putplotdata","argument":{"data":{
                                 "result":"plot","data":{"filename":lastfile,"graphs":data,
