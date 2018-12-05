@@ -309,13 +309,11 @@ class Server():
         self.lasttime=time.time()
         self.lastcount=0
         self.history=history()
-        self.attachments=[]
-        
-        
+        self.attachments=[]        
         try:
             self._checkdirectorycollision(object['argument']['calibration']['Directory'])
             for attachstr in attachment:
-                self.attachments.append(json.loads(attachstr))
+                self.attachments.append(json.loads(attachstr))        
             self.calibration=object['argument']['calibration']
             if object['argument']['calibration'].get("Threads")>0:
                 self.threads=object['argument']['calibration'].get("Threads")
