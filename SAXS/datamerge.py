@@ -259,11 +259,14 @@ def readallimages(app,dir):
     '''If some duplicate entries are left over, they are distinguished now'''
     index=[]
     index.append(merged.index[0])
+    duplicateoffset=0.000001
     for pos in range(0, merged.index.shape[0]): 
         try : 
             if merged.index[pos+1] - merged.index[pos] < timedelta(seconds=0.000001) :
-                index.append(merged.index[pos+1] +timedelta(seconds=0.000001))
-            else:
+                print "Duplicate found at pos: ", pos
+		index.append(merged.index[pos+1] +timedelta(seconds=duplicateoffset))
+		duplicateoffset+=0.000001
+	    else:
                 index.append(merged.index[pos+1])
         except:
             break
