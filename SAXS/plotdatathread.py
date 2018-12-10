@@ -39,7 +39,7 @@ class plotthread(QtCore.QThread):
                     self.lastmergecount=result['data']["stat"]['mergecount']
                     mergedata=initcommand(self.app.options,["getmergedata"],self.app.netconf)
                     self.emit(QtCore.SIGNAL('mergeresultdata(QString)'), mergedata)
-                    print "getmergedata"
+                    print("getmergedata")
     
             elif result["result"]=="Error":
                 self.emit(QtCore.SIGNAL('ProtocolError(QString)'), plotdata)

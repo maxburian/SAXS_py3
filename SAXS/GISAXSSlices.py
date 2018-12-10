@@ -43,7 +43,7 @@ class slice():
                 attachment=attachments[sliceconf['MaskRef']]
             else:
                 atachment=None
-            self.mask=openmask(conf["Masks"][sliceconf['MaskRef']]["MaskFile"], attachment=attachment   )
+            self.mask=openmask(conf["Masks"][sliceconf['MaskRef']]["MaskFile"], attachment=attachment)
         else:
             self.mask=np.zeros((x,y))
         if len(conf["Geometry"]['PixelSizeMicroM'])==1:
@@ -60,7 +60,7 @@ class slice():
         self.makegrid()
         self.areas=self.Projector.dot(np.ones((x,y)).flatten())
         #areaswithoutzero=np.where(self.areas>0.0 ,self.areas,-1.0)
-        self.oneoverA=np.where(self.areas>0.0,1.0/self.areas ,np.NAN)
+        self.oneoverA=np.where(self.areas>0.0,1.0/self.areas,np.NAN)
         
     def integrate(self,picture):
         return self.Projector.dot(picture.flatten())*self.oneoverA
@@ -73,7 +73,7 @@ class slice():
         :param string path: Path to save the file to
         :returns: Scattering curve data as json structure
         """
-        r= self.Projector.dot(image.flatten() ) 
+        r= self.Projector.dot(image.flatten()) 
         data=np.array([self.grid,
                         r *self.oneoverA, 
                         np.sqrt(r) *self.oneoverA # Poisson Error scaled
@@ -130,11 +130,14 @@ class slice():
                                  /self.conf["Geometry"]['DedectorDistanceMM']
                                  )
         if self.sliceconf["Plane"]=="Vertical":
-            self.qname="GISAXS Scattering Vector $q_{v} [nm^{-1}]$"
+            self.qname="vertical scattering Vector $q_{z} [nm^{-1}]$"
             self.grid=-2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(alphaF)
                                                   +np.sin(self.sliceconf["IncidentAngle"]/180.0*np.pi))
         elif self.sliceconf["Plane"]=="InPlane":
-            self.qname="GISAXS Scattering Vector  $ q_{h} [nm^{-1}]$"
-            self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(twothetaF)
-                                                    *np.cos( alphaF[self.sliceconf["CutPosition"]]))
+            self.qname="radial scattering vector  $ q_{r} [nm^{-1}]$"
+            self.grid=4.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(twothetaF/2.))
+            '''Old calculation for qx and not qr'''
+            '''self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(twothetaF)
+                                                    *np.cos(alphaF[VerticalPixelN-self.sliceconf["CutPosition"]]))
+            '''
        

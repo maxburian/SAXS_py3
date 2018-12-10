@@ -100,7 +100,8 @@ class histpanel(QtGui.QWidget):
         
     def plot(self,datastr):
         data=json.loads(unicode(datastr))
-        if (self.app.tab.currentIndex()==2 ):
+        #if (self.app.tab.currentIndex()==2 ):
+        if (2==2):
             if "history" in data["data"]:
                 self.histdata=np.array(data["data"]["history"],dtype=np.float)
                 self.timestep(data)
@@ -117,7 +118,8 @@ class histpanel(QtGui.QWidget):
         if type(data)==QtCore.QString:
             data=json.loads(unicode(data))
         timestamp=float(data["data"]["stat"]["time"])
-        if (self.app.tab.currentIndex()==2 ):
+        #if (self.app.tab.currentIndex()==2 ):
+        if (2==2):
             self.figure.clf()
             ax=self.figure.add_subplot(111)
             self.figure.set_frameon(False)
@@ -126,7 +128,7 @@ class histpanel(QtGui.QWidget):
             ax.set_ylabel("Image Count")
             try:   
                 ppl.hist(ax,self.histdata-np.ceil(timestamp),bins=100,range=(-100,0))
-            except AttributeError:
+            except (ValueError,AttributeError):
                 pass
             ax.set_xlim((-100,0))
             if size(self.histdata)>100:
@@ -165,7 +167,7 @@ class histpanel(QtGui.QWidget):
         if fslfound==False and bslfound==True :
             self.filelist = self.tempdata['file'].str.rsplit("\\",n=1, expand=True)[1]  
         if fslfound==False and bslfound==False :
-            print "SOMETHING WENT WRONG!!!"
+            print('SOMETHING WENT WRONG!!!')
         if (self.app.tab.currentIndex()==2 and self.updateplot==True):
             self.plotIntegParam()
         
