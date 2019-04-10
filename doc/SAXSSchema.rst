@@ -14,7 +14,7 @@ The SAXS configuration file specifies the parameters of a SAXS sensor calibratio
 :Type:
   object
 :Contains:
-  :ref:`Title <Title>`, :ref:`Geometry <Geometry>`:red:`*`, :ref:`Masks <Masks>`:red:`*`, :ref:`Slices <Slices>`, :ref:`Wavelength <Wavelength>`:red:`*`, :ref:`PolarizationCorrection <PolarizationCorrection>`, :ref:`Directory <Directory>`:red:`*`, :ref:`Threads <Threads>`
+  :ref:`Title <Title>`, :ref:`Geometry <Geometry>`:red:`*`, :ref:`Masks <Masks>`:red:`*`, :ref:`Slices <Slices>`, :ref:`Wavelength <Wavelength>`:red:`*`, :ref:`PolarizationCorrection <PolarizationCorrection>`, :ref:`Directory <Directory>`:red:`*`, :ref:`Threads <Threads>`, :ref:`Live-Filelisting <Live-Filelisting>`, :ref:`OverwriteFiles <OverwriteFiles>`, :ref:`GISAXSmode <GISAXSmode>`
 :Required:
   True
 :JSON Path:
@@ -25,6 +25,7 @@ Example JSON:
 .. code:: json
 
     {
+      "Title": "Example Calibration",
       "Geometry": {
         "Tilt": {
           "TiltRotDeg": 0,
@@ -45,7 +46,12 @@ Example JSON:
       },
       "Wavelength": 1.54,
       "Directory": [],
-      "Masks": []
+      "Live-Filelisting": true,
+      "OverwriteFiles": true,
+      "Threads": 2,
+      "Masks": [],
+      "Slices": [],
+      "GISAXSmode": false
     }
 
 .. _Title:
@@ -85,6 +91,7 @@ Example JSON:
 .. code:: json
 
     {
+      "Title": "Example Calibration"
       "Geometry": {
         "Tilt": {
           "TiltRotDeg": 0,
@@ -100,8 +107,7 @@ Example JSON:
         ],
         "PixelSizeMicroM": [
           100.0
-        ],
-        "DedectorDistanceMM": 1000.0
+        ]
       }
     }
 
@@ -272,7 +278,7 @@ Masks
 -------------------------
 
 :Type:
-  array() items: {:ref:`MaskFile`, :ref:`Oversampling`, :ref:`PixelPerRadialElement`, :ref:`Name`, :ref:`qStart`, :ref:`qStop`}
+  array() items: {:ref:`MaskFile`, :ref:`Oversampling`, :ref:`PixelPerRadialElement`, :ref:`Name`, :ref:`qStart`, :ref:`qStop`, :ref:`Phi-mode`}
 :Required:
   True
 :JSON Path:
@@ -419,6 +425,29 @@ Example JSON:
 .. code:: json
 
     {"qStop": 0}
+    
+.. _Phi-mode:
+
+Phi-mode
+-------------------------
+
+To perform an integration as a function of angle in the give radial regime defined by qStart and qStop .
+
+
+:Type:
+  Boolean
+:Required:
+  False
+:Default:
+  False
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Masks <Masks>`'][0][':ref:`Phi-mode <Phi-mode>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"Phi-mode": False}
 
 .. _Slices:
 
@@ -705,6 +734,8 @@ Example JSON:
 Threads
 -------------------------
 
+Number of threads that will simultaniously perform the integration.
+
 :Type:
   integer
 :Required:
@@ -720,3 +751,68 @@ Example JSON:
 
     {"Threads": 2}
 
+.. _Live-Filelisting:
+
+Live-Filelisting
+-------------------------
+
+Writes all processed file names (.chi) into a log-file in ./results/
+
+:Type:
+  Boolean
+:Required:
+  False
+:Default:
+  True
+:JSON Path:
+  * :ref:`# <root>` [':ref:`Live-Filelisting <Live-Filelisting>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"Live-Filelisting": True}
+    
+.. _GISAXSmode:
+
+GISAXSmode
+-------------------------
+
+If true, no radial integration will be performed and only slices will be integrated.
+
+:Type:
+  Boolean
+:Required:
+  False
+:Default:
+  False
+:JSON Path:
+  * :ref:`# <root>` [':ref:`GISAXSmode <GISAXSmode>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"GISAXSmode": False}
+    
+.. _OverwriteFiles:
+
+OverwriteFiles
+-------------------------
+
+Select if already integrated files should be overwritten.
+
+:Type:
+  Boolean
+:Required:
+  False
+:Default:
+  True
+:JSON Path:
+  * :ref:`# <root>` [':ref:`OverwriteFiles <OverwriteFiles>`']
+
+Example JSON: 
+
+.. code:: json
+
+    {"OverwriteFiles": False}

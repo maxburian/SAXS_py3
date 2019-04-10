@@ -362,6 +362,14 @@
             "required": false,
             "default": true
         },
+        
+        "OverwriteFiles":
+        {
+            "description": "Overwrite existing *.chi files during integration (True) or integrate only missing files?",
+            "type": "boolean",
+            "required": false,
+            "default": true
+        },
 
 		"Threads": 
 		{

@@ -1,11 +1,11 @@
 from PyQt4 import  QtGui
  
  
-import jsonschematreemodel
-import calibeditdelegate
+from . import jsonschematreemodel
+from . import calibeditdelegate
 class calibeditor(QtGui.QWidget):
-    def __init__(self,app):
-         super(calibeditor,self).__init__( )
+    def __init__(self, app):
+         super(calibeditor, self).__init__( )
          self.app=app
          self.setLayout(QtGui.QVBoxLayout())
          self.treeview=QtGui.QTreeView()
@@ -16,13 +16,13 @@ class calibeditor(QtGui.QWidget):
          self.treeview.setMinimumHeight(400)
       
          self.treeview.setAlternatingRowColors(True)
-         self.treeview.setItemDelegateForColumn(1,calibeditdelegate.calibEditDelegate( app ))
+         self.treeview.setItemDelegateForColumn(1, calibeditdelegate.calibEditDelegate( app ))
          self.reset()
         
              
-         QtGui.QShortcut(QtGui.QKeySequence("Ctrl+S"),self,self.model.save)
+         QtGui.QShortcut(QtGui.QKeySequence("Ctrl+S"), self, self.model.save)
     def reset(self):
         self.model.invisibleRootItem().setColumnCount(3)
-        self.treeview.setColumnWidth(0,320)
-        self.treeview.setColumnWidth(1,320)
+        self.treeview.setColumnWidth(0, 320)
+        self.treeview.setColumnWidth(1, 320)
         self.treeview.expandAll()

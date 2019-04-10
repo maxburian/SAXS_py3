@@ -3,11 +3,12 @@ from PyQt4 import  QtGui
 from PyQt4 import  uic
 from PyQt4 import  QtCore
 from PyQt4.Qt import QMessageBox
-import os,json,collections
-import schematools,converter
-import Leash
+import os, json, collections
+import ctypes
+from . import schematools, converter
+from . import Leash
 class menueitems(QtGui.QWidget):
-    def __init__(self,app):
+    def __init__(self, app):
         super(menueitems, self).__init__()
         self.app=app
         self.errormessage=QtGui.QErrorMessage()
@@ -17,8 +18,10 @@ class menueitems(QtGui.QWidget):
         self.importmenue= self.app.menuBar().addMenu('&Import')
         self.actionImportFit2d=self.importmenue.addAction("&Import Fit2d")
         self.actionImportOlder=self.importmenue.addAction("&Import Older SAXS calibration Files")
+        self.actionConvertFromNika=self.importmenue.addAction("&Convert from NIKA values")
         self.actionSave=self.filemenue.addAction("&Save")
         self.actionSaveAs=self.filemenue.addAction("Save &As")
+        self.filemenue.addSeparator()
         self.queuemenue= self.app.menuBar().addMenu('&Queue')
         self.queueRedoAllImmagesAction =self.queuemenue.addAction("&Redo All Images")
         self.queueAbortAction=self.queuemenue.addAction("A&bort Queue")
@@ -48,24 +51,28 @@ class menueitems(QtGui.QWidget):
         self.connect(self.actionImportOlder, 
                       QtCore.SIGNAL("triggered()"),
                       self.importOlderJson)
+        self.connect(self.actionConvertFromNika, 
+                      QtCore.SIGNAL("triggered()"),
+                      self.convertFromNika)
         self.connect(self.queueRedoAllImmagesAction, 
                       QtCore.SIGNAL("triggered()"),
                       self.queueRedoAllImmages)
-        self.userconffilename=os.path.expanduser(os.path.join('~',".saxsleashrc"))
+        self.userconffilename=os.path.expanduser(os.path.join('~', ".saxsleashrc"))
         maxrecentfiles=5
         self.recentfiles=collections.deque( json.load(open(self.userconffilename))['recentFiles'], maxrecentfiles)
         self.recentfileactions=[]
         for i in range(maxrecentfiles):
             self.recentfileactions.append(self.filemenue.addAction(""))
-            self.connect(self.recentfileactions[i], QtCore.SIGNAL("triggered()"),self.openrecent)
+            self.connect(self.recentfileactions[i], QtCore.SIGNAL("triggered()"), self.openrecent)
         self.updaterecenfileslist()
     def importFit2d(self):
-        self.importFrom("Open Fit2d Output Text File",converter.txt2json)
+        self.importFrom("Open Fit2d Output Text File", converter.txt2json)
     def importOlderJson(self):
-        self.importFrom("Open JSON From Older Versions",converter.jsontojson)
-            
-    def importFrom(self,buttontext,converterfun):
+        self.importFrom("Open JSON From Older Versions", converter.jsontojson)
+        
+    def importFrom(self, buttontext, converterfun):
         dialog=QtGui.QDialog()
+        dialog.setWindowTitle("Import calibbration...")
         layout=QtGui.QVBoxLayout()
         dialog.setLayout(layout)
         textarea=QtGui.QTextBrowser()
@@ -78,51 +85,174 @@ class menueitems(QtGui.QWidget):
         okbutton=buttonbox.addButton(buttonbox.Ok)
         okbutton.setText("Import Data")
         layout.addWidget(buttonbox)
-        self.connect(okbutton, QtCore.SIGNAL("clicked()"),dialog.accept)
-        self.connect(cancelbutton, QtCore.SIGNAL("clicked()"),dialog.reject)
+        self.connect(okbutton, QtCore.SIGNAL("clicked()"), dialog.accept)
+        self.connect(cancelbutton, QtCore.SIGNAL("clicked()"), dialog.reject)
       
         def pickImportFile():
             filedialog=QtGui.QFileDialog()
             filename=filedialog.getOpenFileName()
             textarea.setText(open(filename).read())
         
-        self.connect(openbutton, QtCore.SIGNAL("clicked()"),pickImportFile)
+        self.connect(openbutton, QtCore.SIGNAL("clicked()"), pickImportFile)
       
         def importText():
-            text=unicode( textarea.toPlainText())
+            text=str(textarea.toPlainText())
             if not self.app.calibeditor.model.filename:
                  filedialog=QtGui.QFileDialog()
-                 self.app.calibeditor.model.filename= unicode(filedialog.getSaveFileName(  caption= "Create New File AS" ))
+                 self.app.calibeditor.model.filename= str(filedialog.getSaveFileName(  caption= "Create New File AS" ))
             
             self.app.calibeditor.model.ifNoneInitFromDefault()
-            converterfun(text,self.app.calibeditor.model.calib)
+            converterfun(text, self.app.calibeditor.model.calib)
             self.app.calibeditor.model.rebuildModel()
             self.app.calibeditor.reset()
-        self.connect(dialog, QtCore.SIGNAL("accepted()"),importText)
+        self.connect(dialog, QtCore.SIGNAL("accepted()"), importText)
         dialog.exec_()
         
+    def convertFromNika(self):
+        dialog=QtGui.QDialog()
+        layout=QtGui.QFormLayout()
+        dialog.setWindowTitle("Convert calibbration from NIKA 2D...")
+        
+        radiobox=QtGui.QHBoxLayout()
+        r1M = QtGui.QRadioButton("Pilatus 1M")
+        radiobox.addWidget(r1M)
+        r100K = QtGui.QRadioButton("Pilatus 100K")
+        radiobox.addWidget(r100K)
+        r100K.setChecked(True)
+        ldet=QtGui.QLabel('Select detector:')
+        layout.addRow(ldet,radiobox)
+        
+        eX = QtGui.QLineEdit()
+        eX.setValidator(QtGui.QDoubleValidator(-99999,99999,2))
+        eX.setMaxLength(7)
+        eX.setAlignment(QtCore.Qt.AlignRight)
+        lX=QtGui.QLabel('X Beamcenter: [pixel]')
+        layout.addRow(lX,eX)
+        
+        eY = QtGui.QLineEdit()
+        eY.setValidator(QtGui.QDoubleValidator(-99999,99999,2))
+        eY.setMaxLength(7)
+        eY.setAlignment(QtCore.Qt.AlignRight)
+        lY = QtGui.QLabel('Y Beamcenter: [pixel]')
+        layout.addRow(lY,eY)
+        
+        eSD = QtGui.QLineEdit()
+        eSD.setValidator(QtGui.QDoubleValidator(-99999,99999,2))
+        eSD.setMaxLength(7)
+        eSD.setAlignment(QtCore.Qt.AlignRight)
+        lSD = QtGui.QLabel('Sanple-Detector distance: [mm]')
+        layout.addRow(lSD,eSD)
+        
+        eWL = QtGui.QLineEdit()
+        eWL.setValidator(QtGui.QDoubleValidator(-99999,99999,2))
+        eWL.setMaxLength(7)
+        eWL.setAlignment(QtCore.Qt.AlignRight)
+        eWL.setText("1.54")
+        lWL = QtGui.QLabel('Wavelength: [Angs]')
+        layout.addRow(lWL,eWL)
+        
+        erX = QtGui.QLineEdit()
+        erX.setValidator(QtGui.QDoubleValidator(-99999,99999,2))
+        erX.setMaxLength(7)
+        erX.setAlignment(QtCore.Qt.AlignRight)
+        erX.setText("0")
+        lrX = QtGui.QLabel('Horizontal Rotation: [deg]')
+        layout.addRow(lrX,erX)
+        
+        erY = QtGui.QLineEdit()
+        erY.setValidator(QtGui.QDoubleValidator(-99999,99999,2))
+        erY.setMaxLength(7)
+        erY.setAlignment(QtCore.Qt.AlignRight)
+        erY.setText("0")
+        lrY = QtGui.QLabel('Vert Rotation: [deg]')
+        layout.addRow(lrY,erY)
+        
+        buttonbox=QtGui.QDialogButtonBox()
+        cancelbutton=buttonbox.addButton(buttonbox.Cancel)
+        okbutton=buttonbox.addButton(buttonbox.Ok)
+        okbutton.setEnabled(False)
+        layout.addRow(buttonbox)  
+        dialog.setLayout(layout)
+        self.connect(okbutton, QtCore.SIGNAL("clicked()"), dialog.accept)
+        self.connect(cancelbutton, QtCore.SIGNAL("clicked()"), dialog.reject)
+        
+        def checkValues():
+            valuesok = False
+            try:
+                eXd=float(eX.text())
+                eYd=float(eY.text())
+                erXd=float(erX.text())
+                erYd=float(erY.text())
+                eSDd=float(eSD.text())
+                eSDd=float(eWL.text())
+                valuesok = True
+            except:
+                valuesok = False
+                
+            if valuesok == True:
+                okbutton.setEnabled(True)
+            else:
+                okbutton.setEnabled(False)
+                
+            
+        def importValues():
+            try:
+                eXd=float(eX.text())
+                eYd=float(eY.text())
+                erXd=float(erX.text())
+                erYd=float(erY.text())
+                eSDd=float(eSD.text())
+                eWLd=float(eWL.text())
+                '''det defines Detector type. det=1: 1M, det=2: 100K, etc..'''
+                if r1M.isChecked() == True:
+                    det = 1
+                if r100K.isChecked() == True:
+                    det = 2
+            except:
+                ctypes.windll.user32.MessageBoxA(0, "There seems to be a problem with your input. Check Again!".encode('ascii'), "Input:".encode('ascii'), 0x0|0x30)      
+                return
+            if not self.app.calibeditor.model.filename:
+                 filedialog=QtGui.QFileDialog()
+                 self.app.calibeditor.model.filename= str(filedialog.getSaveFileName(caption= "Create New File AS" ))
+        
+            
+            self.app.calibeditor.model.ifNoneInitFromDefault()
+            converter.nika2json(det, eXd,eYd,erXd,erYd, eSDd, eWLd, self.app.calibeditor.model.calib) 
+            self.app.calibeditor.model.rebuildModel()
+            self.app.calibeditor.reset()
+            
+        self.connect(eX, QtCore.SIGNAL("textChanged(QString)"), checkValues)
+        self.connect(eY, QtCore.SIGNAL("textChanged(QString)"), checkValues)
+        self.connect(erX, QtCore.SIGNAL("textChanged(QString)"), checkValues)
+        self.connect(erY, QtCore.SIGNAL("textChanged(QString)"), checkValues)
+        self.connect(eSD, QtCore.SIGNAL("textChanged(QString)"), checkValues)
+        self.connect(eWL, QtCore.SIGNAL("textChanged(QString)"), checkValues)
+        
+        self.connect(dialog, QtCore.SIGNAL("accepted()"), importValues)       
+        dialog.exec_()
+                
     def openfile(self):
        dialog=QtGui.QFileDialog()
-       filename= unicode(dialog.getOpenFileName( ))
-       print filename
+       filename= str(dialog.getOpenFileName( ))
+       print(filename)
        self.app.calibeditor.model.loadfile(filename)
        self.app.calibeditor.reset()
        self.appendrecentfile(filename)
     def newfile(self):
         dialog=QtGui.QFileDialog()
-        filename= unicode(dialog.getSaveFileName(  caption= "Create New File AS" ))
+        filename= str(dialog.getSaveFileName(  caption= "Create New File AS" ))
         default= schematools.schematodefault(self.app.calibeditor.model.schema)
         json.dump(
-                 default,  open(filename,"w")
+                 default,  open(filename, "w")
                   )
         self.app.calibeditor.model.loadfile(filename)
         self.app.calibeditor.reset()
         self.appendrecentfile(filename)
-        print "self.app.calibeditor.model.filename", self.app.calibeditor.model.filename
+        print("self.app.calibeditor.model.filename", self.app.calibeditor.model.filename)
     def openrecent(self):
        action=self.sender()
-       filename=unicode(action.data().toString())
-       print filename+"*"
+       filename=str(action.data())
+       #print(filename+"*")
        self.app.calibeditor.model.loadfile(filename)
        self.app.calibeditor.reset()
        self.appendrecentfile(filename)
@@ -134,7 +264,7 @@ class menueitems(QtGui.QWidget):
             self.recentfileactions[i].setData(file)
             self.recentfileactions[i].setToolTip ( file )
             
-    def appendrecentfile(self,filename):
+    def appendrecentfile(self, filename):
         if filename in  self.recentfiles:
             self.recentfiles.remove(filename)
         self.recentfiles.appendleft(filename)
@@ -144,11 +274,11 @@ class menueitems(QtGui.QWidget):
     def saverecentfiles(self):
         user=json.load(open(self.userconffilename))
         user["recentFiles"]=list(self.recentfiles)
-        json.dump(user, open(self.userconffilename,"w"))
+        json.dump(user, open(self.userconffilename, "w"))
     def queueRedoAllImmages(self):
         argu=["readdir"]
-        result=json.loads(Leash.initcommand(self.app.options,argu,self.app.netconf))
-        print result
+        result=json.loads(Leash.initcommand(self.app.options, argu, self.app.netconf))
+        print(result)
         try:
             access = result["data"]["Error"]
             self.errormessage.setWindowTitle("Server Error")
@@ -163,7 +293,7 @@ class menueitems(QtGui.QWidget):
 
     def abortqueue(self):
         argu=["abort"]
-        result=json.loads(Leash.initcommand(self.app.options,argu,self.app.netconf))
+        result=json.loads(Leash.initcommand(self.app.options, argu, self.app.netconf))
         self.emit(QtCore.SIGNAL('queueaborted()'))
         msgBox=QtGui.QMessageBox(self)
         msgBox.setText( result["result"]);

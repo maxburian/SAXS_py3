@@ -1,4 +1,5 @@
 {
+    "Title": "Example Calibration",
     "Geometry": {
         "Tilt": {
             "TiltAngleDeg": -0.56,
@@ -25,10 +26,16 @@
         {
             "PixelPerRadialElement": 1,
             "MaskFile": "data/AAA_integ.msk",
-            "Oversampling": 2,
+            "Oversampling": 3,
+            "Name": "",
+            "Phi-mode": false,
             "qStart": 0.0, 
             "qStop": 5.0
-        }
-    ],
-    "Wavelength": 1.54
+        }],
+    "Slices": [],
+    "GISAXSmode": false,
+    "Wavelength": 1.54,
+    "Live-Filelisting": true,
+    "OverwriteFiles": true,
+    "Threads": 2
 }

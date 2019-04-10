@@ -2,12 +2,12 @@ from PyQt4 import  QtGui
 from PyQt4 import  uic
 from PyQt4 import  QtCore
  
-import json,base64
-from jsonschema import validate,ValidationError
-import os,re
+import json, base64
+from jsonschema import validate, ValidationError
+import os, re
 import collections
-from schematools import schematodefault
-import maskfileui
+from .schematools import schematodefault
+from . import maskfileui
 TYPE=QtCore.Qt.UserRole
  
 SUBSCHEMA=QtCore.Qt.UserRole+3
@@ -18,11 +18,11 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
       super(jsonschematreemodel, self).__init__()
       self.app=app
       if not schema:
-          print os.path.dirname(__file__)+os.sep+'schema.json'
-          self.schema=json.load(open(os.path.dirname(__file__)+os.sep+'schema.json'),object_pairs_hook=collections.OrderedDict) 
+          print(os.path.dirname(__file__)+os.sep+'schema.json')
+          self.schema=json.load(open(os.path.dirname(__file__)+os.sep+'schema.json'), object_pairs_hook=collections.OrderedDict) 
       else:
           self.schema=schema
-      self.connect(self, QtCore.SIGNAL('dataChanged(QModelIndex,QModelIndex)'),self.handleitemchanged)
+      self.connect(self, QtCore.SIGNAL('dataChanged(QModelIndex,QModelIndex)'), self.handleitemchanged)
       self.errormessage=QtGui.QErrorMessage()
       self.errormessage.setWindowTitle("Data Structure Error")
       self.filename=None
@@ -33,10 +33,10 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
             self.InitFromDefault()
     def InitFromDefault(self):
         self.calib=schematodefault(self.schema)
-    def loadfile(self,filename):
+    def loadfile(self, filename):
         try:
-            self.calib=json.load(open(filename),object_pairs_hook=collections.OrderedDict)
-            validate(self.calib,self.schema)
+            self.calib=json.load(open(filename), object_pairs_hook=collections.OrderedDict)
+            validate(self.calib, self.schema)
         except Exception as e:
              self.err=QtGui.QErrorMessage()
              self.err.setWindowTitle("Schema Error")
@@ -47,35 +47,35 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
         self.app.statusmodified()
         self.blockSignals(True)
         self.clear()
-        self.bulidfromjson(self.calib,self.schema,self.invisibleRootItem())
+        self.bulidfromjson(self.calib, self.schema, self.invisibleRootItem())
         self.blockSignals(False)
-    def loadservercalib(self,servercalib):
+    def loadservercalib(self, servercalib):
         self.calib=servercalib["data"]["cal"]
         self.filename=None
      
-        for attachnr,attachment in enumerate( servercalib["data"]["attachments"]):
+        for attachnr, attachment in enumerate(servercalib["data"]["attachments"]):
             if os.path.isfile(attachment['filename']):
                 msgBox=QtGui.QMessageBox()
                 msgBox.setText("'"+attachment['filename']+"' already exists")
                 msgBox.setInformativeText("Do you want to replace it with the server version?")
                 msgBox.setStandardButtons(msgBox.Ok |  msgBox.Retry| msgBox.Cancel)
                 msgBox.setDefaultButton(msgBox.Ok)
-                msgBox.setButtonText(msgBox.Ok,"Replace With Server Version")
-                msgBox.setButtonText(msgBox.Retry,"Save As")
-                msgBox.setButtonText(msgBox.Cancel,"Use Local Version")
+                msgBox.setButtonText(msgBox.Ok, "Replace With Server Version")
+                msgBox.setButtonText(msgBox.Retry, "Save As")
+                msgBox.setButtonText(msgBox.Cancel, "Use Local Version")
                 val=msgBox.exec_()
                 if val==msgBox.Cancel:
                     continue
                 elif val==msgBox.Retry:
                   
                     filedialog=QtGui.QFileDialog()
-                    filename=unicode(filedialog.getSaveFileName(parent=None, caption="Save Mask File As"))
+                    filename=str(filedialog.getSaveFileName(parent=None, caption="Save Mask File As"))
                     attachment['filename']=filename
                     self.calib["Masks"][attachnr]["MaskFile"]=filename
             else:
                 filedialog=QtGui.QFileDialog()
                 suffix=os.path.basename(self.calib["Masks"][attachnr]["MaskFile"]).split(".")[-1]
-                filename=unicode(filedialog.getSaveFileName(
+                filename=str(filedialog.getSaveFileName(
                                                             filter="."+suffix,
                                                             parent=None,
                                                              caption="Save Mask File As"
@@ -87,21 +87,21 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
                 self.calib["Masks"][attachnr]["MaskFile"]=filename
       
                 
-            print "write mask"
+            print("write mask")
             
-            maskfile=open(attachment['filename'],"wb")
-            maskfile.write(base64.b64decode(attachment['data']))
+            maskfile=open(attachment['filename'], "wb")
+            maskfile.write(base64.b64decode(base64.b64encode(attachment['data'].encode('cp1252','ignore'))))
             maskfile.close()
           
-        print "load new"  
+        print("load new")  
         self.clear()
         self.blockSignals(True)
-        self.bulidfromjson(self.calib,self.schema,self.invisibleRootItem())
+        self.bulidfromjson(self.calib, self.schema, self.invisibleRootItem())
         self.blockSignals(False)
         
     def rebuildModel(self):
         self.clear()
-        self.bulidfromjson(self.calib,self.schema,self.invisibleRootItem())
+        self.bulidfromjson(self.calib, self.schema, self.invisibleRootItem())
     def bulidfromjson(self,  input, schema ,parent, row=0):
         """
         generate QStandardItem data structure from json file
@@ -125,16 +125,16 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
             parent.appendRow(item)
                 
             value=QtGui.QStandardItem()
-            value.setData(schema['properties'][key]['type'],role=TYPE)
-            value.setData(json.dumps(schema['properties'][key]),role=SUBSCHEMA)
+            value.setData(schema['properties'][key]['type'], role=TYPE)
+            value.setData(json.dumps(schema['properties'][key]), role=SUBSCHEMA)
              
             if schema['properties'][key]['type']!="string":
-                value.setData(QtCore.Qt.AlignRight,role=QtCore.Qt.TextAlignmentRole)
+                value.setData(QtCore.Qt.AlignRight, role=QtCore.Qt.TextAlignmentRole)
             if schema['properties'][key]['type']!="object":
                 if   row%2==0:
-                    value.setBackground(QtGui.QBrush(QtGui.QColor(179,215,178) ,style = QtCore.Qt.SolidPattern))
+                    value.setBackground(QtGui.QBrush(QtGui.QColor(179, 215, 178), style = QtCore.Qt.SolidPattern))
                 else:
-                    value.setBackground(QtGui.QBrush(QtGui.QColor(212,255,211) ,style = QtCore.Qt.SolidPattern))
+                    value.setBackground(QtGui.QBrush(QtGui.QColor(212, 255, 211), style = QtCore.Qt.SolidPattern))
                 if schema['properties'][key]['type']=="boolean":
                     if key in input:
                         boolv=input[key]
@@ -146,7 +146,7 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
                     else:
                         value.setCheckState(0 )
                 elif   schema['properties'][key]['type']=="array" and key in input :
-                    for arrayindex,arrayitem in enumerate(input[key]):
+                    for arrayindex, arrayitem in enumerate(input[key]):
                         if "labels" in schema['properties'][key]['items']:
                             itemlabel=schema['properties'][key]['items']["labels"][arrayindex]
                         else:
@@ -154,22 +154,22 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
                         modelarrayitem=QtGui.QStandardItem(itemlabel)
                         modelarrayitem.setColumnCount(3)
                         modelarrayvalue=QtGui.QStandardItem()
-                        modelarrayvalue.setData(json.dumps(schema['properties'][key]["items"]),role=SUBSCHEMA)
+                        modelarrayvalue.setData(json.dumps(schema['properties'][key]["items"]), role=SUBSCHEMA)
                         if (not "maxItems" in schema['properties'][key] or
                            schema['properties'][key]["maxItems"]!=schema['properties'][key]["minItems"] ):
-                             value.setData("editablearray",role=ISEDITABLEARRAY)
-                             value.setData("add/remove item",role=QtCore.Qt.DisplayRole)
-                        modelarrayvalue.setData(schema['properties'][key]["items"]["type"],role=TYPE)
+                             value.setData("editablearray", role=ISEDITABLEARRAY)
+                             value.setData("add/remove item", role=QtCore.Qt.DisplayRole)
+                        modelarrayvalue.setData(schema['properties'][key]["items"]["type"], role=TYPE)
                         
-                        modelarrayvalue.setData(QtCore.Qt.AlignRight,role=QtCore.Qt.TextAlignmentRole)
+                        modelarrayvalue.setData(QtCore.Qt.AlignRight, role=QtCore.Qt.TextAlignmentRole)
                         if schema['properties'][key]["items"]["type"]=="object":
-                             modelarrayvalue.setData("arrayitem",role=TYPE)
-                             item.appendRow([modelarrayitem,modelarrayvalue])
+                             modelarrayvalue.setData("arrayitem", role=TYPE)
+                             item.appendRow([modelarrayitem, modelarrayvalue])
                              self.bulidfromjson(arrayitem, schema['properties'][key]["items"], modelarrayitem)
                         else:
-                            modelarrayvalue.setData(str(arrayitem),role=QtCore.Qt.DisplayRole)
+                            modelarrayvalue.setData(str(arrayitem), role=QtCore.Qt.DisplayRole)
                            
-                            item.appendRow([modelarrayitem ,modelarrayvalue])
+                            item.appendRow([modelarrayitem, modelarrayvalue])
                 else:
                     if key in input:
                        
@@ -180,25 +180,25 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
                             if display=="MaskFile":
                                 maskimage=QtGui.QStandardItem()
                                 image=QtGui.QStandardItem()
-                                item.appendRow([maskimage ,image])
+                                item.appendRow([maskimage, image])
                                 try:
                                     pixmap=maskfileui.getMaskPixMapFromFile(input[key]).scaledToWidth(200)
                                     image.setData(
-                                              QtCore.QVariant(pixmap) , 
+                                              (pixmap), 
                                               role=QtCore.Qt.DecorationRole)
                                     
                                 except Exception as e :
-                                    print e
+                                    print(str(e))
                                     pass
                     elif "default" in schema['properties'][key]:
                         value.setData(str(schema['properties'][key]['default']), role=QtCore.Qt.DisplayRole)
                 if "description"in schema['properties'][key]:
                     value.setToolTip(tooltip)
              
-                parent.setChild(row,1,value)
+                parent.setChild(row, 1, value)
                 if 'units' in schema['properties'][key]:
                     units=QtGui.QStandardItem(str(schema['properties'][key]['units']))
-                    parent.setChild(row,2,units)  
+                    parent.setChild(row, 2, units)  
             if schema['properties'][key]['type']=="object" or schema['properties'][key]['type']=="array":
                 if (("required" in  schema['properties'][key] 
                 and not schema['properties'][key]['required']) 
@@ -211,42 +211,42 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
                         value.setCheckState(0)
                     
                    
-                parent.setChild(row,1,value)
+                parent.setChild(row, 1, value)
                  
                 if key in input and schema['properties'][key]['type']=="object":
-                    value.setData("object",role=TYPE)
+                    value.setData("object", role=TYPE)
                     self.bulidfromjson(input[key], schema['properties'][key], item)
             row+=1     
-    def handleitemchanged(self,index,index2):
+    def handleitemchanged(self, index, index2):
         """
         generate json from QStandardItem data structure
         """
       
         if index.isValid() :
-            parent=self.itemFromIndex(index.sibling(index.row(),0))
+            parent=self.itemFromIndex(index.sibling(index.row(), 0))
             item=self.itemFromIndex(index)
-            type=item.data(role=TYPE).toString()
-            text=item.data(role=QtCore.Qt.DisplayRole).toString()
-            action=unicode(item.data(role=ACTION).toString())
+            type=item.data(role=TYPE)
+            text=item.data(role=QtCore.Qt.DisplayRole)
+            action=str(item.data(role=ACTION))
             if not action:
                 if  (item.isCheckable() 
                      and type=="object" 
                      and not item.hasChildren() 
                      and item.checkState()==2 ):
-                    subschema=json.loads(unicode(item.data(role=SUBSCHEMA).toString()))
+                    subschema=json.loads(str(item.data(role=SUBSCHEMA)))
                     default=schematodefault(subschema)
                     self.dontsave=True
                     self.bulidfromjson(default, 
-                                       subschema , 
-                                       self.itemFromIndex(index.sibling(index.row(),0)),row=0 )
+                                       subschema, 
+                                       self.itemFromIndex(index.sibling(index.row(), 0)), row=0 )
                     self.dontsave=False
                 elif  (item.isCheckable() 
                        and type=="array" 
                        and not item.hasChildren() 
                        and item.checkState()==2):
                         value=self.itemFromIndex(index)
-                        value.setData("editablearray",role=ISEDITABLEARRAY)
-                        value.setData("add/remove item",role=QtCore.Qt.DisplayRole)
+                        value.setData("editablearray", role=ISEDITABLEARRAY)
+                        value.setData("add/remove item", role=QtCore.Qt.DisplayRole)
                         
                 elif (item.isCheckable()   
                       and  parent.hasChildren() 
@@ -262,39 +262,39 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
                         self.blockSignals(False)
             else:  
                 if action=="Add New Item":
-                    subschema=json.loads(unicode(item.data(role=SUBSCHEMA).toString()))['items']
-                    self.setData(index,"",role=ACTION)
+                    subschema=json.loads(str(item.data(role=SUBSCHEMA)))['items']
+                    self.setData(index, "", role=ACTION)
                     default=schematodefault(subschema)
                    
-                    arrayroot=self.itemFromIndex(index.sibling(index.row(),0))
+                    arrayroot=self.itemFromIndex(index.sibling(index.row(), 0))
                     
                     nearrayitem=QtGui.QStandardItem(str(arrayroot.rowCount()))
                     value=QtGui.QStandardItem()
                     if subschema['type']!="object":
-                        value.setData(subschema['type'],role=TYPE)
-                        value.setData(json.dumps(subschema),role=SUBSCHEMA)
-                        value.setData(subschema["default"],role=QtCore.Qt.DisplayRole)
+                        value.setData(subschema['type'], role=TYPE)
+                        value.setData(json.dumps(subschema), role=SUBSCHEMA)
+                        value.setData(subschema["default"], role=QtCore.Qt.DisplayRole)
                         if subschema['type']!="string":
-                            value.setData(QtCore.Qt.AlignRight,role=QtCore.Qt.TextAlignmentRole)
+                            value.setData(QtCore.Qt.AlignRight, role=QtCore.Qt.TextAlignmentRole)
                     else:
-                        value.setData("arrayitem",role=TYPE)
+                        value.setData("arrayitem", role=TYPE)
                         self.bulidfromjson(default, 
-                                     subschema , 
-                                      nearrayitem,row=0 )
-                    arrayroot.appendRow([nearrayitem,value])
+                                     subschema, 
+                                      nearrayitem, row=0 )
+                    arrayroot.appendRow([nearrayitem, value])
                 elif action.startswith("Delete Item"):
-                    m=re.match("Delete Item (\d+)",action)
+                    m=re.match("Delete Item (\d+)", action)
                     itemnumber=int(m.group(1))
-                    arrayroot=self.itemFromIndex(index.sibling(index.row(),0))
+                    arrayroot=self.itemFromIndex(index.sibling(index.row(), 0))
                     arrayroot.removeRow(itemnumber)
                     
                     for row in range(arrayroot.rowCount()):
-                        arrayroot.child(row,0).setData(str(row),role=QtCore.Qt.DisplayRole)
-    def allowtodelete(self,parent):
+                        arrayroot.child(row, 0).setData(str(row), role=QtCore.Qt.DisplayRole)
+    def allowtodelete(self, parent):
         """
         Delete Dialog
         """
-        text=parent.data(role=QtCore.Qt.DisplayRole).toString()
+        text=parent.data(role=QtCore.Qt.DisplayRole)
         dialog= QtGui.QDialog( )
         dialog.setWindowTitle("Delete "+text)
         buttons=QtGui.QDialogButtonBox( parent=dialog)
@@ -318,7 +318,7 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
         data=self.modeltojson(self.invisibleRootItem())
      
         try:
-            validate(data,self.schema)
+            validate(data, self.schema)
         except Exception as e:
             self.errormessage.showMessage(str(e))
         return data
@@ -326,17 +326,17 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
         data=self.getjson()
         if not self.filename:
             dialog=QtGui.QFileDialog()
-            filename= unicode(dialog.getSaveFileName(None,"Save File As",directory=self.lastdir))
+            filename= str(dialog.getSaveFileName(None, "Save File As", directory=self.lastdir))
             if filename:
                 self.filename=filename
                 self.lastdir=os.path.dirname( filename)
             else:
                 return
-        json.dump(data,open(self.filename,"w"),indent=2)
+        json.dump(data, open(self.filename, "w"), indent=2)
         self.emit(QtCore.SIGNAL("fileNameChanged()"))
     def saveAs(self):
         dialog=QtGui.QFileDialog()
-        filename= unicode(dialog.getSaveFileName(None,caption="Save File As",directory=self.lastdir))
+        filename= str(dialog.getSaveFileName(None, caption="Save File As", directory=self.lastdir))
         self.lastdir=os.path.dirname( filename)
         if filename:
             self.filename=filename
@@ -346,13 +346,13 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
         model to json converter recursive
         """
         js=collections.OrderedDict({})
-        def stringtotype(typestr,value,item):
+        def stringtotype(typestr, value, item):
             if  typestr=="number":
                  value=float(value)
             elif typestr=="integer":
                  value=int(value)
             elif typestr=="boolean":
-                if item.child(childrow,1).checkState():
+                if item.child(childrow, 1).checkState():
                    value=True
                 else:
                     value=False
@@ -366,15 +366,15 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
         
       
         for childrow in range(item.rowCount()):
-            child= item.child(childrow,0)
-            name= unicode(child.data(role=QtCore.Qt.DisplayRole).toString())
+            child= item.child(childrow, 0)
+            name= str(child.data(role=QtCore.Qt.DisplayRole))
             
-            if item.child(childrow,1):
-                valueitem=item.child(childrow,1)
-                type=unicode(item.child(childrow,1).data(role=TYPE).toString())
-                value=unicode(item.child(childrow,1).data(role=QtCore.Qt.DisplayRole).toString())
+            if item.child(childrow, 1):
+                valueitem=item.child(childrow, 1)
+                type=str(item.child(childrow, 1).data(role=TYPE))
+                value=str(item.child(childrow, 1).data(role=QtCore.Qt.DisplayRole))
             else:
-                print "##### "+name
+                print("##### "+name)
                 continue
             
             
@@ -384,21 +384,21 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
                     js[name]=[]
                  
                     for arrayitemrow in range(child.rowCount()):
-                        arrayitemlabel=child.child(arrayitemrow,0)
-                        arrayitem=child.child(arrayitemrow,1)
+                        arrayitemlabel=child.child(arrayitemrow, 0)
+                        arrayitem=child.child(arrayitemrow, 1)
                         if arrayitemlabel and arrayitem :
-                            arraytype=unicode(arrayitem.data(role=TYPE).toString())
+                            arraytype=str(arrayitem.data(role=TYPE))
                            
-                            arrayvalue=unicode(arrayitem.data(role=QtCore.Qt.DisplayRole).toString())
+                            arrayvalue=str(arrayitem.data(role=QtCore.Qt.DisplayRole))
                             if arraytype=="arrayitem":
-                                js[name].append(self.modeltojson(child.child(arrayitemrow,0)))
+                                js[name].append(self.modeltojson(child.child(arrayitemrow, 0)))
                             else:
-                                js[name].append(stringtotype(arraytype,arrayvalue,arrayitem))
+                                js[name].append(stringtotype(arraytype, arrayvalue, arrayitem))
             elif child.hasChildren() and type=="object":
                     js[name]=self.modeltojson(child)
 
             elif type!="object":
-                js[name]=stringtotype(type,value,item)
+                js[name]=stringtotype(type, value, item)
         
         
         return js
@@ -408,19 +408,19 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
         """
         if role == QtCore.Qt.TextAlignmentRole:
             if orientation == QtCore.Qt.Horizontal:
-                return QtCore.QVariant(int(QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter))
-            return QtCore.QVariant(int(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter))
+                return int(QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+            return int(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         if role != QtCore.Qt.DisplayRole:
-            return QtCore.QVariant()
+            return None
         if orientation == QtCore.Qt.Horizontal:
             if section == 0:
-                return QtCore.QVariant("Name")
+                return str("Name")
             elif section == 1:
-                return QtCore.QVariant("Value")
+                return str("Value")
             elif section == 2:
-                return QtCore.QVariant("Units")
+                return str("Units")
             
-        return QtCore.QVariant(int(section + 1))
+        return (int(section + 1))
     def flags(self, index):
         """
         special class of QStandardItemModel

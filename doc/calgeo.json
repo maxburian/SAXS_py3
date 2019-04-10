@@ -1,4 +1,5 @@
 {
+    "Title": "Example Calibration",
     "Geometry": {
         "Tilt": {
             "TiltAngleDeg": -10,
@@ -26,9 +27,15 @@
             "PixelPerRadialElement": 1,
             "MaskFile": "emptymask.tif",
             "Oversampling": 2,
+            "Name": "",
+            "Phi-mode": false,
             "qStart": 0.0, 
             "qStop": 5.0
-        }
-    ],
-    "Wavelength": 1.54
+        }],
+    "Slices": [],
+    "GISAXSmode": false,
+    "Wavelength": 1.54,
+    "Live-Filelisting": true,
+    "OverwriteFiles": true,
+    "Threads": 2
 }

@@ -14,11 +14,11 @@ def startfeeder():
     usage = "usage: %prog [options]  "
     parser = OptionParser(usage)
     parser.add_option("-p", "--port", dest="port",
-                      help="Port to offer file changes service", metavar="port",default="")
+                      help="Port to offer file changes service", metavar="port", default="")
     parser.add_option("-d", "--dir", dest="dir",
-                      help="Directory to monitor", metavar="dir",default=".")
+                      help="Directory to monitor", metavar="dir", default=".")
     parser.add_option("-s", "--sdir", dest="sdir",
-                      help="server dir, (prefix to filepaths)", metavar="dir",default=".")
+                      help="server dir, (prefix to filepaths)", metavar="dir", default=".")
     (options, args) = parser.parse_args(args=None, values=None)
     
     
@@ -30,7 +30,7 @@ def startfeeder():
         port=conf['Feeder'].split(':')[-1]
     else:
         port=options.port
-    print "conecting:","tcp://*:%s" % port
+    print("conecting:", "tcp://*:%s" % port)
     socket.bind("tcp://*:%s" % port)
     
     fileslist=[]
@@ -45,7 +45,7 @@ def startfeeder():
     messageobj={"command":"new file","argument":""}
     while True:
        for file in fileslist:
-            print file
+            print(file)
             messageobj['argument']=file
             message=json.dumps(messageobj)
             socket.send(message)

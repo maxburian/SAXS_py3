@@ -1,7 +1,8 @@
 {
+    "Title": "Example Calibration",
     "Geometry": {
         "Tilt": {
-            "TiltAngleDeg": -0.56,
+            "TiltAngleDeg": -10,
             "TiltRotDeg": 73.569
         },
         "DedectorDistanceMM": 1031.657,
@@ -28,11 +29,17 @@
     "Masks": [
         {
             "PixelPerRadialElement": 1,
-            "MaskFile": "./data/AAA_integ.msk",
+            "MaskFile": "emptymask.tif",
             "Oversampling": 2,
+            "Name": "",
+            "Phi-mode": false,
             "qStart": 0.0, 
             "qStop": 5.0
-        }
-    ],
-    "Wavelength": 1.54
+        }],
+    "Slices": [],
+    "GISAXSmode": false,
+    "Wavelength": 1.54,
+    "Live-Filelisting": true,
+    "OverwriteFiles": true,
+    "Threads": 2
 }

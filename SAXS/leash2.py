@@ -2,33 +2,33 @@
 from PyQt4 import  QtGui
 from PyQt4 import  uic
 from PyQt4 import  QtCore
-import sys,os
-import connectdialog
-import calibeditor
-import leashmenue
-import Leash
+import sys, os
+from SAXS import connectdialog
+from SAXS import calibeditor
+from SAXS import leashmenue
+from SAXS import Leash
 import time
 import json
-from jsonschema import validate,ValidationError
-import plotdatathread
-import plotpanel
-import histpanel
-import checkServerCalibchanged
+from jsonschema import validate, ValidationError
+from SAXS import plotdatathread
+from SAXS import plotpanel
+from SAXS import histpanel
+from SAXS import checkServerCalibchanged
 import collections
-import consolidatepanel
-from multiprocessing import Process,Value
-from Server import saxsdogserver
+from SAXS import consolidatepanel
+from multiprocessing import Process, Value
+from SAXS.Server import saxsdogserver
 from PyQt4.Qt import QMessageBox
 class LeashUI(QtGui.QMainWindow):
     def __init__(self,app,parent=None):
-        super(LeashUI,self).__init__(parent)
+        super(LeashUI, self).__init__(parent)
         self.clipboard=app.clipboard()
         try:
             self.confs=json.load(open(os.path.expanduser("~"+os.sep+".saxsdognetwork")))
         except IOError:
             self.confs=[]
         try:
-            validate( self.confs,json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
+            validate( self.confs, json.load(open(os.path.dirname(__file__)+os.sep+'NetworkSchema.json')))
         except ValidationError as e:
             errormsg=QtGui.QErrorMessage(parent=self)
             errormsg.setWindowTitle("Your SAXSDog Network is not configured correctly)")
@@ -37,7 +37,7 @@ class LeashUI(QtGui.QMainWindow):
             sys.exit()
         
             
-        self.connectdialog=connectdialog.connectdialog( self.confs,self)
+        self.connectdialog=connectdialog.connectdialog( self.confs, self)
         self.connectdialog.exec_()
         selected=self.connectdialog.confindex
         if  self.connectdialog.ok:
@@ -53,18 +53,18 @@ class LeashUI(QtGui.QMainWindow):
         if selected==-1:
             dirdialog=QtGui.QFileDialog()
             serverdir=dirdialog.getExistingDirectory(parent=self, caption="Choose the Image Data Directory")
-            self.localserverstop=Value('i',0)
+            self.localserverstop=Value('i', 0)
             self.localserver=Process(target=saxsdogserver,
-                                     args=(self.confs[-1],"Local",self.localserverstop,unicode(serverdir)))
+                                     args=(self.confs[-1], "Local", self.localserverstop, str(serverdir)))
             self.localserver.start()
         self.parscecommandline()
         self.loadui(reconnectresult)
         self.setLocale(QtCore.QLocale("C"))
         if not "Name" in self.netconf:
             self.netconf["Name"]="Unnamed"
-    def loadui(self,reconnectresult):
+    def loadui(self, reconnectresult):
         
-        self.mainWindow=super(LeashUI,self)
+        self.mainWindow=super(LeashUI, self)
         self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash")
         self.appdir=os.path.dirname(__file__)+os.sep
         self.mainWindow.setWindowIcon(QtGui.QIcon(self.appdir+"icons"+os.sep+"program.png"))
@@ -85,30 +85,30 @@ class LeashUI(QtGui.QMainWindow):
         self.submitlayout.addWidget(self.filestatuslabel)
         self.submitlayout.addWidget(self.submitbutton)
         self.submitlayout.addStretch()
-        self.tab.addTab( self.calib , "Calib")
+        self.tab.addTab( self.calib, "Calib")
         self.plotpanel=plotpanel.plotpanel(self.tab)
-        plottab=self.tab.addTab( self.plotpanel , "Plots")
+        plottab=self.tab.addTab( self.plotpanel, "Plots")
         
         
         self.histpanel=histpanel.histpanel(self)
-        self.tab.addTab( self.histpanel , "History")
+        self.tab.addTab( self.histpanel, "History")
         self.mainWindow.setCentralWidget (self.tab  )
-        self.connect(self.submitbutton,QtCore.SIGNAL('clicked()'),self.startqueue)
-        self.connect(self.calibeditor.model,QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"),self.statusmodified)
+        self.connect(self.submitbutton, QtCore.SIGNAL('clicked()'), self.startqueue)
+        self.connect(self.calibeditor.model, QtCore.SIGNAL("dataChanged(QModelIndex,QModelIndex)"), self.statusmodified)
         self.errormessage=QtGui.QErrorMessage()
         self.menue=leashmenue.menueitems(self)
-        self.connect(self.menue,QtCore.SIGNAL("queueaborted()"),self.queueaborted)
-        self.connect(self.calibeditor.model, QtCore.SIGNAL("fileNameChanged()"),self.updatewindowtitle)
+        self.connect(self.menue, QtCore.SIGNAL("queueaborted()"), self.queueaborted)
+        self.connect(self.calibeditor.model, QtCore.SIGNAL("fileNameChanged()"), self.updatewindowtitle)
         self.plotthread=plotdatathread.plotthread(self)
-        self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.plotpanel.plot)
-        self.connect(self.plotthread,QtCore.SIGNAL("plotdata(QString)"),self.histpanel.plot)
-        self.connect(self.plotthread,QtCore.SIGNAL("histupdate(QString)"),self.histpanel.timestep)
+        self.connect(self.plotthread, QtCore.SIGNAL("plotdata(QString)"), self.plotpanel.plot)
+        self.connect(self.plotthread, QtCore.SIGNAL("plotdata(QString)"), self.histpanel.plot)
+        self.connect(self.plotthread, QtCore.SIGNAL("histupdate(QString)"), self.histpanel.timestep)
       
         
         if not  self.localserver:
             self.checkServerCalibchanged=checkServerCalibchanged.checkServerCalibChangedThread(self)
-            self.connect(self.plotthread,QtCore.SIGNAL("ServerQueueTimeChanged()"),  self.checkServerCalibchanged.start)
-            self.connect(self.checkServerCalibchanged,QtCore.SIGNAL("ServerQueueChanged(QString)"),self.notifyServerChange)
+            self.connect(self.plotthread, QtCore.SIGNAL("ServerQueueTimeChanged()"),  self.checkServerCalibchanged.start)
+            self.connect(self.checkServerCalibchanged, QtCore.SIGNAL("ServerQueueChanged(QString)"), self.notifyServerChange)
         if  reconnectresult and reconnectresult["result"]=="cal":
             self.calibeditor.model.loadservercalib(reconnectresult)
             self.calibeditor.reset()
@@ -125,11 +125,11 @@ class LeashUI(QtGui.QMainWindow):
         self.plotthread.start()
         
         self.consolidatepanel=consolidatepanel.consolidatepanel(self)
-        self.tab.addTab(self.consolidatepanel , "Consolidate")
+        self.tab.addTab(self.consolidatepanel, "Consolidate")
         
         
     def parscecommandline(self):
-        self.options,self.args= Leash.parsecommandline()
+        self.options, self.args= Leash.parsecommandline()
         
     def startqueue(self):        
         data=self.calibeditor.model.getjson()
@@ -144,16 +144,17 @@ class LeashUI(QtGui.QMainWindow):
         usrfolder = str(data['Directory'][0])
         titlestr='The title and the selected user folder do NOT match. Are you sure you are user: ' + str(usrfolder) +' ?' 
         if title.find(usrfolder)==-1:
-            res=QMessageBox.warning(self, self.tr("User folder"),self.tr(titlestr), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            res=QMessageBox.warning(self, self.tr("User folder"), self.tr(titlestr), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         else:
             res = QMessageBox.Yes
         if res==QMessageBox.Yes:
             try:
-                result=json.loads(Leash.initcommand(self.options,argu,self.netconf))
+                result=json.loads(Leash.initcommand(self.options, argu, self.netconf))
             except Exception as e:
                 self.errormessage.setWindowTitle("Server Error")
                 self.errormessage.setMinimumSize(400, 300)
                 self.errormessage.showMessage(str(e))
+                return
             if 'result' in result and result['result']=="new queue":
                 self.setqueuesynced()
                 self.plotthread.start()
@@ -162,13 +163,13 @@ class LeashUI(QtGui.QMainWindow):
                 for text in data['Directory']:
                     folderpath+=text + "/" 
                 titlestr='Successfully loaded new calibration to Server!\n\nDo you want to re-integrate all images in '+folderpath+' ?' 
-                res=QMessageBox.information(self, self.tr("Re-integrate?"),self.tr(titlestr), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                res=QMessageBox.information(self, self.tr("Re-integrate?"), self.tr(titlestr), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                 if res==QMessageBox.Yes:
                     self.menue.queueRedoAllImmages()
             else:
                 self.errormessage.setWindowTitle("Server Error")
                 self.errormessage.setMinimumSize(400, 300)
-                self.errormessage.showMessage( result["data"]["Error"]) 
+                self.errormessage.showMessage(result["data"]["Error"]) 
     
     def queueaborted(self):
         self.queuestatuslabel.setText("Queue aborted.")
@@ -189,7 +190,7 @@ class LeashUI(QtGui.QMainWindow):
             self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash: Servercalibration")
     def updatewindowtitle(self):
         self.mainWindow.setWindowTitle(self.netconf["Name"]+" SAXS Leash: "+self.calibeditor.model.filename)
-    def notifyServerChange(self,serverdata):
+    def notifyServerChange(self, serverdata):
         message =QtGui.QMessageBox()
         message.setText("The Server Calibration Changed")
         message.setInformativeText("Do you want to load the new Calibration from the server")
@@ -198,15 +199,17 @@ class LeashUI(QtGui.QMainWindow):
         result=message.exec_()
        
         if result==0:
-              ServerData=json.loads(unicode(serverdata),object_pairs_hook=collections.OrderedDict)
+              ServerData=json.loads(str(serverdata), object_pairs_hook=collections.OrderedDict)
               self.calibeditor.model.loadservercalib(ServerData)
               self.calibeditor.reset()
     def cleanup(self):
         
         if  self.localserver:
+            print("cleaning up processes")
             self.localserverstop.value=1
             argu=["abort"]
-            result=json.loads(Leash.initcommand(self.options,argu,self.netconf))
+            result=json.loads(Leash.initcommand(self.options, argu, self.netconf))
+            self.localserver.terminate()
         
 def LeashGUI():
     
@@ -215,6 +218,7 @@ def LeashGUI():
     form.show()
     app.exec_()
     form.cleanup()
+    
 if __name__ == "__main__":
    
     LeashGUI( )

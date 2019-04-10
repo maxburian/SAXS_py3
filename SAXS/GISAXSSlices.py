@@ -1,20 +1,20 @@
 import numpy as np
-from  calibration import openmask,labelstosparse
+from .calibrationhelper import *
 import json
-def yDirSliceProjector(y,x,x1,x2,mask):
-    a=np.repeat(np.arange(x),y).reshape((x,y))
-    maskx=np.ones((x,y),dtype=bool)
+def yDirSliceProjector(y, x, x1, x2, mask):
+    a=np.repeat(np.arange(x), y).reshape((x, y))
+    maskx=np.ones((x, y), dtype=bool)
     maskx[np.logical_not(mask)]=0
-    maskx[:,:x1]=0
-    maskx[:,x2:]=0
-    return labelstosparse(a, maskx,1)
-def xDirSliceProjector(y,x,y1,y2,mask):
-    a=np.tile(np.arange(y),x).reshape(x,y)
-    masky=np.ones((x,y),dtype=bool)
+    maskx[:, :x1]=0
+    maskx[:, x2:]=0
+    return labelstosparse(a, maskx, 1)
+def xDirSliceProjector(y, x, y1, y2, mask):
+    a=np.tile(np.arange(y), x).reshape(x, y)
+    masky=np.ones((x, y), dtype=bool)
     masky[np.logical_not(mask)]=0
     masky[:(x-y2)]=0
     masky[(x-y1):]=0
-    return labelstosparse(a, masky,1)
+    return labelstosparse(a, masky, 1)
  
 class slice():
     """ 
@@ -43,29 +43,30 @@ class slice():
                 attachment=attachments[sliceconf['MaskRef']]
             else:
                 atachment=None
+            
             self.mask=openmask(conf["Masks"][sliceconf['MaskRef']]["MaskFile"], attachment=attachment)
         else:
-            self.mask=np.zeros((x,y))
+            self.mask=np.zeros((x, y))
         if len(conf["Geometry"]['PixelSizeMicroM'])==1:
             conf["Geometry"]['PixelSizeMicroM'].append(conf["Geometry"]['PixelSizeMicroM'][0])
        
         if sliceconf["Direction"]=="x":
-            self.Projector=xDirSliceProjector(x,y,start,stop,self.mask).transpose()
+            self.Projector=xDirSliceProjector(x, y, start, stop, self.mask).transpose()
  
         elif sliceconf["Direction"]=="y":
-            self.Projector=yDirSliceProjector(x,y,start,stop,self.mask).transpose()
+            self.Projector=yDirSliceProjector(x, y, start, stop, self.mask).transpose()
  
         else :
             raise Exception("Invalid Direction: "+ sliceconf["Direction"])
         self.makegrid()
-        self.areas=self.Projector.dot(np.ones((x,y)).flatten())
+        self.areas=self.Projector.dot(np.ones((x, y)).flatten())
         #areaswithoutzero=np.where(self.areas>0.0 ,self.areas,-1.0)
-        self.oneoverA=np.where(self.areas>0.0,1.0/self.areas,np.NAN)
+        self.oneoverA=np.where(self.areas>0.0, 1.0/self.areas, np.NAN)
         
-    def integrate(self,picture):
+    def integrate(self, picture):
         return self.Projector.dot(picture.flatten())*self.oneoverA
    
-    def integratechi(self,image,path,picture):
+    def integratechi(self, image, path, picture):
         """
         Integrate and save to file in "chi" format.
         
@@ -121,11 +122,11 @@ class slice():
             HorizontalPixelsize=self.conf["Geometry"]['PixelSizeMicroM'][0]/1000.0
         else:
             raise Exception("Invalid Plane orientation: "+ self.sliceconf["Plane"])
-        alphaF=np.arctan((np.arange(VerticalPixelN,dtype=np.float)-VerticalBeamCenter)
+        alphaF=np.arctan((np.arange(VerticalPixelN, dtype=np.float)-VerticalBeamCenter)
                        * VerticalPixelsize
                        /self.conf["Geometry"]['DedectorDistanceMM']
                        )
-        twothetaF=np.arctan((np.arange(HorizontalPixeN,dtype=np.float)- HorizontalBeamCenter)
+        twothetaF=np.arctan((np.arange(HorizontalPixeN, dtype=np.float)- HorizontalBeamCenter)
                                  * self.conf["Geometry"]['PixelSizeMicroM'][1]/1000.0
                                  /self.conf["Geometry"]['DedectorDistanceMM']
                                  )

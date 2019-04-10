@@ -1,8 +1,11 @@
 from setuptools import setup
 
-versionstring="2.0b1"
- 
+print("####################################################")
+print("       Starting Installation of SaxsDog")
+print("####################################################")
 
+
+versionstring="3.0"
 setup(
     name="SAXS",
     version=versionstring,
@@ -30,8 +33,9 @@ setup(
                       "watchdog", 
                       "sphinxcontrib-programoutput",
                       "sphinxcontrib-programscreenshot",
-                      "pyzmq","prettyplotlib",
-                      "pandas"],
+                      "pyzmq", "prettyplotlib",
+                      "pandas",
+                      'winshell;platform_system=="Windows"'],
     license="Proprietary",
     entry_points = {
         'console_scripts': [
@@ -47,23 +51,35 @@ setup(
         'gui_scripts':[
             'leash=SAXS:LeashGUI'
                        ]
-        
-        
     }
 )
+
 try:
     import py2exe
 except:
-    print "No py2exe here"
+    print("No py2exe here")
+ 
+def get_reg(name,path):
+    # Read variable from Windows Registry
+    # From https://stackoverflow.com/a/35286642
+    try:
+        registry_key = wr.OpenKey(wr.HKEY_CURRENT_USER, path, 0,
+                                       wr.KEY_READ)
+        value, regtype = wr.QueryValueEx(registry_key, name)
+        wr.CloseKey(registry_key)
+        return value
+    except WindowsError:
+        return None 
  
 from subprocess import call
-import sys,os
+import sys, os
 if sys.argv[1] == 'install':
     if os.name == "nt":
-        import _winreg as  wr
+        
+        import winreg as  wr
       
-        pyw_executable =   os.path.join(sys.prefix,'pythonw.exe')
-        script_file =  '"'+os.path.join(sys.prefix,"Scripts","leash-script.pyw")+'"'
+        pyw_executable =   os.path.join(sys.prefix, 'pythonw.exe')
+        script_file =  '"'+os.path.join(sys.prefix, "Scripts", "leash-script.pyw")+'"'
         iconpath= os.path.expanduser(
             os.path.join(
             sys.prefix,
@@ -72,30 +88,61 @@ if sys.argv[1] == 'install':
             "SAXS",
             "icons",
             "program.ico"))
-        wr.SetValue(wr.HKEY_CURRENT_USER,"Software\Classes\TUG.Leash\shell\open\command",wr.REG_SZ,pyw_executable+" \""+ script_file+ "\"  \"%1\"")
-        wr.SetValue( wr.HKEY_CURRENT_USER,"Software\Classes\TUG.Leash\DefaultIcon",wr.REG_SZ,iconpath)
-        wr.SetValue( wr.HKEY_CURRENT_USER,"Software\Classes\.saxsconf",wr.REG_SZ, "TUG.Leash");
+        wr.SetValue(wr.HKEY_CURRENT_USER, "Software\Classes\TUG.Leash\shell\open\command", wr.REG_SZ, pyw_executable+" \""+ script_file+ "\"  \"%1\"")
+        wr.SetValue( wr.HKEY_CURRENT_USER, "Software\Classes\TUG.Leash\DefaultIcon", wr.REG_SZ, iconpath)
+        wr.SetValue( wr.HKEY_CURRENT_USER, "Software\Classes\.saxsconf", wr.REG_SZ, "TUG.Leash");
         
-        print "added registry values for extensions"
+        print("added registry values for extensions")
          
-        import winshell
-        import win32com 
+        #import winshell
+        import win32com.client
+        
         w_dir = os.path.expanduser('~')
-        desktop_path = winshell.desktop()
-        startmenu_path =win32com.shell.shell.SHGetSpecialFolderPath(0, win32com.shell.shellcon.CSIDL_STARTMENU)
-        with winshell.shortcut( os.path.join(startmenu_path,'SAXSLeash.lnk')) as link:
-            link.path= pyw_executable
-            link.description =  "Control panel for SAXSdog Server"
-            link.arguments =  script_file
-            link.icon_location=(iconpath,0)
-        with winshell.shortcut( os.path.join(desktop_path,'SAXSLeash.lnk')) as link:
-            link.path= pyw_executable
-            link.description = "Control panel for SAXSdog Server"
-            link.arguments =  script_file
-            link.icon_location=(iconpath,0)
-        print startmenu_path
-        call(["ie4uinit.exe" ,"-ClearIconCache"])
+        regName = 'Desktop'
+        regPath = r'Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders'
+        desktop_path = os.path.normpath(get_reg(regName,regPath))
+        #desktop_path = os.path.expanduser("~/Desktop")
+        #startmenu_path =win32com.shell.shell.SHGetSpecialFolderPath(0, win32com.shell.shellcon.CSIDL_STARTMENU)
+        regName = 'Start Menu'
+        startmenu_path = os.path.normpath(get_reg(regName,regPath))
+        
+        print("  ")
+        print("  ")
+        print("####################################################")
+        print("  ")
+        print("Shortcuts for SAXSleash created at:")
+        
+        '''Startmenu Shortcut'''
+        shell = win32com.client.Dispatch("WScript.Shell")
+        startmenu_path = startmenu_path.replace("%USERPROFILE%",os.environ['USERPROFILE'])
+        linklocation = os.path.join(startmenu_path, 'SAXSLeash.lnk')
+        link = shell.CreateShortCut(linklocation)
+        link.TargetPath = pyw_executable
+        link.Description =  "Control panel for SAXSdog Server"
+        link.Arguments =  script_file
+        link.IconLocation =iconpath
+        link.save()
+        print("   -) Start Menu: "+linklocation)
+        
+
+        '''Startmenu Shortcut'''
+        desktop_path = desktop_path.replace("%USERPROFILE%",os.environ['USERPROFILE'])
+        linklocation = os.path.join(desktop_path, 'SAXSLeash.lnk')
+        link = shell.CreateShortCut(linklocation)
+        link.TargetPath = pyw_executable
+        link.Description =  "Control panel for SAXSdog Server"
+        link.Arguments =  script_file
+        link.IconLocation =iconpath
+        link.save()
+        print("   -) Dektop:  "+linklocation)
+        print("   ")
+        
+        call(["ie4uinit.exe", "-ClearIconCache"])
     elif os.name == "posix":
-        print os.name
+        print(os.name)
        
-        call(["bash","addmime.sh"])
+        call(["bash", "addmime.sh"])
+        
+print("####################################################")
+print("        SaxsDog Installation done!")
+print("####################################################")

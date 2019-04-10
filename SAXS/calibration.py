@@ -4,7 +4,6 @@ Created on 22.04.2014
 
 @author: chm
 '''
- 
 import numpy as np
 from scipy import misc
 import matplotlib.pyplot as plt
@@ -13,11 +12,12 @@ import json
 import pickle
 import hashlib, binascii
 import os, sys
-from threading import Thread,current_thread,active_count 
-import StringIO,base64
+from threading import Thread, current_thread, active_count 
+import io, base64
 #from numba import jit
  
 from jsonschema import validate
+from .calibrationhelper import *
 """
 Module ...
 """
@@ -33,19 +33,19 @@ class calibration:
     
     def __init__(self,config,mask=None,attachment=None):
         
-        if type(config) is str:
+        if isinstance(config, str):
             #open config and check schema
             caldict=json.load(open(config))
-        elif  type(config) is dict:
+        elif  isinstance(config, dict):
             caldict=config
            
         else:
-            print "calibrarion takes a config object as path or dictionary"
+            print("calibrarion takes a config object as path or dictionary")
             raise TypeError (config)
         schemapath=os.path.dirname(__file__)+'/schema.json'
        
         schema=(json.load(open(schemapath)))
-        validate(caldict,schema)
+        validate(caldict, schema)
         #calculate a hash for all configdata
   
         self.config=caldict
@@ -53,11 +53,22 @@ class calibration:
             mask=caldict["Masks"][0]
         self.maskconfig=mask
     
-        self._setupcalibration(mask,attachment)
+        self._setupcalibration(mask, attachment)
         self.kind="Radial"
  
-    
-    def polcorr(self,Pfrac,rot):
+    def __complexCoordinatesOfPicture(self, oversampling):
+        """
+        Generates array containing coordinates relative to beam center as complex numbers. 
+        This is used to calculate the angles
+        
+        :param obj config:
+        :param int oversampling:
+        """
+        imagesize=self.config["Geometry"]['Imagesize']
+        beamcenter=self.config["Geometry"]['BeamCenter']
+        return cplwcener(imagesize, beamcenter, oversampling)
+        
+    def polcorr(self, Pfrac, rot):
         """
         Polarization Correction
         """
@@ -70,7 +81,7 @@ class calibration:
         tilt=self.config["Geometry"]['Tilt']['TiltAngleDeg']/180.0*np.pi
         tiltdir=self.config["Geometry"]['Tilt']['TiltRotDeg']/180.0*np.pi
         
-        theta=calc_theta(r,phi,d,tilt,tiltdir)
+        theta=calc_theta(r, phi, d, tilt, tiltdir)
        
         
        
@@ -79,7 +90,7 @@ class calibration:
        
         return corr
 
-    def _setupcalibration(self,mask,attachment):
+    def _setupcalibration(self, mask, attachment):
         """
         Pre-calculate the data for the integration. This is done at initialization.
         """
@@ -95,12 +106,12 @@ class calibration:
         d=self.config["Geometry"]['DedectorDistanceMM']
         tilt=self.config["Geometry"]['Tilt']['TiltAngleDeg']/180.0*np.pi
         tiltdir=self.config["Geometry"]['Tilt']['TiltRotDeg']/180.0*np.pi
-        theta=calc_theta(r,phi,d,tilt,tiltdir)
-        self.corr=np.ones((self.config["Geometry"]['Imagesize'][0],self.config["Geometry"]['Imagesize'][1]))
+        theta=calc_theta(r, phi, d, tilt, tiltdir)
+        self.corr=np.ones((self.config["Geometry"]['Imagesize'][0], self.config["Geometry"]['Imagesize'][1]))
         if 'PolarizationCorrection' in self.config:
             frac = self.config["PolarizationCorrection"]
              #Nanometer
-            self.corr=np.divide(self.corr,self.polcorr(frac['Fraction'], frac['Angle']/180.0*np.pi-np.pi/2))
+            self.corr=np.divide(self.corr, self.polcorr(frac['Fraction'], frac['Angle']/180.0*np.pi-np.pi/2))
         # rescale the theta that the radial regions connected to a label are about 1 pixel wide
         Angstrom=1.00001495e-1
         qpix =4*np.pi*np.sin(theta/2)/self.config['Wavelength']/Angstrom
@@ -113,46 +124,47 @@ class calibration:
         # Check if Phimode is active
         if self.maskconfig["Phi-mode"]:
             self.scale=1/np.max(phi)*np.max(r)/mask['PixelPerRadialElement']
-            labels=np.array((phi+np.pi)*self.scale,dtype=int)
+            labels=np.array((phi+np.pi)*self.scale, dtype=int)
         else:
-            labels=np.array(qpix*self.scale,dtype=int)
-            
+            labels=np.array(qpix*self.scale, dtype=int)
+        
+        print("Let's see if we can create a calibration")    
         self.maxlabel=np.max(labels)
-        mask=openmask(mask["MaskFile"],attachment)
+        mask=openmask(mask["MaskFile"], attachment)
+            
         
         if self.maskconfig["Phi-mode"]:
             complexp_q=self.__complexCoordinatesOfPicture(1)
             r_q=np.absolute(complexp_q)*pixelsize
             phi_q=np.angle(complexp_q)
-            theta_q=calc_theta(r_q,phi_q,d,tilt,tiltdir)
+            theta_q=calc_theta(r_q, phi_q, d, tilt, tiltdir)
             Angstrom=1.00001495e-1
             nqpix =4*np.pi*np.sin(theta_q/2)/self.config['Wavelength']/Angstrom
-            masky = np.ones((self.config["Geometry"]['Imagesize'][0],self.config["Geometry"]['Imagesize'][1]),dtype=bool)
+            masky = np.ones((self.config["Geometry"]['Imagesize'][0], self.config["Geometry"]['Imagesize'][1]), dtype=bool)
             masky[np.logical_not(mask)]=0
             masky[(nqpix<self.maskconfig["qStart"])]=0
             masky[(nqpix>self.maskconfig["qStop"])]=0
             mask = masky
             
-        self.A=labelstosparse(labels,mask,oversampling)
+        self.A=labelstosparse(labels, mask, oversampling)
         self.ITransposed =self.A
-        self.I,self.Areas,self.oneoverA=rescaleI(self.A,self.corr)
+        self.I, self.Areas, self.oneoverA=rescaleI(self.A, self.corr)
         
         if self.maskconfig["Phi-mode"]:
             self.qgrid=(np.arange(self.maxlabel+1)+0.5)/self.scale-np.pi  
         else:
             self.qgrid=(np.arange(self.maxlabel+1)+0.5)/self.scale   
        
-        
-      
-    def integrate(self,image):
+    
+    def integrate(self, image):
         """
         Integrate a picture.
         
         :param numpy.array(dim=2) image: Sensor image to integrate as 2d `NumPy` array 
         :returns: Returns Angle and intensity vector as a tuple (angle,intensity)
         """
-        return  (self.qgrid,self.I.dot(image.flatten() ))
-    def integratechi(self,image,path,picture):
+        return  (self.qgrid, self.I.dot(image.flatten() ))
+    def integratechi(self, image, path, picture):
         """
         Integrate and save to file in "chi" format.
         
@@ -162,8 +174,8 @@ class calibration:
         """
         r= self.I.dot(image.flatten() )
      
-        data=np.array([self.qgrid[len (self.qgrid)-len(r):] ,
-                        r , 
+        data=np.array([self.qgrid[len (self.qgrid)-len(r):],
+                        r, 
                         np.sqrt(r*self.Areas) *self.oneoverA] # Poisson Error sclaed
                       ).transpose()
         
@@ -206,7 +218,7 @@ class calibration:
         }
          
    
-    def integrateerror(self,image):
+    def integrateerror(self, image):
         """
         Integrates an image and computes error estimates.
         
@@ -220,7 +232,7 @@ class calibration:
         poissonerr=np.sqrt(radial*self.Areas)*self.oneoverA
         rsq=(2*np.sin(self.qgrid)*self.config["Geometry"]['DedectorDistanceMM']
              *np.pi*self.config["Geometry"]['PixelSizeMicroM'][0]*1e-3**2)
-        return  np.array([radial,stddev ,poissonerr])
+        return  np.array([radial, stddev, poissonerr])
     
     def plot(self,image,outputfile="",startplotat=0 ,fig=None):
         """
@@ -243,9 +255,9 @@ class calibration:
         fig.clf()
         
         ax = fig.add_subplot(111)
-        ax.fill_between( self.qgrid[nonzero], np.clip(fun[0][nonzero]-fun[1][nonzero],1,1.0e300),fun[0][nonzero]+fun[1][nonzero],facecolor='yellow' ,linewidth=0,alpha=0.5)
-        ax.fill_between( self.qgrid[nonzero], np.clip(fun[0][nonzero]-fun[2][nonzero],1,1.0e300),fun[0][nonzero]+fun[2][nonzero],facecolor='blue' ,alpha=0.2,linewidth=0)
-        ax.plot(self.qgrid[nonzero],fun[0][nonzero])
+        ax.fill_between( self.qgrid[nonzero], np.clip(fun[0][nonzero]-fun[1][nonzero], 1, 1.0e300), fun[0][nonzero]+fun[1][nonzero], facecolor='yellow', linewidth=0, alpha=0.5)
+        ax.fill_between( self.qgrid[nonzero], np.clip(fun[0][nonzero]-fun[2][nonzero], 1, 1.0e300), fun[0][nonzero]+fun[2][nonzero], facecolor='blue', alpha=0.2, linewidth=0)
+        ax.plot(self.qgrid[nonzero], fun[0][nonzero])
       
         
         plt.ylabel('Intensity [counts/pixel]')
@@ -285,141 +297,3 @@ class calibration:
               * self.qgrid[qStartIndex:qStopIndex] 
               * self.qgrid[qStartIndex:qStopIndex])) * qDelta
         return I0, I1, I2
-    
-    def __complexCoordinatesOfPicture(self,oversampling):
-        """
-        Generates array containing coordinates relative to beam center as complex numbers. 
-        This is used to calculate the angles
-        
-        :param obj config:
-        :param int oversampling:
-        """
-        imagesize=self.config["Geometry"]['Imagesize']
-        beamcenter=self.config["Geometry"]['BeamCenter']
-        return cplwcener(imagesize,beamcenter,oversampling)
-def cplwcener(imagesize,beamcenter,oversampling):
-        return np.add.outer(
-                         1j*(np.arange(0,
-                                             imagesize[0],
-                                             1./oversampling,
-                                             dtype=np.float_)
-                                   -imagesize[0]
-                                   +beamcenter[0]+0.5/oversampling),
-                        (np.arange(0,
-                                             imagesize[1],
-                                             1./oversampling,
-                                             dtype=np.float_)
-                                   - beamcenter[1]+0.5/oversampling)
-                         )
-
-def labelstosparse(labels,mask,oversampling):
-        '''labels: numerates pixels of same radial distance'''
-        ind=np.argsort(labels.flatten()).astype(int) #sorted indices to labeled pixels as array
-        sortedl=labels.flatten()[ind] #labels as array sorted by indices
-        '''at this point ind gives pixel number, sortedl the label for which integration ring the pixel is counted'''
-        newcol=sortedl-np.roll(sortedl,1)#0,1 matrix that is always zero and only one when the integration label is increased
-        length=sortedl.shape[0]
-        coli=np.array(np.where(newcol>0)[0])#gives the position in sortedl where the ring is changed
-        coliptr= np.concatenate(([0],coli,[length]))#adds first and last point (0) and (length)
-        m= sp.csc_matrix((np.ones(length),ind,coliptr))#sparse matrix representation of labels
-        sc=scalemat(mask.shape[0],mask.shape[1],oversampling)
-        
-        A=sp.csc_matrix((sc.dot(m)))
-        return sp.csc_matrix((A.data*mask.flatten()[A.indices],A.indices,A.indptr))
-
-def rescaleI(sparse,corr):
-        areas=sparse.transpose().dot(np.ones(sparse.shape[0]))
-        #corect for sensor shape 
-         
-        oneoverA=np.where(areas>0,1.0/areas,np.NAN)
-        #calculate factors for area
-        l=sparse.indptr
-        b=np.roll(sparse.indptr,1) # l-b is repeating count for each column
-        #update sparse data
-        data=sparse.data*np.repeat(oneoverA,(l-b)[1:])*corr.flatten()[sparse.indices] 
-        sparse.data=data
-        return sparse.transpose(), areas,  oneoverA
-def calc_theta(r,phi,d,tilt,tiltdir):
-        """
-        Calculates the difraction angle from pixel coordinates. It does work when called with arrays. 
-        See :ref:`geometry`
-        
-        :param float r: Distance to beamcenter.
-        :param float phi: Angle[rad] from polar sensor plane coordinates.
-        :param float d: distance to difraction center.
-        :param float tilt: Angle[rad] of sensor plane tilt.
-        :param float tiltdir: Angle[rad] of direction of tilt.
-        :returns:  theta
-        """
-        alpha=np.arcsin(np.sin(tilt)*np.sin(phi+tiltdir+np.pi/2))
-        lsquared=d**2 +r**2 -2*d*r*np.cos(np.pi/2+alpha)
-        return np.arccos(-(r**2-lsquared-d**2)/(2*np.sqrt(lsquared)*d))
-    
-   
-        
-def scalemat(Xsize,Ysize,ov):
-        """
-        Computes a scaling projection for use in computing the pixel weights for integration
-        
-        :param int Xsize: Picture size in X direction.
-        :param int Ysize: Picture size in Ydirection.
-        :param int ov: Number of oversampling ticks in x ynd y direction
-        :param array corr: Polarizationn an other correction factors
-        :returns: sparce matrix toing the scaling
-        """
-    
-        cell=np.add.outer(np.arange(ov)*Ysize*ov,np.arange(ov))
-        grid=np.add.outer(np.arange(0,Xsize*Ysize*ov*ov,Ysize*ov*ov),np.arange(0,Ysize*ov,ov))
-        cindices=np.add.outer(grid,cell).flatten().astype(int)
-        return sp.csr_matrix((np.ones(len(cindices))/ov**2,
-                     cindices,
-                     np.arange(0,Ysize*Xsize*ov**2+1,ov*ov,dtype=int)) ,
-                    dtype=np.float,shape=(Ysize*Xsize,Ysize*Xsize*ov**2))
-     
-    
-def openmask(mfile,attachment=None):
-    """
-    Open the mask file especialy the \*.msk file. Unfortunately there is no library
-    module for msk files available also no documentation. So, for the msk file, we have a very brittle hack
-    it works for our sensor. Nevermind any other resolution or size.
-    
-    :param object config: Calibration config object.
-    :returns: Mask as logical numpy array.
-    """
-     
-    if attachment:
-        mfilestream=  base64.b64decode(attachment['data'])
-        fin=StringIO.StringIO(mfilestream)
-    else:
-        mfilestream=open(mfile).read()
-        fin=open(mfile , "rb")
-    if mfile.endswith('.msk'):
-        import bitarray
-        maskb=bitarray.bitarray( endian='little')
-        maskb.frombytes(mfilestream) 
-        maskl=np.array(maskb.tolist())
-       
-        import struct
-        fin.seek(0x10)
-        (y,)= struct.unpack('i', fin.read(4))
-        fin.seek(0x14)
-        x,=struct.unpack('i', fin.read(4))
-        word=32
-        padding= word - y % word
-        yb=y+padding
-        off=np.size(maskl)-yb*x
-        off=8192
-
-        mask=maskl[off:x*yb+off].reshape(x, yb)
-        cropedmask=np.flipud(mask[0:x,0:y])
-        # save the mask in order to controll if it worked
-        #misc.imsave("mask.png",cropedmask)
-        return np.logical_not(cropedmask)
-
-    else:
-        if attachment:
-            mask= np.where(misc.imread(mfilestream)!=0,False,True)
-        else:
-            mask= np.where(misc.imread(mfile)!=0,False,True)
-       
-        return mask

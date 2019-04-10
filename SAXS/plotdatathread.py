@@ -1,7 +1,7 @@
 import json,os
-import atrdict
+from . import atrdict
 import numpy as np
-from Leash import initcommand
+from .Leash import initcommand
 import time
 from PyQt4 import  QtGui
 from PyQt4 import  QtCore
@@ -16,9 +16,12 @@ class plotthread(QtCore.QThread):
         self.queuestarttime=None
        
         while True:
+            time.sleep(2)
             resultstr=initcommand(self.app.options,["stat"],self.app.netconf)
             result=json.loads(resultstr)
-            time.sleep(1)
+            if "Error" in result['data']:
+                print("Error here")
+                continue
             if 'start time' in result['data']["stat"]:
                 starttime=result['data']["stat"]['start time']
                 if self.queuestarttime and self.queuestarttime!=starttime:
