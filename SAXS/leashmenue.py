@@ -58,8 +58,11 @@ class menueitems(QtGui.QWidget):
                       QtCore.SIGNAL("triggered()"),
                       self.queueRedoAllImmages)
         self.userconffilename=os.path.expanduser(os.path.join('~', ".saxsleashrc"))
+        if not os.path.isfile(self.userconffilename):
+            content=[{"recentFiles": ["","","","",""]}]
+            json.dump(content, open(self.userconffilename, "w"))
         maxrecentfiles=5
-        self.recentfiles=collections.deque( json.load(open(self.userconffilename))['recentFiles'], maxrecentfiles)
+        self.recentfiles=collections.deque(json.load(open(self.userconffilename))['recentFiles'], maxrecentfiles)
         self.recentfileactions=[]
         for i in range(maxrecentfiles):
             self.recentfileactions.append(self.filemenue.addAction(""))

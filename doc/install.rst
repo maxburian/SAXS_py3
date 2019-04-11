@@ -29,9 +29,9 @@ Start your Anacoda console, which can be found under the name *Anaconda promp* o
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Use the command line in the Anaconda console to navigate to the desired SAXSdog installation directory. If you are not sure, we suggest the following commands::
 
-    >> cd ~
-    >> mkdir GIT
-    >> cd GIT
+    $ cd ~
+    $ mkdir GIT
+    $ cd GIT
 
 This will create the folder "GIT" in your user-directory and set the current path to that folder.
 
@@ -39,18 +39,18 @@ This will create the folder "GIT" in your user-directory and set the current pat
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Use GIT to download a "clone-copy" of the latest SAXSdog version, by typing ::
     
-    >> git clone https://github.com/maxburian/SAXS_py3.git
+    $ git clone https://github.com/maxburian/SAXS_py3.git
 
 Once you have downloaded the repository, move to correpsonding folder ::
 
-    >> cd SAXS_py3
+    $ cd SAXS_py3
     
 
 6) Create the Python 3.5 Environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless. In order to create the corresponding environment and install all packages, type::
 
-    >> conda env create -f environment.yml
+    $ conda env create -f environment.yml
     
 This can now take a few minutes as all packages have to be downloaded and installed.
 
@@ -60,25 +60,35 @@ In case you want to integrate SAXSdog in your existing environment, use the deta
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You must now activate the Python environment such that you work with Python 3.5.5.::
     
-    >> conda activate py3p5_qt4
+    $ conda activate py3p5_qt4
 
     
 8) Install SAXSdog
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You are now ready to install SAXSdog using the following command::
 
-    >> python setup.py install
+    $ python setup.py install
     
+    
+
 9) Done!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You have now installed SAXSdog and the software is ready to be used. The installer has placed icons in the "Start Menu" as well as on your "Desktop". You can use either one to start "SAXSLeash": the graphical user interface to control your image integration. 
 
 
+(Optional) Create your Default Network Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SAXSDog is a network-based program. If you want to use it in a feeder-based environment or such that it operates on a remote server, you will have to setup your network configuration. For more information, please read :ref:`saxsdognetwork` and use ::
+
+    % saxsnetconf
+
+This will generate a default configuration file with a random secret. The file must then be saved in ``$Home/.saxdognetwork``.
+
 Dependencies
 --------------------
 In case you want to create your own environment, we provide a list of the required packages and versions for which SAXSdog has been tested. 
 
-Installable using ``>> conda install <module>=<version>=<build>`` :: 
+Install using ``$ conda install <module>=<version>=<build>`` :: 
 
     - python=3.5.5=h0c2934d_2
     - pyqt=4.11.4=py35_7
@@ -103,7 +113,7 @@ Installable using ``>> conda install <module>=<version>=<build>`` ::
     - xlwt=1.3.0=py35hd04410a_0
     
     
-Installable using ``>> pip install <module>==<version>`` ::
+Install using ``$ pip install <module>==<version>`` ::
 
     - sphinxcontrib-programoutput==0.13
     - sphinxcontrib-programscreenshot==0.0.0
@@ -112,10 +122,4 @@ Installable using ``>> pip install <module>==<version>`` ::
     - py2exe==0.9.2.2 
 
 
-The code can be obtained on github: https://github.com/ChristianMeisenbichler/SAXS where you would also find a "Download Zip" button. After unpacking or cloning with git you end up with a directory called "SAXS" containing the files. Go there, and type into the command line:
-
-.. code::
-
-   python setup.py install
-   
-This installs the Python module to the environment, creates the command line tools and installs them on the system. Where that is, depends on the Python installation.  The setup script will also try to satisfy all the dependencies by downloading and installing the missing packages. 
+The code can be obtained on github: https://github.com/ChristianMeisenbichler/SAXS 
