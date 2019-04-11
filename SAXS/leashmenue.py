@@ -59,7 +59,7 @@ class menueitems(QtGui.QWidget):
                       self.queueRedoAllImmages)
         self.userconffilename=os.path.expanduser(os.path.join('~', ".saxsleashrc"))
         if not os.path.isfile(self.userconffilename):
-            content=[{"recentFiles": ["","","","",""]}]
+            content={"recentFiles": ["","","","",""]}
             json.dump(content, open(self.userconffilename, "w"))
         maxrecentfiles=5
         self.recentfiles=collections.deque(json.load(open(self.userconffilename))['recentFiles'], maxrecentfiles)

@@ -85,6 +85,7 @@ if sys.argv[1] == 'install':
             sys.prefix,
             "Lib",
             "site-packages", 
+            "SAXS-3.0-py3.5.egg",
             "SAXS",
             "icons",
             "program.ico"))
