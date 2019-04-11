@@ -105,7 +105,7 @@ in the diffraction curve:
    geo=json.load(open("calgeo.json","r")) 
    misc.imsave("emptymask.tif",np.zeros(geo["Geometry"]['Imagesize']))
    Cal=SAXS.calibration(json.load(open("calgeo.json","r")))  
-   rmax= 1002   
+   rmax= 1003   
    x=np.arange(rmax)/100000.0 /3
    y=(3*np.exp(-(x/6.0e-5)**2) 
          +np.exp(-((x-0.5e-3)/1.0e-5)**2) 

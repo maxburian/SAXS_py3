@@ -39,63 +39,77 @@ This will create the folder "GIT" in your user-directory and set the current pat
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Use GIT to download a "clone-copy" of the latest SAXSdog version, by typing ::
     
-    >> git clone https://github.com/maxburian/SAXS.git
-    
-6) Move to SAXS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Change your current directory to the SAXSdog folder by typing ::
-    
-    >> cd SAXS
+    >> git clone https://github.com/maxburian/SAXS_py3.git
 
-7) Create the custom Python Environment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SAXSdog requires a very specific Python environment to work flawless. In order to install all required dependencies, including the correct Python version, type::
+Once you have downloaded the repository, move to correpsonding folder ::
 
-    >> conda create --name py3p5_qt5 --file conda-env.txt
+    >> cd SAXS_py3
+    
+
+6) Create the Python 3.5 Environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless. In order to create the corresponding environment and install all packages, type::
+
+    >> conda env create -f environment.yml
     
 This can now take a few minutes as all packages have to be downloaded and installed.
 
-8) Activate the Python Environment 
+In case you want to integrate SAXSdog in your existing environment, use the detailed list of the required dependencies further bellow.
+    
+7) Activate the Python Environment 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In order to activate the Python environment you just created, type::
+You must now activate the Python environment such that you work with Python 3.5.5.::
     
-    >> activate py3p5_qt5
+    >> conda activate py3p5_qt4
+
     
-9) Install SAXSdog
+8) Install SAXSdog
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You are now ready to install SAXSdog using the following command::
 
     >> python setup.py install
     
-10) Done!
+9) Done!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You have now installed SAXSdog and the software is ready to be used. The installer has placed icons in the "Start Menu" as well as on your "Desktop". You can use either one to start "SAXSLeash": the graphical user interface to control your image integration. 
 
 
 Dependencies
 --------------------
-In case you want to create your own environment, we provide a list of the required packages and versions for which SAXSdog has been tested. :: 
+In case you want to create your own environment, we provide a list of the required packages and versions for which SAXSdog has been tested. 
 
-    **python == 3.5.5**
-    **pyqt == 4.11.4**
-    bitarray == 0.8.1
-    hdf5 == 1.10.2
-    jsonschema == 2.6.0
-    matplotlib == 1.5.1
-    numpy == 1.11.3
-    pandas == 0.23.0
-    pyzmq == 17.0.0
-    scipy == 1.1.0
-    setuptools == 39.1.0
-    sphinx == 1.7.4
-    sphinx_rtd_theme = 0.4.3
-    sphinxcontrib == 1.0
-    sphinxcontrib-programoutput == 0.13
-    sphinxcontrib-programscreenshot == 0.0.0
-    watchdog == 0.9.0
+Installable using ``>> conda install <module>=<version>=<build>`` :: 
+
+    - python=3.5.5=h0c2934d_2
+    - pyqt=4.11.4=py35_7
+      
+    - bitarray=0.8.1=py35hfa6e2cd_1
+    - comtypes=1.1.4=py35_0
+    - jsonschema=2.6.0=py35h27d56d3_0
+    - matplotlib=1.5.1=np111py35_0
+    - numpy=1.11.3=py35h4a99626_4
+    - numpy-base=1.14.3=py35h5c71026_0
+    - pandas=0.23.0=py35h830ac7b_0
+    - pillow=3.4.2=py35_0
+    - pyqt=4.11.4=py35_7
+    - pytables=3.4.3=py35he6f6034_1
+    - pywin32=223=py35hfa6e2cd_1
+    - pyzmq=17.0.0=py35hfa6e2cd_1
+    - scipy=1.1.0=py35h672f292_0
+    - sphinx=1.7.9=py35_0
+    - sphinx_rtd_theme=0.4.3=py_0
+    - sphinxcontrib=1.0=py35_1
+    - sphinxcontrib-websupport=1.0.1=py35ha3690eb_1
+    - xlwt=1.3.0=py35hd04410a_0
     
-    prettyplotlib == 0.1.7 (only available over *pip*)
+    
+Installable using ``>> pip install <module>==<version>`` ::
 
+    - sphinxcontrib-programoutput==0.13
+    - sphinxcontrib-programscreenshot==0.0.0
+    - watchdog==0.9.0
+    - prettyplotlib==0.1.7
+    - py2exe==0.9.2.2 
 
 
 The code can be obtained on github: https://github.com/ChristianMeisenbichler/SAXS where you would also find a "Download Zip" button. After unpacking or cloning with git you end up with a directory called "SAXS" containing the files. Go there, and type into the command line:
