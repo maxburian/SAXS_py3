@@ -10,7 +10,7 @@ dependencies:
   - numpy-base=1.14.3
   - pandas=0.23.0
   - pillow=3.4.2
-  - pip=10.0.1
+  - pip
   - pyqt=4.11.4
   - pytables=3.4.3
   - python=3.5.5
