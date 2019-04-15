@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Integration as Matrix-Vector Multiplication &mdash; SAXS py3.5 V3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'py3.5 V3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Geometry" href="Geometry.html" />
+    <link rel="prev" title="The Technology" href="TheTechnology.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SAXS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTools.html">The Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Server.html">The Saxsdog Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSSchemaDoc.html">The Dedector Calibration File</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="TheTechnology.html">The Technology</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Integration as Matrix-Vector Multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#over-sampling">Over sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Geometry.html">The Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PolCorr.html">Polarization Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Fit2d.html">Compare With Fit2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ConstantImage.html">Integrating a Constant Image With Masked Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Statistics.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Slices.html">GISAXS Slices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="LeashDeveloperDoc.html">SAXSDOG Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSapi.html">SAXS Module API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAXS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="TheTechnology.html">The Technology</a> &raquo;</li>
+        
+      <li>Integration as Matrix-Vector Multiplication</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/MatrixMulti.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="integration-as-matrix-vector-multiplication">
+<h1>Integration as Matrix-Vector Multiplication<a class="headerlink" href="#integration-as-matrix-vector-multiplication" title="Permalink to this headline">¶</a></h1>
+<p>Every SAXS image <span class="math notranslate nohighlight">\(\mathbf p\)</span> is a list of pixels that have an intensity value.
+This 2d array might as well be addressed as a vector with all the pixels addressable with one index <span class="math notranslate nohighlight">\(\mathbf p_i\)</span>.</p>
+<p>The integration over pixels that are within a certain radial interval is
+in any case a weighted sum of some of the pixels.</p>
+<p>This weighted sum is a scalar product with another vector containing the weight factors.
+As only the pixels in a radius interval are counted, most of these factors are 0.</p>
+<div class="math notranslate nohighlight">
+\[r=\mathbf c \cdot \mathbf p\]</div>
+<p>As we intend to do all the radial intervals at once, we write it as a matrix vector product.</p>
+<div class="math notranslate nohighlight">
+\[\mathbf r=\mathbf X \cdot \mathbf p\]</div>
+<p>The columns are the weight factors for the <span class="math notranslate nohighlight">\(i^{th}\)</span> radial element.
+Rearranged in the order of the image, this looks like the ring element relevant for the radial Point.</p>
+<p>This matrix would be quite big as it has the dimensions len(<span class="math notranslate nohighlight">\(\mathbf r\)</span>)*len(<span class="math notranslate nohighlight">\(\mathbf p\)</span>). Fortunately most
+of the entries are 0 and we can use a sparse matrix representation which uses only about ~len(<span class="math notranslate nohighlight">\(\mathbf p\)</span>)
+of memory, as every pixel is counted only once, or, as we will see, about once.</p>
+<p>(<a class="reference external" href=".//MatrixMulti-1.py">Source code</a>)</p>
+<div class="figure" id="id1">
+<img alt="_images/ringNoOv.png" src="_images/ringNoOv.png" />
+<p class="caption"><span class="caption-text">The vector <span class="math notranslate nohighlight">\(\mathbf c\)</span> displayed as image.</span></p>
+</div>
+<p>Figure <span class="xref std std-ref">CircleNoAA</span> Shows the data of such a matrix column.</p>
+</div>
+<div class="section" id="over-sampling">
+<h1>Over sampling<a class="headerlink" href="#over-sampling" title="Permalink to this headline">¶</a></h1>
+<div class="figure" id="id2">
+<span id="circle"></span><img alt="_images/ring.png" src="_images/ring.png" />
+<p class="caption"><span class="caption-text">Ring with anti aliasing / over sampling.</span></p>
+</div>
+<p>A pixel might lie on the border of two radial intervals, making it
+unclear to which one it should be added. By only choosing the nearest
+one, one may get artifacts in the resulting curve especially when only few pixels contribute.
+So, how could we calculate to which fraction a pixel should account to one radial interval?</p>
+<p>The idea here is to use an algorithm comparable to anti aliasing in computer graphics.
+We will divide a much larger picture into the radial intervals and down sample it to the real pixels.
+Which results in nicely balanced factors for the border pixels that add
+up nicely over joining  intervals such that the intensity is conserved. If one looks closer at image <a class="reference internal" href="#circle"><span class="std std-ref">Ring with anti aliasing / over sampling.</span></a> ,
+one sees that the ring has soft edges. Quite as it would have through anti aliasing.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Geometry.html" class="btn btn-neutral float-right" title="The Geometry" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="TheTechnology.html" class="btn btn-neutral float-left" title="The Technology" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright  2019, Tu Graz, Christian Meisenbichler, Max Burian, Heinz Amenitsch
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

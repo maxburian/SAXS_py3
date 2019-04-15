@@ -1,0 +1,1255 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The Dedector Calibration File &mdash; SAXS py3.5 V3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'py3.5 V3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Technology" href="TheTechnology.html" />
+    <link rel="prev" title="Leash Datamerge and saxsdmerge Schema" href="DmergeSchema.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SAXS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTools.html">The Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Server.html">The Saxsdog Network</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The Dedector Calibration File</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#calibration-file-reference">Calibration file Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#title">Title</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geometry">Geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tilt">Tilt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tiltrotdeg">TiltRotDeg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tiltangledeg">TiltAngleDeg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#beamcenter">BeamCenter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dedectordistancemm">DedectorDistanceMM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pixelsizemicrom">PixelSizeMicroM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#imagesize">Imagesize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#masks">Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maskfile">MaskFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#oversampling">Oversampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pixelperradialelement">PixelPerRadialElement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#name">Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#qstart">qStart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#qstop">qStop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#phi-mode">Phi-mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#slices">Slices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#direction">Direction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plane">Plane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cutposition">CutPosition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cutmargin">CutMargin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#incidentangle">IncidentAngle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maskref">MaskRef</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wavelength">Wavelength</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#polarizationcorrection">PolarizationCorrection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fraction">Fraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#angle">Angle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#directory">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#threads">Threads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#live-filelisting">Live-Filelisting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gisaxsmode">GISAXSmode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overwritefiles">OverwriteFiles</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TheTechnology.html">The Technology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LeashDeveloperDoc.html">SAXSDOG Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSapi.html">SAXS Module API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAXS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>The Dedector Calibration File</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/SAXSSchemaDoc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-dedector-calibration-file">
+<span id="calib"></span><h1>The Dedector Calibration File<a class="headerlink" href="#the-dedector-calibration-file" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="SAXSapi.html#SAXS.calibration" title="SAXS.calibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">SAXS.calibration</span></code></a> class and the saxsdog tool accepts a input file with the calibration data.
+This input file is written as a JSON file. This is a common syntax to express structured data as text.
+You might want to read a bit about it before moving on.</p>
+<div class="section" id="calibration-file-reference">
+<span id="root"></span><h2>Calibration file Reference<a class="headerlink" href="#calibration-file-reference" title="Permalink to this headline">¶</a></h2>
+<style> .red {color:red} </style><blockquote id="required">
+<div>The ‘<span class="red">*</span>’ signifies a required Field.</div></blockquote>
+<p>The SAXS configuration file specifies the parameters of a SAXS sensor calibration. It is written in the JSON format which governs the general syntax.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="#title"><span class="std std-ref">Title</span></a>, <a class="reference internal" href="#geometry"><span class="std std-ref">Geometry</span></a><span class="red">*</span>, <a class="reference internal" href="#masks"><span class="std std-ref">Masks</span></a><span class="red">*</span>, <a class="reference internal" href="#slices"><span class="std std-ref">Slices</span></a>, <a class="reference internal" href="#wavelength"><span class="std std-ref">Wavelength</span></a><span class="red">*</span>, <a class="reference internal" href="#polarizationcorrection"><span class="std std-ref">PolarizationCorrection</span></a>, <a class="reference internal" href="#directory"><span class="std std-ref">Directory</span></a><span class="red">*</span>, <a class="reference internal" href="#threads"><span class="std std-ref">Threads</span></a>, <a class="reference internal" href="#live-filelisting"><span class="std std-ref">Live-Filelisting</span></a>, <a class="reference internal" href="#overwritefiles"><span class="std std-ref">OverwriteFiles</span></a>, <a class="reference internal" href="#gisaxsmode"><span class="std std-ref">GISAXSmode</span></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;Title&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Calibration&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;Geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;Tilt&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;TiltRotDeg&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s2">&quot;TiltAngleDeg&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;Imagesize&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="mi">1000</span><span class="p">,</span>
+      <span class="mi">900</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;BeamCenter&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="mf">800.0</span><span class="p">,</span>
+      <span class="mf">400.0</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;PixelSizeMicroM&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="mf">100.0</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;DedectorDistanceMM&quot;</span><span class="p">:</span> <span class="mf">1000.0</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;Wavelength&quot;</span><span class="p">:</span> <span class="mf">1.54</span><span class="p">,</span>
+  <span class="s2">&quot;Directory&quot;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s2">&quot;Live-Filelisting&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+  <span class="s2">&quot;OverwriteFiles&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+  <span class="s2">&quot;Threads&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s2">&quot;Masks&quot;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s2">&quot;Slices&quot;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s2">&quot;GISAXSmode&quot;</span><span class="p">:</span> <span class="n">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="title">
+<span id="id1"></span><h3>Title<a class="headerlink" href="#title" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#title"><span class="std std-ref">Title</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Title&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="geometry">
+<span id="id2"></span><h3>Geometry<a class="headerlink" href="#geometry" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="#tilt"><span class="std std-ref">Tilt</span></a><span class="red">*</span>, <a class="reference internal" href="#beamcenter"><span class="std std-ref">BeamCenter</span></a><span class="red">*</span>, <a class="reference internal" href="#dedectordistancemm"><span class="std std-ref">DedectorDistanceMM</span></a><span class="red">*</span>, <a class="reference internal" href="#pixelsizemicrom"><span class="std std-ref">PixelSizeMicroM</span></a><span class="red">*</span>, <a class="reference internal" href="#imagesize"><span class="std std-ref">Imagesize</span></a><span class="red">*</span></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#geometry"><span class="std std-ref">Geometry</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;Title&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Calibration&quot;</span>
+  <span class="s2">&quot;Geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;Tilt&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;TiltRotDeg&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s2">&quot;TiltAngleDeg&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;Imagesize&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="mi">1000</span><span class="p">,</span>
+      <span class="mi">900</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;BeamCenter&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="mf">800.0</span><span class="p">,</span>
+      <span class="mf">400.0</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;PixelSizeMicroM&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="mf">100.0</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tilt">
+<span id="id3"></span><h3>Tilt<a class="headerlink" href="#tilt" title="Permalink to this headline">¶</a></h3>
+<p>The sensor, usually is not perfectly perpenticular to the ray direction. The tilt angle can be specified by giving the following paramters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="#tiltrotdeg"><span class="std std-ref">TiltRotDeg</span></a><span class="red">*</span>, <a class="reference internal" href="#tiltangledeg"><span class="std std-ref">TiltAngleDeg</span></a><span class="red">*</span></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#geometry"><span class="std std-ref">Geometry</span></a>’][‘<a class="reference internal" href="#tilt"><span class="std std-ref">Tilt</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Tilt&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;TiltRotDeg&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span><span class="s2">&quot;TiltAngleDeg&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tiltrotdeg">
+<span id="id4"></span><h3>TiltRotDeg<a class="headerlink" href="#tiltrotdeg" title="Permalink to this headline">¶</a></h3>
+<p>This gives the angel of the tilt direction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in degree</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#geometry"><span class="std std-ref">Geometry</span></a>’][‘<a class="reference internal" href="#tilt"><span class="std std-ref">Tilt</span></a>’][‘<a class="reference internal" href="#tiltrotdeg"><span class="std std-ref">TiltRotDeg</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;TiltRotDeg&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tiltangledeg">
+<span id="id5"></span><h3>TiltAngleDeg<a class="headerlink" href="#tiltangledeg" title="Permalink to this headline">¶</a></h3>
+<p>This gives the angle between the ray direction and the normal to the sensor plane.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in degree</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#geometry"><span class="std std-ref">Geometry</span></a>’][‘<a class="reference internal" href="#tilt"><span class="std std-ref">Tilt</span></a>’][‘<a class="reference internal" href="#tiltangledeg"><span class="std std-ref">TiltAngleDeg</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;TiltAngleDeg&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="beamcenter">
+<span id="id6"></span><h3>BeamCenter<a class="headerlink" href="#beamcenter" title="Permalink to this headline">¶</a></h3>
+<p>Gives the beam center in pixel coorinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array(2) items: number</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">[800.0, 400.0]</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#geometry"><span class="std std-ref">Geometry</span></a>’][‘<a class="reference internal" href="#beamcenter"><span class="std std-ref">BeamCenter</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;BeamCenter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">800.0</span><span class="p">,</span><span class="mf">400.0</span><span class="p">]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dedectordistancemm">
+<span id="id7"></span><h3>DedectorDistanceMM<a class="headerlink" href="#dedectordistancemm" title="Permalink to this headline">¶</a></h3>
+<p>Distance between diffraction center and sensor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in Millimeters</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">1000.0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#geometry"><span class="std std-ref">Geometry</span></a>’][‘<a class="reference internal" href="#dedectordistancemm"><span class="std std-ref">DedectorDistanceMM</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;DedectorDistanceMM&quot;</span><span class="p">:</span> <span class="mf">1000.0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pixelsizemicrom">
+<span id="id8"></span><h3>PixelSizeMicroM<a class="headerlink" href="#pixelsizemicrom" title="Permalink to this headline">¶</a></h3>
+<p>The pixel size on the sensor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array(2) items: number</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">[100.0]</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#geometry"><span class="std std-ref">Geometry</span></a>’][‘<a class="reference internal" href="#pixelsizemicrom"><span class="std std-ref">PixelSizeMicroM</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;PixelSizeMicroM&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="imagesize">
+<span id="id9"></span><h3>Imagesize<a class="headerlink" href="#imagesize" title="Permalink to this headline">¶</a></h3>
+<p>Size of sensor image in pixel.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array(2) items: integer</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">[1000, 900]</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#geometry"><span class="std std-ref">Geometry</span></a>’][‘<a class="reference internal" href="#imagesize"><span class="std std-ref">Imagesize</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Imagesize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span><span class="mi">900</span><span class="p">]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="masks">
+<span id="id10"></span><h3>Masks<a class="headerlink" href="#masks" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items: {<a class="reference internal" href="#maskfile"><span class="std std-ref">MaskFile</span></a>, <a class="reference internal" href="#oversampling"><span class="std std-ref">Oversampling</span></a>, <a class="reference internal" href="#pixelperradialelement"><span class="std std-ref">PixelPerRadialElement</span></a>, <a class="reference internal" href="#name"><span class="std std-ref">Name</span></a>, <a class="reference internal" href="#qstart"><span class="std std-ref">qStart</span></a>, <a class="reference internal" href="#qstop"><span class="std std-ref">qStop</span></a>, <a class="reference internal" href="#phi-mode"><span class="std std-ref">Phi-mode</span></a>}</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#masks"><span class="std std-ref">Masks</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Masks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="maskfile">
+<span id="id11"></span><h3>MaskFile<a class="headerlink" href="#maskfile" title="Permalink to this headline">¶</a></h3>
+<p>Path of Maskfile</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">AAA_integ.msk</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#masks"><span class="std std-ref">Masks</span></a>’][0][‘<a class="reference internal" href="#maskfile"><span class="std std-ref">MaskFile</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;MaskFile&quot;</span><span class="p">:</span> <span class="s2">&quot;AAA_integ.msk&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oversampling">
+<span id="id12"></span><h3>Oversampling<a class="headerlink" href="#oversampling" title="Permalink to this headline">¶</a></h3>
+<p>Oversampling factor for radial integration. The higher, the longer the setup but the higher the accuracy. More then 3 is probably overkill.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">integer</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">3</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#masks"><span class="std std-ref">Masks</span></a>’][0][‘<a class="reference internal" href="#oversampling"><span class="std std-ref">Oversampling</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Oversampling&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pixelperradialelement">
+<span id="id13"></span><h3>PixelPerRadialElement<a class="headerlink" href="#pixelperradialelement" title="Permalink to this headline">¶</a></h3>
+<p>Expresses the width of a radial step in terms of pixels. ‘1’ means <span class="math notranslate nohighlight">\(\delta R\approx 1\)</span> <a class="reference internal" href="#pixelsizemicrom"><span class="std std-ref">PixelSizeMicroM</span></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in Pixel</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">1</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#masks"><span class="std std-ref">Masks</span></a>’][0][‘<a class="reference internal" href="#pixelperradialelement"><span class="std std-ref">PixelPerRadialElement</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;PixelPerRadialElement&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="name">
+<span id="id14"></span><h3>Name<a class="headerlink" href="#name" title="Permalink to this headline">¶</a></h3>
+<p>Name for mask configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#masks"><span class="std std-ref">Masks</span></a>’][0][‘<a class="reference internal" href="#name"><span class="std std-ref">Name</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="qstart">
+<span id="id15"></span><h3>qStart<a class="headerlink" href="#qstart" title="Permalink to this headline">¶</a></h3>
+<p>Starting q-value for integral parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in nm^-1</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#masks"><span class="std std-ref">Masks</span></a>’][0][‘<a class="reference internal" href="#qstart"><span class="std std-ref">qStart</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;qStart&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="qstop">
+<span id="id16"></span><h3>qStop<a class="headerlink" href="#qstop" title="Permalink to this headline">¶</a></h3>
+<p>Ending q-value for integral parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in nm^-1</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#masks"><span class="std std-ref">Masks</span></a>’][0][‘<a class="reference internal" href="#qstop"><span class="std std-ref">qStop</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;qStop&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="phi-mode">
+<span id="id17"></span><h3>Phi-mode<a class="headerlink" href="#phi-mode" title="Permalink to this headline">¶</a></h3>
+<p>To perform an integration as a function of angle in the give radial regime defined by qStart and qStop .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">Boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#masks"><span class="std std-ref">Masks</span></a>’][0][‘<a class="reference internal" href="#phi-mode"><span class="std std-ref">Phi-mode</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Phi-mode&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="slices">
+<span id="id18"></span><h3>Slices<a class="headerlink" href="#slices" title="Permalink to this headline">¶</a></h3>
+<p>Slices are designed to analyse GISAXS data.It allows you to specify slices along the sensor axis and get intensity along <span class="math notranslate nohighlight">\(q_x\)</span>, <span class="math notranslate nohighlight">\(q_z\)</span> directions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items: {<a class="reference internal" href="#direction"><span class="std std-ref">Direction</span></a>, <a class="reference internal" href="#plane"><span class="std std-ref">Plane</span></a>, <a class="reference internal" href="#cutposition"><span class="std std-ref">CutPosition</span></a>, <a class="reference internal" href="#cutmargin"><span class="std std-ref">CutMargin</span></a>, <a class="reference internal" href="#incidentangle"><span class="std std-ref">IncidentAngle</span></a>, <a class="reference internal" href="#maskref"><span class="std std-ref">MaskRef</span></a>}</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#slices"><span class="std std-ref">Slices</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Slices&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="direction">
+<span id="id19"></span><h3>Direction<a class="headerlink" href="#direction" title="Permalink to this headline">¶</a></h3>
+<p>‘x’ or ‘y’ direction in sensor pixel coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">values:</th><td class="field-body"><p class="first">[x, y]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default:</th><td class="field-body"><p class="first">x</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#slices"><span class="std std-ref">Slices</span></a>’][0][‘<a class="reference internal" href="#direction"><span class="std std-ref">Direction</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Direction&quot;</span><span class="p">:</span> <span class="s2">&quot;x&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plane">
+<span id="id20"></span><h3>Plane<a class="headerlink" href="#plane" title="Permalink to this headline">¶</a></h3>
+<p>Whether the direction is in plane with scattering surface or vertical to it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">values:</th><td class="field-body"><p class="first">[InPlane, Vertical]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default:</th><td class="field-body"><p class="first">InPlane</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#slices"><span class="std std-ref">Slices</span></a>’][0][‘<a class="reference internal" href="#plane"><span class="std std-ref">Plane</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Plane&quot;</span><span class="p">:</span> <span class="s2">&quot;InPlane&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cutposition">
+<span id="id21"></span><h3>CutPosition<a class="headerlink" href="#cutposition" title="Permalink to this headline">¶</a></h3>
+<p>Cut position in pixel coordinates in the other coodinate then specified in ‘Direction’. Origin is top left Corner.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">integer in Pixel</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#slices"><span class="std std-ref">Slices</span></a>’][0][‘<a class="reference internal" href="#cutposition"><span class="std std-ref">CutPosition</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;CutPosition&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cutmargin">
+<span id="id22"></span><h3>CutMargin<a class="headerlink" href="#cutmargin" title="Permalink to this headline">¶</a></h3>
+<p>Number of pixels left and right from  cut to include into the average .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">integer in Pixel</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">1</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#slices"><span class="std std-ref">Slices</span></a>’][0][‘<a class="reference internal" href="#cutmargin"><span class="std std-ref">CutMargin</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;CutMargin&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="incidentangle">
+<span id="id23"></span><h3>IncidentAngle<a class="headerlink" href="#incidentangle" title="Permalink to this headline">¶</a></h3>
+<p>Angle of incidence in GISAXS setup.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in degree</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#slices"><span class="std std-ref">Slices</span></a>’][0][‘<a class="reference internal" href="#incidentangle"><span class="std std-ref">IncidentAngle</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;IncidentAngle&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="maskref">
+<span id="id24"></span><h3>MaskRef<a class="headerlink" href="#maskref" title="Permalink to this headline">¶</a></h3>
+<p>Chose which mask to use for the sclice. ‘-1’ means don’t use mask</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">integer</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#slices"><span class="std std-ref">Slices</span></a>’][0][‘<a class="reference internal" href="#maskref"><span class="std std-ref">MaskRef</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;MaskRef&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="wavelength">
+<span id="id25"></span><h3>Wavelength<a class="headerlink" href="#wavelength" title="Permalink to this headline">¶</a></h3>
+<p>Refined wavelength.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in Angstrom</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">1.54</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#wavelength"><span class="std std-ref">Wavelength</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">:</span> <span class="mf">1.54</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="polarizationcorrection">
+<span id="id26"></span><h3>PolarizationCorrection<a class="headerlink" href="#polarizationcorrection" title="Permalink to this headline">¶</a></h3>
+<p>The scattering direction id dependend on the light polarization. This may be acconted for with the polarization correction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="#fraction"><span class="std std-ref">Fraction</span></a><span class="red">*</span>, <a class="reference internal" href="#angle"><span class="std std-ref">Angle</span></a><span class="red">*</span></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default:</th><td class="field-body"><p class="first">OrderedDict([(u’Fraction’, 0.95), (u’Angle’, 0)])</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#polarizationcorrection"><span class="std std-ref">PolarizationCorrection</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;PolarizationCorrection&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Angle&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span><span class="s2">&quot;Fraction&quot;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fraction">
+<span id="id27"></span><h3>Fraction<a class="headerlink" href="#fraction" title="Permalink to this headline">¶</a></h3>
+<p>Fraction of light polarized in the given (<a class="reference internal" href="#angle"><span class="std std-ref">Angle</span></a>) direction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0.95</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#polarizationcorrection"><span class="std std-ref">PolarizationCorrection</span></a>’][‘<a class="reference internal" href="#fraction"><span class="std std-ref">Fraction</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Fraction&quot;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="angle">
+<span id="id28"></span><h3>Angle<a class="headerlink" href="#angle" title="Permalink to this headline">¶</a></h3>
+<p>Angle of the polarization plane.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in degree</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0.0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#polarizationcorrection"><span class="std std-ref">PolarizationCorrection</span></a>’][‘<a class="reference internal" href="#angle"><span class="std std-ref">Angle</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Angle&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="directory">
+<span id="id29"></span><h3>Directory<a class="headerlink" href="#directory" title="Permalink to this headline">¶</a></h3>
+<p>Directory to take into acount for processing images. Given as a list of subdirectories.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items: string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#directory"><span class="std std-ref">Directory</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Directory&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="threads">
+<span id="id30"></span><h3>Threads<a class="headerlink" href="#threads" title="Permalink to this headline">¶</a></h3>
+<p>Number of threads that will simultaniously perform the integration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">integer</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">2</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#threads"><span class="std std-ref">Threads</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Threads&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="live-filelisting">
+<span id="id31"></span><h3>Live-Filelisting<a class="headerlink" href="#live-filelisting" title="Permalink to this headline">¶</a></h3>
+<p>Writes all processed file names (.chi) into a log-file in ./results/</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">Boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#live-filelisting"><span class="std std-ref">Live-Filelisting</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Live-Filelisting&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gisaxsmode">
+<span id="id32"></span><h3>GISAXSmode<a class="headerlink" href="#gisaxsmode" title="Permalink to this headline">¶</a></h3>
+<p>If true, no radial integration will be performed and only slices will be integrated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">Boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#gisaxsmode"><span class="std std-ref">GISAXSmode</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;GISAXSmode&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="overwritefiles">
+<span id="id33"></span><h3>OverwriteFiles<a class="headerlink" href="#overwritefiles" title="Permalink to this headline">¶</a></h3>
+<p>Select if already integrated files should be overwritten.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">Boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#root"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#overwritefiles"><span class="std std-ref">OverwriteFiles</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;OverwriteFiles&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="TheTechnology.html" class="btn btn-neutral float-right" title="The Technology" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="DmergeSchema.html" class="btn btn-neutral float-left" title="Leash Datamerge and saxsdmerge Schema" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright  2019, Tu Graz, Christian Meisenbichler, Max Burian, Heinz Amenitsch
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

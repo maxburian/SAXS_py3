@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SAXSDOG Developer Documentation &mdash; SAXS py3.5 V3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'py3.5 V3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="SAXS Module API" href="SAXSapi.html" />
+    <link rel="prev" title="GISAXS Slices" href="Slices.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SAXS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTools.html">The Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Server.html">The Saxsdog Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSSchemaDoc.html">The Dedector Calibration File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTechnology.html">The Technology</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SAXSDOG Developer Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-leash">The Leash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-json-schema-to-extend-leash">Using the JSON Schema to Extend Leash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-qitemdelegate">The QItemDelegate</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-image-queue">The Image Queue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-consolidation-or-datamerger">Data Consolidation or Datamerger</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSapi.html">SAXS Module API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAXS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>SAXSDOG Developer Documentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/LeashDeveloperDoc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="saxsdog-developer-documentation">
+<h1>SAXSDOG Developer Documentation<a class="headerlink" href="#saxsdog-developer-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-leash">
+<h2>The Leash<a class="headerlink" href="#the-leash" title="Permalink to this headline">¶</a></h2>
+<p>The Leash GUI is part of the SAXSdog Network and the most user facing software. Its design allows to extend it with functionality by touching only small well defined parts. One is the Schemas of the configuration files and the other is the  <code class="docutils literal notranslate"><span class="pre">QItemDelegate</span></code>. The following sections give an overview of the important parts.</p>
+<div class="section" id="using-the-json-schema-to-extend-leash">
+<h3>Using the JSON Schema to Extend Leash<a class="headerlink" href="#using-the-json-schema-to-extend-leash" title="Permalink to this headline">¶</a></h3>
+<p>This software relies a lot on structured configuration files that have to constantly be checked for validity. This is done by defining the grammar in JSON Schema. This is a language, in its self expressed in JSON, made to specify what values may occur where in the file. This does not only allow for automatically generating documentation, as it is used in this document many times, but you can also use it to generate an GUI that can edit this structured data files.</p>
+<p>The tree view in the “Calib” tab of <code class="docutils literal notranslate"><span class="pre">Leash</span></code> is build by recursively, going to the schema and the data, building the model that can be displayed in the QtreeView widget.</p>
+<p>So, in order to add new parameters to the view, the only thing you must do, is to add the description to the schema. If you use similar constructs as in the rest of the data, it will work just so.</p>
+<p>The leash uses the scheme in <code class="docutils literal notranslate"><span class="pre">SAXS/schema.json</span></code> to build the “Calib” tab and
+<code class="docutils literal notranslate"><span class="pre">SAXS/DataConsolidationConf.json</span></code> to build the Consolidate tab.</p>
+<p>Consider this excerpt of the <code class="docutils literal notranslate"><span class="pre">SAXS/schema.json</span></code>:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="s2">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-03/schema&quot;</span><span class="p">,</span>
+<span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+<span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The SAXS configuration file specifies the parameters of a SAXS sensor calibration. It is written in the JSON format which governs the general syntax.&quot;</span><span class="p">,</span>
+<span class="s2">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+<span class="s2">&quot;properties&quot;</span><span class="p">:</span>
+   <span class="p">{</span>
+      <span class="s2">&quot;Directory&quot;</span><span class="p">:</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;Directory to take into acount for processing images. Given as a list of subdirectories.&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+         <span class="s2">&quot;minItems&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+         <span class="s2">&quot;items&quot;</span><span class="p">:</span>
+         <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;appinfo&quot;</span><span class="p">:</span>
+            <span class="p">{</span>
+               <span class="s2">&quot;editor&quot;</span><span class="p">:</span> <span class="s2">&quot;RemoteDir&quot;</span>
+            <span class="p">}</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">type</span></code> in the root says <code class="docutils literal notranslate"><span class="pre">object</span></code> which means it is a dictionary like data structure. The possible keys are declared in the <code class="docutils literal notranslate"><span class="pre">properties</span></code> dictionary. Inside the <code class="docutils literal notranslate"><span class="pre">properties</span></code> other nested types are declared in this case an <code class="docutils literal notranslate"><span class="pre">array</span></code> called <code class="docutils literal notranslate"><span class="pre">Directory</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">appinfo</span></code> section is not part of the schema specification it is rather a custom field to tell the application  about possible special treatments. In this case we want the Leash use editor widgets
+to pick a remote directory. This editor widget will be provided by the <code class="docutils literal notranslate"><span class="pre">QItemDelegate</span></code>. Which shall be explained in the following section.</p>
+</div>
+<div class="section" id="the-qitemdelegate">
+<h3>The QItemDelegate<a class="headerlink" href="#the-qitemdelegate" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">QtGui.QTreeView()</span></code> class allows to set an item delegate. This happens for example in <code class="docutils literal notranslate"><span class="pre">calibeditor.py</span></code></p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">treeview</span><span class="o">.</span><span class="n">setItemDelegateForColumn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">calibeditdelegate</span><span class="o">.</span><span class="n">calibEditDelegate</span><span class="p">(</span> <span class="n">app</span> <span class="p">))</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">calibeditdelegate.calibEditDelegate</span></code> class in turn is a custom class derived from QtGui.QItemDelegate. This is implemented in <code class="docutils literal notranslate"><span class="pre">calibeditdelegate.py</span></code>.</p>
+<p>The constructor is initializing the base class:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">calibEditDelegate</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QItemDelegate</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">app</span><span class="p">,</span>  <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">calibEditDelegate</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">=</span><span class="n">app</span>
+</pre></div>
+</div>
+<p>The part that is interesting is the reimplementations of the <code class="docutils literal notranslate"><span class="pre">createEditor</span></code>,
+<code class="docutils literal notranslate"><span class="pre">commitAndCloseEditor</span></code>, <code class="docutils literal notranslate"><span class="pre">setEditorData</span></code> and <code class="docutils literal notranslate"><span class="pre">setModelData</span></code> methods.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">createEditor</span></code> method is called when the user double clicks an item content cell in the tree view. The default behavior is to make the text content editable but you can return any widget you like, depending on the context.</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    special method of QItemDelegate class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">subschema</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">unicode</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">role</span><span class="o">=</span><span class="n">im</span><span class="o">.</span><span class="n">SUBSCHEMA</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">()))</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nb">type</span><span class="o">=</span> <span class="n">unicode</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">role</span><span class="o">=</span><span class="n">im</span><span class="o">.</span><span class="n">TYPE</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">())</span>
+    <span class="n">editablearray</span><span class="o">=</span> <span class="n">unicode</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">role</span><span class="o">=</span><span class="n">im</span><span class="o">.</span><span class="n">ISEDITABLEARRAY</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">())</span>
+    <span class="n">editortype</span><span class="o">=</span><span class="kc">None</span>
+    <span class="k">if</span> <span class="n">subschema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;appinfo&quot;</span><span class="p">):</span>
+        <span class="n">editortype</span><span class="o">=</span> <span class="n">subschema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;appinfo&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;editor&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span> <span class="nb">type</span>
+    <span class="k">if</span> <span class="s2">&quot;enum&quot;</span> <span class="ow">in</span> <span class="n">subschema</span><span class="p">:</span>
+        <span class="n">isenum</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+        <span class="n">enum</span><span class="o">=</span><span class="n">subschema</span><span class="p">[</span><span class="s1">&#39;enum&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">isenum</span><span class="o">=</span><span class="s2">&quot;false&quot;</span>
+
+    <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;integer&quot;</span><span class="p">:</span>
+        <span class="n">spinbox</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QSpinBox</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">spinbox</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="o">-</span><span class="mi">200000</span><span class="p">,</span> <span class="mi">200000</span><span class="p">)</span>
+        <span class="n">spinbox</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">spinbox</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignRight</span><span class="o">|</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignVCenter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">spinbox</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;number&quot;</span><span class="p">:</span>
+        <span class="n">spinbox</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QDoubleSpinBox</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">spinbox</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="o">-</span><span class="mi">200000</span><span class="p">,</span> <span class="mi">200000</span><span class="p">)</span>
+        <span class="n">spinbox</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">spinbox</span><span class="o">.</span><span class="n">setDecimals</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">spinbox</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignRight</span><span class="o">|</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignVCenter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">spinbox</span>
+    <span class="k">elif</span> <span class="n">editablearray</span><span class="o">==</span><span class="s2">&quot;editablearray&quot;</span><span class="p">:</span>
+        <span class="n">arrayeditdialog</span><span class="o">=</span><span class="n">arrayediddialog</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">parent</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">arrayeditdialog</span>
+    <span class="k">elif</span>  <span class="nb">type</span><span class="o">==</span> <span class="s2">&quot;object&quot;</span> <span class="ow">or</span> <span class="nb">type</span><span class="o">==</span><span class="s2">&quot;array&quot;</span> <span class="ow">or</span> <span class="nb">type</span><span class="o">==</span><span class="s2">&quot;arrayitem&quot;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="n">isenum</span><span class="o">==</span><span class="s2">&quot;true&quot;</span><span class="p">:</span>
+        <span class="n">combobox</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QComboBox</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">combobox</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span> <span class="n">enum</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">combobox</span>
+    <span class="k">elif</span> <span class="n">editortype</span><span class="o">==</span><span class="s2">&quot;File&quot;</span><span class="p">:</span>
+        <span class="n">dirname</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">unicode</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
+        <span class="n">filepicker</span><span class="o">=</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QFileDialog</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">dirname</span><span class="p">)</span>
+        <span class="n">filepicker</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">filepicker</span><span class="o">.</span><span class="n">setFileMode</span><span class="p">(</span><span class="n">filepicker</span><span class="o">.</span><span class="n">ExistingFile</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filepicker</span>
+    <span class="k">elif</span> <span class="n">editortype</span><span class="o">==</span><span class="s2">&quot;RemoteDir&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RemoteDirPicker</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">,</span><span class="n">parent</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">editortype</span><span class="o">==</span><span class="s2">&quot;RemoteFile&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RemoteDirPicker</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">,</span><span class="n">parent</span><span class="p">,</span><span class="n">index</span><span class="p">,</span><span class="n">showfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QItemDelegate</span><span class="o">.</span><span class="n">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span>
+                                          <span class="n">index</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">createEditor</span></code> is called with an index object. Which is a class that is used by the <code class="docutils literal notranslate"><span class="pre">QtGui.QStandardItemModel</span></code> class to represent the data in a form the tree view can display it.</p>
+<p>In the implementation in <code class="docutils literal notranslate"><span class="pre">jsonschematreemodel.py</span></code> the items have the subschema describing themselves and their children stored in special data attributes. We can use this to chose which editor to present to the user, depending of the type and role of the item on hand. Integers get a <code class="docutils literal notranslate"><span class="pre">QtGui.QSpinBox</span></code>, Enumerations get  <code class="docutils literal notranslate"><span class="pre">QtGui.QComboBox</span></code> to select one of the options.</p>
+<p>In case the item has <code class="docutils literal notranslate"><span class="pre">File</span></code> in the appinfo/editor field,</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;MaskFile&quot;</span><span class="p">:</span>
+   <span class="p">{</span>
+      <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Path of Maskfile&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;AAA_integ.msk&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+      <span class="s2">&quot;appinfo&quot;</span><span class="p">:</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;editor&quot;</span><span class="p">:</span> <span class="s2">&quot;File&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="s2">&quot;MaskFile&quot;</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>double clicking the cell will give the user a file system dialog to select a local file. This time we did not get a small widget that fits into the cell, we got a separate dialog. This means it is possible to launch any kind of fancy dialog from here. Think “mask editor”, “powder diffraction calibration” anything you like.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&quot;display&quot;:</span> <span class="pre">&quot;MaskFile&quot;</span></code> field will cause another method to execute custom behavior. The <code class="docutils literal notranslate"><span class="pre">setModelData</span></code> method. In this case it will load the mask file and display the picture in another cell in the tree view.</p>
+</div>
+</div>
+<div class="section" id="the-image-queue">
+<h2>The Image Queue<a class="headerlink" href="#the-image-queue" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">imagequeue</span></code> class manages how and when to integrate images. It is instantiated by the server when you load up a new calibration and start a new queue. Or, alternatively the <code class="docutils literal notranslate"><span class="pre">saxsdog</span></code> command line tool will also create an image queue. It takes as argument a list of integration recipes e.g. radial integration or slices. This recipes can be any Python object that knows how to do something with images as long they implement the <code class="xref py py-meth docutils literal notranslate"><span class="pre">integratechi()</span></code> method with the same API as the others.</p>
+<p>In the initialization process, it will create a queue object, which is a very powerful synchronized data structure which can even be accessed by subprocesses. If the server creates it it will also create a process to listen to the Feeder service and push the image paths into the queue of the <code class="docutils literal notranslate"><span class="pre">imagequeue</span></code> object.</p>
+<p>For the work to begin the <code class="xref py py-meth docutils literal notranslate"><span class="pre">imagequeue.start()</span></code>  method needs to be called. This will create the worker subprocesses to consume the images from the queue.</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">threadid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">threads</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="s2">&quot;start proc [&quot;</span><span class="p">,</span><span class="n">threadid</span><span class="p">,</span><span class="s2">&quot;]&quot;</span>
+    <span class="n">worker</span><span class="o">=</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">funcworker</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">threadid</span><span class="p">))</span>
+    <span class="n">worker</span><span class="o">.</span><span class="n">daemon</span><span class="o">=</span><span class="kc">True</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">worker</span><span class="p">)</span>
+    <span class="n">worker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The imagequeue will launch and manage as many workers as configured in the calibration. The workers are in an infinite loop  where they wait until a new image arrives through the queue to decide whether they are configured to work on the directory the images are in. If so they will process the image and push a small report into the history queue. This report includes the time (for the histogram) and the files written.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">readdir</span></code> command is issued to the server, it will call the  <code class="xref py py-meth docutils literal notranslate"><span class="pre">imagequeue.fillqueuewithexistingfiles()</span></code> method which will fill the queue with all “.tif” files it finds in the configured directory.</p>
+</div>
+<div class="section" id="data-consolidation-or-datamerger">
+<h2>Data Consolidation or Datamerger<a class="headerlink" href="#data-consolidation-or-datamerger" title="Permalink to this headline">¶</a></h2>
+<p>After the images are integrated and the measurements are done there remain a few data consolidation tasks.
+The <code class="docutils literal notranslate"><span class="pre">datamerge</span></code> module provides this functionality. The <a class="reference internal" href="TheTools.html#saxsdmerge"><span class="std std-ref">Saxsdmerge</span></a> commandline tool is one way to use it,
+the other is via the <code class="docutils literal notranslate"><span class="pre">Leash</span></code>. Its main goal is to merge the logfiles with the parameters logged in the
+images and dedector logs.</p>
+<p>The result is a table where each images has one row and the collumns are all the available
+parameters fom continuous logs
+or logs that log not regularly but only if an image is requested.</p>
+<p>This is where future versions may include a compleete HDF export of all relevant data.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="SAXSapi.html" class="btn btn-neutral float-right" title="SAXS Module API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Slices.html" class="btn btn-neutral float-left" title="GISAXS Slices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright  2019, Tu Graz, Christian Meisenbichler, Max Burian, Heinz Amenitsch
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -36,29 +36,6 @@ Example JSON:
       "OutputFileBaseName": "../results/merged"
     }
 
-.. _TimeOffset:
-
-TimeOffset
--------------------------
-
-If offset is not found otherwise, use this as offset  for all log data
-
-
-:Type:
-  number in Seconds
-:Required:
-  True
-:Default:
-  0
-:JSON Path:
-  * :ref:`# <consroot>` [':ref:`TimeOffset <TimeOffset>`']
-
-Example JSON: 
-
-.. code:: json
-
-    {"TimeOffset": "0"}
-
 .. _LogDataTables:
 
 LogDataTables

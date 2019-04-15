@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Leash Request Schema &mdash; SAXS py3.5 V3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'py3.5 V3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Leash Response Schema" href="SAXSLeashResultSchema.html" />
+    <link rel="prev" title="The Saxsdog Network" href="Server.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SAXS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTools.html">The Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Server.html">The Saxsdog Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSSchemaDoc.html">The Dedector Calibration File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTechnology.html">The Technology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LeashDeveloperDoc.html">SAXSDOG Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSapi.html">SAXS Module API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAXS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="Server.html">The Saxsdog Network</a> &raquo;</li>
+        
+      <li>Leash Request Schema</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/SAXSLeashRequestSchema.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="leash-request-schema">
+<span id="reqroot"></span><h1>Leash Request Schema<a class="headerlink" href="#leash-request-schema" title="Permalink to this headline">¶</a></h1>
+<p>This describes how the requests to the server must be composed.</p>
+<style> .red {color:red} </style><blockquote id="required">
+<div>The ‘<span class="red">*</span>’ signifies a required Field.</div></blockquote>
+<p>Schema for requests from Saxs Leash to Saxs Server</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="#command"><span class="std std-ref">command</span></a><span class="red">*</span>, <a class="reference internal" href="#argument"><span class="std std-ref">argument</span></a>, <a class="reference internal" href="#sign"><span class="std std-ref">sign</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#time"><span class="std std-ref">time</span></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#reqroot"><span class="std std-ref">#</span></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;close&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="command">
+<span id="id1"></span><h2>command<a class="headerlink" href="#command" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">values:</th><td class="field-body"><p class="first">[close, abort, new, get, plot, plotdata, readdir, stat, listdir, fileslist, mergedata, getmergedata]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#reqroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#command"><span class="std std-ref">command</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;close&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="argument">
+<span id="id2"></span><h2>argument<a class="headerlink" href="#argument" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="#calibration"><span class="std std-ref">calibration</span></a>, <a class="reference internal" href="#mergeconf"><span class="std std-ref">mergeconf</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>, <a class="reference internal" href="SAXSSchemaDoc.html#directory"><span class="std std-ref">directory</span></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#reqroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#argument"><span class="std std-ref">argument</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;argument&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="calibration">
+<span id="id3"></span><h2>calibration<a class="headerlink" href="#calibration" title="Permalink to this headline">¶</a></h2>
+<p>Calibrarion data according to <a class="reference internal" href="SAXSSchemaDoc.html#calib"><span class="std std-ref">The Dedector Calibration File</span></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><span class="xref std std-ref">/</span></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#reqroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#argument"><span class="std std-ref">argument</span></a>’][‘<a class="reference internal" href="#calibration"><span class="std std-ref">calibration</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;calibration&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mergeconf">
+<span id="id4"></span><h2>mergeconf<a class="headerlink" href="#mergeconf" title="Permalink to this headline">¶</a></h2>
+<p>Datamerger Configuratioin</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><span class="xref std std-ref">/</span></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#reqroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#argument"><span class="std std-ref">argument</span></a>’][‘<a class="reference internal" href="#mergeconf"><span class="std std-ref">mergeconf</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;mergeconf&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="data">
+<span id="id5"></span><h2>data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#reqroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#argument"><span class="std std-ref">argument</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="directory">
+<span id="id6"></span><h2>directory<a class="headerlink" href="#directory" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#reqroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#argument"><span class="std std-ref">argument</span></a>’][‘<a class="reference internal" href="SAXSSchemaDoc.html#directory"><span class="std std-ref">directory</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sign">
+<span id="id7"></span><h2>sign<a class="headerlink" href="#sign" title="Permalink to this headline">¶</a></h2>
+<p>Signature of request</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#reqroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="#sign"><span class="std std-ref">sign</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;sign&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="time">
+<span id="id8"></span><h2>time<a class="headerlink" href="#time" title="Permalink to this headline">¶</a></h2>
+<p>time in seconds (pythons time.time())</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#reqroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#time"><span class="std std-ref">time</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="SAXSLeashResultSchema.html" class="btn btn-neutral float-right" title="Leash Response Schema" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Server.html" class="btn btn-neutral float-left" title="The Saxsdog Network" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright  2019, Tu Graz, Christian Meisenbichler, Max Burian, Heinz Amenitsch
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -72,13 +72,13 @@ Example JSON:
 calibration
 -------------------------
 
-Calibrarion data according to :ref:`calib`
+Calibration data according to :ref:`calib`
 
 
 :Type:
   object
 :Contains:
-  :ref:`/<schema.json#>`
+  see :ref:`calib`
 :Required:
   False
 :JSON Path:
@@ -101,7 +101,7 @@ Datamerger Configuratioin
 :Type:
   object
 :Contains:
-  :ref:`/<DataConsolidationConf.json#>`
+  see :ref:`consroot`
 :Required:
   False
 :JSON Path:

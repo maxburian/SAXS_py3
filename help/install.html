@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Install &mdash; SAXS py3.5 V3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'py3.5 V3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Tools" href="TheTools.html" />
+    <link rel="prev" title="SAXSDog Documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SAXS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sources">Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-by-step-instructions">Step-by-Step Instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-anaconda">1) Get Anaconda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-git-version-control">2) Get GIT - version control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-anaconda">3) Start Anaconda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#find-your-installation-path">4) Find your installation path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-saxsdog">5) Get SAXSdog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-the-python-3-5-environment">6) Create the Python 3.5 Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#activate-the-python-environment">7) Activate the Python Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-saxsdog">8) Install SAXSdog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#done">9) Done!</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-create-your-default-network-configuration">(Optional) Create your Default Network Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TheTools.html">The Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Server.html">The Saxsdog Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSSchemaDoc.html">The Dedector Calibration File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTechnology.html">The Technology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LeashDeveloperDoc.html">SAXSDOG Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSapi.html">SAXS Module API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAXS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Install</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/install.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="install">
+<h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
+<p>The SAXS Package distributes as a Python package. So in order to use it, you need a Python system installed. The program was originally written in Python 2.7 and has been updated to Python 3.5. <strong>In the future, the AustoSAXS beamline will only support the Python 3.5 version!</strong></p>
+<p>SAXSDog has been developed and tested in a specific Python environment that requires precise control of the used libraries. <em>We hence suggest to create a dedicated environment as explained further below</em>.</p>
+<p>For software “end-users” we suggest to use the step-by-step instructions below. For implementation in a beamline-network, we recommend contacting the authors as some adjustments in the core-code might have to be necessary, depending on the available hardware infrastructure.</p>
+<div class="section" id="sources">
+<h2>Sources<a class="headerlink" href="#sources" title="Permalink to this headline">¶</a></h2>
+<p>The source-code of SAXSDog is available from Github. Originally, SAXSdog was implemented in 2014 for Python 2.7. <em>This version will not be supported/updated by the AustroSAXS beamline!</em> The original repository can nevertheless be found at:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ChristianMeisenbichler</span><span class="o">/</span><span class="n">SAXS</span>
+</pre></div>
+</div>
+<p>After several program-extensions and optimizations, the code was updated to be compatible with Python 3.5.5 (last version supporting Qt4). <strong>The latest version of SAXSdog can be obtained from</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">maxburian</span><span class="o">/</span><span class="n">SAXS_py3</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-by-step-instructions">
+<h2>Step-by-Step Instructions<a class="headerlink" href="#step-by-step-instructions" title="Permalink to this headline">¶</a></h2>
+<p>The following is a step-by-step instruction to obtain and run SAXSDog on your machine. The instructions are given for Windows - MAC and Linux users might have to adjust them slightly. The SAXSdog code is based on the Anaconda framework, which is cross-platform compatible. In case of problems, please contact the authors.</p>
+<div class="section" id="get-anaconda">
+<h3>1) Get Anaconda<a class="headerlink" href="#get-anaconda" title="Permalink to this headline">¶</a></h3>
+<p>Download and install the latest Anaconda Package for Python 3.7 from: <a class="reference external" href="https://www.anaconda.com/distribution/#download-section">https://www.anaconda.com/distribution/#download-section</a></p>
+</div>
+<div class="section" id="get-git-version-control">
+<h3>2) Get GIT - version control<a class="headerlink" href="#get-git-version-control" title="Permalink to this headline">¶</a></h3>
+<p>Download and install the latest GIT distribution from <a class="reference external" href="https://git-scm.com">https://git-scm.com</a></p>
+</div>
+<div class="section" id="start-anaconda">
+<h3>3) Start Anaconda<a class="headerlink" href="#start-anaconda" title="Permalink to this headline">¶</a></h3>
+<p>Start your Anacoda console, which can be found under the name <em>Anaconda promp</em> or <em>Anaconda Powershell Pronpt</em>.</p>
+</div>
+<div class="section" id="find-your-installation-path">
+<h3>4) Find your installation path<a class="headerlink" href="#find-your-installation-path" title="Permalink to this headline">¶</a></h3>
+<p>Use the command line in the Anaconda console to navigate to the desired SAXSdog installation directory. If you are not sure, we suggest the following commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ~
+$ mkdir GIT
+$ cd GIT
+</pre></div>
+</div>
+<p>This will create the folder “GIT” in your user-directory and set the current path to that folder.</p>
+</div>
+<div class="section" id="get-saxsdog">
+<h3>5) Get SAXSdog<a class="headerlink" href="#get-saxsdog" title="Permalink to this headline">¶</a></h3>
+<p>Use GIT to download a “clone-copy” of the latest SAXSdog version, by typing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/maxburian/SAXS_py3.git
+</pre></div>
+</div>
+<p>Once you have downloaded the repository, move to correpsonding folder</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd SAXS_py3
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-the-python-3-5-environment">
+<h3>6) Create the Python 3.5 Environment<a class="headerlink" href="#create-the-python-3-5-environment" title="Permalink to this headline">¶</a></h3>
+<p>SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless. In order to create the corresponding environment and install all packages, type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda env create -f environment.yml
+</pre></div>
+</div>
+<p>This can now take a few minutes as all packages have to be downloaded and installed.</p>
+<p>In case you want to integrate SAXSdog in your existing environment, use the detailed list of the required dependencies further bellow.</p>
+</div>
+<div class="section" id="activate-the-python-environment">
+<h3>7) Activate the Python Environment<a class="headerlink" href="#activate-the-python-environment" title="Permalink to this headline">¶</a></h3>
+<p>You must now activate the Python environment such that you work with Python 3.5.5.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda activate py3p5_qt4
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-saxsdog">
+<h3>8) Install SAXSdog<a class="headerlink" href="#install-saxsdog" title="Permalink to this headline">¶</a></h3>
+<p>You are now ready to install SAXSdog using the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python setup.py install
+</pre></div>
+</div>
+</div>
+<div class="section" id="done">
+<h3>9) Done!<a class="headerlink" href="#done" title="Permalink to this headline">¶</a></h3>
+<p>You have now installed SAXSdog and the software is ready to be used. The installer has placed icons in the “Start Menu” as well as on your “Desktop”. You can use either one to start “SAXSLeash”: the graphical user interface to control your image integration.</p>
+</div>
+<div class="section" id="optional-create-your-default-network-configuration">
+<h3>(Optional) Create your Default Network Configuration<a class="headerlink" href="#optional-create-your-default-network-configuration" title="Permalink to this headline">¶</a></h3>
+<p>SAXSDog is a network-based program. If you want to use it in a feeder-based environment or such that it operates on a remote server, you will have to setup your network configuration. For more information, please read <a class="reference internal" href="Server.html#saxsdognetwork"><span class="std std-ref">The Saxsdog Network</span></a> and use</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">saxsnetconf</span>
+</pre></div>
+</div>
+<p>This will generate a default configuration file with a random secret. The file must then be saved in <code class="docutils literal notranslate"><span class="pre">$Home/.saxdognetwork</span></code>.</p>
+</div>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>In case you want to create your own environment, we provide a list of the required packages and versions for which SAXSdog has been tested.</p>
+<p>Install using <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">install</span> <span class="pre">&lt;module&gt;=&lt;version&gt;=&lt;build&gt;</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.5</span><span class="o">.</span><span class="mi">5</span><span class="o">=</span><span class="n">h0c2934d_2</span>
+<span class="o">-</span> <span class="n">pyqt</span><span class="o">=</span><span class="mf">4.11</span><span class="o">.</span><span class="mi">4</span><span class="o">=</span><span class="n">py35_7</span>
+
+<span class="o">-</span> <span class="n">bitarray</span><span class="o">=</span><span class="mf">0.8</span><span class="o">.</span><span class="mi">1</span><span class="o">=</span><span class="n">py35hfa6e2cd_1</span>
+<span class="o">-</span> <span class="n">comtypes</span><span class="o">=</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">4</span><span class="o">=</span><span class="n">py35_0</span>
+<span class="o">-</span> <span class="n">jsonschema</span><span class="o">=</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">0</span><span class="o">=</span><span class="n">py35h27d56d3_0</span>
+<span class="o">-</span> <span class="n">matplotlib</span><span class="o">=</span><span class="mf">1.5</span><span class="o">.</span><span class="mi">1</span><span class="o">=</span><span class="n">np111py35_0</span>
+<span class="o">-</span> <span class="n">numpy</span><span class="o">=</span><span class="mf">1.11</span><span class="o">.</span><span class="mi">3</span><span class="o">=</span><span class="n">py35h4a99626_4</span>
+<span class="o">-</span> <span class="n">numpy</span><span class="o">-</span><span class="n">base</span><span class="o">=</span><span class="mf">1.14</span><span class="o">.</span><span class="mi">3</span><span class="o">=</span><span class="n">py35h5c71026_0</span>
+<span class="o">-</span> <span class="n">pandas</span><span class="o">=</span><span class="mf">0.23</span><span class="o">.</span><span class="mi">0</span><span class="o">=</span><span class="n">py35h830ac7b_0</span>
+<span class="o">-</span> <span class="n">pillow</span><span class="o">=</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">2</span><span class="o">=</span><span class="n">py35_0</span>
+<span class="o">-</span> <span class="n">pyqt</span><span class="o">=</span><span class="mf">4.11</span><span class="o">.</span><span class="mi">4</span><span class="o">=</span><span class="n">py35_7</span>
+<span class="o">-</span> <span class="n">pytables</span><span class="o">=</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">3</span><span class="o">=</span><span class="n">py35he6f6034_1</span>
+<span class="o">-</span> <span class="n">pywin32</span><span class="o">=</span><span class="mi">223</span><span class="o">=</span><span class="n">py35hfa6e2cd_1</span>
+<span class="o">-</span> <span class="n">pyzmq</span><span class="o">=</span><span class="mf">17.0</span><span class="o">.</span><span class="mi">0</span><span class="o">=</span><span class="n">py35hfa6e2cd_1</span>
+<span class="o">-</span> <span class="n">scipy</span><span class="o">=</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">0</span><span class="o">=</span><span class="n">py35h672f292_0</span>
+<span class="o">-</span> <span class="n">sphinx</span><span class="o">=</span><span class="mf">1.7</span><span class="o">.</span><span class="mi">9</span><span class="o">=</span><span class="n">py35_0</span>
+<span class="o">-</span> <span class="n">sphinx_rtd_theme</span><span class="o">=</span><span class="mf">0.4</span><span class="o">.</span><span class="mi">3</span><span class="o">=</span><span class="n">py_0</span>
+<span class="o">-</span> <span class="n">sphinxcontrib</span><span class="o">=</span><span class="mf">1.0</span><span class="o">=</span><span class="n">py35_1</span>
+<span class="o">-</span> <span class="n">sphinxcontrib</span><span class="o">-</span><span class="n">websupport</span><span class="o">=</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">1</span><span class="o">=</span><span class="n">py35ha3690eb_1</span>
+<span class="o">-</span> <span class="n">xlwt</span><span class="o">=</span><span class="mf">1.3</span><span class="o">.</span><span class="mi">0</span><span class="o">=</span><span class="n">py35hd04410a_0</span>
+</pre></div>
+</div>
+<p>Install using <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&lt;module&gt;==&lt;version&gt;</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">sphinxcontrib</span><span class="o">-</span><span class="n">programoutput</span><span class="o">==</span><span class="mf">0.13</span>
+<span class="o">-</span> <span class="n">sphinxcontrib</span><span class="o">-</span><span class="n">programscreenshot</span><span class="o">==</span><span class="mf">0.0</span><span class="o">.</span><span class="mi">0</span>
+<span class="o">-</span> <span class="n">watchdog</span><span class="o">==</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span>
+<span class="o">-</span> <span class="n">prettyplotlib</span><span class="o">==</span><span class="mf">0.1</span><span class="o">.</span><span class="mi">7</span>
+<span class="o">-</span> <span class="n">py2exe</span><span class="o">==</span><span class="mf">0.9</span><span class="o">.</span><span class="mf">2.2</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="TheTools.html" class="btn btn-neutral float-right" title="The Tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="SAXSDog Documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright  2019, Tu Graz, Christian Meisenbichler, Max Burian, Heinz Amenitsch
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

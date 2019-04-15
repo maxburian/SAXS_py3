@@ -1,0 +1,723 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The Saxsdog Network &mdash; SAXS py3.5 V3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'py3.5 V3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Leash Request Schema" href="SAXSLeashRequestSchema.html" />
+    <link rel="prev" title="The Tools" href="TheTools.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SAXS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTools.html">The Tools</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The Saxsdog Network</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-saxsnetwork-configuration">The SAXSNetwork configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-saxsdog-server">The Saxsdog Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-saxs-leash">The Saxs Leash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#saxs-leash-commandline">Saxs Leash Commandline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#new">New</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plot">Plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#close">Close</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#abort">Abort</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stat">Stat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-dir">Read Dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#list-directory">List Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#files-list">Files List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#merge-data">Merge Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-saxsdog-network-protocol">The Saxsdog Network Protocol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">The Saxsdog Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-saxsdog-feeder">The Saxsdog Feeder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-saxsdog-leash">The Saxsdog Leash</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Close</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Abort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">New</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#readdir">Readdir</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Stat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#error">Error</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-protocol-schemas">The Protocol Schemas</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="SAXSLeashRequestSchema.html">Leash Request Schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SAXSLeashResultSchema.html">Leash Response Schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DmergeSchema.html">Leash Datamerge and saxsdmerge Schema</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSSchemaDoc.html">The Dedector Calibration File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTechnology.html">The Technology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LeashDeveloperDoc.html">SAXSDOG Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSapi.html">SAXS Module API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAXS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>The Saxsdog Network</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Server.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-saxsdog-network">
+<span id="saxsdognetwork"></span><h1>The Saxsdog Network<a class="headerlink" href="#the-saxsdog-network" title="Permalink to this headline">¶</a></h1>
+<p>The network  may consist  of 3 different services. The “Saxsdog Server” does the image processing.  The “Saxs Feeder” publishes new file events and the “Saxs Leash” controls an configures the server. The feeder is optional.</p>
+<div class="figure">
+<img alt="_images/Network.svg" src="_images/Network.svg" /></div>
+<div class="section" id="the-saxsnetwork-configuration">
+<h2>The SAXSNetwork configuration<a class="headerlink" href="#the-saxsnetwork-configuration" title="Permalink to this headline">¶</a></h2>
+<p>The Saxsdog server and the Saxsleash have a common configuration file, which tells them how to connect with each other and which also includes a shared secret for authentication. If you want two computers to connect via the Saxsleash you need to have a copy of the file on each of them.</p>
+<p>To create such a configuration, use the command:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ saxsnetconf
+</pre></div>
+</div>
+<p>It will ask for the Feeder URL and for the Saxsdog Server URL. Then it will generate a random secret and save the file in file in <code class="docutils literal notranslate"><span class="pre">$Home/.saxdognetwork</span></code>.  You will have to copy the file  to the other computers you need to allow to connect to your network. The secret must be the same on all of them.</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+   <span class="s2">&quot;Server&quot;</span><span class="p">:</span><span class="s2">&quot;tcp://hostname:port&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;Feeder&quot;</span><span class="p">:</span><span class="s2">&quot;tcp://hostname:port&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;Secret&quot;</span><span class="p">:</span><span class="s2">&quot;Some large random string.&quot;</span>
+   <span class="s2">&quot;Name&quot;</span><span class="p">:</span><span class="s2">&quot;Pilatus1M&quot;</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+<p>The authentication is done by hashing the request and the secret including a time stamp. The time stamp is checked if it lies within 900 seconds of the servers time.</p>
+</div>
+<div class="section" id="the-saxsdog-server">
+<h2>The Saxsdog Server<a class="headerlink" href="#the-saxsdog-server" title="Permalink to this headline">¶</a></h2>
+<p>The Saxdog Server is the program that is started on the processing computer (node). It may subscribe to a “new file” event service.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ saxsdogserver --help
+Usage: saxsdogserver [options] basedir
+
+Options:
+  -h, --help            show this help message and exit
+  -p port, --port=port  Port to offer command service. Default is 7777.
+  -t THREADS, --threads=THREADS
+                        Number of concurrent processes.
+  -f tcp://hostname:port, --feeder=tcp://hostname:port
+                        Specify the URL of the new file event service (Saxsdog
+                        Feeder)
+  -w, --watch           Watch directory for changes, using file system events
+                        recursively for all sub directories.
+  -R RELPATH, --relpath=RELPATH
+                        Specify output directory as relative path to image
+                        file. Default: &#39;../work&#39;
+  -o OUTDIR, --out=OUTDIR
+                        Specify output directory
+  -d, --daemon          Start server  as daemon
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-saxs-leash">
+<span id="saxsleash"></span><h2>The Saxs Leash<a class="headerlink" href="#the-saxs-leash" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/screenshot.png" src="_images/screenshot.png" />
+<p>The Leash Program is a GUI to load calibrations into the Saxdog Server and monitor the processing of the data. It provides a calibration editor, as mask preview and basic data import from <span class="xref std std-ref">saxsconverter</span>.</p>
+<p>The main window has 3 tab cards. The first is for setting up the server, the second to review the currently processed data and the third for basic statistics. The command to launch it is.</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">leash</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="saxs-leash-commandline">
+<h2>Saxs Leash Commandline<a class="headerlink" href="#saxs-leash-commandline" title="Permalink to this headline">¶</a></h2>
+<p>The “Saxs Leash” command line client can issue the commands for the Saxsdog Server.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ saxsleash --help
+Usage: saxsleash close|abort|new|get|plot|plotdata|readdir|stat|listdir|fileslist|mergedata|getmergedata|mergestat [options] [arguments]
+
+Options:
+  -h, --help            show this help message and exit
+  -S tcp://HOSTNAME:PORT, --server=tcp://HOSTNAME:PORT
+                        URL of &quot;Saxsdog Server&quot;
+  -s N, --skip=N        plot: Skip first N points.
+  -k N, --clip=N        plot: Clip last N points.
+  -x TYPE, --xaxsistype=TYPE
+                        plot: Select type of X axis scale, might be
+                        [linear|log|symlog]
+  -y TYPE, --yaxsistype=TYPE
+                        plot: Select type of Y axis scale, might be
+                        [linear|log|symlog]
+  -N SERVERNO, --serverno=SERVERNO
+                        select server from config list by index default:0
+</pre></div>
+</div>
+<p>Most of the command line options are about the <code class="docutils literal notranslate"><span class="pre">plot</span></code> command, but in order to visualize the processed data, one has to send the commands to setup a calibration.</p>
+<div class="section" id="new">
+<h3>New<a class="headerlink" href="#new" title="Permalink to this headline">¶</a></h3>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ saxsleash new cal.json data/AAA_integ.msk data/
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">new</span></code> command loads a calibration and starts the queue to receive new files. It requires 3 arguments:</p>
+<ol class="arabic simple">
+<li>Calibration file. as in <a class="reference internal" href="SAXSSchemaDoc.html#calib"><span class="std std-ref">The Dedector Calibration File</span></a>,</li>
+<li>mask file,</li>
+<li>directory where the image files are or are going to be.</li>
+</ol>
+<p>If there is a queue running, this command will abort the other one and replace it. One server can have only one queue at a time.</p>
+</div>
+<div class="section" id="plot">
+<h3>Plot<a class="headerlink" href="#plot" title="Permalink to this headline">¶</a></h3>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ saxsleash plot
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">plot</span></code> command will grab the next image and show a plot of the result in a window. This command will be repeated until the user interrupts it with <code class="docutils literal notranslate"><span class="pre">Ctrl-C</span></code>.</p>
+</div>
+<div class="section" id="close">
+<h3>Close<a class="headerlink" href="#close" title="Permalink to this headline">¶</a></h3>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ saxsleash close
+</pre></div>
+</div>
+<p>Closes the queue. Which means, the server will process what is left in the queue but ignore all new files.</p>
+</div>
+<div class="section" id="abort">
+<h3>Abort<a class="headerlink" href="#abort" title="Permalink to this headline">¶</a></h3>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ saxsleash abort
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">abort</span></code> command will close the queue  and stop all data processing processes. It will only wait for each process to finish the picture they started before. The remaining pictures in the queue are ignored.</p>
+</div>
+<div class="section" id="stat">
+<h3>Stat<a class="headerlink" href="#stat" title="Permalink to this headline">¶</a></h3>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ saxsleash stat
+</pre></div>
+</div>
+<p>Return basic statistics data about the processes.</p>
+</div>
+<div class="section" id="read-dir">
+<h3>Read Dir<a class="headerlink" href="#read-dir" title="Permalink to this headline">¶</a></h3>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ saxsleash readdir
+</pre></div>
+</div>
+<p>This command will put all the images in the configured directory into the queue. This is useful to reprocess pictures.</p>
+</div>
+<div class="section" id="list-directory">
+<h3>List Directory<a class="headerlink" href="#list-directory" title="Permalink to this headline">¶</a></h3>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>  $ saxsleash listdir Serverdirectory
+
+Returns a list of files and directories on the server. Mostly used for the Leash GUI dialoges.
+</pre></div>
+</div>
+</div>
+<div class="section" id="files-list">
+<h3>Files List<a class="headerlink" href="#files-list" title="Permalink to this headline">¶</a></h3>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ saxsleash fileslist
+</pre></div>
+</div>
+<p>Returns a list of processed files.</p>
+</div>
+<div class="section" id="merge-data">
+<h3>Merge Data<a class="headerlink" href="#merge-data" title="Permalink to this headline">¶</a></h3>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$  saxsleash mergedata mergeconf.json
+</pre></div>
+</div>
+<p>Sends command to merge data. Takes a merge configuration file as argument.</p>
+</div>
+</div>
+<div class="section" id="the-saxsdog-network-protocol">
+<h2>The Saxsdog Network Protocol<a class="headerlink" href="#the-saxsdog-network-protocol" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>The Saxsdog Server<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The saxdog server can watch for files ystem events for himself  or subscribe to a zmq service, the Saxsdog Feeder, that publishes new file names. The server can process the new images according to one  calibration. The server may only have one calibration at a time, it is not designed to be used  by multiple users at the same time.</p>
+</div>
+<div class="section" id="the-saxsdog-feeder">
+<h3>The Saxsdog Feeder<a class="headerlink" href="#the-saxsdog-feeder" title="Permalink to this headline">¶</a></h3>
+<p>The “Saxsdog Feeder” service offers file events for subscription. It should not do any buffering or pre-selection, just send a new  message when any new file was copied and is ready for processing. Also when a file is overwritten: Send a message. It should however,  only send this event, when the file is completely written to the file system.</p>
+<p>New file events are composed of the following message:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;command&quot;</span><span class="p">:</span><span class="s2">&quot;new file&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;argument&quot;</span><span class="p">:</span><span class="s2">&quot;/Path/to/file/&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The service must be a ZeroMQ <code class="docutils literal notranslate"><span class="pre">zmq.PUP</span></code> socket. This code is a simulation of the messages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">zmq</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">optparse</span> <span class="k">import</span> <span class="n">OptionParser</span>
+
+<span class="k">def</span> <span class="nf">startfeeder</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simulator for new file anounciation service. For development and testing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">OptionParser</span><span class="p">()</span>
+    <span class="n">usage</span> <span class="o">=</span> <span class="s2">&quot;usage: %prog [options]  &quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">OptionParser</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--port&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;port&quot;</span><span class="p">,</span>
+                      <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Port to offer file changes service&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;port&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--dir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;dir&quot;</span><span class="p">,</span>
+                      <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory to monitor&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;dir&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--sdir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;sdir&quot;</span><span class="p">,</span>
+                      <span class="n">help</span><span class="o">=</span><span class="s2">&quot;server dir, (prefix to filepaths)&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;dir&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    
+    
+    
+    <span class="n">context</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
+    <span class="n">socket</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">PUB</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">port</span><span class="o">==</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">conf</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s2">&quot;.saxsdognetwork&quot;</span><span class="p">)))</span> 
+        <span class="n">port</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;Feeder&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">port</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">port</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;conecting:&quot;</span><span class="p">,</span> <span class="s2">&quot;tcp://*:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">port</span><span class="p">)</span>
+    <span class="n">socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;tcp://*:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">port</span><span class="p">)</span>
+    
+    <span class="n">fileslist</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">options</span><span class="o">.</span><span class="n">dir</span><span class="o">==</span><span class="s2">&quot;.&quot;</span><span class="p">:</span>
+        <span class="n">dirtosearch</span> <span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dirtosearch</span> <span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">dir</span>
+    <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">subdirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">dirtosearch</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;tif&#39;</span><span class="p">):</span>
+                        <span class="n">fileslist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+    <span class="n">messageobj</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;command&quot;</span><span class="p">:</span><span class="s2">&quot;new file&quot;</span><span class="p">,</span><span class="s2">&quot;argument&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">}</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+       <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">fileslist</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">messageobj</span><span class="p">[</span><span class="s1">&#39;argument&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">file</span>
+            <span class="n">message</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">messageobj</span><span class="p">)</span>
+            <span class="n">socket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+                        
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">startfeeder</span><span class="p">()</span>
+
+    
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-saxsdog-leash">
+<h3>The Saxsdog Leash<a class="headerlink" href="#the-saxsdog-leash" title="Permalink to this headline">¶</a></h3>
+<p>The Saxsdog Leash is a user-facing control interface.  There, the user should enter new calibrations and specify the data directories connected to it.  During the processing, it shows a graph of one of the current images.</p>
+<p>It may send the following commands:</p>
+<div class="section" id="id2">
+<h4>Close<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p>Request:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;command&quot;</span><span class="p">:</span><span class="s2">&quot;close queue&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="mf">1404979588.715198</span><span class="p">,</span>
+  <span class="s2">&quot;sign&quot;</span><span class="p">:</span><span class="s2">&quot;Signature generated for request&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Answer:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;result&quot;</span><span class="p">:</span><span class="s2">&quot;queue closed&quot;</span><span class="p">,</span>
+<span class="s2">&quot;data&quot;</span><span class="p">:{</span>
+   <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;time interval&quot;</span><span class="p">:</span> <span class="mf">0.8776118755340576</span><span class="p">,</span>
+      <span class="s2">&quot;queue length&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s2">&quot;frames per sec&quot;</span><span class="p">:</span> <span class="mf">10.25510279760422</span><span class="p">,</span>
+       <span class="s2">&quot;images processed&quot;</span><span class="p">:</span> <span class="mi">235</span><span class="p">,</span> <span class="s2">&quot;pics&quot;</span><span class="p">:</span> <span class="mi">9</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h4>Abort<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>Request:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;command&quot;</span><span class="p">:</span><span class="s2">&quot;abort queue&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="mf">1404979588.715198</span><span class="p">,</span>
+   <span class="s2">&quot;sign&quot;</span><span class="p">:</span><span class="s2">&quot;Signature generated for request&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Answer:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;result&quot;</span><span class="p">:</span><span class="s2">&quot;queue stopped emptied and closed&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;data&quot;</span><span class="p">:{</span>
+      <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">&quot;time interval&quot;</span><span class="p">:</span> <span class="mf">0.8776118755340576</span><span class="p">,</span>
+         <span class="s2">&quot;queue length&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="s2">&quot;frames per sec&quot;</span><span class="p">:</span> <span class="mf">10.25510279760422</span><span class="p">,</span>
+         <span class="s2">&quot;images processed&quot;</span><span class="p">:</span> <span class="mi">235</span><span class="p">,</span>
+         <span class="s2">&quot;pics&quot;</span><span class="p">:</span> <span class="mi">9</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h4>New<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>Request:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;command&quot;</span><span class="p">:</span><span class="s2">&quot;new queue&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;argument&quot;</span><span class="p">:{</span>
+      <span class="s2">&quot;directory&quot;</span><span class="p">:[</span><span class="s2">&quot;path&quot;</span><span class="p">,</span><span class="s2">&quot;to&quot;</span><span class="p">,</span><span class="s2">&quot;data&quot;</span><span class="p">],</span>
+      <span class="s2">&quot;calibration&quot;</span><span class="p">:{},</span>
+      <span class="s2">&quot;maskbin&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span>
+   <span class="p">},</span>
+<span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="mf">1404979588.715198</span><span class="p">,</span>
+<span class="s2">&quot;sign&quot;</span><span class="p">:</span><span class="s2">&quot;Signature generated for request&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Answer:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span><span class="s2">&quot;new queue&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;data&quot;</span><span class="p">:{</span>
+         <span class="p">}</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h4>Plot<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p>Request:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>  <span class="s2">&quot;command&quot;</span><span class="p">:</span><span class="s2">&quot;send plot&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="mf">1404979588.715198</span><span class="p">,</span>
+   <span class="s2">&quot;sign&quot;</span><span class="p">:</span><span class="s2">&quot;Signature generated for request&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Answer:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+ <span class="s2">&quot;result&quot;</span><span class="p">:</span><span class="s2">&quot;plot data&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;data&quot;</span><span class="p">:{</span>
+   <span class="s2">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;/name/.tiv&quot;</span> <span class="p">,</span>
+   <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">&quot;time interval&quot;</span><span class="p">:</span> <span class="mf">0.8776118755340576</span><span class="p">,</span>
+         <span class="s2">&quot;queue length&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="s2">&quot;frames per sec&quot;</span><span class="p">:</span> <span class="mf">10.25510279760422</span><span class="p">,</span>
+         <span class="s2">&quot;images processed&quot;</span><span class="p">:</span> <span class="mi">235</span><span class="p">,</span>
+         <span class="s2">&quot;pics&quot;</span><span class="p">:</span> <span class="mi">9</span>
+         <span class="p">},</span>
+   <span class="s2">&quot;array&quot;</span><span class="p">:[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">]]</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="readdir">
+<h4>Readdir<a class="headerlink" href="#readdir" title="Permalink to this headline">¶</a></h4>
+<p>This puts all existing files in the queue directory into the queue again.</p>
+<p>Request:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;command&quot;</span><span class="p">:</span><span class="s2">&quot;readdir&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="mf">1404979588.715198</span><span class="p">,</span>
+   <span class="s2">&quot;sign&quot;</span><span class="p">:</span><span class="s2">&quot;Signature generated for request&quot;</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Answer:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;result&quot;</span><span class="p">:</span><span class="s2">&quot;directory refilled queue&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;data&quot;</span><span class="p">:{</span>
+      <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">&quot;time interval&quot;</span><span class="p">:</span> <span class="mf">0.8776118755340576</span><span class="p">,</span>
+         <span class="s2">&quot;queue length&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="s2">&quot;frames per sec&quot;</span><span class="p">:</span> <span class="mf">10.25510279760422</span><span class="p">,</span>
+         <span class="s2">&quot;images processed&quot;</span><span class="p">:</span> <span class="mi">235</span><span class="p">,</span> <span class="s2">&quot;pics&quot;</span><span class="p">:</span> <span class="mi">9</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h4>Stat<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<p>Get basic processing statistics.</p>
+<p>Request:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>  <span class="s2">&quot;command&quot;</span><span class="p">:</span><span class="s2">&quot;stat&quot;</span><span class="p">,</span><span class="s2">&quot;argument&quot;</span><span class="p">:{},</span>
+   <span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="mf">1404979588.715198</span><span class="p">,</span>
+   <span class="s2">&quot;sign&quot;</span><span class="p">:</span><span class="s2">&quot;Signature generated for request&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Answer:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+   <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;time interval&quot;</span><span class="p">:</span> <span class="mf">711.6886098384857</span><span class="p">,</span>
+      <span class="s2">&quot;queue length&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s2">&quot;frames per sec&quot;</span><span class="p">:</span> <span class="mf">9.972057866165134</span><span class="p">,</span>
+      <span class="s2">&quot;images processed&quot;</span><span class="p">:</span> <span class="mi">7332</span><span class="p">,</span>
+      <span class="s2">&quot;pics&quot;</span><span class="p">:</span> <span class="mi">7097</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+<span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;stat&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="error">
+<h4>Error<a class="headerlink" href="#error" title="Permalink to this headline">¶</a></h4>
+<p>In case of error in the Saxsdog server it will return an error message:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;result&quot;</span><span class="p">:</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span>
+<span class="s2">&quot;data&quot;</span><span class="p">:{</span><span class="s2">&quot;Error&quot;</span><span class="p">:</span><span class="s2">&quot;Error message&quot;</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="the-protocol-schemas">
+<h2>The Protocol Schemas<a class="headerlink" href="#the-protocol-schemas" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="SAXSLeashRequestSchema.html">Leash Request Schema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashRequestSchema.html#command">command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashRequestSchema.html#argument">argument</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashRequestSchema.html#calibration">calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashRequestSchema.html#mergeconf">mergeconf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashRequestSchema.html#data">data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashRequestSchema.html#directory">directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashRequestSchema.html#sign">sign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashRequestSchema.html#time">time</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSLeashResultSchema.html">Leash Response Schema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#result">result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#data">data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#cal">cal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#error">Error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#syncplot">syncplot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#directory">directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#attachments">attachments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#threads">threads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#dircontent">dircontent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#history">history</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#fileslist">fileslist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#stat">stat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#queue-length">queue length</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#images-processed">images processed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#time">time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#start-time">start time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#mergecount">mergecount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#filename">filename</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#integralparameters">IntegralParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#graphs">graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#kind">kind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#conf">conf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#columnlabels">columnLabels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SAXSLeashResultSchema.html#array">array</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DmergeSchema.html">Leash Datamerge and saxsdmerge Schema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#timeoffset">TimeOffset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#logdatatables">LogDataTables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#timeepoch">TimeEpoch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#id4">TimeOffset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#firstimagecorrelation">FirstImageCorrelation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#name">Name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#files">Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#remotepath">RemotePath</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#localpath">LocalPath</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#outputformats">OutputFormats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#csv">csv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#hdf">hdf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#exel">exel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#json">json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#outputfilebasename">OutputFileBaseName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#hdfoptions">HDFOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#includechi">IncludeCHI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DmergeSchema.html#includetif">IncludeTIF</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="SAXSLeashRequestSchema.html" class="btn btn-neutral float-right" title="Leash Request Schema" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="TheTools.html" class="btn btn-neutral float-left" title="The Tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright  2019, Tu Graz, Christian Meisenbichler, Max Burian, Heinz Amenitsch
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

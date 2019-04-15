@@ -1,0 +1,523 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SAXS Module API &mdash; SAXS py3.5 V3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'py3.5 V3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="SAXSDOG Developer Documentation" href="LeashDeveloperDoc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SAXS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTools.html">The Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Server.html">The Saxsdog Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSSchemaDoc.html">The Dedector Calibration File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTechnology.html">The Technology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LeashDeveloperDoc.html">SAXSDOG Developer Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SAXS Module API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAXS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>SAXS Module API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/SAXSapi.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-SAXS">
+<span id="saxs-module-api"></span><h1>SAXS Module API<a class="headerlink" href="#module-SAXS" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="SAXS.calibration">
+<em class="property">class </em><code class="descclassname">SAXS.</code><code class="descname">calibration</code><span class="sig-paren">(</span><em>config</em>, <em>mask=None</em>, <em>attachment=None</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.calibration" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class represents a calibration for SAXS diffraction. 
+After initialization, the <a class="reference internal" href="#SAXS.calibration.integrate" title="SAXS.calibration.integrate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">integrate()</span></code></a> method can compute the radial intensity very fast.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> (<em>dict</em>) – the calibration json object as dictionary <a class="reference internal" href="SAXSSchemaDoc.html#root"><span class="std std-ref">Calibration file Reference</span></a>:</li>
+<li><strong>mask</strong> (<em>dict</em>) – The mask of the list to use for this instance</li>
+<li><strong>attachment</strong> (<em>dict</em>) – If mask is not to be read from filesystem it must be provided as attachment</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="SAXS.calibration.integParameters">
+<code class="descname">integParameters</code><span class="sig-paren">(</span><em>Intensity</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.calibration.integParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to calculate the integral parameters between qStart and qStop
+returns I0, I1, I2</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SAXS.calibration.integrate">
+<code class="descname">integrate</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.calibration.integrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integrate a picture.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> (<em>numpy.array</em><em>(</em><em>dim=2</em><em>)</em>) – Sensor image to integrate as 2d <cite>NumPy</cite> array</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Returns Angle and intensity vector as a tuple (angle,intensity)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="SAXS.calibration.integratechi">
+<code class="descname">integratechi</code><span class="sig-paren">(</span><em>image</em>, <em>path</em>, <em>picture</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.calibration.integratechi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integrate and save to file in “chi” format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> (<em>np.array</em><em>(</em><em>)</em>) – Image to integrate as numpy array</li>
+<li><strong>path</strong> (<em>string</em>) – Path to save the file to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Scattering curve data as numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="SAXS.calibration.integrateerror">
+<code class="descname">integrateerror</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.calibration.integrateerror" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integrates an image and computes error estimates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> (<em>np.array</em><em>(</em><em>)</em>) – Image to integrate as numpy array</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The intensity the standard deviation and the Poisson statistics error in a numpy array.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="SAXS.calibration.plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><em>image</em>, <em>outputfile=''</em>, <em>startplotat=0</em>, <em>fig=None</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.calibration.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot integrated function for image in argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> (<em>numpy.array</em><em>(</em><em>dim=2</em><em>)</em>) – Sensor image to integrate as 2d <cite>NumPy</cite> array</li>
+<li><strong>outputfile</strong> (<em>string</em>) – File to write plot to. Might be any image format supported by matplotlib.</li>
+<li><strong>startplotat</strong> (<em>integer</em>) – radial point from which to start the plot</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="SAXS.calibration.polcorr">
+<code class="descname">polcorr</code><span class="sig-paren">(</span><em>Pfrac</em>, <em>rot</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.calibration.polcorr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Polarization Correction</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="SAXS.slice">
+<em class="property">class </em><code class="descclassname">SAXS.</code><code class="descname">slice</code><span class="sig-paren">(</span><em>conf</em>, <em>sliceconf</em>, <em>attachments=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes slice integration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>conf</strong> (<em>dictionary</em>) – Detector calibration</li>
+<li><strong>sliceconf</strong> (<em>dictionary</em>) – The part of detector calibration which deals with this slice.</li>
+<li><strong>attachments</strong> (<em>dictionary</em>) – Mask data.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="SAXS.slice.integratechi">
+<code class="descname">integratechi</code><span class="sig-paren">(</span><em>image</em>, <em>path</em>, <em>picture</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.slice.integratechi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integrate and save to file in “chi” format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> (<em>np.array</em><em>(</em><em>)</em>) – Image to integrate as numpy array</li>
+<li><strong>path</strong> (<em>string</em>) – Path to save the file to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Scattering curve data as json structure</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="SAXS.slice.plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><em>image</em>, <em>outputfile=''</em>, <em>startplotat=0</em>, <em>fig=None</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.slice.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>dummy function in order to not trip up image queue</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="SAXS.calc_theta">
+<code class="descclassname">SAXS.</code><code class="descname">calc_theta</code><span class="sig-paren">(</span><em>r</em>, <em>phi</em>, <em>d</em>, <em>tilt</em>, <em>tiltdir</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.calc_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the difraction angle from pixel coordinates. It does work when called with arrays. 
+See <a class="reference internal" href="SAXSSchemaDoc.html#geometry"><span class="std std-ref">Geometry</span></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r</strong> (<em>float</em>) – Distance to beamcenter.</li>
+<li><strong>phi</strong> (<em>float</em>) – Angle[rad] from polar sensor plane coordinates.</li>
+<li><strong>d</strong> (<em>float</em>) – distance to difraction center.</li>
+<li><strong>tilt</strong> (<em>float</em>) – Angle[rad] of sensor plane tilt.</li>
+<li><strong>tiltdir</strong> (<em>float</em>) – Angle[rad] of direction of tilt.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">theta</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="SAXS.scalemat">
+<code class="descclassname">SAXS.</code><code class="descname">scalemat</code><span class="sig-paren">(</span><em>Xsize</em>, <em>Ysize</em>, <em>ov</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.scalemat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a scaling projection for use in computing the pixel weights for integration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Xsize</strong> (<em>int</em>) – Picture size in X direction.</li>
+<li><strong>Ysize</strong> (<em>int</em>) – Picture size in Ydirection.</li>
+<li><strong>ov</strong> (<em>int</em>) – Number of oversampling ticks in x ynd y direction</li>
+<li><strong>corr</strong> (<em>array</em>) – Polarizationn an other correction factors</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">sparce matrix toing the scaling</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="SAXS.openmask">
+<code class="descclassname">SAXS.</code><code class="descname">openmask</code><span class="sig-paren">(</span><em>mfile</em>, <em>attachment=None</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.openmask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the mask file especialy the *.msk file. Unfortunately there is no library
+module for msk files available also no documentation. So, for the msk file, we have a very brittle hack
+it works for our sensor. Nevermind any other resolution or size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>object</em>) – Calibration config object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Mask as logical numpy array.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="SAXS.convert">
+<code class="descclassname">SAXS.</code><code class="descname">convert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>This implements the functionality oft <a class="reference internal" href="TheTools.html#converter"><span class="std std-ref">The Converter</span></a>.
+It parses the commandline options and converts the
+Fit2d info file to the JSON data used by the SAXS.callibration class.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SAXS.saxsdog">
+<code class="descclassname">SAXS.</code><code class="descname">saxsdog</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.saxsdog" title="Permalink to this definition">¶</a></dt>
+<dd><p>This implements the functionality of <a class="reference internal" href="TheTools.html#saxsdog"><span class="std std-ref">The Saxsdog</span></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="SAXS.imagequeue">
+<em class="property">class </em><code class="descclassname">SAXS.</code><code class="descname">imagequeue</code><span class="sig-paren">(</span><em>Cals</em>, <em>options</em>, <em>directory</em>, <em>conf</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.imagequeue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class keeps a queue of images which may be worked on in threads.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Cal</strong> (<a class="reference internal" href="#SAXS.calibration" title="SAXS.calibration"><em>SAXS.calibration</em></a>) – The SAXS Calibration to use for the processing</li>
+<li><strong>options</strong> (<em>optparser</em>) – The object with the comandline options of the saxsdog</li>
+<li><strong>args</strong> (<em>list</em>) – List of command line options</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="SAXS.imagequeue.fillqueuewithexistingfiles">
+<code class="descname">fillqueuewithexistingfiles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.imagequeue.fillqueuewithexistingfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill the queue with the list of images that is already there.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SAXS.imagequeue.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.imagequeue.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start threads and directory observer.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="SAXS.Server">
+<em class="property">class </em><code class="descclassname">SAXS.</code><code class="descname">Server</code><span class="sig-paren">(</span><em>conf</em>, <em>serverid</em>, <em>stopflag=None</em>, <em>serverdir=None</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.Server" title="Permalink to this definition">¶</a></dt>
+<dd><p>class to manage a saxsdog server</p>
+<dl class="method">
+<dt id="SAXS.Server.authenticate">
+<code class="descname">authenticate</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.Server.authenticate" title="Permalink to this definition">¶</a></dt>
+<dd><p>check signature of request</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SAXS.Server.commandhandler">
+<code class="descname">commandhandler</code><span class="sig-paren">(</span><em>object</em>, <em>attachment</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.Server.commandhandler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="SAXS.Server.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.Server.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>start server loop</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SAXS.Server.start_image_queue">
+<code class="descname">start_image_queue</code><span class="sig-paren">(</span><em>object</em>, <em>attachment</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.Server.start_image_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>prepare new image queue
+start processing threads</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="SAXS.initcommand">
+<code class="descclassname">SAXS.</code><code class="descname">initcommand</code><span class="sig-paren">(</span><em>options</em>, <em>arg</em>, <em>conf</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.initcommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface for issuing leash commands</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SAXS.validateResponse">
+<code class="descclassname">SAXS.</code><code class="descname">validateResponse</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#SAXS.validateResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate response from saxsdog server against the schema.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="LeashDeveloperDoc.html" class="btn btn-neutral float-left" title="SAXSDOG Developer Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright  2019, Tu Graz, Christian Meisenbichler, Max Burian, Heinz Amenitsch
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

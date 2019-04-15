@@ -1,0 +1,744 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>TimeOffset &mdash; SAXS py3.5 V3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'py3.5 V3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SAXS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTools.html">The Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Server.html">The Saxsdog Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSSchemaDoc.html">The Dedector Calibration File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTechnology.html">The Technology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LeashDeveloperDoc.html">SAXSDOG Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSapi.html">SAXS Module API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAXS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>TimeOffset</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DataConsolidationSchema.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <style> .red {color:red} </style><blockquote id="required">
+<div>The ‘<span class="red">*</span>’ signifies a required Field.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><span class="xref std std-ref">TimeOffset</span><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>, <a class="reference internal" href="DmergeSchema.html#outputformats"><span class="std std-ref">OutputFormats</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#outputfilebasename"><span class="std std-ref">OutputFileBaseName</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#hdfoptions"><span class="std std-ref">HDFOptions</span></a><span class="red">*</span></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;TimeOffset&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;HDFOptions&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;IncludeCHI&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s2">&quot;IncludeTIF&quot;</span><span class="p">:</span> <span class="n">false</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;OutputFormats&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;exel&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s2">&quot;hdf&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s2">&quot;csv&quot;</span><span class="p">:</span> <span class="n">false</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;OutputFileBaseName&quot;</span><span class="p">:</span> <span class="s2">&quot;../results/merged&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="timeoffset">
+<span id="id1"></span><h1>TimeOffset<a class="headerlink" href="#timeoffset" title="Permalink to this headline">¶</a></h1>
+<p>If offset is not found otherwise, use this as offset  for all log data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in Seconds</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<span class="xref std std-ref">TimeOffset</span>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;TimeOffset&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="logdatatables">
+<span id="id2"></span><h1>LogDataTables<a class="headerlink" href="#logdatatables" title="Permalink to this headline">¶</a></h1>
+<p>Define log files to consolidate with image data. If more then one defined, they will be joined and missing values will be interpolated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items: {<a class="reference internal" href="DmergeSchema.html#timeepoch"><span class="std std-ref">TimeEpoch</span></a>, <span class="xref std std-ref">TimeOffset</span>, <a class="reference internal" href="DmergeSchema.html#firstimagecorrelation"><span class="std std-ref">FirstImageCorrelation</span></a>, <a class="reference internal" href="SAXSSchemaDoc.html#name"><span class="std std-ref">Name</span></a>, <a class="reference internal" href="DmergeSchema.html#files"><span class="std std-ref">Files</span></a>}</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;LogDataTables&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="timeepoch">
+<span id="id3"></span><h1>TimeEpoch<a class="headerlink" href="#timeepoch" title="Permalink to this headline">¶</a></h1>
+<p>Time epoch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">values:</th><td class="field-body"><p class="first">[Mac, Unix]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default:</th><td class="field-body"><p class="first">Mac</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>’][0][‘<a class="reference internal" href="DmergeSchema.html#timeepoch"><span class="std std-ref">TimeEpoch</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;TimeEpoch&quot;</span><span class="p">:</span> <span class="s2">&quot;Mac&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<span id="id5"></span><h1>TimeOffset<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h1>
+<p>If offset is not found otherwise, use this as offset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in Seconds</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>’][0][‘<span class="xref std std-ref">TimeOffset</span>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;TimeOffset&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="firstimagecorrelation">
+<span id="id6"></span><h1>FirstImageCorrelation<a class="headerlink" href="#firstimagecorrelation" title="Permalink to this headline">¶</a></h1>
+<p>Find offset for all log data by correlating first image with first entry of this table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>’][0][‘<a class="reference internal" href="DmergeSchema.html#firstimagecorrelation"><span class="std std-ref">FirstImageCorrelation</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;FirstImageCorrelation&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="name">
+<span id="id7"></span><h1>Name<a class="headerlink" href="#name" title="Permalink to this headline">¶</a></h1>
+<p>Name field to be used as prefix in the joined collumn names.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">log</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>’][0][‘<a class="reference internal" href="SAXSSchemaDoc.html#name"><span class="std std-ref">Name</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="s2">&quot;log&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="files">
+<span id="id8"></span><h1>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h1>
+<p>One log table may be one file, or a list of files to be concatenated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items: {<a class="reference internal" href="DmergeSchema.html#remotepath"><span class="std std-ref">RemotePath</span></a>, <a class="reference internal" href="DmergeSchema.html#localpath"><span class="std std-ref">LocalPath</span></a>}</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>’][0][‘<a class="reference internal" href="DmergeSchema.html#files"><span class="std std-ref">Files</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Files&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="remotepath">
+<span id="id9"></span><h1>RemotePath<a class="headerlink" href="#remotepath" title="Permalink to this headline">¶</a></h1>
+<p>Path of logfile on server if used in server mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items: string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>’][0][‘<a class="reference internal" href="DmergeSchema.html#files"><span class="std std-ref">Files</span></a>’][0][‘<a class="reference internal" href="DmergeSchema.html#remotepath"><span class="std std-ref">RemotePath</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;RemotePath&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="localpath">
+<span id="id10"></span><h1>LocalPath<a class="headerlink" href="#localpath" title="Permalink to this headline">¶</a></h1>
+<p>Path of logfile on client. Overrides <a class="reference internal" href="DmergeSchema.html#remotepath"><span class="std std-ref">RemotePath</span></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>’][0][‘<a class="reference internal" href="DmergeSchema.html#files"><span class="std std-ref">Files</span></a>’][0][‘<a class="reference internal" href="DmergeSchema.html#localpath"><span class="std std-ref">LocalPath</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;LocalPath&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="outputformats">
+<span id="id11"></span><h1>OutputFormats<a class="headerlink" href="#outputformats" title="Permalink to this headline">¶</a></h1>
+<p>List of outputformats to write the consolidated log or the consolidated ‘hdf’ file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="DmergeSchema.html#csv"><span class="std std-ref">csv</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#hdf"><span class="std std-ref">hdf</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#exel"><span class="std std-ref">exel</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#json"><span class="std std-ref">json</span></a><span class="red">*</span></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#outputformats"><span class="std std-ref">OutputFormats</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;OutputFormats&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;exel&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s2">&quot;hdf&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s2">&quot;csv&quot;</span><span class="p">:</span> <span class="n">false</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="csv">
+<span id="id12"></span><h1>csv<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#outputformats"><span class="std std-ref">OutputFormats</span></a>’][‘<a class="reference internal" href="DmergeSchema.html#csv"><span class="std std-ref">csv</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;csv&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="hdf">
+<span id="id13"></span><h1>hdf<a class="headerlink" href="#hdf" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#outputformats"><span class="std std-ref">OutputFormats</span></a>’][‘<a class="reference internal" href="DmergeSchema.html#hdf"><span class="std std-ref">hdf</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;hdf&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="exel">
+<span id="id14"></span><h1>exel<a class="headerlink" href="#exel" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#outputformats"><span class="std std-ref">OutputFormats</span></a>’][‘<a class="reference internal" href="DmergeSchema.html#exel"><span class="std std-ref">exel</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;exel&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="json">
+<span id="id15"></span><h1>json<a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#outputformats"><span class="std std-ref">OutputFormats</span></a>’][‘<a class="reference internal" href="DmergeSchema.html#json"><span class="std std-ref">json</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="outputfilebasename">
+<span id="id16"></span><h1>OutputFileBaseName<a class="headerlink" href="#outputfilebasename" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">../results/merged</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#outputfilebasename"><span class="std std-ref">OutputFileBaseName</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;OutputFileBaseName&quot;</span><span class="p">:</span> <span class="s2">&quot;../results/merged&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="hdfoptions">
+<span id="id17"></span><h1>HDFOptions<a class="headerlink" href="#hdfoptions" title="Permalink to this headline">¶</a></h1>
+<p>Options only relevant to hdf export.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="DmergeSchema.html#includechi"><span class="std std-ref">IncludeCHI</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#includetif"><span class="std std-ref">IncludeTIF</span></a><span class="red">*</span></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#hdfoptions"><span class="std std-ref">HDFOptions</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;HDFOptions&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;IncludeCHI&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span><span class="s2">&quot;IncludeTIF&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="includechi">
+<span id="id18"></span><h1>IncludeCHI<a class="headerlink" href="#includechi" title="Permalink to this headline">¶</a></h1>
+<p>Whether to include the .chi files as strings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#hdfoptions"><span class="std std-ref">HDFOptions</span></a>’][‘<a class="reference internal" href="DmergeSchema.html#includechi"><span class="std std-ref">IncludeCHI</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;IncludeCHI&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="includetif">
+<span id="id19"></span><h1>IncludeTIF<a class="headerlink" href="#includetif" title="Permalink to this headline">¶</a></h1>
+<p>Whether to include the images as integer array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#hdfoptions"><span class="std std-ref">HDFOptions</span></a>’][‘<a class="reference internal" href="DmergeSchema.html#includetif"><span class="std std-ref">IncludeTIF</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;IncludeTIF&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright  2019, Tu Graz, Christian Meisenbichler, Max Burian, Heinz Amenitsch
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

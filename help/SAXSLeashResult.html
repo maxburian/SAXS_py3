@@ -1,0 +1,824 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>result &mdash; SAXS py3.5 V3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'py3.5 V3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SAXS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTools.html">The Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Server.html">The Saxsdog Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSSchemaDoc.html">The Dedector Calibration File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheTechnology.html">The Technology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LeashDeveloperDoc.html">SAXSDOG Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SAXSapi.html">SAXS Module API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAXS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>result</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/SAXSLeashResult.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <style> .red {color:red} </style><blockquote id="required">
+<div>The ‘<span class="red">*</span>’ signifies a required Field.</div></blockquote>
+<p>Schema for requests from Saxs Leash to Saxs Server</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="SAXSLeashResultSchema.html#result"><span class="std std-ref">result</span></a><span class="red">*</span>, <a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a><span class="red">*</span></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{},</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="result">
+<span id="id1"></span><h1>result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#result"><span class="std std-ref">result</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="data">
+<span id="id2"></span><h1>data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="SAXSLeashResultSchema.html#cal"><span class="std std-ref">cal</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#error"><span class="std std-ref">Error</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#syncplot"><span class="std std-ref">syncplot</span></a>, <a class="reference internal" href="SAXSSchemaDoc.html#directory"><span class="std std-ref">directory</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#attachments"><span class="std std-ref">attachments</span></a>, <a class="reference internal" href="SAXSSchemaDoc.html#threads"><span class="std std-ref">threads</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#dircontent"><span class="std std-ref">dircontent</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#history"><span class="std std-ref">history</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#fileslist"><span class="std std-ref">fileslist</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#stat"><span class="std std-ref">stat</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#filename"><span class="std std-ref">filename</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#integralparameters"><span class="std std-ref">IntegralParameters</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#graphs"><span class="std std-ref">graphs</span></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cal">
+<span id="id3"></span><h1>cal<a class="headerlink" href="#cal" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#cal"><span class="std std-ref">cal</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;cal&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="error">
+<span id="id4"></span><h1>Error<a class="headerlink" href="#error" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#error"><span class="std std-ref">Error</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Error&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="syncplot">
+<span id="id5"></span><h1>syncplot<a class="headerlink" href="#syncplot" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#syncplot"><span class="std std-ref">syncplot</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;syncplot&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="directory">
+<span id="id6"></span><h1>directory<a class="headerlink" href="#directory" title="Permalink to this headline">¶</a></h1>
+<p>Directory this queue is going to use. New files in other directories are going to be ignored.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items:</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">[u’.’, u’‘, u’‘]</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSSchemaDoc.html#directory"><span class="std std-ref">directory</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="attachments">
+<span id="id7"></span><h1>attachments<a class="headerlink" href="#attachments" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#attachments"><span class="std std-ref">attachments</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;attachments&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="threads">
+<span id="id8"></span><h1>threads<a class="headerlink" href="#threads" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">integer</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSSchemaDoc.html#threads"><span class="std std-ref">threads</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;threads&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dircontent">
+<span id="id9"></span><h1>dircontent<a class="headerlink" href="#dircontent" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#dircontent"><span class="std std-ref">dircontent</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;dircontent&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="history">
+<span id="id10"></span><h1>history<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#history"><span class="std std-ref">history</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fileslist">
+<span id="id11"></span><h1>fileslist<a class="headerlink" href="#fileslist" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#fileslist"><span class="std std-ref">fileslist</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;fileslist&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stat">
+<span id="id12"></span><h1>stat<a class="headerlink" href="#stat" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="SAXSLeashResultSchema.html#queue-length"><span class="std std-ref">queue length</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#images-processed"><span class="std std-ref">images processed</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#time"><span class="std std-ref">time</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#start-time"><span class="std std-ref">start time</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#mergecount"><span class="std std-ref">mergecount</span></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#stat"><span class="std std-ref">stat</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="queue-length">
+<span id="id13"></span><h1>queue length<a class="headerlink" href="#queue-length" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">integer</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#stat"><span class="std std-ref">stat</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#queue-length"><span class="std std-ref">queue length</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;queue length&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="images-processed">
+<span id="id14"></span><h1>images processed<a class="headerlink" href="#images-processed" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">integer</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#stat"><span class="std std-ref">stat</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#images-processed"><span class="std std-ref">images processed</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;images processed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="time">
+<span id="id15"></span><h1>time<a class="headerlink" href="#time" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#stat"><span class="std std-ref">stat</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#time"><span class="std std-ref">time</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="start-time">
+<span id="id16"></span><h1>start time<a class="headerlink" href="#start-time" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#stat"><span class="std std-ref">stat</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#start-time"><span class="std std-ref">start time</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;start time&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mergecount">
+<span id="id17"></span><h1>mergecount<a class="headerlink" href="#mergecount" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#stat"><span class="std std-ref">stat</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#mergecount"><span class="std std-ref">mergecount</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;mergecount&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="filename">
+<span id="id18"></span><h1>filename<a class="headerlink" href="#filename" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#filename"><span class="std std-ref">filename</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="integralparameters">
+<span id="id19"></span><h1>IntegralParameters<a class="headerlink" href="#integralparameters" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#integralparameters"><span class="std std-ref">IntegralParameters</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;IntegralParameters&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="graphs">
+<span id="id20"></span><h1>graphs<a class="headerlink" href="#graphs" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items: {<a class="reference internal" href="SAXSLeashResultSchema.html#kind"><span class="std std-ref">kind</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#conf"><span class="std std-ref">conf</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#columnlabels"><span class="std std-ref">columnLabels</span></a>, <a class="reference internal" href="SAXSLeashResultSchema.html#array"><span class="std std-ref">array</span></a>}</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#graphs"><span class="std std-ref">graphs</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;graphs&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="kind">
+<span id="id21"></span><h1>kind<a class="headerlink" href="#kind" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">values:</th><td class="field-body"><p class="first">[Radial, Slice]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#graphs"><span class="std std-ref">graphs</span></a>’][0][‘<a class="reference internal" href="SAXSLeashResultSchema.html#kind"><span class="std std-ref">kind</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;Radial&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="conf">
+<span id="id22"></span><h1>conf<a class="headerlink" href="#conf" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#graphs"><span class="std std-ref">graphs</span></a>’][0][‘<a class="reference internal" href="SAXSLeashResultSchema.html#conf"><span class="std std-ref">conf</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;conf&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="columnlabels">
+<span id="id23"></span><h1>columnLabels<a class="headerlink" href="#columnlabels" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items: string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#graphs"><span class="std std-ref">graphs</span></a>’][0][‘<a class="reference internal" href="SAXSLeashResultSchema.html#columnlabels"><span class="std std-ref">columnLabels</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;columnLabels&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="array">
+<span id="id24"></span><h1>array<a class="headerlink" href="#array" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items:</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="SAXSLeashResultSchema.html#resroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="SAXSLeashResultSchema.html#data"><span class="std std-ref">data</span></a>’][‘<a class="reference internal" href="SAXSLeashResultSchema.html#graphs"><span class="std std-ref">graphs</span></a>’][0][‘<a class="reference internal" href="SAXSLeashResultSchema.html#array"><span class="std std-ref">array</span></a>’]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;array&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright  2019, Tu Graz, Christian Meisenbichler, Max Burian, Heinz Amenitsch
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
