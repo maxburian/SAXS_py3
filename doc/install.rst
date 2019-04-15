@@ -60,6 +60,13 @@ Once you have downloaded the repository, move to correpsonding folder ::
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless. In order to create the corresponding environment and install all packages, type::
 
+    for Windows:
+    
+    $ conda env create -f environment_win.yml
+    
+    
+    For Linux/Mac:
+    
     $ conda env create -f environment.yml
     
 This can now take a few minutes as all packages have to be downloaded and installed.
@@ -100,27 +107,28 @@ In case you want to create your own environment, we provide a list of the requir
 
 Install using ``$ conda install <module>=<version>=<build>`` :: 
 
-    - python=3.5.5=h0c2934d_2
-    - pyqt=4.11.4=py35_7
+    - python=3.5.5
+    - pyqt=4.11.4
       
-    - bitarray=0.8.1=py35hfa6e2cd_1
-    - comtypes=1.1.4=py35_0
-    - jsonschema=2.6.0=py35h27d56d3_0
-    - matplotlib=1.5.1=np111py35_0
-    - numpy=1.11.3=py35h4a99626_4
-    - numpy-base=1.14.3=py35h5c71026_0
-    - pandas=0.23.0=py35h830ac7b_0
-    - pillow=3.4.2=py35_0
-    - pyqt=4.11.4=py35_7
-    - pytables=3.4.3=py35he6f6034_1
-    - pywin32=223=py35hfa6e2cd_1
-    - pyzmq=17.0.0=py35hfa6e2cd_1
-    - scipy=1.1.0=py35h672f292_0
-    - sphinx=1.7.9=py35_0
-    - sphinx_rtd_theme=0.4.3=py_0
-    - sphinxcontrib=1.0=py35_1
-    - sphinxcontrib-websupport=1.0.1=py35ha3690eb_1
-    - xlwt=1.3.0=py35hd04410a_0
+    - bitarray=0.8.1
+    - comtypes=1.1.4        # windows only
+    - jsonschema=2.6.0
+    - matplotlib=1.5.1
+    - numpy=1.11.3
+    - numpy-base=1.14.3
+    - pandas=0.23.0
+    - pillow=3.4.2
+    - pip=10.0.1
+    - pyqt=4.11.4
+    - pytables=3.4.3
+    - pywin32=223           # windows only
+    - pyzmq=17.0.0
+    - scipy=1.1.0
+    - sphinx=1.7.9
+    - sphinx_rtd_theme=0.4.3
+    - sphinxcontrib=1.0
+    - sphinxcontrib-websupport=1.0.1
+    - xlwt=1.3.0
     
     
 Install using ``$ pip install <module>==<version>`` ::
@@ -129,5 +137,5 @@ Install using ``$ pip install <module>==<version>`` ::
     - sphinxcontrib-programscreenshot==0.0.0
     - watchdog==0.9.0
     - prettyplotlib==0.1.7
-    - py2exe==0.9.2.2 
+    - py2exe==0.9.2.2       # windows only
 
