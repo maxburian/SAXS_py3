@@ -205,6 +205,7 @@
 <div class="section" id="get-anaconda">
 <h3>1) Get Anaconda<a class="headerlink" href="#get-anaconda" title="Permalink to this headline">¶</a></h3>
 <p>Download and install the latest Anaconda Package for Python 3.7 from: <a class="reference external" href="https://www.anaconda.com/distribution/#download-section">https://www.anaconda.com/distribution/#download-section</a></p>
+<p>If you already have a working version of Anaconda, we recommend to use it. However, make sure to <strong>update conda</strong> and <strong>pip</strong>  before creating the environment - see <a class="reference internal" href="#createenv"><span class="std std-ref">6) Create the Python 3.5 Environment</span></a>.</p>
 </div>
 <div class="section" id="get-git-version-control">
 <h3>2) Get GIT - version control<a class="headerlink" href="#get-git-version-control" title="Permalink to this headline">¶</a></h3>
@@ -230,31 +231,35 @@ $ cd GIT
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/maxburian/SAXS_py3.git
 </pre></div>
 </div>
-<p>Once you have downloaded the repository, move to correpsonding folder</p>
+<p>Once you have downloaded the repository, move to corresponding folder</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd SAXS_py3
 </pre></div>
 </div>
 </div>
 <div class="section" id="create-the-python-3-5-environment">
-<h3>6) Create the Python 3.5 Environment<a class="headerlink" href="#create-the-python-3-5-environment" title="Permalink to this headline">¶</a></h3>
+<span id="createenv"></span><h3>6) Create the Python 3.5 Environment<a class="headerlink" href="#create-the-python-3-5-environment" title="Permalink to this headline">¶</a></h3>
 <p>SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless. In order to create the corresponding environment and install all packages, type:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>for Windows:
-
-$ conda env create -f environment_win.yml
-
-
-For Linux/Mac:
-
-$ conda env create -f environment.yml
+<p>For Windows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda env create -f environment_win.yml
+</pre></div>
+</div>
+<p>For Linux/Mac:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda env create -f environment.yml
 </pre></div>
 </div>
 <p>This can now take a few minutes as all packages have to be downloaded and installed.</p>
+<p>In case you already have a working Anaconda distribution, you can still use the command above. However, make sure that you have <strong>updated conda</strong> using <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">update</span> <span class="pre">conda</span></code> and <strong>updated pip</strong> using <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">update</span> <span class="pre">pip</span></code>.</p>
 <p>In case you want to integrate SAXSdog in your existing environment, use the detailed list of the required dependencies further bellow.</p>
 </div>
 <div class="section" id="activate-the-python-environment">
 <h3>7) Activate the Python Environment<a class="headerlink" href="#activate-the-python-environment" title="Permalink to this headline">¶</a></h3>
 <p>You must now activate the Python environment such that you work with Python 3.5.5.:</p>
+<p>For Windows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda activate py3p5_qt4
+</pre></div>
+</div>
+<p>For Linux/Mac:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ source activate py3p5_qt4
 </pre></div>
 </div>
 </div>
@@ -275,7 +280,7 @@ $ conda env create -f environment.yml
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">saxsnetconf</span>
 </pre></div>
 </div>
-<p>This will generate a default configuration file with a random secret. The file must then be saved in <code class="docutils literal notranslate"><span class="pre">$Home/.saxdognetwork</span></code>.</p>
+<p>This will generate a default configuration file with a random secret. The file must then be saved in <code class="docutils literal notranslate"><span class="pre">$User-Home$/.saxdognetwork</span></code>.</p>
 </div>
 </div>
 <div class="section" id="dependencies">

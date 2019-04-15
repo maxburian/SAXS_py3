@@ -27,6 +27,8 @@ The following is a step-by-step instruction to obtain and run SAXSDog on your ma
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Download and install the latest Anaconda Package for Python 3.7 from: https://www.anaconda.com/distribution/#download-section 
 
+If you already have a working version of Anaconda, we recommend to use it. However, make sure to **update conda** and **pip**  before creating the environment - see :ref:`createEnv`.
+
 2) Get GIT - version control
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Download and install the latest GIT distribution from https://git-scm.com
@@ -51,34 +53,42 @@ Use GIT to download a "clone-copy" of the latest SAXSdog version, by typing ::
     
     $ git clone https://github.com/maxburian/SAXS_py3.git
 
-Once you have downloaded the repository, move to correpsonding folder ::
+Once you have downloaded the repository, move to corresponding folder ::
 
     $ cd SAXS_py3
     
+.. _createEnv:
 
 6) Create the Python 3.5 Environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless. In order to create the corresponding environment and install all packages, type::
+SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless. In order to create the corresponding environment and install all packages, type:
 
-    for Windows:
+For Windows::
     
     $ conda env create -f environment_win.yml
+
     
-    
-    For Linux/Mac:
+For Linux/Mac::
     
     $ conda env create -f environment.yml
     
 This can now take a few minutes as all packages have to be downloaded and installed.
 
-In case you want to integrate SAXSdog in your existing environment, use the detailed list of the required dependencies further bellow.
+In case you already have a working Anaconda distribution, you can still use the command above. However, make sure that you have **updated conda** using ``$ conda update conda`` and **updated pip** using ``$ conda update pip``. 
+
+In case you want to integrate SAXSdog in your existing environment, use the detailed list of the required dependencies further bellow. 
     
 7) Activate the Python Environment 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You must now activate the Python environment such that you work with Python 3.5.5.::
+You must now activate the Python environment such that you work with Python 3.5.5.:
     
-    $ conda activate py3p5_qt4
-
+For Windows::
+    
+    $ conda activate py3p5_qt4      
+    
+For Linux/Mac::
+    
+    $ source activate py3p5_qt4
     
 8) Install SAXSdog
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -99,7 +109,7 @@ SAXSDog is a network-based program. If you want to use it in a feeder-based envi
 
     % saxsnetconf
 
-This will generate a default configuration file with a random secret. The file must then be saved in ``$Home/.saxdognetwork``.
+This will generate a default configuration file with a random secret. The file must then be saved in ``$User-Home$/.saxdognetwork``.
 
 Dependencies
 --------------------
