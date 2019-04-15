@@ -128,7 +128,7 @@ Install using ``$ conda install <module>=<version>=<build>`` ::
     - numpy-base=1.14.3
     - pandas=0.23.0
     - pillow=3.4.2
-    - pip=10.0.1
+    - pip
     - pyqt=4.11.4
     - pytables=3.4.3
     - pywin32=223           # windows only
@@ -143,6 +143,7 @@ Install using ``$ conda install <module>=<version>=<build>`` ::
     
 Install using ``$ pip install <module>==<version>`` ::
 
+    - python-daemon==2.2.3  # linux only
     - sphinxcontrib-programoutput==0.13
     - sphinxcontrib-programscreenshot==0.0.0
     - watchdog==0.9.0
