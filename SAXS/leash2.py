@@ -143,11 +143,16 @@ class LeashUI(QtGui.QMainWindow):
            
         '''Check if slices are here in GISAXS mode'''
         if data['GISAXSmode']:
-            print("We are in GISAXS mode")
             if 'Slices' not in data:
                 self.errormessage.setWindowTitle("Calibration Error")
                 self.errormessage.setMinimumSize(400, 300)
                 msg = "You tried to use GISAXSmode but you have no slices defined. Please specify and rerun again!"
+                self.errormessage.showMessage(str(msg))
+                return
+            elif data['Slices']==[]:
+                self.errormessage.setWindowTitle("Calibration Error")
+                self.errormessage.setMinimumSize(400, 300)
+                msg = "You tried to use GISAXSmode but you have no slices defined. Please Add Item and rerun again!"
                 self.errormessage.showMessage(str(msg))
                 return
         
