@@ -6,6 +6,7 @@ from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
 from .AddToQueue import addtoqueue
 from scipy import misc
+# import imageio
 import os, sys
 from PIL import Image, TiffImagePlugin
  
@@ -141,20 +142,23 @@ class imagequeue:
                 if not self.options.silent: print("[", threadid, "] open: ", picture) 
                 for i in range(max):
                     try:
+                        # print("try opening picture: ", picture)
+                        # image=imageio.imread(picture)
                         image=misc.imread(picture)
                     except KeyboardInterrupt:
                         return
                     except IOError as e:
                         try:
                             print("cannot open ", picture, ", lets wait.", max-i, " s")
-                            print(e.message,  sys.exc_info()[0])
+                            print("e: ", e)
+                            # print("sys.exc_info", sys.exc_info()[0])
                             time.sleep(1)
                             continue
                         except KeyboardInterrupt:
                             return
                     except:
                         print("############")
-                        print(sys.exc_info())
+                        # print(sys.exc_info())
                         continue
                     if image.shape==tuple(self.cals[0].config["Geometry"]["Imagesize"]):
                         break
