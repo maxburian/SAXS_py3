@@ -228,7 +228,7 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
             type=item.data(role=TYPE)
             text=item.data(role=QtCore.Qt.DisplayRole)
             action=str(item.data(role=ACTION))
-            if not action:
+            if action == "None":
                 if  (item.isCheckable() 
                      and type=="object" 
                      and not item.hasChildren() 
@@ -244,9 +244,9 @@ class jsonschematreemodel(QtGui.QStandardItemModel ):
                        and type=="array" 
                        and not item.hasChildren() 
                        and item.checkState()==2):
-                        value=self.itemFromIndex(index)
-                        value.setData("editablearray", role=ISEDITABLEARRAY)
-                        value.setData("add/remove item", role=QtCore.Qt.DisplayRole)
+                    value=self.itemFromIndex(index)
+                    value.setData("editablearray", role=ISEDITABLEARRAY)
+                    value.setData("add/remove item", role=QtCore.Qt.DisplayRole)
                         
                 elif (item.isCheckable()   
                       and  parent.hasChildren() 

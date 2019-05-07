@@ -361,6 +361,7 @@ class Server():
             
             if self.calibration["OverwriteFiles"]:
                 o["OverwriteFiles"]=True
+                print("Overwrite Files Active: ", o["OverwriteFiles"])
             
             '''Create empty file for filelisting'''
             filelist_path="xxx"

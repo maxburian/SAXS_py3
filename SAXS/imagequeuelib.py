@@ -41,12 +41,12 @@ def funcworker(self, threadid):
    
 def filler(queue, dir):
             filequeue=[] 
-            print("filler" + dir)
+            print("Picturequeue filler: " + dir)
             
             for path, subdirs, files in os.walk(dir):
                 for name in files:
                     if name.endswith('tif'):
-                        queue.put(os.path.join(path, name))      
+                        queue.put(os.path.join(path, name))   
 class imagequeue:
     """
     This class keeps a queue of images which may be worked on in threads.
@@ -86,11 +86,12 @@ class imagequeue:
         Fill the queue with the list of images that is already there.
         """
        
-                
         if self.options.walkdirinthreads:
+            print("Using threaded Picturequeue filler")
             self.dirwalker=Thread(target=filler, args=(self.picturequeue, self.directory))
             self.dirwalker.start()
         else:
+            print("Using non-threaded Picturequeue filler")
             filler(self.picturequeue, self.directory)
         
     def procimage(self, picture, threadid):

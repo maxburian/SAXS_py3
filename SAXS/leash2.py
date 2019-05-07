@@ -140,6 +140,18 @@ class LeashUI(QtGui.QMainWindow):
         self.calibeditor.model.save()
         argu=["new", data]
         result={}
+           
+        '''Check if slices are here in GISAXS mode'''
+        if data['GISAXSmode']:
+            print("We are in GISAXS mode")
+            if 'Slices' not in data:
+                self.errormessage.setWindowTitle("Calibration Error")
+                self.errormessage.setMinimumSize(400, 300)
+                msg = "You tried to use GISAXSmode but you have no slices defined. Please specify and rerun again!"
+                self.errormessage.showMessage(str(msg))
+                return
+        
+        '''Check if Title has something in common with the user name'''
         title = str(data['Title'])
         usrfolder = str(data['Directory'][0])
         titlestr='The title and the selected user folder do NOT match. Are you sure you are user: ' + str(usrfolder) +' ?' 
@@ -147,6 +159,7 @@ class LeashUI(QtGui.QMainWindow):
             res=QMessageBox.warning(self, self.tr("User folder"), self.tr(titlestr), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         else:
             res = QMessageBox.Yes
+        
         if res==QMessageBox.Yes:
             try:
                 result=json.loads(Leash.initcommand(self.options, argu, self.netconf))
