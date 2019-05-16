@@ -66,6 +66,7 @@ def readtiff(imagepath):
                 
         i+=1
         if i>20: break
+    f.close()
     return data
 
 def readlog(logfile):
