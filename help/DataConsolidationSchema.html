@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>TimeOffset &mdash; SAXS py3.5 V3 documentation</title>
+  <title>LogDataTables &mdash; SAXS py3.5 V3 documentation</title>
   
 
   
@@ -145,7 +145,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>TimeOffset</li>
+      <li>LogDataTables</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -173,7 +173,7 @@
 <tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">object</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><span class="xref std std-ref">TimeOffset</span><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>, <a class="reference internal" href="DmergeSchema.html#outputformats"><span class="std std-ref">OutputFormats</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#outputfilebasename"><span class="std std-ref">OutputFileBaseName</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#hdfoptions"><span class="std std-ref">HDFOptions</span></a><span class="red">*</span></p>
+<tr class="field-even field"><th class="field-name">Contains:</th><td class="field-body"><p class="first"><a class="reference internal" href="DmergeSchema.html#timeoffset"><span class="std std-ref">TimeOffset</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>, <a class="reference internal" href="DmergeSchema.html#outputformats"><span class="std std-ref">OutputFormats</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#outputfilebasename"><span class="std std-ref">OutputFileBaseName</span></a><span class="red">*</span>, <a class="reference internal" href="DmergeSchema.html#hdfoptions"><span class="std std-ref">HDFOptions</span></a><span class="red">*</span></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
@@ -203,42 +203,14 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<div class="section" id="timeoffset">
-<span id="id1"></span><h1>TimeOffset<a class="headerlink" href="#timeoffset" title="Permalink to this headline">¶</a></h1>
-<p>If offset is not found otherwise, use this as offset  for all log data</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">number in Seconds</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">True</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><p class="first">0</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<span class="xref std std-ref">TimeOffset</span>’]</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Example JSON:</p>
-<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;TimeOffset&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
 <div class="section" id="logdatatables">
-<span id="id2"></span><h1>LogDataTables<a class="headerlink" href="#logdatatables" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>LogDataTables<a class="headerlink" href="#logdatatables" title="Permalink to this headline">¶</a></h1>
 <p>Define log files to consolidate with image data. If more then one defined, they will be joined and missing values will be interpolated.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items: {<a class="reference internal" href="DmergeSchema.html#timeepoch"><span class="std std-ref">TimeEpoch</span></a>, <span class="xref std std-ref">TimeOffset</span>, <a class="reference internal" href="DmergeSchema.html#firstimagecorrelation"><span class="std std-ref">FirstImageCorrelation</span></a>, <a class="reference internal" href="SAXSSchemaDoc.html#name"><span class="std std-ref">Name</span></a>, <a class="reference internal" href="DmergeSchema.html#files"><span class="std std-ref">Files</span></a>}</p>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">array() items: {<a class="reference internal" href="DmergeSchema.html#timeepoch"><span class="std std-ref">TimeEpoch</span></a>, <a class="reference internal" href="DmergeSchema.html#timeoffset"><span class="std std-ref">TimeOffset</span></a>, <a class="reference internal" href="DmergeSchema.html#firstimagecorrelation"><span class="std std-ref">FirstImageCorrelation</span></a>, <a class="reference internal" href="SAXSSchemaDoc.html#name"><span class="std std-ref">Name</span></a>, <a class="reference internal" href="DmergeSchema.html#files"><span class="std std-ref">Files</span></a>}</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Required:</th><td class="field-body"><p class="first">False</p>
@@ -257,7 +229,7 @@
 </div>
 </div>
 <div class="section" id="timeepoch">
-<span id="id3"></span><h1>TimeEpoch<a class="headerlink" href="#timeepoch" title="Permalink to this headline">¶</a></h1>
+<span id="id2"></span><h1>TimeEpoch<a class="headerlink" href="#timeepoch" title="Permalink to this headline">¶</a></h1>
 <p>Time epoch</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -287,8 +259,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="id4">
-<span id="id5"></span><h1>TimeOffset<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="timeoffset">
+<span id="id3"></span><h1>TimeOffset<a class="headerlink" href="#timeoffset" title="Permalink to this headline">¶</a></h1>
 <p>If offset is not found otherwise, use this as offset.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -304,7 +276,7 @@
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">JSON Path:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>’][0][‘<span class="xref std std-ref">TimeOffset</span>’]</li>
+<li><a class="reference internal" href="DmergeSchema.html#consroot"><span class="std std-ref">#</span></a> [‘<a class="reference internal" href="DmergeSchema.html#logdatatables"><span class="std std-ref">LogDataTables</span></a>’][0][‘<a class="reference internal" href="DmergeSchema.html#timeoffset"><span class="std std-ref">TimeOffset</span></a>’]</li>
 </ul>
 </td>
 </tr>
@@ -316,7 +288,7 @@
 </div>
 </div>
 <div class="section" id="firstimagecorrelation">
-<span id="id6"></span><h1>FirstImageCorrelation<a class="headerlink" href="#firstimagecorrelation" title="Permalink to this headline">¶</a></h1>
+<span id="id4"></span><h1>FirstImageCorrelation<a class="headerlink" href="#firstimagecorrelation" title="Permalink to this headline">¶</a></h1>
 <p>Find offset for all log data by correlating first image with first entry of this table.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -344,7 +316,7 @@
 </div>
 </div>
 <div class="section" id="name">
-<span id="id7"></span><h1>Name<a class="headerlink" href="#name" title="Permalink to this headline">¶</a></h1>
+<span id="id5"></span><h1>Name<a class="headerlink" href="#name" title="Permalink to this headline">¶</a></h1>
 <p>Name field to be used as prefix in the joined collumn names.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -372,7 +344,7 @@
 </div>
 </div>
 <div class="section" id="files">
-<span id="id8"></span><h1>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h1>
+<span id="id6"></span><h1>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h1>
 <p>One log table may be one file, or a list of files to be concatenated.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -397,7 +369,7 @@
 </div>
 </div>
 <div class="section" id="remotepath">
-<span id="id9"></span><h1>RemotePath<a class="headerlink" href="#remotepath" title="Permalink to this headline">¶</a></h1>
+<span id="id7"></span><h1>RemotePath<a class="headerlink" href="#remotepath" title="Permalink to this headline">¶</a></h1>
 <p>Path of logfile on server if used in server mode.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -422,7 +394,7 @@
 </div>
 </div>
 <div class="section" id="localpath">
-<span id="id10"></span><h1>LocalPath<a class="headerlink" href="#localpath" title="Permalink to this headline">¶</a></h1>
+<span id="id8"></span><h1>LocalPath<a class="headerlink" href="#localpath" title="Permalink to this headline">¶</a></h1>
 <p>Path of logfile on client. Overrides <a class="reference internal" href="DmergeSchema.html#remotepath"><span class="std std-ref">RemotePath</span></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -447,7 +419,7 @@
 </div>
 </div>
 <div class="section" id="outputformats">
-<span id="id11"></span><h1>OutputFormats<a class="headerlink" href="#outputformats" title="Permalink to this headline">¶</a></h1>
+<span id="id9"></span><h1>OutputFormats<a class="headerlink" href="#outputformats" title="Permalink to this headline">¶</a></h1>
 <p>List of outputformats to write the consolidated log or the consolidated ‘hdf’ file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -482,7 +454,7 @@
 </div>
 </div>
 <div class="section" id="csv">
-<span id="id12"></span><h1>csv<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h1>
+<span id="id10"></span><h1>csv<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h1>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -509,7 +481,7 @@
 </div>
 </div>
 <div class="section" id="hdf">
-<span id="id13"></span><h1>hdf<a class="headerlink" href="#hdf" title="Permalink to this headline">¶</a></h1>
+<span id="id11"></span><h1>hdf<a class="headerlink" href="#hdf" title="Permalink to this headline">¶</a></h1>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -536,7 +508,7 @@
 </div>
 </div>
 <div class="section" id="exel">
-<span id="id14"></span><h1>exel<a class="headerlink" href="#exel" title="Permalink to this headline">¶</a></h1>
+<span id="id12"></span><h1>exel<a class="headerlink" href="#exel" title="Permalink to this headline">¶</a></h1>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -563,7 +535,7 @@
 </div>
 </div>
 <div class="section" id="json">
-<span id="id15"></span><h1>json<a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h1>
+<span id="id13"></span><h1>json<a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h1>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -590,7 +562,7 @@
 </div>
 </div>
 <div class="section" id="outputfilebasename">
-<span id="id16"></span><h1>OutputFileBaseName<a class="headerlink" href="#outputfilebasename" title="Permalink to this headline">¶</a></h1>
+<span id="id14"></span><h1>OutputFileBaseName<a class="headerlink" href="#outputfilebasename" title="Permalink to this headline">¶</a></h1>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -617,7 +589,7 @@
 </div>
 </div>
 <div class="section" id="hdfoptions">
-<span id="id17"></span><h1>HDFOptions<a class="headerlink" href="#hdfoptions" title="Permalink to this headline">¶</a></h1>
+<span id="id15"></span><h1>HDFOptions<a class="headerlink" href="#hdfoptions" title="Permalink to this headline">¶</a></h1>
 <p>Options only relevant to hdf export.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -645,7 +617,7 @@
 </div>
 </div>
 <div class="section" id="includechi">
-<span id="id18"></span><h1>IncludeCHI<a class="headerlink" href="#includechi" title="Permalink to this headline">¶</a></h1>
+<span id="id16"></span><h1>IncludeCHI<a class="headerlink" href="#includechi" title="Permalink to this headline">¶</a></h1>
 <p>Whether to include the .chi files as strings.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -673,7 +645,7 @@
 </div>
 </div>
 <div class="section" id="includetif">
-<span id="id19"></span><h1>IncludeTIF<a class="headerlink" href="#includetif" title="Permalink to this headline">¶</a></h1>
+<span id="id17"></span><h1>IncludeTIF<a class="headerlink" href="#includetif" title="Permalink to this headline">¶</a></h1>
 <p>Whether to include the images as integer array.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

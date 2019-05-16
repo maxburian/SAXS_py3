@@ -35,7 +35,7 @@ Download and install the latest GIT distribution from https://git-scm.com
 
 3) Start Anaconda
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Start your Anacoda console, which can be found under the name *Anaconda promp* or *Anaconda Powershell Pronpt*.
+Start your Anacoda console, by opening the program called **Anaconda prompt** or **Anaconda Powershell Pronpt**.
 
 4) Find your installation path
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -61,7 +61,8 @@ Once you have downloaded the repository, move to corresponding folder ::
 
 6) Create the Python 3.5 Environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless. In order to create the corresponding environment and install all packages, type:
+SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless. 
+In order to create the corresponding environment and install all packages, type:
 
 For Windows::
     
@@ -74,7 +75,8 @@ For Linux/Mac::
     
 This can now take a few minutes as all packages have to be downloaded and installed.
 
-In case you already have a working Anaconda distribution, you can still use the command above. However, make sure that you have **updated conda** using ``$ conda update conda`` and **updated pip** using ``$ conda update pip``. 
+In case you already have a working Anaconda distribution, you can still use the command above. However, make sure that you 
+have **updated conda** using ``$ conda update conda`` and **updated pip** using ``$ conda update pip``. 
 
 In case you want to integrate SAXSdog in your existing environment, use the detailed list of the required dependencies further bellow. 
     
@@ -89,6 +91,10 @@ For Windows::
 For Linux/Mac::
     
     $ source activate py3p5_qt4
+    
+Make sure that the environment has really been changed! In your command window, you should see something similar to
+
+.. figure:: install_active_env.png
     
 8) Install SAXSdog
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -82,9 +82,6 @@ class calibration:
         tiltdir=self.config["Geometry"]['Tilt']['TiltRotDeg']/180.0*np.pi
         
         theta=calc_theta(r, phi, d, tilt, tiltdir)
-       
-        
-       
         corr=(Pfrac*(1.0 -np.square(np.sin(phi-rot)*np.sin(theta)))+
             (1.0-Pfrac)*(1.0-np.square(np.cos(phi-rot)*np.sin(theta))))
        
@@ -128,7 +125,7 @@ class calibration:
         else:
             labels=np.array(qpix*self.scale, dtype=int)
         
-        print("Let's see if we can create a calibration")    
+        # print("Let's see if we can create a calibration")    
         self.maxlabel=np.max(labels)
         mask=openmask(mask["MaskFile"], attachment)
             

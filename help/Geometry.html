@@ -185,10 +185,16 @@
 <span id="geometry"></span><h1>The Geometry<a class="headerlink" href="#the-geometry" title="Permalink to this headline">¶</a></h1>
 <p>The plane of the sensor is not perfectly normal to the beam. So in order to calculate witch
 pixel is on witch cone in the diffracted light, we need to express the geometry somehow.</p>
-<p>Every pixel has the polar coordinates <span class="math notranslate nohighlight">\(r\)</span>, <span class="math notranslate nohighlight">\(\phi\)</span> with the projected diffraction center in the origin.
+<p>We define the <em>tilt rotation</em> <cite>phi</cite>  and <em>tilt angle</em> <cite>tau</cite> corresponding to FIT2Ds’ “Rotating Angle of Tilting Plane”
+and “Tilting Angle”. Each pixel on a tilted detector plane hence corresponds to a unique set of angles.</p>
+<div class="figure" id="id1">
+<span id="detectorgeo"></span><img alt="_images/detector_geometry.png" src="_images/detector_geometry.png" />
+<p class="caption"><span class="caption-text">Naming convetion used to express tilting angles.</span></p>
+</div>
+<p>Every pixel has the polar coordinates <span class="math notranslate nohighlight">\(r\)</span>, <span class="math notranslate nohighlight">\(\psi\)</span> with the projected diffraction center in the origin.
 For each pixel (P) the triangle S,C,P (Sample, Center, Pixel, <span class="math notranslate nohighlight">\(\theta\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span>)
 can be fully expressed with the law of cosines.</p>
-<div class="figure" id="id1">
+<div class="figure" id="id2">
 <img alt="_images/Dreieck.svg" src="_images/Dreieck.svg" /><p class="caption"><span class="caption-text">The SCP triangle.</span></p>
 </div>
 <p><span class="math notranslate nohighlight">\(l\)</span> is the distance the light travels from the diffraction center to the sensor.</p>
@@ -199,31 +205,32 @@ can be fully expressed with the law of cosines.</p>
 \[r^2=l^2+d^2 -2 l d \cos(\theta)\]</div>
 <p>from these two formulas the diffraction angle (here) <span class="math notranslate nohighlight">\(\theta\)</span> can be computed.</p>
 <div class="math notranslate nohighlight">
-\[\theta=\arccos(-r^2 -l^2 -d^2 2 l d)\]</div>
-<div class="figure" id="id2">
+\[\theta=\arccos( (l^2-r^2-d^2)/(2 l d))\]</div>
+<div class="figure" id="id3">
 <span id="alpha"></span><img alt="_images/winkel.svg" src="_images/winkel.svg" /><p class="caption"><span class="caption-text">Angle between two planes.</span></p>
 </div>
-<p><span class="math notranslate nohighlight">\(\alpha\)</span> comes from the following relation in figure <a class="reference internal" href="#alpha"><span class="std std-ref">Angle between two planes.</span></a></p>
+<p><span class="math notranslate nohighlight">\(\alpha\)</span> comes from the following relation in figure <a class="reference internal" href="#alpha"><span class="std std-ref">Angle between two planes.</span></a> Here, <cite>phi</cite> relates to the
+total rotation`phi`’, which is actually composed of <cite>phi</cite> + <cite>psi</cite>, as shown in <a class="reference internal" href="#detectorgeo"><span class="std std-ref">Naming convetion used to express tilting angles.</span></a>.</p>
 <p>The angle between the sensor plane and the normal plane to the ray is given by <span class="math notranslate nohighlight">\(\tau\)</span>.
 The slope <span class="math notranslate nohighlight">\(s\)</span> derived from  <span class="math notranslate nohighlight">\(\tau\)</span> is</p>
 <div class="math notranslate nohighlight">
 \[s=\sin(\tau)\]</div>
 <p>On the (red) unit circle in the plane of the sensor the distance to the plane normal to the ray is expressed as</p>
 <div class="math notranslate nohighlight">
-\[h=\sin(\phi)s\]</div>
+\[h=\sin(\phi')s\]</div>
 <p>The angle <span class="math notranslate nohighlight">\(\alpha\)</span> is therefore:</p>
 <div class="math notranslate nohighlight">
-\[\alpha=\arcsin(\sin(\tau)\sin(\phi))\]</div>
+\[\alpha=\arcsin(\sin(\tau)\sin(\phi'))\]</div>
 <p>in Python code this is <a class="reference internal" href="SAXSapi.html#SAXS.calc_theta" title="SAXS.calc_theta"><code class="xref py py-func docutils literal notranslate"><span class="pre">SAXS.calc_theta()</span></code></a>:</p>
-<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_theta</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">theta</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">tilt</span><span class="p">,</span><span class="n">tiltdir</span><span class="p">):</span>
-   <span class="n">alpha</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">tilt</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="o">+</span><span class="n">tiltdir</span><span class="p">))</span>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_theta</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">phi</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">tilt</span><span class="p">,</span><span class="n">tiltdir</span><span class="p">):</span>
+   <span class="n">alpha</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">tilt</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="o">+</span><span class="n">tiltdir</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
    <span class="n">lsquared</span><span class="o">=</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="n">alpha</span><span class="p">)</span>
    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">lsquared</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lsquared</span><span class="p">)</span><span class="o">*</span><span class="n">d</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>This angle <span class="math notranslate nohighlight">\(\theta\)</span> then is calculated for every sub pixel in the sensor.
 This number then can be rescaled and rounded to the nearest integer in order to get
-unique integer labels for all the pixels. This labels are the index of the radial interval.</p>
+unique integer labels for all the pixels. These labels are the index of the radial interval.</p>
 <div class="section" id="tilt-angle-correction-test">
 <h2>Tilt Angle Correction Test<a class="headerlink" href="#tilt-angle-correction-test" title="Permalink to this headline">¶</a></h2>
 <p>To check if the tilt angle correction is working, lets create some fake calibration data, with the following peaks

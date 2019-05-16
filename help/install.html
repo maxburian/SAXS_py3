@@ -213,7 +213,7 @@
 </div>
 <div class="section" id="start-anaconda">
 <h3>3) Start Anaconda<a class="headerlink" href="#start-anaconda" title="Permalink to this headline">¶</a></h3>
-<p>Start your Anacoda console, which can be found under the name <em>Anaconda promp</em> or <em>Anaconda Powershell Pronpt</em>.</p>
+<p>Start your Anacoda console, by opening the program called <strong>Anaconda prompt</strong> or <strong>Anaconda Powershell Pronpt</strong>.</p>
 </div>
 <div class="section" id="find-your-installation-path">
 <h3>4) Find your installation path<a class="headerlink" href="#find-your-installation-path" title="Permalink to this headline">¶</a></h3>
@@ -238,7 +238,8 @@ $ cd GIT
 </div>
 <div class="section" id="create-the-python-3-5-environment">
 <span id="createenv"></span><h3>6) Create the Python 3.5 Environment<a class="headerlink" href="#create-the-python-3-5-environment" title="Permalink to this headline">¶</a></h3>
-<p>SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless. In order to create the corresponding environment and install all packages, type:</p>
+<p>SAXSdog is currently supported on Python 3.5 only and it requires very specific packet versions to work flawless.
+In order to create the corresponding environment and install all packages, type:</p>
 <p>For Windows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda env create -f environment_win.yml
 </pre></div>
@@ -248,7 +249,8 @@ $ cd GIT
 </pre></div>
 </div>
 <p>This can now take a few minutes as all packages have to be downloaded and installed.</p>
-<p>In case you already have a working Anaconda distribution, you can still use the command above. However, make sure that you have <strong>updated conda</strong> using <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">update</span> <span class="pre">conda</span></code> and <strong>updated pip</strong> using <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">update</span> <span class="pre">pip</span></code>.</p>
+<p>In case you already have a working Anaconda distribution, you can still use the command above. However, make sure that you
+have <strong>updated conda</strong> using <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">update</span> <span class="pre">conda</span></code> and <strong>updated pip</strong> using <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">update</span> <span class="pre">pip</span></code>.</p>
 <p>In case you want to integrate SAXSdog in your existing environment, use the detailed list of the required dependencies further bellow.</p>
 </div>
 <div class="section" id="activate-the-python-environment">
@@ -261,6 +263,10 @@ $ cd GIT
 <p>For Linux/Mac:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ source activate py3p5_qt4
 </pre></div>
+</div>
+<p>Make sure that the environment has really been changed! In your command window, you should see something similar to</p>
+<div class="figure">
+<img alt="_images/install_active_env.png" src="_images/install_active_env.png" />
 </div>
 </div>
 <div class="section" id="install-saxsdog">

@@ -7,12 +7,21 @@ The Geometry
 The plane of the sensor is not perfectly normal to the beam. So in order to calculate witch 
 pixel is on witch cone in the diffracted light, we need to express the geometry somehow.
 
-Every pixel has the polar coordinates :math:`r`, :math:`\phi` with the projected diffraction center in the origin.
+We define the *tilt rotation* `\phi`  and *tilt angle* `\tau` corresponding to FIT2Ds' "Rotating Angle of Tilting Plane" 
+and "Tilting Angle". Each pixel on a tilted detector plane hence corresponds to a unique set of angles.
+
+.. _detectorgeo:
+
+.. figure:: detector_geometry.png
+   
+   Naming convetion used to express tilting angles.
+
+Every pixel has the polar coordinates :math:`r`, :math:`\psi` with the projected diffraction center in the origin.
 For each pixel (P) the triangle S,C,P (Sample, Center, Pixel, :math:`\theta`, :math:`\beta`, :math:`\gamma`) 
 can be fully expressed with the law of cosines.
 
 
-.. figure:: Dreieck.*
+.. figure:: svg/Dreieck.svg
    
    The SCP triangle.
 
@@ -29,16 +38,17 @@ can be fully expressed with the law of cosines.
 from these two formulas the diffraction angle (here) :math:`\theta` can be computed.
 
 .. math::
-   \theta=\arccos(-r^2 -l^2 -d^2 2 l d)
+   \theta=\arccos( (l^2-r^2-d^2)/(2 l d))
 
 .. _alpha:
 
-.. figure:: winkel.*
+.. figure:: svg/winkel.svg
 
    Angle between two planes.
 
 
-:math:`\alpha` comes from the following relation in figure :ref:`alpha`
+:math:`\alpha` comes from the following relation in figure :ref:`alpha` Here, `\phi` relates to the
+total rotation`\phi`', which is actually composed of `\phi` + `\psi`, as shown in :ref:`detectorgeo`.
 
 
 
@@ -51,27 +61,26 @@ The slope :math:`s` derived from  :math:`\tau` is
 On the (red) unit circle in the plane of the sensor the distance to the plane normal to the ray is expressed as
 
 .. math::
-    h=\sin(\phi)s
+    h=\sin(\phi')s
 
 The angle :math:`\alpha` is therefore:
 
 .. math::
-   \alpha=\arcsin(\sin(\tau)\sin(\phi))
+   \alpha=\arcsin(\sin(\tau)\sin(\phi'))
    
 in Python code this is :py:func:`SAXS.calc_theta`:
 
 .. code::
 
-   def calc_theta(r,theta,d,tilt,tiltdir):
-      alpha=np.arcsin(np.sin(tilt)*np.sin(theta+tiltdir))
+   def calc_theta(r,phi,d,tilt,tiltdir):
+      alpha=np.arcsin(np.sin(tilt)*np.sin(phi+tiltdir+np.pi/2))
       lsquared=d**2 +r**2 -2*d*r*np.cos(np.pi/2+alpha)
       return np.arccos(-(r**2-lsquared-d**2)/(2*np.sqrt(lsquared)*d))
  
-  
-   
 This angle :math:`\theta` then is calculated for every sub pixel in the sensor. 
 This number then can be rescaled and rounded to the nearest integer in order to get
-unique integer labels for all the pixels. This labels are the index of the radial interval.
+unique integer labels for all the pixels. These labels are the index of the radial interval.
+
 
 Tilt Angle Correction Test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

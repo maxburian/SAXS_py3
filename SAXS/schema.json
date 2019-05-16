@@ -27,7 +27,7 @@
 					{
 						"TiltRotDeg": 
 						{
-							"description": "This gives the angel of the tilt direction.",
+							"description": "This gives the angle of the tilt direction.",
 							"type": "number",
 							"units": "degree",
 							"default": 0,

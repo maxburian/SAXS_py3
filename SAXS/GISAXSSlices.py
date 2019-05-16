@@ -131,11 +131,11 @@ class slice():
                                  /self.conf["Geometry"]['DedectorDistanceMM']
                                  )
         if self.sliceconf["Plane"]=="Vertical":
-            self.qname="vertical scattering Vector $q_{z} [nm^{-1}]$"
+            self.qname="vertical scattering Vector $q_{v} [nm^{-1}]$"
             self.grid=-2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(alphaF)
                                                   +np.sin(self.sliceconf["IncidentAngle"]/180.0*np.pi))
         elif self.sliceconf["Plane"]=="InPlane":
-            self.qname="radial scattering vector  $ q_{r} [nm^{-1}]$"
+            self.qname="horizontal scattering vector  $ q_{h} [nm^{-1}]$"
             self.grid=4.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(twothetaF/2.))
             '''Old calculation for qx and not qr'''
             '''self.grid=2.0*np.pi/self.conf['Wavelength']/Angstrom*(np.sin(twothetaF)

@@ -79,7 +79,7 @@ def scalemat(Xsize, Ysize, ov):
         :param int Ysize: Picture size in Ydirection.
         :param int ov: Number of oversampling ticks in x ynd y direction
         :param array corr: Polarizationn an other correction factors
-        :returns: sparce matrix toing the scaling
+        :returns: sparce matrix doing the scaling
         """
     
         cell=np.add.outer(np.arange(ov)*Ysize*ov, np.arange(ov))

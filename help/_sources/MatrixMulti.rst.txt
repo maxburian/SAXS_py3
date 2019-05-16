@@ -30,7 +30,6 @@ of the entries are 0 and we can use a sparse matrix representation which uses on
 of memory, as every pixel is counted only once, or, as we will see, about once.
 
 
-
 .. plot:: 
 
 	import matplotlib.pyplot as plt
@@ -52,15 +51,14 @@ of memory, as every pixel is counted only once, or, as we will see, about once.
 	misc.imsave("ringNoOv.pdf",ringnov[110:350,250:550]) 
 
 .. _CircleNoAA
-
 .. figure:: ringNoOv.*
 
 	The vector :math:`\mathbf c` displayed as image.
 	
-Figure :ref:`CircleNoAA` Shows the data of such a matrix column.
+Above shows the data of such a matrix column.
  
 Over sampling
-------------
+--------------
 
 .. _Circle:
 
@@ -76,6 +74,6 @@ So, how could we calculate to which fraction a pixel should account to one radia
 The idea here is to use an algorithm comparable to anti aliasing in computer graphics. 
 We will divide a much larger picture into the radial intervals and down sample it to the real pixels. 
 Which results in nicely balanced factors for the border pixels that add 
-up nicely over joining  intervals such that the intensity is conserved. If one looks closer at image :ref:`Circle` ,
+up nicely over joining  intervals such that the intensity is conserved. If one looks closer at the image above ,
 one sees that the ring has soft edges. Quite as it would have through anti aliasing.
    

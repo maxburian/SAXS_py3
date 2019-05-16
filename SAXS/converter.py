@@ -3,6 +3,7 @@ from optparse import OptionParser
 import os, re, sys
 from jsonschema import validate, ValidationError
 import time
+import numpy as np
 from . import schematools
 def txt2json(text, s):
             if not "Geometry" in s:
@@ -62,18 +63,31 @@ def nika2json(det, eX,eY,erX,erY,eSD, eWL, s):
             ..eSD = SampleDet distane
             ..eWL = Wavelength
             '''
+    
+            if (det==1): #for Pil1M
+                s["Geometry"]['Imagesize'][0]=1043
+                s["Geometry"]['Imagesize'][1]=981
+            if (det==2): #for Pil199k
+                s["Geometry"]['Imagesize'][0]=198
+                s["Geometry"]['Imagesize'][1]=487 
+            
             #horizontal calculation
             bcX = eX + 0.5
-                        #vertical calculation
-            if det == 1: #for 1M
-                vert_size = 1043.
-            if det == 2: #for 100K
-                vert_size = 195.
+            #vertical calculation
+            vert_size = s["Geometry"]['Imagesize'][0]
             bcY = vert_size - eY -0.5
+            
+            #Tilt calculation
+            Gxz=np.sin(erY/180.*np.pi)
+            Gxy=np.sin(-1.0*erX/180.*np.pi)
+            D=np.sqrt(Gxy*Gxy+Gxz*Gxz)
+            tau = np.arcsin(D)
+            phi = np.arctan2(Gxz,Gxy)            
+            
             #write to dict
             s["Geometry"]['BeamCenter']=[bcX, bcY]
-            s["Geometry"]['Tilt']['TiltAngleDeg']=-1*erX
-            s["Geometry"]['Tilt']['TiltRotDeg']=erY
+            s["Geometry"]['Tilt']['TiltAngleDeg']=tau*180/np.pi
+            s["Geometry"]['Tilt']['TiltRotDeg']=phi*180/np.pi
             s["Geometry"]['DedectorDistanceMM']=eSD
             s['Wavelength']=eWL
                
