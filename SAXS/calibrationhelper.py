@@ -34,7 +34,7 @@ def labelstosparse(labels, mask, oversampling):
         newcol=sortedl-np.roll(sortedl, 1)#0,1 matrix that is always zero and only one when the integration label is increased
         length=sortedl.shape[0]
         coli=np.array(np.where(newcol>0)[0])#gives the position in sortedl where the ring is changed
-        coliptr= np.concatenate(([0], coli, [length]))#adds first and last point (0) and (length)
+        coliptr= np.concatenate(([0], coli, [length])) #adds first and last point (0) and (length)
         m= sp.csc_matrix((np.ones(length), ind, coliptr))#sparse matrix representation of labels
         sc=scalemat(mask.shape[0], mask.shape[1], oversampling)
         
@@ -105,7 +105,7 @@ def openmask(mfile,attachment=None):
             fin=io.BytesIO(mfilestream.encode('cp1252','ignore'))
             print("Now we open attached mask!")
         else:
-            mfilestream=open(mfile).read()
+            mfilestream=open(mfile,encoding='cp850').read()
             fin=open(mfile, "rb")
             print("Now we open local mask!")
         if mfile.endswith('.msk'):
