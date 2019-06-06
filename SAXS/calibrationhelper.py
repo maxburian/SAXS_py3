@@ -102,16 +102,17 @@ def openmask(mfile,attachment=None):
         if attachment:
             #mfilestream=base64.b64decode(attachment['data']).decode('cp1252','ignore')
             mfilestream=attachment['data']
-            fin=io.BytesIO(mfilestream.encode('cp1252','ignore'))
+            fin=io.BytesIO(mfilestream.encode('latin-1','ignore'))
+            #was 'cp1252' codec
             print("Now we open attached mask!")
         else:
-            mfilestream=open(mfile,encoding='cp850').read()
+            mfilestream=open(mfile,encoding='latin-1').read()
             fin=open(mfile, "rb")
             print("Now we open local mask!")
         if mfile.endswith('.msk'):
             import bitarray
             maskb=bitarray.bitarray(endian='little')
-            maskb.frombytes(mfilestream.encode('cp1252','ignore')) 
+            maskb.frombytes(mfilestream.encode('latin-1','ignore')) 
             maskl=np.array(maskb.tolist())
             
             import struct

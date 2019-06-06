@@ -196,7 +196,7 @@ def sendnew(options, arg, socket, conf):
         maskfile=mask["MaskFile"]
         messageparts+=(json.dumps(
                                   {"filename":maskfile,
-                                   "data": base64.b64decode(base64.b64encode(open(maskfile, "rb").read())).decode('cp1252','ignore')
+                                   "data": base64.b64decode(base64.b64encode(open(maskfile, "rb").read())).decode('latin-1','ignore')
                                    }).encode('utf-8'),)
     leashsend(socket, messageparts)
  
