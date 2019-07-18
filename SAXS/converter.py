@@ -68,7 +68,7 @@ def nika2json(det, eX,eY,erX,erY,eSD, eWL, s):
                 s["Geometry"]['Imagesize'][0]=1043
                 s["Geometry"]['Imagesize'][1]=981
             if (det==2): #for Pil199k
-                s["Geometry"]['Imagesize'][0]=198
+                s["Geometry"]['Imagesize'][0]=195
                 s["Geometry"]['Imagesize'][1]=487 
             
             #horizontal calculation
