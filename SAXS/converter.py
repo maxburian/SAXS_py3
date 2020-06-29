@@ -63,11 +63,11 @@ def nika2json(det, eX,eY,erX,erY,eSD, eWL, s):
             ..eSD = SampleDet distane
             ..eWL = Wavelength
             '''
-    
+            
             if (det==1): #for Pil1M
                 s["Geometry"]['Imagesize'][0]=1043
                 s["Geometry"]['Imagesize'][1]=981
-            if (det==2): #for Pil199k
+            if (det==2): #for Pil100k
                 s["Geometry"]['Imagesize'][0]=195
                 s["Geometry"]['Imagesize'][1]=487 
             
@@ -85,7 +85,7 @@ def nika2json(det, eX,eY,erX,erY,eSD, eWL, s):
             phi = np.arctan2(Gxz,Gxy)            
             
             #write to dict
-            s["Geometry"]['BeamCenter']=[bcX, bcY]
+            s["Geometry"]['BeamCenter']=[bcY,bcX]
             s["Geometry"]['Tilt']['TiltAngleDeg']=tau*180/np.pi
             s["Geometry"]['Tilt']['TiltRotDeg']=phi*180/np.pi
             s["Geometry"]['DedectorDistanceMM']=eSD
