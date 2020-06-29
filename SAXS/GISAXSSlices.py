@@ -35,7 +35,7 @@ class slice():
         self.conf=conf
         self.qname=""
         self.sliceconf=sliceconf
-        start=sliceconf["CutPosition"]-sliceconf["CutMargin"]
+        start=sliceconf["CutPosition"]-1-sliceconf["CutMargin"]
         stop=sliceconf["CutPosition"]+sliceconf["CutMargin"]
         if len (conf["Masks"])>0 and sliceconf['MaskRef']>=0:
              
