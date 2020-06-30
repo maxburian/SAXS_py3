@@ -138,16 +138,19 @@ class imagequeue:
                 
             '''Check if image can be opened'''
             if skipfile==False:                  
-                if not self.options.silent: print("[", threadid, "] open: ", picture) 
+                print("[", threadid, "] open: ", picture) 
                 for i in range(max):
                     try:
                         # print("try opening picture: ", picture)
                         # image=imageio.imread(picture)
                         image=misc.imread(picture)
+                        break
                     except KeyboardInterrupt:
                         return
                     except IOError as e:
                         try:
+                            print("cannot open ", picture, ", lets wait.", max-i, " s")
+                            print("e: ", e)
                             errorfilename = "MissingImages.txt"
                             errorfile = os.path.join(reldir,errorfilname)
                             print(errorfile)
@@ -155,22 +158,18 @@ class imagequeue:
                                 output = picture +"\n"
                                 f_handle.write(output)
                                 f_handle.close()
-                            print("cannot open ", picture, ", lets wait.", max-i, " s")
-                            print("e: ", e)
-                            # print("sys.exc_info", sys.exc_info()[0])
                             time.sleep(1)
                             continue
-                        except KeyboardInterrupt:
-                            return
                     except:
-                        print("############")
+                        print("e: Some Other Error")
                         # print(sys.exc_info())
                         continue
                     if image.shape==tuple(self.cals[0].config["Geometry"]["Imagesize"]):
                         break
-                    print("cannot open ", picture, ", lets wait.", max-i, " s")
-                    time.sleep(1)
-                        
+                    if i==(max-1):
+                        print("After ", max, " tries, ", picture, " can still not be opened.")
+
+                    
                 else:
                     print("image ", picture, " has wrong format")
                     return
