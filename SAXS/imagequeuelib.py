@@ -157,10 +157,10 @@ class imagequeue:
                     if imgChecker == True:
                         if image.shape == tuple(self.cals[0].config["Geometry"]["Imagesize"]):
                             print("[", threadid,i, "]: ","Image Format is Good")  
-                            print("[", threadid,i, "]: ","Image Shape: ", image.shape)
-                            print("[", threadid,i, "]: ","Required Shape: ", tuple(self.cals[0].config["Geometry"]["Imagesize"]))
                             pass
                         else:
+                            print("[", threadid,i, "]: ","Image Shape: ", image.shape)
+                            print("[", threadid,i, "]: ","Required Shape: ", tuple(self.cals[0].config["Geometry"]["Imagesize"]))
                             print("[", threadid,i, "]: ","image ", picture, " has wrong format.")  
                             imgChecker = False
                     
