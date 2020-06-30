@@ -1,5 +1,6 @@
 # coding: utf8
 from threading import Thread, current_thread, active_count
+import threading
 
 import time
 from watchdog.observers import Observer
@@ -20,6 +21,8 @@ import json
 import time
 from . import datamerge
 #from SAXS.tifffile import   TiffFile 
+
+lock = threading.Lock()
 def funcworker(self, threadid):
    """
    Function for subprocesses
@@ -129,18 +132,20 @@ class imagequeue:
                         filelist[cal.kind+str(calnum)]=chifilename
                         skipfile=True
                         if self.options["livefilelist"] is not "xxx":
+                            lock.acquire()
                             with open(self.options["livefilelist"], 'a') as f_handle:
                                 file_path = os.path.normpath(chifilename)
                                 file_path=str.split(str(file_path), str(os.path.split(self.options["watchdir"])[0]))[1]
                                 output = file_path +", "+str(0)+ ", "+str(0)+", "+str(0)+"\n"
                                 f_handle.write(output)
                                 f_handle.close()
+                            lock.release()
                 
             '''Check if image can be opened'''
             imgChecker = False
             i = 0
             if skipfile==False:                  
-                #print("[", threadid, "] open: ", picture) 
+                print("[", threadid, "] open: ", picture) 
                 while imgChecker is False:
                     try:
                         # print("try opening picture: ", picture)
@@ -210,6 +215,7 @@ class imagequeue:
                         data.append(result)
                         if self.options["livefilelist"] is not "xxx":
                             #print result["Integparam"]["I0"]
+                            lock.acquire()
                             with open(self.options["livefilelist"], 'a') as f_handle:
                                 file_path = os.path.normpath(chifilename)
                                 file_path=str.split(str(file_path), str(os.path.split(self.options["watchdir"])[0]))[1]
@@ -222,7 +228,7 @@ class imagequeue:
                                 f_handle.write(output)
                                 f_handle.close()
                                 #np.savetxt(f_handle,self.filelist_output, delimiter=',', fmt="%s ")
-                            
+                            lock.release()
                         if threadid==0 and self.options.plotwindow:
                             # this is a hack it really schould be a proper GUI
                            
