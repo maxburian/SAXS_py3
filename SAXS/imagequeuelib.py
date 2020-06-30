@@ -170,7 +170,7 @@ class imagequeue:
                             i=i+1
                             continue
                         else:
-                            print("[", threadid "]: ", "Gave it ", max, " tries - skipping picture: ", picture)
+                            print("[", threadid, "]: ", "Gave it ", max, " tries - skipping picture: ", picture)
                             try:
                                 image=misc.imread(picture)
                                 print("[", threadid"]: ","Image Shape: ", image.shape)
