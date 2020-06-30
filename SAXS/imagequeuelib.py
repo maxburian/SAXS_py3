@@ -150,10 +150,8 @@ class imagequeue:
                         # if image can be opened, set boolean to True
                     except KeyboardInterrupt:
                         return
-                    except IOError as e:
+                    except Exception as e:
                         print("[", threadid, "]: ","e: ", e)
-                    except:
-                        print("[", threadid, "]: ","e: Some Other Error")
                         
                     # Once image can be opend, check its dimensions     
                     if imgChecker == True:
