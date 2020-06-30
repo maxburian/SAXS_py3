@@ -173,10 +173,10 @@ class imagequeue:
                             print("[", threadid, "]: ", "Gave it ", max, " tries - skipping picture: ", picture)
                             try:
                                 image=misc.imread(picture)
-                                print("[", threadid"]: ","Image Shape: ", image.shape)
-                                print("[", threadid"]: ","Required Shape: ", tuple(self.cals[0].config["Geometry"]["Imagesize"]))
+                                print("[", threadid, "]: ","Image Shape: ", image.shape)
+                                print("[", threadid, "]: ","Required Shape: ", tuple(self.cals[0].config["Geometry"]["Imagesize"]))
                             except Exception as e:
-                                print("[", threadid , "]: ","Error was: ", e)
+                                print("[", threadid, "]: ","Error was: ", e)
                             return
                             
             #print("[", threadid, "]: ", picture, "took ", (i), "ms." ) 
