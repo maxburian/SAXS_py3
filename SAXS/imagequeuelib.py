@@ -96,7 +96,7 @@ class imagequeue:
         
     def procimage(self, picture, threadid):
             filelist={}
-            max = 10
+            max = 1000
             data=[]
             integparams={}
             
@@ -156,11 +156,11 @@ class imagequeue:
                     # Once image can be opend, check its dimensions     
                     if imgChecker == True:
                         if image.shape == tuple(self.cals[0].config["Geometry"]["Imagesize"]):
-                            print("[", threadid,i, "]: ","Image Format is Good")  
+                            #print("[", threadid,i, "]: ","Image Format is Good")  
                             pass
                         else:
-                            print("[", threadid,i, "]: ","Image Shape: ", image.shape)
-                            print("[", threadid,i, "]: ","Required Shape: ", tuple(self.cals[0].config["Geometry"]["Imagesize"]))
+                            #print("[", threadid,i, "]: ","Image Shape: ", image.shape)
+                            #print("[", threadid,i, "]: ","Required Shape: ", tuple(self.cals[0].config["Geometry"]["Imagesize"]))
                             print("[", threadid,i, "]: ","image ", picture, " has wrong format.")  
                             imgChecker = False
                     
@@ -169,13 +169,15 @@ class imagequeue:
                         break
                     else:
                         if i<max:
-                            print("[", threadid,i, "]: ", "Issues with ", picture, ", lets wait.", max-i, " s")
-                            time.sleep(1)
+                            #print("[", threadid,i, "]: ", "Issues with ", picture, ", lets wait.", max-i, " s")
+                            time.sleep(0.01)
                             i=i+1
                             continue
                         else:
-                            print("[", threadid,i, "]: ", "Waited ", max, " s - skipping images")
+                            print("[", threadid,i, "]: ", "Waited ", max, " tries - skipping images")
                             return
+                            
+            print("[", threadid, "]: ", picture, "took ", (i*10), "ms." ) 
                 
                 
             if skipfile == False:    
