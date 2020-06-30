@@ -174,7 +174,7 @@ class imagequeue:
                             i=i+1
                             continue
                         else:
-                            print("[", threadid, "]: ", "Waited ", max " s - skipping images")
+                            print("[", threadid, "]: ", "Waited ", max, " s - skipping images")
                             return
                 
                 
