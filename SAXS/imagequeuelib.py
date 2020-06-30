@@ -167,7 +167,7 @@ class imagequeue:
                     # If both tests are passed, we can break the loop
                     if imgChecker == True:
                         break
-                    else
+                    else:
                         if i<max:
                             print("[", threadid, "]: ", "Issues with ", picture, ", lets wait.", max-i, " s")
                             time.sleep(1)
