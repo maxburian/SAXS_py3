@@ -150,7 +150,8 @@ class imagequeue:
                         try:
                             errorfilename = "MissingImages.txt"
                             errorfile = os.path.join(reldir,errorfilname)
-                            with open(errorfile) as f_handle:
+                            print(errorfile)
+                            with open(errorfile,'a') as f_handle:
                                 output = picture +"\n"
                                 f_handle.write(output)
                                 f_handle.close()
