@@ -141,14 +141,6 @@ class imagequeue:
                 if not self.options.silent: print("[", threadid, "] open: ", picture) 
                 for i in range(max):
                     try:
-                        errorfilename = "MissingImages.txt"
-                        errorfile = os.path.join(reldir,errorfilname)
-                        with open(errorfilename) as f_handle:
-                            file_path = os.path.normpath(chifilename)
-                            file_path=str.split(str(file_path), str(os.path.split(self.options["watchdir"])[0]))[1]
-                            output = file_path +"\n"
-                            f_handle.write(output)
-                            f_handle.close()
                         # print("try opening picture: ", picture)
                         # image=imageio.imread(picture)
                         image=misc.imread(picture)
@@ -156,6 +148,14 @@ class imagequeue:
                         return
                     except IOError as e:
                         try:
+                            errorfilename = "MissingImages.txt"
+                            errorfile = os.path.join(reldir,errorfilname)
+                            with open(errorfile) as f_handle:
+                                file_path = os.path.normpath(chifilename)
+                                file_path=str.split(str(file_path), str(os.path.split(self.options["watchdir"])[0]))[1]
+                                output = file_path +"\n"
+                                f_handle.write(output)
+                                f_handle.close()
                             print("cannot open ", picture, ", lets wait.", max-i, " s")
                             print("e: ", e)
                             # print("sys.exc_info", sys.exc_info()[0])
