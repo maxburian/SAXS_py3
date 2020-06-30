@@ -170,7 +170,10 @@ class imagequeue:
                         print("[", threadid, "]: ","After ", max, " tries, ", picture, " can still not be opened.")
                         return
                 # Once image can be opend, check its dimensions        
-                if image.shape is not tuple(self.cals[0].config["Geometry"]["Imagesize"]):
+                if image.shape == tuple(self.cals[0].config["Geometry"]["Imagesize"]):
+                    print("[", threadid, "]: ","Image Format")  
+                    break
+                else
                     print("[", threadid, "]: ","image ", picture, " has wrong format")  
                     return                  
                 
