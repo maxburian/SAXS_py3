@@ -160,6 +160,8 @@ class imagequeue:
                                 f_handle.close()
                             time.sleep(1)
                             continue
+                        except KeyboardInterrupt:
+                            return              
                     except:
                         print("e: Some Other Error")
                         # print(sys.exc_info())
