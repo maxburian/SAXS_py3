@@ -96,7 +96,7 @@ class imagequeue:
         
     def procimage(self, picture, threadid):
             filelist={}
-            max = 1000
+            max = 10000
             data=[]
             integparams={}
             
@@ -170,14 +170,14 @@ class imagequeue:
                     else:
                         if i<max:
                             #print("[", threadid,i, "]: ", "Issues with ", picture, ", lets wait.", max-i, " s")
-                            time.sleep(0.01)
+                            time.sleep(0.001)
                             i=i+1
                             continue
                         else:
                             print("[", threadid,i, "]: ", "Waited ", max, " tries - skipping images")
                             return
                             
-            print("[", threadid, "]: ", picture, "took ", (i*10), "ms." ) 
+            print("[", threadid, "]: ", picture, "took ", (i), "ms." ) 
                 
                 
             if skipfile == False:    
