@@ -145,10 +145,10 @@ class imagequeue:
             imgChecker = False
             i = 0
             if skipfile==False:                  
-                #print("[", threadid, "] open: ", picture) 
+                # print("[", threadid, "] open: ", picture) 
                 while imgChecker is False:
                     try:
-                        print("[", threadid, "]try opening picture: ", picture)
+                        # print("[", threadid, "]try opening picture: ", picture)
                         # image=imageio.imread(picture)
                         image=misc.imread(picture)
                         # if image can be opened, set boolean to True
@@ -157,7 +157,7 @@ class imagequeue:
                             imgChecker = True
                         else:
                             #print("[", threadid,i, "]: ","Image Shape: ", image.shape)
-                            #print("[", threadid,i, "]: ","Required Shape: ", tuple(self.cals[0].config["Geometry"]["Imagesize"]))
+                            #print("[", threadid,i, "]: ","Required Shape: ", tuple(self..cals[0].config["Geometry"]["Imagesize"]))
                             #print("[", threadid,i, "]: ","image ", picture, " has wrong format.")  
                             imgChecker = False
                     except KeyboardInterrupt:
@@ -209,7 +209,7 @@ class imagequeue:
                     filelist[cal.kind+str(calnum)]=chifilename
                     if not self.options.resume or not os.path.isfile(chifilename):
                         result=cal.integratechi(image, chifilename, picture)
-                        print("[", threadid, "]: ",chifilename, " has been integrated!")
+                        # print("[", threadid, "]: ",chifilename, " has been integrated!")
                         result["Image"]=picture
                         if "Integparam" in result:
                             integparams[cal.kind[0]+str(calnum)]=result["Integparam"]                  
