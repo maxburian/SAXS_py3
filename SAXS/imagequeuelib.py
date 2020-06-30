@@ -148,7 +148,7 @@ class imagequeue:
                 #print("[", threadid, "] open: ", picture) 
                 while imgChecker is False:
                     try:
-                        # print("try opening picture: ", picture)
+                        print("[", threadid, "]try opening picture: ", picture)
                         # image=imageio.imread(picture)
                         image=misc.imread(picture)
                         # if image can be opened, set boolean to True
