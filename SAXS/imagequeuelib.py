@@ -162,7 +162,7 @@ class imagequeue:
                             pass
                         else:
                             print("[", threadid, "]: ","image ", picture, " has wrong format.")  
-                            imgChecker = False:
+                            imgChecker = False
                     
                     # If both tests are passed, we can break the loop
                     if imgChecker == True:
