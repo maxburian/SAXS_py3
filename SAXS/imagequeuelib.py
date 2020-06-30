@@ -145,7 +145,7 @@ class imagequeue:
                     try:
                         # print("try opening picture: ", picture)
                         # image=imageio.imread(picture)
-                        image=misc.imread(picture
+                        image=misc.imread(picture)
                         imgChecker = True
                         # if image can be opened, set boolean to True
                     except KeyboardInterrupt:
