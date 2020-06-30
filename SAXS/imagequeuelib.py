@@ -141,12 +141,12 @@ class imagequeue:
             i = 0
             if skipfile==False:                  
                 print("[", threadid, "] open: ", picture) 
-                while imageChecker is False:
+                while imgChecker is False:
                     try:
                         # print("try opening picture: ", picture)
                         # image=imageio.imread(picture)
                         image=misc.imread(picture
-                        imageChecker = True
+                        imgChecker = True
                         # if image can be opened, set boolean to True
                     except KeyboardInterrupt:
                         return
@@ -156,16 +156,16 @@ class imagequeue:
                         print("[", threadid, "]: ","e: Some Other Error")
                         
                     # Once image can be opend, check its dimensions     
-                    if imageChecker == True:
+                    if imgChecker == True:
                         if image.shape == tuple(self.cals[0].config["Geometry"]["Imagesize"]):
                             print("[", threadid, "]: ","Image Format is Good")  
                             pass
                         else:
                             print("[", threadid, "]: ","image ", picture, " has wrong format.")  
-                            imageChecker == False:
+                            imgChecker = False:
                     
                     # If both tests are passed, we can break the loop
-                    if imageChecker == True:
+                    if imgChecker == True:
                         break
                     else
                         if i<max:
