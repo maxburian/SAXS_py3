@@ -137,45 +137,45 @@ class imagequeue:
                                 f_handle.close()
                 
             '''Check if image can be opened'''
+            imgChecker = False
+            i = 0
             if skipfile==False:                  
                 print("[", threadid, "] open: ", picture) 
-                for i in range(max):
+                while imageChecker is False:
                     try:
                         # print("try opening picture: ", picture)
                         # image=imageio.imread(picture)
-                        image=misc.imread(picture)
-                        break
+                        image=misc.imread(picture
+                        imageChecker = True
+                        # if image can be opened, set boolean to True
                     except KeyboardInterrupt:
                         return
                     except IOError as e:
-                        try:
-                            print("[", threadid, "]: ", "cannot open ", picture, ", lets wait.", max-i, " s")
-                            print("[", threadid, "]: ","e: ", e)
-                            #errorfilename = "MissingImages.txt"
-                            #errorfile = os.path.join(reldir,errorfilname)
-                            #print(errorfile)
-                            #with open(errorfile,'a') as f_handle:
-                            #    output = picture +"\n"
-                            #    f_handle.write(output)
-                            #    f_handle.close()
-                            time.sleep(1)
-                            continue
-                        except KeyboardInterrupt:
-                            return              
+                        print("[", threadid, "]: ","e: ", e)
                     except:
                         print("[", threadid, "]: ","e: Some Other Error")
-                        # print(sys.exc_info())
-                        continue
-                    if i==(max-1):
-                        print("[", threadid, "]: ","After ", max, " tries, ", picture, " can still not be opened.")
-                        return
-                # Once image can be opend, check its dimensions        
-                if image.shape == tuple(self.cals[0].config["Geometry"]["Imagesize"]):
-                    print("[", threadid, "]: ","Image Format")  
-                    pass
-                else:
-                    print("[", threadid, "]: ","image ", picture, " has wrong format")  
-                    return                  
+                        
+                    # Once image can be opend, check its dimensions     
+                    if imageChecker == True:
+                        if image.shape == tuple(self.cals[0].config["Geometry"]["Imagesize"]):
+                            print("[", threadid, "]: ","Image Format is Good")  
+                            pass
+                        else:
+                            print("[", threadid, "]: ","image ", picture, " has wrong format.")  
+                            imageChecker == False:
+                    
+                    # If both tests are passed, we can break the loop
+                    if imageChecker == True:
+                        break
+                    else
+                        if i<max:
+                            print("[", threadid, "]: ", "Issues with ", picture, ", lets wait.", max-i, " s")
+                            time.sleep(1)
+                            i=i+1
+                            continue
+                        else:
+                            print("[", threadid, "]: ", "Waited ", max " s - skipping images")
+                            return
                 
                 
             if skipfile == False:    
