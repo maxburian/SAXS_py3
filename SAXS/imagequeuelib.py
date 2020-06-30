@@ -151,15 +151,17 @@ class imagequeue:
                     except KeyboardInterrupt:
                         return
                     except Exception as e:
-                        print("[", threadid, "]: ","e: ", e)
+                        print("[", threadid,i, "]: ","e: ", e)
                         
                     # Once image can be opend, check its dimensions     
                     if imgChecker == True:
                         if image.shape == tuple(self.cals[0].config["Geometry"]["Imagesize"]):
-                            print("[", threadid, "]: ","Image Format is Good")  
+                            print("[", threadid,i, "]: ","Image Format is Good")  
+                            print("[", threadid,i, "]: ","Image Shape: ", image.shape)
+                            print("[", threadid,i, "]: ","Required Shape: ", tuple(self.cals[0].config["Geometry"]["Imagesize"]))
                             pass
                         else:
-                            print("[", threadid, "]: ","image ", picture, " has wrong format.")  
+                            print("[", threadid,i, "]: ","image ", picture, " has wrong format.")  
                             imgChecker = False
                     
                     # If both tests are passed, we can break the loop
@@ -167,12 +169,12 @@ class imagequeue:
                         break
                     else:
                         if i<max:
-                            print("[", threadid, "]: ", "Issues with ", picture, ", lets wait.", max-i, " s")
+                            print("[", threadid,i, "]: ", "Issues with ", picture, ", lets wait.", max-i, " s")
                             time.sleep(1)
                             i=i+1
                             continue
                         else:
-                            print("[", threadid, "]: ", "Waited ", max, " s - skipping images")
+                            print("[", threadid,i, "]: ", "Waited ", max, " s - skipping images")
                             return
                 
                 
