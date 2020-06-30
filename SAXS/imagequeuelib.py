@@ -145,7 +145,7 @@ class imagequeue:
             imgChecker = False
             i = 0
             if skipfile==False:                  
-                print("[", threadid, "] open: ", picture) 
+                #print("[", threadid, "] open: ", picture) 
                 while imgChecker is False:
                     try:
                         # print("try opening picture: ", picture)
@@ -184,7 +184,7 @@ class imagequeue:
                                 print("[", threadid, "]: ","Error was: ", e)
                             return
                             
-            #print("[", threadid, "]: ", picture, "took ", (i), "ms." ) 
+            print("[", threadid, "]: ", picture, "took ", (i), "ms." ) 
                 
                 
             if skipfile == False:    
@@ -208,7 +208,7 @@ class imagequeue:
                     filelist[cal.kind+str(calnum)]=chifilename
                     if not self.options.resume or not os.path.isfile(chifilename):
                         result=cal.integratechi(image, chifilename, picture)
-                        #print(chifilename, " has been integrated!")
+                        print("[", threadid, "]: ",chifilename, " has been integrated!")
                         result["Image"]=picture
                         if "Integparam" in result:
                             integparams[cal.kind[0]+str(calnum)]=result["Integparam"]                  
