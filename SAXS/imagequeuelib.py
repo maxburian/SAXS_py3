@@ -173,7 +173,7 @@ class imagequeue:
                 if image.shape == tuple(self.cals[0].config["Geometry"]["Imagesize"]):
                     print("[", threadid, "]: ","Image Format")  
                     break
-                else
+                else:
                     print("[", threadid, "]: ","image ", picture, " has wrong format")  
                     return                  
                 
