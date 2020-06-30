@@ -157,8 +157,8 @@ class imagequeue:
                             imgChecker = False
                     except KeyboardInterrupt:
                         return
-                    except Exception as e:
-                        print("[", threadid,i, "]: ","e: ", e)
+                    #except Exception as e:
+                    #   print("[", threadid,i, "]: ","e: ", e)
 
                     # If both tests are passed, we can break the loop
                     if imgChecker == True:
@@ -170,10 +170,16 @@ class imagequeue:
                             i=i+1
                             continue
                         else:
-                            print("[", threadid,i, "]: ", "Waited ", max, " tries - skipping images")
+                            print("[", threadid "]: ", "Gave it ", max, " tries - skipping picture: ", picture)
+                            try:
+                                image=misc.imread(picture)
+                                print("[", threadid"]: ","Image Shape: ", image.shape)
+                                print("[", threadid"]: ","Required Shape: ", tuple(self.cals[0].config["Geometry"]["Imagesize"]))
+                            except Exception as e:
+                                print("[", threadid "]: ","Error was: ", e)
                             return
                             
-            print("[", threadid, "]: ", picture, "took ", (i), "ms." ) 
+            #print("[", threadid, "]: ", picture, "took ", (i), "ms." ) 
                 
                 
             if skipfile == False:    
