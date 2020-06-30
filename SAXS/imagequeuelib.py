@@ -149,32 +149,31 @@ class imagequeue:
                         return
                     except IOError as e:
                         try:
-                            print("cannot open ", picture, ", lets wait.", max-i, " s")
-                            print("e: ", e)
-                            errorfilename = "MissingImages.txt"
-                            errorfile = os.path.join(reldir,errorfilname)
-                            print(errorfile)
-                            with open(errorfile,'a') as f_handle:
-                                output = picture +"\n"
-                                f_handle.write(output)
-                                f_handle.close()
+                            print("[", threadid, "]: ", "cannot open ", picture, ", lets wait.", max-i, " s")
+                            print("[", threadid, "]: ","e: ", e)
+                            #errorfilename = "MissingImages.txt"
+                            #errorfile = os.path.join(reldir,errorfilname)
+                            #print(errorfile)
+                            #with open(errorfile,'a') as f_handle:
+                            #    output = picture +"\n"
+                            #    f_handle.write(output)
+                            #    f_handle.close()
                             time.sleep(1)
                             continue
                         except KeyboardInterrupt:
                             return              
                     except:
-                        print("e: Some Other Error")
+                        print("[", threadid, "]: ","e: Some Other Error")
                         # print(sys.exc_info())
                         continue
-                    if image.shape==tuple(self.cals[0].config["Geometry"]["Imagesize"]):
-                        break
                     if i==(max-1):
-                        print("After ", max, " tries, ", picture, " can still not be opened.")
-
-                    
-                else:
-                    print("image ", picture, " has wrong format")
-                    return
+                        print("[", threadid, "]: ","After ", max, " tries, ", picture, " can still not be opened.")
+                        return
+                # Once image can be opend, check its dimensions        
+                if image.shape is not tuple(self.cals[0].config["Geometry"]["Imagesize"]):
+                    print("[", threadid, "]: ","image ", picture, " has wrong format")  
+                    return                  
+                
                 
             if skipfile == False:    
                 imgMetaData=datamerge.readtiff(picture)
