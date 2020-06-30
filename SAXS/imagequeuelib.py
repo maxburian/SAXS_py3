@@ -151,9 +151,7 @@ class imagequeue:
                             errorfilename = "MissingImages.txt"
                             errorfile = os.path.join(reldir,errorfilname)
                             with open(errorfile) as f_handle:
-                                file_path = os.path.normpath(chifilename)
-                                file_path=str.split(str(file_path), str(os.path.split(self.options["watchdir"])[0]))[1]
-                                output = file_path +"\n"
+                                output = picture +"\n"
                                 f_handle.write(output)
                                 f_handle.close()
                             print("cannot open ", picture, ", lets wait.", max-i, " s")
