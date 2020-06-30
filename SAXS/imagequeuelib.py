@@ -140,8 +140,8 @@ class imagequeue:
             if skipfile==False:                  
                 if not self.options.silent: print("[", threadid, "] open: ", picture) 
                 for i in range(max):
-                    try:a
-                        errorfilename = "MissingImates.txt"
+                    try:
+                        errorfilename = "MissingImages.txt"
                         errorfile = os.path.join(reldir,errorfilname)
                         with open(errorfilename) as f_handle:
                             file_path = os.path.normpath(chifilename)
