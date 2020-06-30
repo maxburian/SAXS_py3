@@ -140,7 +140,15 @@ class imagequeue:
             if skipfile==False:                  
                 if not self.options.silent: print("[", threadid, "] open: ", picture) 
                 for i in range(max):
-                    try:
+                    try:a
+                        errorfilename = "MissingImates.txt"
+                        errorfile = os.path.join(reldir,errorfilname)
+                        with open(errorfilename) as f_handle:
+                            file_path = os.path.normpath(chifilename)
+                            file_path=str.split(str(file_path), str(os.path.split(self.options["watchdir"])[0]))[1]
+                            output = file_path +"\n"
+                            f_handle.write(output)
+                            f_handle.close()
                         # print("try opening picture: ", picture)
                         # image=imageio.imread(picture)
                         image=misc.imread(picture)
