@@ -162,7 +162,8 @@ class imagequeue:
                             imgChecker = False
                     except KeyboardInterrupt:
                         return
-                    #except Exception as e:
+                    except Exception as e:
+                        pass
                     #   print("[", threadid,i, "]: ","e: ", e)
 
                     # If both tests are passed, we can break the loop
