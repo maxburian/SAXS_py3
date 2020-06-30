@@ -140,30 +140,26 @@ class imagequeue:
             imgChecker = False
             i = 0
             if skipfile==False:                  
-                print("[", threadid, "] open: ", picture) 
+                #print("[", threadid, "] open: ", picture) 
                 while imgChecker is False:
                     try:
                         # print("try opening picture: ", picture)
                         # image=imageio.imread(picture)
                         image=misc.imread(picture)
-                        imgChecker = True
                         # if image can be opened, set boolean to True
-                    except KeyboardInterrupt:
-                        return
-                    except Exception as e:
-                        print("[", threadid,i, "]: ","e: ", e)
-                        
-                    # Once image can be opend, check its dimensions     
-                    if imgChecker == True:
                         if image.shape == tuple(self.cals[0].config["Geometry"]["Imagesize"]):
                             #print("[", threadid,i, "]: ","Image Format is Good")  
-                            pass
+                            imgChecker = True
                         else:
                             #print("[", threadid,i, "]: ","Image Shape: ", image.shape)
                             #print("[", threadid,i, "]: ","Required Shape: ", tuple(self.cals[0].config["Geometry"]["Imagesize"]))
-                            print("[", threadid,i, "]: ","image ", picture, " has wrong format.")  
+                            #print("[", threadid,i, "]: ","image ", picture, " has wrong format.")  
                             imgChecker = False
-                    
+                    except KeyboardInterrupt:
+                        return
+                    except Exception as e:
+                        #print("[", threadid,i, "]: ","e: ", e)
+
                     # If both tests are passed, we can break the loop
                     if imgChecker == True:
                         break
