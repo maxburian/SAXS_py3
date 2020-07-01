@@ -177,6 +177,8 @@ class imagequeue:
                             continue
                         else:
                             print("[", threadid, "]: ", "Gave it ", max, " tries - skipping picture: ", picture)
+                            print("[", threadid, "]: ", "Adding it back into the picture queue.")
+                            self.queue.put(picture)
                             try:
                                 image=misc.imread(picture)
                                 print("[", threadid, "]: ","Image Shape: ", image.shape)
@@ -215,7 +217,6 @@ class imagequeue:
                             integparams[cal.kind[0]+str(calnum)]=result["Integparam"]                  
                         data.append(result)
                         if self.options["livefilelist"] is not "xxx":
-                            #print result["Integparam"]["I0"]
                             lock.acquire()
                             with open(self.options["livefilelist"], 'a') as f_handle:
                                 file_path = os.path.normpath(chifilename)
@@ -228,7 +229,6 @@ class imagequeue:
                                         ", "+str(0)+", "+str(0)+"\n"
                                 f_handle.write(output)
                                 f_handle.close()
-                                #np.savetxt(f_handle,self.filelist_output, delimiter=',', fmt="%s ")
                             lock.release()
                         if threadid==0 and self.options.plotwindow:
                             # this is a hack it really schould be a proper GUI
@@ -243,11 +243,11 @@ class imagequeue:
                     if self.options.writepng:
                          if not self.options.resume or not os.path.isfile(filename+'.svg'):
                               misc.imsave(filename+".png", image)
-                    if self.options.silent:
-                        if np.mod(self.allp.value, 100)==0:
-                            print("[", threadid, "] ", self.allp.value)
-                    else:
-                        print("[", threadid, "] write: ", filename+".chi") 
+                    #if self.options.silent:
+                    #    if np.mod(self.allp.value, 100)==0:
+                    #        print("[", threadid, "] ", self.allp.value)
+                    #else:
+                    #    print("[", threadid, "] write: ", filename+".chi") 
             
             with self.allp.get_lock():
                 self.allp.value+=1
@@ -311,14 +311,14 @@ class imagequeue:
                     except:
                         continue                   
 
-                    if self.options.servermode:
+                    if self.options.servermode and threadid == 1:
                         request={"command":"putplotdata","argument":{"data":{
                                 "result":"plot","data":{"filename":lastfile,"graphs":data,
                                                         "stat":{}}
                                   }}}
                      
                         self.plotdataqueue.put(request)
-                    if np.mod(self.allp.value, 500)==0:
+                    if np.mod(self.allp.value, 100)==0:
                         self.timreport()
         except KeyboardInterrupt:
             pass
