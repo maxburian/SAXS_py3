@@ -40,7 +40,7 @@ def funcworker(self, threadid):
         except KeyboardInterrupt:
             pass 
         except Exception as e:
-            print() 
+            print(e) 
    
 def filler(queue, dir):
             filequeue=[] 
@@ -99,7 +99,7 @@ class imagequeue:
         
     def procimage(self, picture, threadid):
             filelist={}
-            max = 10000
+            max = 1000
             data=[]
             integparams={}
             
@@ -314,7 +314,7 @@ class imagequeue:
                     except:
                         continue                   
 
-                    if self.options.servermode and threadid == 1:
+                    if self.options.servermode:
                         request={"command":"putplotdata","argument":{"data":{
                                 "result":"plot","data":{"filename":lastfile,"graphs":data,
                                                         "stat":{}}
