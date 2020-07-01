@@ -178,7 +178,10 @@ class imagequeue:
                         else:
                             print("[", threadid, "]: ", "Gave it ", max, " tries - skipping picture: ", picture)
                             print("[", threadid, "]: ", "Adding it back into the picture queue.")
-                            self.queue.put(picture)
+                            try:
+                                self.picturequeue.put(picture)
+                            except Exception as e:
+                                print("[", threadid, "]: ","Error was: ", e)
                             try:
                                 image=misc.imread(picture)
                                 print("[", threadid, "]: ","Image Shape: ", image.shape)
