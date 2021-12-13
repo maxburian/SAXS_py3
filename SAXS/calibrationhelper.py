@@ -126,7 +126,10 @@ def openmask(mfile,attachment=None):
             off=np.size(maskl)-yb*x
             off=8192
             
-            mask=maskl[off:x*yb+off].reshape(x,yb)
+            try:
+                mask=maskl[off:x*yb+off].reshape(x,yb)
+            except:
+                mask=maskl[off:x*yb+off].reshape(x,y)
             #misc.imsave("mask.png",mask)
             cropedmask=np.flipud(mask[0:x, 0:y])
             # save the mask in order to check if it worked
